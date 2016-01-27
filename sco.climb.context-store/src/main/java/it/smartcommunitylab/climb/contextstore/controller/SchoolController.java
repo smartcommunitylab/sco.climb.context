@@ -18,15 +18,15 @@ package it.smartcommunitylab.climb.contextstore.controller;
 
 import it.smartcommunitylab.climb.contextstore.common.Utils;
 import it.smartcommunitylab.climb.contextstore.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.contextstore.security.DataSetInfo;
+import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +43,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class AdminController {
-	private static final transient Logger logger = LoggerFactory.getLogger(AdminController.class);
+public class SchoolController {
+	private static final transient Logger logger = LoggerFactory.getLogger(SchoolController.class);
 			
 	@Autowired
 	private RepositoryManager storage;
@@ -52,40 +52,63 @@ public class AdminController {
 	@Autowired
 	private DataSetSetup dataSetSetup;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/ping")
-	public @ResponseBody
-	String ping(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		return "PONG";
-	}
-	
-	@RequestMapping(value = "/dataset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody String updateDataSetInfo(@RequestBody DataSetInfo dataSetInfo, 
-			@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		storage.saveAppToken(dataSetInfo.getOwnerId(), dataSetInfo.getToken());
-		storage.saveDataSetInfo(dataSetInfo);
-		dataSetSetup.init();
-		if(logger.isInfoEnabled()) {
-			logger.info("add dataSet");
-		}
-		return "OK";
-	}
-	
-	@RequestMapping(value = "/reload/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody String reload(@PathVariable String ownerId, 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/school/{ownerId}", method = RequestMethod.GET)
+	public @ResponseBody List<School> searchSchool(@PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		dataSetSetup.init();
+		List<School> result = (List<School>) storage.findData(School.class, null, ownerId);
 		if(logger.isInfoEnabled()) {
-			logger.info("reload dataSet");
+			logger.info(String.format("searchSchool[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/school/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody School addSchool(@RequestBody School school, @PathVariable String ownerId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		school.setOwnerId(ownerId);
+		school.setId(Utils.getUUID());
+		storage.addSchool(school);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addSchool[%s]:%s", ownerId, school.getName()));
+		}
+		return school;
+	}
+
+	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.PUT)
+	public @ResponseBody School updateSchool(@RequestBody School school, @PathVariable String ownerId, 
+			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		school.setOwnerId(ownerId);
+		school.setId(objectId);
+		storage.updateSchool(school);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("updateSchool[%s]:%s", ownerId, school.getName()));
+		}
+		return school;
+	}
+	
+	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteSchool(@PathVariable String ownerId, @PathVariable String objectId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		storage.removeSchool(ownerId, objectId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("deleteSchool[%s]:%s", ownerId, objectId));
 		}
 		return "OK";
 	}
-
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody

@@ -18,15 +18,15 @@ package it.smartcommunitylab.climb.contextstore.controller;
 
 import it.smartcommunitylab.climb.contextstore.common.Utils;
 import it.smartcommunitylab.climb.contextstore.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.contextstore.security.DataSetInfo;
+import it.smartcommunitylab.climb.contextstore.model.Pedibus;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +43,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class AdminController {
-	private static final transient Logger logger = LoggerFactory.getLogger(AdminController.class);
+public class PedibusController {
+	private static final transient Logger logger = LoggerFactory.getLogger(PedibusController.class);
 			
 	@Autowired
 	private RepositoryManager storage;
@@ -52,40 +52,63 @@ public class AdminController {
 	@Autowired
 	private DataSetSetup dataSetSetup;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/ping")
-	public @ResponseBody
-	String ping(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		return "PONG";
-	}
-	
-	@RequestMapping(value = "/dataset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody String updateDataSetInfo(@RequestBody DataSetInfo dataSetInfo, 
-			@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		storage.saveAppToken(dataSetInfo.getOwnerId(), dataSetInfo.getToken());
-		storage.saveDataSetInfo(dataSetInfo);
-		dataSetSetup.init();
-		if(logger.isInfoEnabled()) {
-			logger.info("add dataSet");
-		}
-		return "OK";
-	}
-	
-	@RequestMapping(value = "/reload/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody String reload(@PathVariable String ownerId, 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/pedibus/{ownerId}", method = RequestMethod.GET)
+	public @ResponseBody List<Pedibus> searchPedibus(@PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		dataSetSetup.init();
+		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, null, ownerId);
 		if(logger.isInfoEnabled()) {
-			logger.info("reload dataSet");
+			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/pedibus/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody Pedibus addPedibus(@RequestBody Pedibus pedibus, @PathVariable String ownerId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		pedibus.setOwnerId(ownerId);
+		pedibus.setId(Utils.getUUID());
+		storage.addPedibus(pedibus);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addPedibus[%s]:%s", ownerId, pedibus.getId()));
+		}
+		return pedibus;
+	}
+
+	@RequestMapping(value = "/api/pedibus/{ownerId}/{objectId}", method = RequestMethod.PUT)
+	public @ResponseBody Pedibus updatePedibus(@RequestBody Pedibus pedibus, @PathVariable String ownerId, 
+			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		pedibus.setOwnerId(ownerId);
+		pedibus.setId(objectId);
+		storage.updatePedibus(pedibus);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibus[%s]:%s", ownerId, pedibus.getId()));
+		}
+		return pedibus;
+	}
+	
+	@RequestMapping(value = "/api/pedibus/{ownerId}/{objectId}", method = RequestMethod.DELETE)
+	public @ResponseBody String deletePedibus(@PathVariable String ownerId, @PathVariable String objectId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		storage.removePedibus(ownerId, objectId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("deletePedibus[%s]:%s", ownerId, objectId));
 		}
 		return "OK";
 	}
-
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody

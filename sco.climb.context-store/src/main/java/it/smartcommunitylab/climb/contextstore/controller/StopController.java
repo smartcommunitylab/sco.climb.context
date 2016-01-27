@@ -18,15 +18,15 @@ package it.smartcommunitylab.climb.contextstore.controller;
 
 import it.smartcommunitylab.climb.contextstore.common.Utils;
 import it.smartcommunitylab.climb.contextstore.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.contextstore.security.DataSetInfo;
+import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,49 +43,72 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class AdminController {
-	private static final transient Logger logger = LoggerFactory.getLogger(AdminController.class);
-			
+public class StopController {
+	private static final transient Logger logger = LoggerFactory.getLogger(StopController.class);
+	
 	@Autowired
 	private RepositoryManager storage;
 
 	@Autowired
 	private DataSetSetup dataSetSetup;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/ping")
-	public @ResponseBody
-	String ping(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		return "PONG";
-	}
-	
-	@RequestMapping(value = "/dataset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody String updateDataSetInfo(@RequestBody DataSetInfo dataSetInfo, 
-			@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		storage.saveAppToken(dataSetInfo.getOwnerId(), dataSetInfo.getToken());
-		storage.saveDataSetInfo(dataSetInfo);
-		dataSetSetup.init();
-		if(logger.isInfoEnabled()) {
-			logger.info("add dataSet");
-		}
-		return "OK";
-	}
-	
-	@RequestMapping(value = "/reload/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody String reload(@PathVariable String ownerId, 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/stop/{ownerId}/{routeId}", method = RequestMethod.GET)
+	public @ResponseBody List<Stop> searchStop(@PathVariable String ownerId,  @PathVariable String routeId,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		dataSetSetup.init();
+		List<Stop> result = (List<Stop>) storage.findData(Stop.class, null, ownerId);
 		if(logger.isInfoEnabled()) {
-			logger.info("reload dataSet");
+			logger.info(String.format("searchStop[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/stop/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody Stop addStop(@RequestBody Stop stop, @PathVariable String ownerId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		stop.setOwnerId(ownerId);
+		stop.setId(Utils.getUUID());
+		storage.addStop(stop);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addStop[%s]:%s", ownerId, stop.getName()));
+		}
+		return stop;
+	}
+
+	@RequestMapping(value = "/api/stop/{ownerId}/{objectId}", method = RequestMethod.PUT)
+	public @ResponseBody Stop updateStop(@RequestBody Stop stop, @PathVariable String ownerId, 
+			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		stop.setOwnerId(ownerId);
+		stop.setId(objectId);
+		storage.updateStop(stop);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("updateStop[%s]:%s", ownerId, stop.getName()));
+		}
+		return stop;
+	}
+	
+	@RequestMapping(value = "/api/stop/{ownerId}/{objectId}", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteStop(@PathVariable String ownerId, @PathVariable String objectId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		storage.removeStop(ownerId, objectId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("deleteStop[%s]:%s", ownerId, objectId));
 		}
 		return "OK";
 	}
-
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody

@@ -7,6 +7,7 @@ import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,10 @@ public class Utils {
 			result = false;
 		}
 		return result;
+	}
+	
+	public static String getUUID() {
+		return UUID.randomUUID().toString();
 	}
 
 	public static String getString(Map<String, String> data, String lang, String defaultLang) {
