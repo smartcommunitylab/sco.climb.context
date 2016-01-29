@@ -132,122 +132,258 @@ public class RepositoryManager {
 	}
 
 	public void addPedibus(Pedibus pedibus) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		pedibus.setCreationDate(actualDate);
+		pedibus.setLastUpdate(actualDate);
+		mongoTemplate.save(pedibus);
 	}
 
-	public void updatePedibus(Pedibus pedibus) {
-		// TODO Auto-generated method stub
-		
+	public void updatePedibus(Pedibus pedibus) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(pedibus.getOwnerId()).and("id").is(pedibus.getId()));
+		Pedibus entityDB = mongoTemplate.findOne(query, Pedibus.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Pedibus with id %s not found", pedibus.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("schoolId", pedibus.getSchoolId());
+		update.set("from", pedibus.getFrom());
+		update.set("to", pedibus.getTo());
+		update.set("supervisorId", pedibus.getSupervisorId());
+		mongoTemplate.updateFirst(query, update, Pedibus.class);
 	}
 
-	public void removePedibus(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removePedibus(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Pedibus entityDB = mongoTemplate.findOne(query, Pedibus.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Pedibus with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Pedibus.class);
 	}
 
 	public void addRoute(Route route) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		route.setCreationDate(actualDate);
+		route.setLastUpdate(actualDate);
+		mongoTemplate.save(route);
 	}
 
-	public void updateRoute(Route route) {
-		// TODO Auto-generated method stub
-		
+	public void updateRoute(Route route) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(route.getOwnerId()).and("id").is(route.getId()));
+		Route entityDB = mongoTemplate.findOne(query, Route.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Route with id %s not found", route.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", route.getName());
+		update.set("pedibusId", route.getPedibusId());
+		update.set("from", route.getFrom());
+		update.set("to", route.getTo());
+		update.set("distance", route.getDistance());
+		mongoTemplate.updateFirst(query, update, Route.class);
 	}
 
-	public void removeRoute(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeRoute(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Route entityDB = mongoTemplate.findOne(query, Route.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Route with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Route.class);
 	}
 
 	public void addStop(Stop stop) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		stop.setCreationDate(actualDate);
+		stop.setLastUpdate(actualDate);
+		mongoTemplate.save(stop);
 	}
 
-	public void updateStop(Stop stop) {
-		// TODO Auto-generated method stub
-		
+	public void updateStop(Stop stop) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(stop.getOwnerId()).and("id").is(stop.getId()));
+		Stop entityDB = mongoTemplate.findOne(query, Stop.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Stop with id %s not found", stop.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", stop.getName());
+		update.set("routeId", stop.getRouteId());
+		update.set("anchorId", stop.getAnchorId());
+		update.set("start", stop.isStart());
+		update.set("destination", stop.isDestination());
+		update.set("school", stop.isSchool());
+		update.set("passengerList", stop.getPassengerList());
+		mongoTemplate.updateFirst(query, update, Stop.class);
 	}
 
-	public void removeStop(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeStop(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Stop entityDB = mongoTemplate.findOne(query, Stop.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Stop with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Stop.class);
 	}
 
 	public void addChild(Child child) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		child.setCreationDate(actualDate);
+		child.setLastUpdate(actualDate);
+		mongoTemplate.save(child);
 	}
 
-	public void updateChild(Child child) {
-		// TODO Auto-generated method stub
-		
+	public void updateChild(Child child) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(child.getOwnerId()).and("id").is(child.getId()));
+		Child entityDB = mongoTemplate.findOne(query, Child.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Child with id %s not found", child.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", child.getName());
+		update.set("externalId", child.getExternalId());
+		update.set("parentName", child.getParentName());
+		update.set("phone", child.getPhone());
+		update.set("schoolId", child.getSchoolId());
+		update.set("classRoom", child.getClassRoom());
+		update.set("wsnId", child.getWsnId());
+		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 
-	public void removeChild(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeChild(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Child entityDB = mongoTemplate.findOne(query, Child.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Child with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Child.class);
 	}
 
 	public void addAnchor(Anchor anchor) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		anchor.setCreationDate(actualDate);
+		anchor.setLastUpdate(actualDate);
+		mongoTemplate.save(anchor);
 	}
 
-	public void updateAnchor(Anchor anchor) {
-		// TODO Auto-generated method stub
-		
+	public void updateAnchor(Anchor anchor) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(anchor.getOwnerId()).and("id").is(anchor.getId()));
+		Anchor entityDB = mongoTemplate.findOne(query, Anchor.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Anchor with id %s not found", anchor.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", anchor.getName());
+		update.set("geocoding", anchor.getGeocoding());
+		update.set("wsnId", anchor.getWsnId());
+		mongoTemplate.updateFirst(query, update, Anchor.class);
 	}
 
-	public void removeAnchor(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeAnchor(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Anchor entityDB = mongoTemplate.findOne(query, Anchor.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Anchor with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Anchor.class);
 	}
 
 	public void addVolunteer(Volunteer volunteer) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		volunteer.setCreationDate(actualDate);
+		volunteer.setLastUpdate(actualDate);
+		mongoTemplate.save(volunteer);
 	}
 
-	public void updateVolunteer(Volunteer volunteer) {
-		// TODO Auto-generated method stub
-		
+	public void updateVolunteer(Volunteer volunteer) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(volunteer.getOwnerId()).and("id").is(volunteer.getId()));
+		Volunteer entityDB = mongoTemplate.findOne(query, Volunteer.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Volunteer with id %s not found", volunteer.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", volunteer.getName());
+		update.set("address", volunteer.getAddress());
+		update.set("phone", volunteer.getPhone());
+		update.set("schoolId", volunteer.getSchoolId());
+		update.set("wsnId", volunteer.getWsnId());
+		mongoTemplate.updateFirst(query, update, Volunteer.class);
 	}
 
-	public void removeVolunteer(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeVolunteer(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Volunteer entityDB = mongoTemplate.findOne(query, Volunteer.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Volunteer with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Volunteer.class);
 	}
 
 	public void addPassengerCalendar(PassengerCalendar calendar) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		calendar.setCreationDate(actualDate);
+		calendar.setLastUpdate(actualDate);
+		mongoTemplate.save(calendar);
 	}
 
-	public void updatePassengerCalendar(PassengerCalendar calendar) {
-		// TODO Auto-generated method stub
-		
+	public void updatePassengerCalendar(PassengerCalendar calendar) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("id").is(calendar.getId()));
+		PassengerCalendar entityDB = mongoTemplate.findOne(query, PassengerCalendar.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("PassengerCalendar with id %s not found", calendar.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("date", calendar.getDate());
+		update.set("routeId", calendar.getRouteId());
+		update.set("stopId", calendar.getStopId());
+		update.set("absenteeList", calendar.getAbsenteeList());
+		mongoTemplate.updateFirst(query, update, PassengerCalendar.class);
 	}
 
-	public void removePassengerCalendar(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removePassengerCalendar(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		PassengerCalendar entityDB = mongoTemplate.findOne(query, PassengerCalendar.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("PassengerCalendar with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, PassengerCalendar.class);
 	}
 
 	public void addVolunteerCalendar(VolunteerCalendar calendar) {
-		// TODO Auto-generated method stub
-		
+		Date actualDate = new Date();
+		calendar.setCreationDate(actualDate);
+		calendar.setLastUpdate(actualDate);
+		mongoTemplate.save(calendar);
 	}
 
-	public void updateVolunteerCalendar(VolunteerCalendar calendar) {
-		// TODO Auto-generated method stub
-		
+	public void updateVolunteerCalendar(VolunteerCalendar calendar) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("id").is(calendar.getId()));
+		VolunteerCalendar entityDB = mongoTemplate.findOne(query, VolunteerCalendar.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", calendar.getId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("date", calendar.getDate());
+		update.set("schoolId", calendar.getSchoolId());
+		update.set("routeId", calendar.getRouteId());
+		update.set("driverId", calendar.getDate());
+		update.set("helperId", calendar.getHelperId());
+		mongoTemplate.updateFirst(query, update, VolunteerCalendar.class);
 	}
 
-	public void removeVolunteerCalendar(String ownerId, String objectId) {
-		// TODO Auto-generated method stub
-		
+	public void removeVolunteerCalendar(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		VolunteerCalendar entityDB = mongoTemplate.findOne(query, VolunteerCalendar.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, VolunteerCalendar.class);
 	}	
 }
