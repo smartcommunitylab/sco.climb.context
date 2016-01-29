@@ -3,11 +3,13 @@ package it.smartcommunitylab.climb.contextstore.storage;
 import it.smartcommunitylab.climb.contextstore.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
 import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.PassengerCalendar;
 import it.smartcommunitylab.climb.contextstore.model.Pedibus;
 import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.contextstore.model.Volunteer;
+import it.smartcommunitylab.climb.contextstore.model.VolunteerCalendar;
 import it.smartcommunitylab.climb.contextstore.security.DataSetInfo;
 import it.smartcommunitylab.climb.contextstore.security.Token;
 
@@ -215,6 +217,36 @@ public class RepositoryManager {
 	}
 
 	public void removeVolunteer(String ownerId, String objectId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addPassengerCalendar(PassengerCalendar calendar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updatePassengerCalendar(PassengerCalendar calendar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removePassengerCalendar(String ownerId, String objectId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addVolunteerCalendar(VolunteerCalendar calendar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateVolunteerCalendar(VolunteerCalendar calendar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeVolunteerCalendar(String ownerId, String objectId) {
 		// TODO Auto-generated method stub
 		
 	}	

@@ -5,6 +5,7 @@ import java.util.Date;
 public class VolunteerCalendar extends BaseObject {
 	private String id;
 	private Date date;
+	private String schoolId;
 	private String routeId;
 	private String driverId;
 	private String helperId;
@@ -38,5 +39,11 @@ public class VolunteerCalendar extends BaseObject {
 	}
 	public void setHelperId(String helperId) {
 		this.helperId = helperId;
+	}
+	public String getSchoolId() {
+		return schoolId;
+	}
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 }
