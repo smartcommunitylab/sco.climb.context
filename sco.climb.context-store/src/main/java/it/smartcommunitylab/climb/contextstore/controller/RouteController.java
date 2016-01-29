@@ -67,11 +67,27 @@ public class RouteController {
 		String dateString = request.getParameter("date");
 		if(Utils.isNotEmpty(dateString)) {
 			Date date = sdf.parse(dateString);
-			criteria = new Criteria().andOperator(Criteria.where("from").lte(date), Criteria.where("to").gte(date));
+			criteria = new Criteria().andOperator(
+					Criteria.where("from").lte(date), 
+					Criteria.where("to").gte(date));
 		}
 		List<Route> result = (List<Route>) storage.findData(Route.class, criteria, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchRoute[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/route/{ownerId}/{routeId}", method = RequestMethod.GET)
+	public @ResponseBody Route searchRouteById(@PathVariable String ownerId,  @PathVariable String routeId,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Criteria criteria = Criteria.where("id").is(routeId);
+		Route result = storage.findOneData(Route.class, criteria, ownerId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchRouteById[%s]:%s", ownerId, routeId));
 		}
 		return result;
 	}

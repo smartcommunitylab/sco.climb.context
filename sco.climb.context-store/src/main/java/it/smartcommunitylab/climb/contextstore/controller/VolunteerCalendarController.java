@@ -18,7 +18,6 @@ package it.smartcommunitylab.climb.contextstore.controller;
 
 import it.smartcommunitylab.climb.contextstore.common.Utils;
 import it.smartcommunitylab.climb.contextstore.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.contextstore.model.PassengerCalendar;
 import it.smartcommunitylab.climb.contextstore.model.VolunteerCalendar;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
@@ -80,6 +79,35 @@ public class VolunteerCalendarController {
 		}		
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteerCalendar[%s]:%s - %d", ownerId, schoolId, result.size()));
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/volunteercal/{ownerId}/{schoolId}/{volunteerId}", method = RequestMethod.GET)
+	public @ResponseBody List<VolunteerCalendar> searchVolunteerCalendarByVolId(@PathVariable String ownerId, 
+			@PathVariable String schoolId, @PathVariable String volunteerId,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		List<VolunteerCalendar> result = Lists.newArrayList();
+		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		criteria = criteria.orOperator(
+				Criteria.where("driverId").is(volunteerId),
+				Criteria.where("helperId").is(volunteerId));
+		String dateFromString = request.getParameter("dateFrom");
+		String dateToString = request.getParameter("dateTo");
+		if(Utils.isNotEmpty(dateFromString) && Utils.isNotEmpty(dateToString)) {
+			Date dateFrom = sdf.parse(dateFromString);
+			Date dateTo = sdf.parse(dateToString);
+			criteria = criteria.andOperator(
+					Criteria.where("date").lte(dateTo),
+					Criteria.where("date").gte(dateFrom));
+			result = (List<VolunteerCalendar>) storage.findData(VolunteerCalendar.class, criteria, ownerId);
+		}		
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchVolunteerCalendarByVolId[%s]:%s - %d", ownerId, schoolId, result.size()));
 		}
 		return result;
 	}

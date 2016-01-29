@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,7 +60,8 @@ public class StopController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<Stop> result = (List<Stop>) storage.findData(Stop.class, null, ownerId);
+		Criteria criteria = Criteria.where("routeId").is(routeId);
+		List<Stop> result = (List<Stop>) storage.findData(Stop.class, criteria, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchStop[%s]:%d", ownerId, result.size()));
 		}

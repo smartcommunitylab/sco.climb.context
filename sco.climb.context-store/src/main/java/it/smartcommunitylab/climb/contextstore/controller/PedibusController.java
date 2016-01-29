@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +61,21 @@ public class PedibusController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, null, ownerId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/pedibus/{ownerId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Pedibus> searchPedibus(@PathVariable String ownerId, @PathVariable String schoolId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, criteria, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
 		}
