@@ -8,6 +8,7 @@ public class Stop extends BaseObject {
 	private String name;
 	private String routeId;
 	private String anchorId;
+	private String departureTime;
 	private boolean start;
 	private boolean destination;
 	private boolean school;
@@ -60,6 +61,12 @@ public class Stop extends BaseObject {
 	}
 	public void setPassengerList(List<String> passengerList) {
 		this.passengerList = passengerList;
+	}
+	public String getDepartureTime() {
+		return departureTime;
+	}
+	public void setDepartureTime(String departureTime) {
+		this.departureTime = departureTime;
 	}
 	
 }
