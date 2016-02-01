@@ -53,6 +53,10 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Value("${defaultLang}")
 	private String defaultLang;
 
+	@Autowired
+	@Value("${contextstore.dir}")
+	private String baseDir;
+	
 	public AppConfig() {
 	}
 

@@ -57,17 +57,17 @@ public class RouteController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/route/{ownerId}/{pedibusId}", method = RequestMethod.GET)
-	public @ResponseBody List<Route> searchRoute(@PathVariable String ownerId,  @PathVariable String pedibusId,
+	@RequestMapping(value = "/api/route/{ownerId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Route> searchRoute(@PathVariable String ownerId,  @PathVariable String schoolId,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = null;
+		Criteria criteria = Criteria.where("schoolId").is(schoolId);
 		String dateString = request.getParameter("date");
 		if(Utils.isNotEmpty(dateString)) {
 			Date date = sdf.parse(dateString);
-			criteria = new Criteria().andOperator(
+			criteria = criteria.andOperator(
 					Criteria.where("from").lte(date), 
 					Criteria.where("to").gte(date));
 		}

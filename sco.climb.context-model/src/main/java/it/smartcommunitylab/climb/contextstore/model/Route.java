@@ -5,7 +5,8 @@ import java.util.Date;
 public class Route extends BaseObject {
 	private String id;
 	private String name;
-	private String pedibusId; 
+	private String pedibusId;
+	private String schoolId;
 	private Date from;
 	private Date to;
 	private double distance;
@@ -45,5 +46,11 @@ public class Route extends BaseObject {
 	}
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+	public String getSchoolId() {
+		return schoolId;
+	}
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 }
