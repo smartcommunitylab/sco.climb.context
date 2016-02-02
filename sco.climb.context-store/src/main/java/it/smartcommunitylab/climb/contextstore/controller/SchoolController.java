@@ -59,7 +59,7 @@ public class SchoolController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<School> result = (List<School>) storage.findData(School.class, null, ownerId);
+		List<School> result = (List<School>) storage.findData(School.class, null, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchSchool[%s]:%d", ownerId, result.size()));
 		}

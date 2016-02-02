@@ -61,7 +61,7 @@ public class VolunteerController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Criteria criteria = Criteria.where("schoolId").is(schoolId);
-		List<Volunteer> result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, ownerId);
+		List<Volunteer> result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteer[%s]:%d", ownerId, result.size()));
 		}

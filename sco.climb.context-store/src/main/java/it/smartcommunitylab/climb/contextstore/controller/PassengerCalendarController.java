@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,8 @@ public class PassengerCalendarController {
 			criteria = criteria.andOperator(
 					Criteria.where("date").lte(dateTo),
 					Criteria.where("date").gte(dateFrom));
-			result = (List<PassengerCalendar>) storage.findData(PassengerCalendar.class, criteria, ownerId);
+			Sort sort = new Sort(Sort.Direction.ASC, "date");
+			result = (List<PassengerCalendar>) storage.findData(PassengerCalendar.class, criteria, sort, ownerId);
 		}		
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchPassengerCalendar[%s]:%s - %d", ownerId, routeId, result.size()));

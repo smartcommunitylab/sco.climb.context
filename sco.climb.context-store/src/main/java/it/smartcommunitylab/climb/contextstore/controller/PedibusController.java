@@ -60,7 +60,7 @@ public class PedibusController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, null, ownerId);
+		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, null, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
 		}
@@ -75,7 +75,7 @@ public class PedibusController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Criteria criteria = Criteria.where("schoolId").is(schoolId);
-		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, criteria, ownerId);
+		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
 		}

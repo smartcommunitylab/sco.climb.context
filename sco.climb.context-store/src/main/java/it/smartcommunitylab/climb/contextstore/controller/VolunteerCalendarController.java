@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,8 @@ public class VolunteerCalendarController {
 			criteria = criteria.andOperator(
 					Criteria.where("date").lte(dateTo),
 					Criteria.where("date").gte(dateFrom));
-			result = (List<VolunteerCalendar>) storage.findData(VolunteerCalendar.class, criteria, ownerId);
+			Sort sort = new Sort(Sort.Direction.ASC, "date");
+			result = (List<VolunteerCalendar>) storage.findData(VolunteerCalendar.class, criteria, sort, ownerId);
 		}		
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteerCalendar[%s]:%s - %d", ownerId, schoolId, result.size()));
@@ -104,7 +106,8 @@ public class VolunteerCalendarController {
 			criteria = criteria.andOperator(
 					Criteria.where("date").lte(dateTo),
 					Criteria.where("date").gte(dateFrom));
-			result = (List<VolunteerCalendar>) storage.findData(VolunteerCalendar.class, criteria, ownerId);
+			Sort sort = new Sort(Sort.Direction.ASC, "date");
+			result = (List<VolunteerCalendar>) storage.findData(VolunteerCalendar.class, criteria, sort, ownerId);
 		}		
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteerCalendarByVolId[%s]:%s - %d", ownerId, schoolId, result.size()));

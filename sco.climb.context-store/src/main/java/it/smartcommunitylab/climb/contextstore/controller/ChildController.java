@@ -61,7 +61,7 @@ public class ChildController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Criteria criteria = Criteria.where("schoolId").is(schoolId);
-		List<Child> result = (List<Child>) storage.findData(Child.class, criteria, ownerId);
+		List<Child> result = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchChild[%s]:%d", ownerId, result.size()));
 		}

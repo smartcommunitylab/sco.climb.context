@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -78,7 +79,7 @@ public class RepositoryManager {
 		}
 	}
 	
-	public List<?> findData(Class<?> entityClass, Criteria criteria, String ownerId)
+	public List<?> findData(Class<?> entityClass, Criteria criteria, Sort sort, String ownerId)
 			throws ClassNotFoundException {
 		Query query = null;
 		if (criteria != null) {
@@ -86,6 +87,10 @@ public class RepositoryManager {
 		} else {
 			query = new Query(new Criteria("ownerId").is(ownerId));
 		}
+		if (sort != null) {
+			query.with(sort);
+		}
+		query.limit(5000);
 		List<?> result = mongoTemplate.find(query, entityClass);
 		return result;
 	}

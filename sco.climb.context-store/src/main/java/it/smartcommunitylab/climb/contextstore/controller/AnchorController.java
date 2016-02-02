@@ -60,7 +60,7 @@ public class AnchorController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<Anchor> result = (List<Anchor>) storage.findData(Anchor.class, null, ownerId);
+		List<Anchor> result = (List<Anchor>) storage.findData(Anchor.class, null, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchAnchor[%s]:%d", ownerId, result.size()));
 		}

@@ -71,7 +71,7 @@ public class RouteController {
 					Criteria.where("from").lte(date), 
 					Criteria.where("to").gte(date));
 		}
-		List<Route> result = (List<Route>) storage.findData(Route.class, criteria, ownerId);
+		List<Route> result = (List<Route>) storage.findData(Route.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchRoute[%s]:%d", ownerId, result.size()));
 		}
