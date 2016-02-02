@@ -249,12 +249,14 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
 		update.set("name", child.getName());
+		update.set("surname", child.getName());
 		update.set("externalId", child.getExternalId());
 		update.set("parentName", child.getParentName());
 		update.set("phone", child.getPhone());
 		update.set("schoolId", child.getSchoolId());
 		update.set("classRoom", child.getClassRoom());
 		update.set("wsnId", child.getWsnId());
+		update.set("imageUrl", child.getImageUrl());
 		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 

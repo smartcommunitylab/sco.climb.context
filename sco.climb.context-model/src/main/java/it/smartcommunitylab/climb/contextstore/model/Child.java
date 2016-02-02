@@ -4,11 +4,13 @@ public class Child extends BaseObject {
 	private String id;
 	private String externalId;
 	private String name;
+	private String surname;
 	private String parentName;
 	private String phone;
 	private String schoolId;
 	private String classRoom;
 	private int wsnId;
+	private String imageUrl;
 	
 	public String getId() {
 		return id;
@@ -57,5 +59,17 @@ public class Child extends BaseObject {
 	}
 	public void setWsnId(int wsnId) {
 		this.wsnId = wsnId;
+	}
+	public String getSurname() {
+		return surname;
+	}
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }
