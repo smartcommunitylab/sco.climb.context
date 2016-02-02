@@ -73,7 +73,7 @@ public class SchoolController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		school.setOwnerId(ownerId);
-		school.setId(Utils.getUUID());
+		school.setObjectId(Utils.getUUID());
 		storage.addSchool(school);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addSchool[%s]:%s", ownerId, school.getName()));
@@ -88,7 +88,7 @@ public class SchoolController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		school.setOwnerId(ownerId);
-		school.setId(objectId);
+		school.setObjectId(objectId);
 		storage.updateSchool(school);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateSchool[%s]:%s", ownerId, school.getName()));

@@ -22,6 +22,7 @@ import java.util.Date;
 public class BaseObject {
 
 	private String ownerId;
+	private String objectId;
 	private Date creationDate;
 	private Date lastUpdate;
 
@@ -47,6 +48,14 @@ public class BaseObject {
 
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
 	}
 
 }

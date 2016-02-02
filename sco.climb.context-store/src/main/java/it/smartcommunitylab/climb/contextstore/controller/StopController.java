@@ -77,7 +77,7 @@ public class StopController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		stop.setOwnerId(ownerId);
-		stop.setId(Utils.getUUID());
+		stop.setObjectId(Utils.getUUID());
 		storage.addStop(stop);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addStop[%s]:%s", ownerId, stop.getName()));
@@ -92,7 +92,7 @@ public class StopController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		stop.setOwnerId(ownerId);
-		stop.setId(objectId);
+		stop.setObjectId(objectId);
 		storage.updateStop(stop);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateStop[%s]:%s", ownerId, stop.getName()));

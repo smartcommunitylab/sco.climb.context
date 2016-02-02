@@ -75,7 +75,7 @@ public class VolunteerController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		volunteer.setOwnerId(ownerId);
-		volunteer.setId(Utils.getUUID());
+		volunteer.setObjectId(Utils.getUUID());
 		storage.addVolunteer(volunteer);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addVolunteer[%s]:%s", ownerId, volunteer.getName()));
@@ -90,7 +90,7 @@ public class VolunteerController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		volunteer.setOwnerId(ownerId);
-		volunteer.setId(objectId);
+		volunteer.setObjectId(objectId);
 		storage.updateVolunteer(volunteer);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateVolunteer[%s]:%s", ownerId, volunteer.getName()));

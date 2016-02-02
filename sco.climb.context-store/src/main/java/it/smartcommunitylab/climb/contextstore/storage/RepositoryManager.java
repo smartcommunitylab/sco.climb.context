@@ -115,10 +115,10 @@ public class RepositoryManager {
 	}
 
 	public void updateSchool(School school) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(school.getOwnerId()).and("id").is(school.getId()));
+		Query query = new Query(new Criteria("ownerId").is(school.getOwnerId()).and("objectId").is(school.getObjectId()));
 		School schoolDB = mongoTemplate.findOne(query, School.class);
 		if(schoolDB == null) {
-			throw new EntityNotFoundException(String.format("School with id %s not found", school.getId()));
+			throw new EntityNotFoundException(String.format("School with id %s not found", school.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -128,7 +128,7 @@ public class RepositoryManager {
 	}
 
 	public void removeSchool(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		School schoolDB = mongoTemplate.findOne(query, School.class);
 		if(schoolDB == null) {
 			throw new EntityNotFoundException(String.format("School with id %s not found", objectId));
@@ -144,10 +144,10 @@ public class RepositoryManager {
 	}
 
 	public void updatePedibus(Pedibus pedibus) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(pedibus.getOwnerId()).and("id").is(pedibus.getId()));
+		Query query = new Query(new Criteria("ownerId").is(pedibus.getOwnerId()).and("objectId").is(pedibus.getObjectId()));
 		Pedibus entityDB = mongoTemplate.findOne(query, Pedibus.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Pedibus with id %s not found", pedibus.getId()));
+			throw new EntityNotFoundException(String.format("Pedibus with id %s not found", pedibus.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -159,7 +159,7 @@ public class RepositoryManager {
 	}
 
 	public void removePedibus(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Pedibus entityDB = mongoTemplate.findOne(query, Pedibus.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Pedibus with id %s not found", objectId));
@@ -175,10 +175,10 @@ public class RepositoryManager {
 	}
 
 	public void updateRoute(Route route) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(route.getOwnerId()).and("id").is(route.getId()));
+		Query query = new Query(new Criteria("ownerId").is(route.getOwnerId()).and("objectId").is(route.getObjectId()));
 		Route entityDB = mongoTemplate.findOne(query, Route.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Route with id %s not found", route.getId()));
+			throw new EntityNotFoundException(String.format("Route with id %s not found", route.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -192,7 +192,7 @@ public class RepositoryManager {
 	}
 
 	public void removeRoute(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Route entityDB = mongoTemplate.findOne(query, Route.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Route with id %s not found", objectId));
@@ -208,10 +208,10 @@ public class RepositoryManager {
 	}
 
 	public void updateStop(Stop stop) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(stop.getOwnerId()).and("id").is(stop.getId()));
+		Query query = new Query(new Criteria("ownerId").is(stop.getOwnerId()).and("objectId").is(stop.getObjectId()));
 		Stop entityDB = mongoTemplate.findOne(query, Stop.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Stop with id %s not found", stop.getId()));
+			throw new EntityNotFoundException(String.format("Stop with id %s not found", stop.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -230,7 +230,7 @@ public class RepositoryManager {
 	}
 
 	public void removeStop(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Stop entityDB = mongoTemplate.findOne(query, Stop.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Stop with id %s not found", objectId));
@@ -246,10 +246,10 @@ public class RepositoryManager {
 	}
 
 	public void updateChild(Child child) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(child.getOwnerId()).and("id").is(child.getId()));
+		Query query = new Query(new Criteria("ownerId").is(child.getOwnerId()).and("objectId").is(child.getObjectId()));
 		Child entityDB = mongoTemplate.findOne(query, Child.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Child with id %s not found", child.getId()));
+			throw new EntityNotFoundException(String.format("Child with id %s not found", child.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -266,7 +266,7 @@ public class RepositoryManager {
 	}
 
 	public void removeChild(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Child entityDB = mongoTemplate.findOne(query, Child.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Child with id %s not found", objectId));
@@ -282,10 +282,10 @@ public class RepositoryManager {
 	}
 
 	public void updateAnchor(Anchor anchor) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(anchor.getOwnerId()).and("id").is(anchor.getId()));
+		Query query = new Query(new Criteria("ownerId").is(anchor.getOwnerId()).and("objectId").is(anchor.getObjectId()));
 		Anchor entityDB = mongoTemplate.findOne(query, Anchor.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Anchor with id %s not found", anchor.getId()));
+			throw new EntityNotFoundException(String.format("Anchor with id %s not found", anchor.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -296,7 +296,7 @@ public class RepositoryManager {
 	}
 
 	public void removeAnchor(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Anchor entityDB = mongoTemplate.findOne(query, Anchor.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Anchor with id %s not found", objectId));
@@ -312,10 +312,10 @@ public class RepositoryManager {
 	}
 
 	public void updateVolunteer(Volunteer volunteer) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(volunteer.getOwnerId()).and("id").is(volunteer.getId()));
+		Query query = new Query(new Criteria("ownerId").is(volunteer.getOwnerId()).and("objectId").is(volunteer.getObjectId()));
 		Volunteer entityDB = mongoTemplate.findOne(query, Volunteer.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("Volunteer with id %s not found", volunteer.getId()));
+			throw new EntityNotFoundException(String.format("Volunteer with id %s not found", volunteer.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -328,7 +328,7 @@ public class RepositoryManager {
 	}
 
 	public void removeVolunteer(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		Volunteer entityDB = mongoTemplate.findOne(query, Volunteer.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("Volunteer with id %s not found", objectId));
@@ -344,10 +344,10 @@ public class RepositoryManager {
 	}
 
 	public void updatePassengerCalendar(PassengerCalendar calendar) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("id").is(calendar.getId()));
+		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("objectId").is(calendar.getObjectId()));
 		PassengerCalendar entityDB = mongoTemplate.findOne(query, PassengerCalendar.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("PassengerCalendar with id %s not found", calendar.getId()));
+			throw new EntityNotFoundException(String.format("PassengerCalendar with id %s not found", calendar.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -359,7 +359,7 @@ public class RepositoryManager {
 	}
 
 	public void removePassengerCalendar(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		PassengerCalendar entityDB = mongoTemplate.findOne(query, PassengerCalendar.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("PassengerCalendar with id %s not found", objectId));
@@ -375,10 +375,10 @@ public class RepositoryManager {
 	}
 
 	public void updateVolunteerCalendar(VolunteerCalendar calendar) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("id").is(calendar.getId()));
+		Query query = new Query(new Criteria("ownerId").is(calendar.getOwnerId()).and("objectId").is(calendar.getObjectId()));
 		VolunteerCalendar entityDB = mongoTemplate.findOne(query, VolunteerCalendar.class);
 		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", calendar.getId()));
+			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", calendar.getObjectId()));
 		}
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
@@ -391,7 +391,7 @@ public class RepositoryManager {
 	}
 
 	public void removeVolunteerCalendar(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("id").is(objectId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
 		VolunteerCalendar entityDB = mongoTemplate.findOne(query, VolunteerCalendar.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", objectId));

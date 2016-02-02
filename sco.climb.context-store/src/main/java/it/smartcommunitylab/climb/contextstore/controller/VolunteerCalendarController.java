@@ -122,7 +122,7 @@ public class VolunteerCalendarController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		calendar.setOwnerId(ownerId);
-		calendar.setId(Utils.getUUID());
+		calendar.setObjectId(Utils.getUUID());
 		storage.addVolunteerCalendar(calendar);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addVolunteerCalendar[%s]:%s - %s", ownerId, calendar.getRouteId(), 
@@ -139,7 +139,7 @@ public class VolunteerCalendarController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		calendar.setOwnerId(ownerId);
-		calendar.setId(objectId);
+		calendar.setObjectId(objectId);
 		storage.updateVolunteerCalendar(calendar);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateVolunteerCalendar[%s]:%s - %s", ownerId, calendar.getRouteId(), 

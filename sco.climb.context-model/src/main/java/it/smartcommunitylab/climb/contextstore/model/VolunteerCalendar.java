@@ -3,19 +3,12 @@ package it.smartcommunitylab.climb.contextstore.model;
 import java.util.Date;
 
 public class VolunteerCalendar extends BaseObject {
-	private String id;
 	private Date date;
 	private String schoolId;
 	private String routeId;
 	private String driverId;
 	private String helperId;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public Date getDate() {
 		return date;
 	}

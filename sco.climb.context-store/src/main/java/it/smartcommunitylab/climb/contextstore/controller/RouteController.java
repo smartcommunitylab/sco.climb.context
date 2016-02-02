@@ -84,7 +84,7 @@ public class RouteController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("id").is(routeId);
+		Criteria criteria = Criteria.where("objectId").is(routeId);
 		Route result = storage.findOneData(Route.class, criteria, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchRouteById[%s]:%s", ownerId, routeId));
@@ -99,7 +99,7 @@ public class RouteController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		route.setOwnerId(ownerId);
-		route.setId(Utils.getUUID());
+		route.setObjectId(Utils.getUUID());
 		storage.addRoute(route);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addRoute[%s]:%s", ownerId, route.getName()));
@@ -114,7 +114,7 @@ public class RouteController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		route.setOwnerId(ownerId);
-		route.setId(objectId);
+		route.setObjectId(objectId);
 		storage.updateRoute(route);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateRoute[%s]:%s", ownerId, route.getName()));

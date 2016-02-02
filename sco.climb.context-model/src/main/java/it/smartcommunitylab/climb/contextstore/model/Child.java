@@ -1,7 +1,6 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
 public class Child extends BaseObject {
-	private String id;
 	private String externalId;
 	private String name;
 	private String surname;
@@ -12,12 +11,6 @@ public class Child extends BaseObject {
 	private int wsnId;
 	private String imageUrl;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getExternalId() {
 		return externalId;
 	}

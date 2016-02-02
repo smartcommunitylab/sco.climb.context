@@ -3,7 +3,6 @@ package it.smartcommunitylab.climb.contextstore.model;
 import java.util.Date;
 
 public class Route extends BaseObject {
-	private String id;
 	private String name;
 	private String pedibusId;
 	private String schoolId;
@@ -11,12 +10,6 @@ public class Route extends BaseObject {
 	private Date to;
 	private double distance;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}

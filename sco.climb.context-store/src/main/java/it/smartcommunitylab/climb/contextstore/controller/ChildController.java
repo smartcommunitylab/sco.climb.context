@@ -75,7 +75,7 @@ public class ChildController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		child.setOwnerId(ownerId);
-		child.setId(Utils.getUUID());
+		child.setObjectId(Utils.getUUID());
 		storage.addChild(child);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addChild[%s]:%s", ownerId, child.getName()));
@@ -90,7 +90,7 @@ public class ChildController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		child.setOwnerId(ownerId);
-		child.setId(objectId);
+		child.setObjectId(objectId);
 		storage.updateChild(child);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateChild[%s]:%s", ownerId, child.getName()));

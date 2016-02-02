@@ -1,17 +1,10 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
 public class Anchor extends BaseObject {
-	private String id;
 	private String name;
 	double[] geocoding;
 	private int wsnId;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}

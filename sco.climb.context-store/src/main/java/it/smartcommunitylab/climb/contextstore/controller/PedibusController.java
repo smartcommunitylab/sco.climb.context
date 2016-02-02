@@ -89,10 +89,10 @@ public class PedibusController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		pedibus.setOwnerId(ownerId);
-		pedibus.setId(Utils.getUUID());
+		pedibus.setObjectId(Utils.getUUID());
 		storage.addPedibus(pedibus);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addPedibus[%s]:%s", ownerId, pedibus.getId()));
+			logger.info(String.format("addPedibus[%s]:%s", ownerId, pedibus.getObjectId()));
 		}
 		return pedibus;
 	}
@@ -104,10 +104,10 @@ public class PedibusController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		pedibus.setOwnerId(ownerId);
-		pedibus.setId(objectId);
+		pedibus.setObjectId(objectId);
 		storage.updatePedibus(pedibus);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("updatePedibus[%s]:%s", ownerId, pedibus.getId()));
+			logger.info(String.format("updatePedibus[%s]:%s", ownerId, pedibus.getObjectId()));
 		}
 		return pedibus;
 	}

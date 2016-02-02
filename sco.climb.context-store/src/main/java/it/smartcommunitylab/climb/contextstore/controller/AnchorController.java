@@ -73,7 +73,7 @@ public class AnchorController {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("id").is(id);
+		Criteria criteria = Criteria.where("objectId").is(id);
 		Anchor result = storage.findOneData(Anchor.class, criteria, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchAnchor[%s]:%s", ownerId, id));
@@ -88,7 +88,7 @@ public class AnchorController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		anchor.setOwnerId(ownerId);
-		anchor.setId(Utils.getUUID());
+		anchor.setObjectId(Utils.getUUID());
 		storage.addAnchor(anchor);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addAnchor[%s]:%s", ownerId, anchor.getName()));
@@ -103,7 +103,7 @@ public class AnchorController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		anchor.setOwnerId(ownerId);
-		anchor.setId(objectId);
+		anchor.setObjectId(objectId);
 		storage.updateAnchor(anchor);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateAnchor[%s]:%s", ownerId, anchor.getName()));

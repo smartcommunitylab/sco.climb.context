@@ -3,18 +3,11 @@ package it.smartcommunitylab.climb.contextstore.model;
 import java.util.Date;
 
 public class Pedibus extends BaseObject {
-	private String id;
 	private String schoolId;
 	private Date from;
 	private Date to;
 	private String supervisorId;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getSchoolId() {
 		return schoolId;
 	}

@@ -5,18 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 public class PassengerCalendar extends BaseObject {
-	private String id;
 	private Date date;
 	private String routeId;
 	private String stopId;
 	private List<String> absenteeList = new ArrayList<String>();
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public Date getDate() {
 		return date;
 	}
