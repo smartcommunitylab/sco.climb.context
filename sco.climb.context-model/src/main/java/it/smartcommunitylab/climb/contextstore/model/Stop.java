@@ -11,8 +11,10 @@ public class Stop extends BaseObject {
 	private boolean start;
 	private boolean destination;
 	private boolean school;
-	double[] geocoding;
+	private double[] geocoding;
+	private double distance;
 	private int wsnId;
+	private int position;
 	private List<String> passengerList = new ArrayList<String>();
 	
 	public String getId() {
@@ -74,6 +76,18 @@ public class Stop extends BaseObject {
 	}
 	public void setWsnId(int wsnId) {
 		this.wsnId = wsnId;
+	}
+	public double getDistance() {
+		return distance;
+	}
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
 }

@@ -217,7 +217,9 @@ public class RepositoryManager {
 		update.set("destination", stop.isDestination());
 		update.set("school", stop.isSchool());
 		update.set("geocoding", stop.getGeocoding());
+		update.set("distance", stop.getDistance());
 		update.set("wsnId", stop.getWsnId());
+		update.set("position", stop.getPosition());
 		update.set("passengerList", stop.getPassengerList());
 		mongoTemplate.updateFirst(query, update, Stop.class);
 	}
