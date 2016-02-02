@@ -179,6 +179,7 @@ public class RepositoryManager {
 		update.set("lastUpdate", new Date());
 		update.set("name", route.getName());
 		update.set("pedibusId", route.getPedibusId());
+		update.set("schoolId", route.getSchoolId());
 		update.set("from", route.getFrom());
 		update.set("to", route.getTo());
 		update.set("distance", route.getDistance());
@@ -211,10 +212,12 @@ public class RepositoryManager {
 		update.set("lastUpdate", new Date());
 		update.set("name", stop.getName());
 		update.set("routeId", stop.getRouteId());
-		update.set("anchorId", stop.getAnchorId());
+		update.set("departureTime", stop.getDepartureTime());
 		update.set("start", stop.isStart());
 		update.set("destination", stop.isDestination());
 		update.set("school", stop.isSchool());
+		update.set("geocoding", stop.getGeocoding());
+		update.set("wsnId", stop.getWsnId());
 		update.set("passengerList", stop.getPassengerList());
 		mongoTemplate.updateFirst(query, update, Stop.class);
 	}

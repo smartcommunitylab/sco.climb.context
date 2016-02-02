@@ -7,11 +7,12 @@ public class Stop extends BaseObject {
 	private String id;
 	private String name;
 	private String routeId;
-	private String anchorId;
 	private String departureTime;
 	private boolean start;
 	private boolean destination;
 	private boolean school;
+	double[] geocoding;
+	private int wsnId;
 	private List<String> passengerList = new ArrayList<String>();
 	
 	public String getId() {
@@ -31,12 +32,6 @@ public class Stop extends BaseObject {
 	}
 	public void setRouteId(String routeId) {
 		this.routeId = routeId;
-	}
-	public String getAnchorId() {
-		return anchorId;
-	}
-	public void setAnchorId(String anchorId) {
-		this.anchorId = anchorId;
 	}
 	public boolean isStart() {
 		return start;
@@ -67,6 +62,18 @@ public class Stop extends BaseObject {
 	}
 	public void setDepartureTime(String departureTime) {
 		this.departureTime = departureTime;
+	}
+	public double[] getGeocoding() {
+		return geocoding;
+	}
+	public void setGeocoding(double[] geocoding) {
+		this.geocoding = geocoding;
+	}
+	public int getWsnId() {
+		return wsnId;
+	}
+	public void setWsnId(int wsnId) {
+		this.wsnId = wsnId;
 	}
 	
 }
