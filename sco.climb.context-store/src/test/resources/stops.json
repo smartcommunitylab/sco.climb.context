@@ -1,0 +1,24 @@
+[
+	{
+		"name" : "Fermata 1",
+		"departureTime" : "08:05",
+		"start" : true,
+		"destination" : false,
+		"school" : false,
+		"geocoding" : [11.1601932, 46.1555397],
+		"distance" : 0.35,
+		"wsnId" : 21,
+		"position" : 1
+	},
+	{
+		"name" : "Fermata 2",
+		"departureTime" : "08:10",
+		"start" : false,
+		"destination" : true,
+		"school" : true,
+		"geocoding" : [11.1601932, 46.1555397],
+		"distance" : 0.25,
+		"wsnId" : 22,
+		"position" : 2
+	}
+]
