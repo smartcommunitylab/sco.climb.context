@@ -57,7 +57,7 @@ public class RouteController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/route/{ownerId}/{schoolId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/route/{ownerId}/school/{schoolId}", method = RequestMethod.GET)
 	public @ResponseBody List<Route> searchRoute(@PathVariable String ownerId,  @PathVariable String schoolId,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
