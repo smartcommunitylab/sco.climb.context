@@ -24,7 +24,7 @@
     ]
 
 		
-### Route Search 
+### Route Search by Id 
 ```
   GET /api/route/{ownerId}/{routeId}
 ```
@@ -43,6 +43,7 @@
 			"distance": 0.35
 		}
 
+### Route Search by School
 ```
   GET /api/route/{ownerId}/school/{schoolId}
 ```
