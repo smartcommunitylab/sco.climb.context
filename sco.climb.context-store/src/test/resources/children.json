@@ -4,7 +4,7 @@
 		"surname" : "Rossi",
 		"parentName" : "Gino Senior",
 		"phone" : "12345",
-		"classRoom" : "1C",
+		"classRoom" : "3C",
 		"wsnId" : 1,
 		"imageUrl" : "/img/photo1.png"
 	},
@@ -13,17 +13,17 @@
 		"surname" : "Rossi",
 		"parentName" : "Rino Senior",
 		"phone" : "12345",
-		"classRoom" : "1C",
+		"classRoom" : "3C",
 		"wsnId" : 2,
-		"imageUrl" : "/img/photo1.png"	
+		"imageUrl" : "/img/photo2.png"	
 	},
 	{
 		"name" : "Dino Junior",
 		"surname" : "Rossi",
 		"parentName" : "Dino Senior",
 		"phone" : "12345",
-		"classRoom" : "1C",
+		"classRoom" : "3C",
 		"wsnId" : 3,
-		"imageUrl" : "/img/photo1.png"
+		"imageUrl" : "/img/photo3.png"
 	}
 ]

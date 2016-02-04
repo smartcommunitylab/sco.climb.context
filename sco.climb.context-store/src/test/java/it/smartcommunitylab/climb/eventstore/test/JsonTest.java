@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 public class JsonTest {
 	private static final transient Logger logger = LoggerFactory.getLogger(JsonTest.class);
 	
-	public static final String networkBaseUrl = "http://localhost:8080/context-store/api/";
+	public static final String networkBaseUrl = "https://climb.smartcommunitylab.it/context-store/api/";
 	public static final String ownerId = "TEST";
 	public static final String token = "<token>";
 	public static final String baseDir = "<path>";
@@ -107,11 +107,15 @@ public class JsonTest {
 		FileReader fileReader = new FileReader(baseDir + fileName);
 		JsonNode rootNode = Utils.readJsonFromReader(fileReader);
 		Iterator<JsonNode> elements = rootNode.elements();
+		boolean first = true;
 		while(elements.hasNext()) {
 			JsonNode node = elements.next();
 			Stop stop = Utils.toObject(node, Stop.class);
 			stop.setRouteId(routeId);
-			stop.setPassengerList(passengerList);
+			if(first) {
+				stop.setPassengerList(passengerList);
+				first = false;
+			}
 			String response = postJson(stop, "stop");
 			if(response != null) {
 				JsonNode stopNode = Utils.readJsonFromString(response);

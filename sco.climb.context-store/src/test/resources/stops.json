@@ -1,24 +1,46 @@
 [
 	{
 		"name" : "Fermata 1",
-		"departureTime" : "08:05",
+		"departureTime" : "07:47",
 		"start" : true,
 		"destination" : false,
 		"school" : false,
-		"geocoding" : [11.1601932, 46.1555397],
-		"distance" : 0.35,
+		"geocoding" : [11.116912, 46.122709],
+		"distance" : 0.0,
 		"wsnId" : 21,
 		"position" : 1
 	},
 	{
 		"name" : "Fermata 2",
-		"departureTime" : "08:10",
+		"departureTime" : "07:50",
+		"start" : false,
+		"destination" : false,
+		"school" : false,
+		"geocoding" : [11.116935, 46.123494],
+		"distance" : 0.08,
+		"wsnId" : 22,
+		"position" : 2
+	},
+	{
+		"name" : "Fermata 3",
+		"departureTime" : "07:52",
+		"start" : false,
+		"destination" : false,
+		"school" : false,
+		"geocoding" : [11.117334, 46.124628],
+		"distance" : 0.13,
+		"wsnId" : 23,
+		"position" : 3
+	},
+	{
+		"name" : "Fermata 4",
+		"departureTime" : "07:55",
 		"start" : false,
 		"destination" : true,
 		"school" : true,
-		"geocoding" : [11.1601932, 46.1555397],
-		"distance" : 0.25,
-		"wsnId" : 22,
-		"position" : 2
+		"geocoding" : [11.115939, 46.125042],
+		"distance" : 0.15,
+		"wsnId" : 24,
+		"position" : 4
 	}
 ]

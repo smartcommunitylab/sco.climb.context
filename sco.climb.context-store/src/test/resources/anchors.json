@@ -1,12 +1,22 @@
 [
 	{
 		"name" : "Fermata 1",
-		"geocoding" : [11.1601932, 46.1555397],
+		"geocoding" : [11.116912, 46.122709],
 		"wsnId" : 21
 	},
 	{
 		"name" : "Fermata 2",
-		"geocoding" : [11.1601932, 46.1555397],
+		"geocoding" : [11.116935, 46.123494],
 		"wsnId" : 22
+	},
+	{
+		"name" : "Fermata 3",
+		"geocoding" : [11.117334, 46.124628],
+		"wsnId" : 23
+	},
+	{
+		"name" : "Fermata 4",
+		"geocoding" : [11.115939, 46.125042],
+		"wsnId" : 24
 	}
 ]
