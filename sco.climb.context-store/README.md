@@ -165,3 +165,48 @@
 		}
 		]
 		
+### Volunteer Calendar Search by School
+```
+  GET /api/volunteercal/{ownerId}/{schoolId}
+```
+#### Params
+  - **dateFrom**: string, optional, "yyyy-MM-dd"
+  - **dateTo**: string, optional, "yyyy-MM-dd"
+
+#### Result
+		[
+		{
+    		"ownerId": "TEST",
+    		"objectId": "ed1b0e6d-c8d6-4a91-9179-601525e6b292",
+    		"creationDate": 1454598917230,
+    		"lastUpdate": 1454598917230,
+    		"date": 1456873200000,
+    		"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
+    		"routeId": "695b4e34-25f0-4cb0-b8fe-4855c4028d9f",
+    		"driverId": "ded93f02-9986-473a-a202-2a5169ca9834",
+    		"helperId": null
+  		}
+		]
+
+### Volunteer Calendar Search by School and Volunteer
+```
+  GET /api/volunteercal/{ownerId}/{schoolId}/{volunteerId}
+```
+#### Params
+  - **dateFrom**: string, optional, "yyyy-MM-dd"
+  - **dateTo**: string, optional, "yyyy-MM-dd"
+
+#### Result
+		[
+		{
+    		"ownerId": "TEST",
+    		"objectId": "ed1b0e6d-c8d6-4a91-9179-601525e6b292",
+    		"creationDate": 1454598917230,
+    		"lastUpdate": 1454598917230,
+    		"date": 1456873200000,
+    		"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
+    		"routeId": "695b4e34-25f0-4cb0-b8fe-4855c4028d9f",
+    		"driverId": "ded93f02-9986-473a-a202-2a5169ca9834",
+    		"helperId": null
+  		}
+		]		
