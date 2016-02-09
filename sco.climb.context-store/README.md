@@ -100,7 +100,7 @@
     }
 		]
 
-### Child Search
+### Child Search by School
 ```
   GET /api/child/{ownerId}/{schoolId}
 ```
@@ -124,6 +124,33 @@
 		}
 		]
 
+### Child Search by School and ClassRoom
+```
+  GET /api/child/{ownerId}/{schoolId}/classroom
+```
+
+#### Params
+  - **classRoom**: string, mandatory
+
+#### Result
+		[
+		{
+			"ownerId": "TEST",
+			"objectId": "6f2cd4dc-0eb7-4920-95f7-414cc9f5a509",
+			"creationDate": 1454598658834,
+			"lastUpdate": 1454598658834,
+			"externalId": null,
+			"name": "Gino Junior",
+			"surname": "Rossi",
+			"parentName": "Gino Senior",
+			"phone": "12345",
+			"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
+			"classRoom": "3C",
+			"wsnId": 1,
+			"imageUrl": "/img/photo1.png"
+		}
+		]
+		
 ### Anchor Search
 ```
   GET /api/anchor/{ownerId}
