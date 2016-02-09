@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -82,6 +83,22 @@ public class ChildController {
 		}
 		return child;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/child/{ownerId}/{schoolId}/classroom", method = RequestMethod.GET)
+	public @ResponseBody List<Child> searchChild(@PathVariable String ownerId, @PathVariable String schoolId, @RequestParam String classRoom, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Criteria criteria = Criteria.where("schoolId").is(schoolId).and("classRoom").is(classRoom);
+		List<Child> result = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("searchChild[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}	
+	
 
 	@RequestMapping(value = "/api/child/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody Child updateChild(@RequestBody Child child, @PathVariable String ownerId, 
