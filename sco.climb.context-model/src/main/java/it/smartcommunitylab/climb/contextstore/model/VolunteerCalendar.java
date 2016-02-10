@@ -1,13 +1,15 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class VolunteerCalendar extends BaseObject {
 	private Date date;
 	private String schoolId;
 	private String routeId;
 	private String driverId;
-	private String helperId;
+	private List<String> helperList = new ArrayList<String>();
 	
 	public Date getDate() {
 		return date;
@@ -27,16 +29,16 @@ public class VolunteerCalendar extends BaseObject {
 	public void setDriverId(String driverId) {
 		this.driverId = driverId;
 	}
-	public String getHelperId() {
-		return helperId;
-	}
-	public void setHelperId(String helperId) {
-		this.helperId = helperId;
-	}
 	public String getSchoolId() {
 		return schoolId;
 	}
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
+	}
+	public List<String> getHelperList() {
+		return helperList;
+	}
+	public void setHelperList(List<String> helperList) {
+		this.helperList = helperList;
 	}
 }

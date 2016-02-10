@@ -86,8 +86,8 @@ public class ChildController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/child/{ownerId}/{schoolId}/classroom", method = RequestMethod.GET)
-	public @ResponseBody List<Child> searchChild(@PathVariable String ownerId, @PathVariable String schoolId, @RequestParam String classRoom, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public @ResponseBody List<Child> searchChild(@PathVariable String ownerId, @PathVariable String schoolId, 
+			@RequestParam String classRoom, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

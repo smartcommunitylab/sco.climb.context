@@ -94,10 +94,7 @@ public class VolunteerCalendarController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		List<VolunteerCalendar> result = Lists.newArrayList();
-		Criteria criteria = Criteria.where("schoolId").is(schoolId);
-		criteria = criteria.orOperator(
-				Criteria.where("driverId").is(volunteerId),
-				Criteria.where("helperId").is(volunteerId));
+		Criteria criteria = Criteria.where("schoolId").is(schoolId).and("driverId").is(volunteerId);
 		String dateFromString = request.getParameter("dateFrom");
 		String dateToString = request.getParameter("dateTo");
 		if(Utils.isNotEmpty(dateFromString) && Utils.isNotEmpty(dateToString)) {

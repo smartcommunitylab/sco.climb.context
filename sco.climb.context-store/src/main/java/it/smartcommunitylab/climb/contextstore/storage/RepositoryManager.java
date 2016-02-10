@@ -386,7 +386,7 @@ public class RepositoryManager {
 		update.set("schoolId", calendar.getSchoolId());
 		update.set("routeId", calendar.getRouteId());
 		update.set("driverId", calendar.getDate());
-		update.set("helperId", calendar.getHelperId());
+		update.set("helperList", calendar.getHelperList());
 		mongoTemplate.updateFirst(query, update, VolunteerCalendar.class);
 	}
 
