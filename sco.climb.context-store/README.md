@@ -185,6 +185,7 @@
 			"creationDate": 1454598659514,
 			"lastUpdate": 1454598659514,
 			"name": "Vol 1",
+			"password": "VOL1",
 			"address": "via sta cippa 13",
 			"phone": "12345",
 			"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
