@@ -323,6 +323,7 @@ public class RepositoryManager {
 		update.set("address", volunteer.getAddress());
 		update.set("phone", volunteer.getPhone());
 		update.set("schoolId", volunteer.getSchoolId());
+		update.set("password", volunteer.getPassword());
 		update.set("wsnId", volunteer.getWsnId());
 		mongoTemplate.updateFirst(query, update, Volunteer.class);
 	}
