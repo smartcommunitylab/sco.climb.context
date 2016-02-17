@@ -1,0 +1,9 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.School",
+    "name" : "Scuola Primaria 'De Carli' di Meano",
+    "address" : "Via delle Tre Croci, 40",
+    "ownerId" : "MEANO",
+    "objectId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "creationDate" : ISODate("2016-02-17T09:25:02.137Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.137Z")
+}

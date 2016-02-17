@@ -1,29 +1,218 @@
 [
 	{
-		"name" : "Gino Junior",
-		"surname" : "Rossi",
-		"parentName" : "Gino Senior",
-		"phone" : "12345",
-		"classRoom" : "3C",
-		"wsnId" : 1,
-		"imageUrl" : "/img/photo1.png"
+		"name" : "ANNA",
+		"surname" : "ARMELLINI",
+		"phone" : "348 9931876",
+		"classRoom" : "4A"
 	},
 	{
-		"name" : "Rino Junior",
-		"surname" : "Rossi",
-		"parentName" : "Rino Senior",
-		"phone" : "12345",
-		"classRoom" : "3C",
-		"wsnId" : 2,
-		"imageUrl" : "/img/photo2.png"	
+		"name" : "SAMUEL",
+		"surname" : "BORTOLOTTI",
+		"phone" : "347 1156631",
+		"classRoom" : "4B"
 	},
 	{
-		"name" : "Dino Junior",
-		"surname" : "Rossi",
-		"parentName" : "Dino Senior",
-		"phone" : "12345",
-		"classRoom" : "3C",
-		"wsnId" : 3,
-		"imageUrl" : "/img/photo3.png"
+		"name" : "SIMONE",
+		"surname" : "D'ACCORDI",
+		"phone" : "335 8380373",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "CHIARA",
+		"surname" : "D'AVERSA",
+		"phone" : "333 9107240",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "FILIPPO",
+		"surname" : "D'AVERSA",
+		"phone" : "333 9107240",
+		"classRoom" : "2B"
+	},
+	{
+		"name" : "GIULIA",
+		"surname" : "D'AVERSA",
+		"phone" : "333 9107240",
+		"classRoom" : "4A"
+	},
+	{
+		"name" : "STELLA",
+		"surname" : "D'AVERSA",
+		"phone" : "333 9107240",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "VALENTINA",
+		"surname" : "DEGASPERI",
+		"phone" : "335 6144806",
+		"classRoom" : "1A"
+	},
+	{
+		"name" : "MICHELE",
+		"surname" : "FAORO",
+		"phone" : "349 1714984",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "DAVIDE",
+		"surname" : "LIBARDI",
+		"phone" : "331 6043086",
+		"classRoom" : "4A"
+	},
+	{
+		"name" : "ILARIA",
+		"surname" : "LIBARDI",
+		"phone" : "332 6043086",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "GIULIA",
+		"surname" : "MASOLINO",
+		"phone" : "349 8092259",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "SOFIA",
+		"surname" : "MEZZANZANICA",
+		"phone" : "347 6405992",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "LUCA",
+		"surname" : "MEZZANZANICA",
+		"phone" : "347 6405992",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "ANDREA",
+		"surname" : "NICOLODI",
+		"phone" : "328 6449757",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "MANUEL",
+		"surname" : "NICOLODI",
+		"phone" : "328 6449757",
+		"classRoom" : "1A"
+	},
+	{
+		"name" : "CARMEN",
+		"surname" : "NUVOLI",
+		"phone" : "349 6001128",
+		"classRoom" : "4A"
+	},
+	{
+		"name" : "ALICE",
+		"surname" : "PEGORETTI",
+		"phone" : "340 1411385",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "MARCO",
+		"surname" : "TONAZZOLI",
+		"phone" : "340 4939448",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "MARTINA",
+		"surname" : "UBER",
+		"phone" : "349 5594089",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "GIULIA",
+		"surname" : "VACCARO",
+		"phone" : "392 7029606",
+		"classRoom" : "4A"
+	},
+	{
+		"name" : "ALESSANDRO",
+		"surname" : "BARZAN",
+		"phone" : "329 8830903",
+		"classRoom" : "3A"
+	},
+	{
+		"name" : "ALESSANDRO",
+		"surname" : "BETTA",
+		"phone" : "346 4100217",
+		"classRoom" : "3B"
+	},
+	{
+		"name" : "MADDALENA",
+		"surname" : "BETTA",
+		"phone" : "346 4100217",
+		"classRoom" : "3B"
+	},
+	{
+		"name" : "ALESSIA",
+		"surname" : "BONVICINI",
+		"phone" : "346 5140654",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "GIACOMO",
+		"surname" : "CASTELLANI",
+		"phone" : "349 3268033",
+		"classRoom" : "2A"
+	},
+	{
+		"name" : "GIULIA",
+		"surname" : "CLEMENTI",
+		"phone" : "392 1724415",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "CHRISTIAN",
+		"surname" : "FURLAN",
+		"phone" : "328 3848563",
+		"classRoom" : "3A"
+	},
+	{
+		"name" : "ELEONORA",
+		"surname" : "GALEAZZO",
+		"phone" : "347 0532465",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "FABIANO",
+		"surname" : "MICHELI",
+		"phone" : "347 0173727",
+		"classRoom" : "2B"
+	},
+	{
+		"name" : "ILARIA",
+		"surname" : "PASQUALINI",
+		"phone" : "340 1650211",
+		"classRoom" : "4B"
+	},
+	{
+		"name" : "AKALMOUNI",
+		"surname" : "RAYANE",
+		"phone" : "328 7070777",
+		"classRoom" : "2A"
+	},
+	{
+		"name" : "MATTIA",
+		"surname" : "STENICO",
+		"phone" : "391 4748246",
+		"classRoom" : "4A"
+	},
+	{
+		"name" : "TOMMASO",
+		"surname" : "STENICO",
+		"phone" : "392 4748246",
+		"classRoom" : "1B"
+	},
+	{
+		"name" : "SEBASTIANO",
+		"surname" : "TOMASI",
+		"phone" : "339 8250838",
+		"classRoom" : "2A"
+	},
+	{
+		"name" : "DAVID",
+		"surname" : "VERSINI",
+		"phone" : "340 6871792",
+		"classRoom" : "3A"
 	}
 ]

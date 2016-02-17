@@ -1,0 +1,467 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ALESSANDRO",
+    "surname" : "BARZAN",
+    "phone" : "329 8830903",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "3A",
+    "ownerId" : "MEANO",
+    "objectId" : "b899a63a-8c16-4b64-8d6a-c30de8552ac0",
+    "creationDate" : ISODate("2016-02-17T09:25:02.387Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.387Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ALESSANDRO",
+    "surname" : "BETTA",
+    "phone" : "346 4100217",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "3B",
+    "ownerId" : "MEANO",
+    "objectId" : "6d8fc033-7841-4c5b-89ee-c029abcb14fa",
+    "creationDate" : ISODate("2016-02-17T09:25:02.393Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.393Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MADDALENA",
+    "surname" : "BETTA",
+    "phone" : "346 4100217",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "3B",
+    "ownerId" : "MEANO",
+    "objectId" : "11f14235-aeae-4262-8b7d-570358571a6b",
+    "creationDate" : ISODate("2016-02-17T09:25:02.399Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.399Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ALESSIA",
+    "surname" : "BONVICINI",
+    "phone" : "346 5140654",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "b31f8ae9-4f91-4d3d-a5c1-f588957aac09",
+    "creationDate" : ISODate("2016-02-17T09:25:02.414Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.414Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "GIACOMO",
+    "surname" : "CASTELLANI",
+    "phone" : "349 3268033",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "2A",
+    "ownerId" : "MEANO",
+    "objectId" : "6f2a71ef-9ebf-48ad-9141-f3d4120276c7",
+    "creationDate" : ISODate("2016-02-17T09:25:02.421Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.421Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "GIULIA",
+    "surname" : "CLEMENTI",
+    "phone" : "392 1724415",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "b59cc9be-2020-4dd7-bdf5-e9cc2158602a",
+    "creationDate" : ISODate("2016-02-17T09:25:02.427Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.427Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "CHRISTIAN",
+    "surname" : "FURLAN",
+    "phone" : "328 3848563",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "3A",
+    "ownerId" : "MEANO",
+    "objectId" : "fe40c330-b573-4622-b1a1-fa285414003f",
+    "creationDate" : ISODate("2016-02-17T09:25:02.433Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.433Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ELEONORA",
+    "surname" : "GALEAZZO",
+    "phone" : "347 0532465",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "b634d683-5ec7-4228-aa53-ff0ed6322511",
+    "creationDate" : ISODate("2016-02-17T09:25:02.441Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.441Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "FABIANO",
+    "surname" : "MICHELI",
+    "phone" : "347 0173727",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "2B",
+    "ownerId" : "MEANO",
+    "objectId" : "d7c7715c-6167-448c-92df-291b29c33913",
+    "creationDate" : ISODate("2016-02-17T09:25:02.447Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.447Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ILARIA",
+    "surname" : "PASQUALINI",
+    "phone" : "340 1650211",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "3cd50798-15df-4ce7-ae63-bfa14a8b91bb",
+    "creationDate" : ISODate("2016-02-17T09:25:02.454Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.454Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "AKALMOUNI",
+    "surname" : "RAYANE",
+    "phone" : "328 7070777",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "2A",
+    "ownerId" : "MEANO",
+    "objectId" : "5829b62f-a63c-4281-aae0-ead160d2da41",
+    "creationDate" : ISODate("2016-02-17T09:25:02.461Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.461Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MATTIA",
+    "surname" : "STENICO",
+    "phone" : "391 4748246",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "b6379ee1-fc3a-4462-86f7-770a3c80a501",
+    "creationDate" : ISODate("2016-02-17T09:25:02.467Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.467Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "TOMMASO",
+    "surname" : "STENICO",
+    "phone" : "392 4748246",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "61663c64-76aa-4184-864e-73c0ccb0da65",
+    "creationDate" : ISODate("2016-02-17T09:25:02.473Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.473Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "SEBASTIANO",
+    "surname" : "TOMASI",
+    "phone" : "339 8250838",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "2A",
+    "ownerId" : "MEANO",
+    "objectId" : "f9e167df-438c-4673-aca6-f83135fcd6e5",
+    "creationDate" : ISODate("2016-02-17T09:25:02.480Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.480Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "DAVID",
+    "surname" : "VERSINI",
+    "phone" : "340 6871792",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "3A",
+    "ownerId" : "MEANO",
+    "objectId" : "cfb62b32-55a8-4051-aff8-88c3581b1a4e",
+    "creationDate" : ISODate("2016-02-17T09:25:02.487Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.487Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ANNA",
+    "surname" : "ARMELLINI",
+    "phone" : "348 9931876",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "1bc05f9f-6402-4b16-b9d8-00691cdca7a5",
+    "creationDate" : ISODate("2016-02-17T09:25:02.219Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.219Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "SAMUEL",
+    "surname" : "BORTOLOTTI",
+    "phone" : "347 1156631",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "0c9b11dd-0287-427c-a850-2def02c5dda0",
+    "creationDate" : ISODate("2016-02-17T09:25:02.238Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.238Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "SIMONE",
+    "surname" : "D'ACCORDI",
+    "phone" : "335 8380373",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "661e94f3-51eb-491b-bc0b-5756ad0add9a",
+    "creationDate" : ISODate("2016-02-17T09:25:02.246Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.246Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "CHIARA",
+    "surname" : "D'AVERSA",
+    "phone" : "333 9107240",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "32aa9744-7c81-46a4-8196-f7c9c0abd0e2",
+    "creationDate" : ISODate("2016-02-17T09:25:02.253Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.253Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "FILIPPO",
+    "surname" : "D'AVERSA",
+    "phone" : "333 9107240",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "2B",
+    "ownerId" : "MEANO",
+    "objectId" : "da19bf77-65a0-4d8b-83ae-30d247f7adc9",
+    "creationDate" : ISODate("2016-02-17T09:25:02.260Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.260Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "GIULIA",
+    "surname" : "D'AVERSA",
+    "phone" : "333 9107240",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "0c930b2b-5af2-42f3-8e1d-4f5d703c4f3c",
+    "creationDate" : ISODate("2016-02-17T09:25:02.266Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.266Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "STELLA",
+    "surname" : "D'AVERSA",
+    "phone" : "333 9107240",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "280778f4-f626-4dce-aa9c-76bd381a3390",
+    "creationDate" : ISODate("2016-02-17T09:25:02.273Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.273Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "VALENTINA",
+    "surname" : "DEGASPERI",
+    "phone" : "335 6144806",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1A",
+    "ownerId" : "MEANO",
+    "objectId" : "d3356a44-1092-46b8-8342-39ff7fc39926",
+    "creationDate" : ISODate("2016-02-17T09:25:02.280Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.280Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MICHELE",
+    "surname" : "FAORO",
+    "phone" : "349 1714984",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "73ac2199-ca4d-49de-8d6e-9cb86f1385db",
+    "creationDate" : ISODate("2016-02-17T09:25:02.288Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.288Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "DAVIDE",
+    "surname" : "LIBARDI",
+    "phone" : "331 6043086",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "469082cc-2dfe-4926-89d3-d18b51e4378e",
+    "creationDate" : ISODate("2016-02-17T09:25:02.296Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.296Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ILARIA",
+    "surname" : "LIBARDI",
+    "phone" : "332 6043086",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "9e516552-46ed-4d4e-88d6-b4e6152a6a39",
+    "creationDate" : ISODate("2016-02-17T09:25:02.303Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.303Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "GIULIA",
+    "surname" : "MASOLINO",
+    "phone" : "349 8092259",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "74806770-bbad-4f63-93ca-08048d72fd59",
+    "creationDate" : ISODate("2016-02-17T09:25:02.311Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.311Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "SOFIA",
+    "surname" : "MEZZANZANICA",
+    "phone" : "347 6405992",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "184fadbf-17dc-425b-9abb-7d29b8e8ef38",
+    "creationDate" : ISODate("2016-02-17T09:25:02.317Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.317Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "LUCA",
+    "surname" : "MEZZANZANICA",
+    "phone" : "347 6405992",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "faddaae8-2010-4637-a63e-196478de3a2a",
+    "creationDate" : ISODate("2016-02-17T09:25:02.325Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.325Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ANDREA",
+    "surname" : "NICOLODI",
+    "phone" : "328 6449757",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "1af3da8d-d60a-42d1-9730-bf91bc043174",
+    "creationDate" : ISODate("2016-02-17T09:25:02.333Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.333Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MANUEL",
+    "surname" : "NICOLODI",
+    "phone" : "328 6449757",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1A",
+    "ownerId" : "MEANO",
+    "objectId" : "dff57c45-b3b0-419c-8435-3d8b488c45b8",
+    "creationDate" : ISODate("2016-02-17T09:25:02.344Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.344Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "CARMEN",
+    "surname" : "NUVOLI",
+    "phone" : "349 6001128",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "13f1e936-d42f-4e2c-8524-c78685a5f86d",
+    "creationDate" : ISODate("2016-02-17T09:25:02.354Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.354Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "ALICE",
+    "surname" : "PEGORETTI",
+    "phone" : "340 1411385",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "9c0b844d-9ab5-4a48-be6b-1271f0e2c616",
+    "creationDate" : ISODate("2016-02-17T09:25:02.362Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.362Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MARCO",
+    "surname" : "TONAZZOLI",
+    "phone" : "340 4939448",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "1B",
+    "ownerId" : "MEANO",
+    "objectId" : "33fdbf98-de46-4698-9d50-e674b049cf53",
+    "creationDate" : ISODate("2016-02-17T09:25:02.368Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.368Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "MARTINA",
+    "surname" : "UBER",
+    "phone" : "349 5594089",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4B",
+    "ownerId" : "MEANO",
+    "objectId" : "4e1282eb-517b-4c1a-a7a0-d32f46f6259f",
+    "creationDate" : ISODate("2016-02-17T09:25:02.376Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.376Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Child",
+    "name" : "GIULIA",
+    "surname" : "VACCARO",
+    "phone" : "392 7029606",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "classRoom" : "4A",
+    "ownerId" : "MEANO",
+    "objectId" : "340be53d-2f27-4dbf-a32b-52c6e302496c",
+    "creationDate" : ISODate("2016-02-17T09:25:02.381Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.381Z")
+}

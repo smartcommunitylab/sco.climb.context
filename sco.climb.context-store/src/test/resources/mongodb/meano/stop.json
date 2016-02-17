@@ -1,0 +1,117 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Stop",
+    "name" : "Via dei Palustei",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "departureTime" : "07:40",
+    "start" : true,
+    "destination" : false,
+    "school" : false,
+    "geocoding" : [ 
+        11.1191429999999990, 
+        46.1204249999999970
+    ],
+    "distance" : 0.0000000000000000,
+    "position" : 1,
+    "passengerList" : ["1bc05f9f-6402-4b16-b9d8-00691cdca7a5",
+		"0c9b11dd-0287-427c-a850-2def02c5dda0",
+		"661e94f3-51eb-491b-bc0b-5756ad0add9a",
+		"32aa9744-7c81-46a4-8196-f7c9c0abd0e2",
+		"da19bf77-65a0-4d8b-83ae-30d247f7adc9",
+		"0c930b2b-5af2-42f3-8e1d-4f5d703c4f3c",
+		"280778f4-f626-4dce-aa9c-76bd381a3390",
+		"d3356a44-1092-46b8-8342-39ff7fc39926",
+		"73ac2199-ca4d-49de-8d6e-9cb86f1385db",
+		"469082cc-2dfe-4926-89d3-d18b51e4378e",
+		"9e516552-46ed-4d4e-88d6-b4e6152a6a39",
+		"74806770-bbad-4f63-93ca-08048d72fd59",
+		"184fadbf-17dc-425b-9abb-7d29b8e8ef38",
+		"faddaae8-2010-4637-a63e-196478de3a2a",
+		"1af3da8d-d60a-42d1-9730-bf91bc043174",
+		"dff57c45-b3b0-419c-8435-3d8b488c45b8",
+		"13f1e936-d42f-4e2c-8524-c78685a5f86d",
+		"9c0b844d-9ab5-4a48-be6b-1271f0e2c616",
+		"33fdbf98-de46-4698-9d50-e674b049cf53",
+		"4e1282eb-517b-4c1a-a7a0-d32f46f6259f",
+		"340be53d-2f27-4dbf-a32b-52c6e302496c"],
+    "ownerId" : "MEANO",
+    "objectId" : "12bda299-a752-4dc3-9468-aea2be47041f",
+    "creationDate" : ISODate("2016-02-17T09:25:02.571Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.571Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Stop",
+    "name" : "Piazza dell'Assunta",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "departureTime" : "07:45",
+    "start" : false,
+    "destination" : false,
+    "school" : false,
+    "geocoding" : [ 
+        11.1170570000000010, 
+        46.1226830000000020
+    ],
+    "distance" : 275.0000000000000000,
+    "position" : 2,
+    "passengerList" : ["b899a63a-8c16-4b64-8d6a-c30de8552ac0",
+		"6d8fc033-7841-4c5b-89ee-c029abcb14fa",
+		"11f14235-aeae-4262-8b7d-570358571a6b",
+		"b31f8ae9-4f91-4d3d-a5c1-f588957aac09",
+		"6f2a71ef-9ebf-48ad-9141-f3d4120276c7",
+		"b59cc9be-2020-4dd7-bdf5-e9cc2158602a",
+		"fe40c330-b573-4622-b1a1-fa285414003f",
+		"b634d683-5ec7-4228-aa53-ff0ed6322511",
+		"d7c7715c-6167-448c-92df-291b29c33913",
+		"3cd50798-15df-4ce7-ae63-bfa14a8b91bb",
+		"5829b62f-a63c-4281-aae0-ead160d2da41",
+		"b6379ee1-fc3a-4462-86f7-770a3c80a501",
+		"61663c64-76aa-4184-864e-73c0ccb0da65",
+		"f9e167df-438c-4673-aca6-f83135fcd6e5",
+		"cfb62b32-55a8-4051-aff8-88c3581b1a4e"],
+    "ownerId" : "MEANO",
+    "objectId" : "8de9b814-08df-4944-91b9-a9aea8a79a90",
+    "creationDate" : ISODate("2016-02-17T09:25:02.602Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.602Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Stop",
+    "name" : "Vicolo dei Portoni",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "departureTime" : "07:47",
+    "start" : false,
+    "destination" : false,
+    "school" : false,
+    "geocoding" : [ 
+        11.1168780000000000, 
+        46.1234600000000010
+    ],
+    "distance" : 100.0000000000000000,
+    "position" : 3,
+    "passengerList" : [],
+    "ownerId" : "MEANO",
+    "objectId" : "80103548-fe1c-43f9-a990-2c801fecf0bb",
+    "creationDate" : ISODate("2016-02-17T09:25:02.608Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.608Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Stop",
+    "name" : "Scuola",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "departureTime" : "07:55",
+    "start" : false,
+    "destination" : true,
+    "school" : true,
+    "geocoding" : [ 
+        11.1159389999999990, 
+        46.1250420000000010
+    ],
+    "distance" : 255.0000000000000000,
+    "position" : 4,
+    "passengerList" : [],
+    "ownerId" : "MEANO",
+    "objectId" : "83f84c21-d631-46c6-87ab-569282847709",
+    "creationDate" : ISODate("2016-02-17T09:25:02.614Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.614Z")
+}

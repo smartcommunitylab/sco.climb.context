@@ -1,0 +1,12 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Route",
+    "name" : "Linea Blu",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "from" : ISODate("2016-02-29T23:00:00.000Z"),
+    "to" : ISODate("2016-06-29T22:00:00.000Z"),
+    "distance" : 630.0000000000000000,
+    "ownerId" : "MEANO",
+    "objectId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "creationDate" : ISODate("2016-02-17T09:25:02.517Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.517Z")
+}

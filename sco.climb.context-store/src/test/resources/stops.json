@@ -1,46 +1,42 @@
 [
 	{
-		"name" : "Fermata 1",
-		"departureTime" : "07:47",
+		"name" : "Via dei Palustei",
+		"departureTime" : "07:40",
 		"start" : true,
 		"destination" : false,
 		"school" : false,
-		"geocoding" : [11.116912, 46.122709],
+		"geocoding" : [11.119143, 46.120425],
 		"distance" : 0.0,
-		"wsnId" : 21,
 		"position" : 1
 	},
 	{
-		"name" : "Fermata 2",
-		"departureTime" : "07:50",
+		"name" : "Piazza dell'Assunta",
+		"departureTime" : "07:45",
 		"start" : false,
 		"destination" : false,
 		"school" : false,
-		"geocoding" : [11.116935, 46.123494],
-		"distance" : 0.08,
-		"wsnId" : 22,
+		"geocoding" : [11.117057, 46.122683],
+		"distance" : 275.0,
 		"position" : 2
 	},
 	{
-		"name" : "Fermata 3",
-		"departureTime" : "07:52",
+		"name" : "Vicolo dei Portoni",
+		"departureTime" : "07:47",
 		"start" : false,
 		"destination" : false,
 		"school" : false,
-		"geocoding" : [11.117334, 46.124628],
-		"distance" : 0.13,
-		"wsnId" : 23,
+		"geocoding" : [11.116878, 46.123460],
+		"distance" : 100.0,
 		"position" : 3
 	},
 	{
-		"name" : "Fermata 4",
+		"name" : "Scuola",
 		"departureTime" : "07:55",
 		"start" : false,
 		"destination" : true,
 		"school" : true,
 		"geocoding" : [11.115939, 46.125042],
-		"distance" : 0.15,
-		"wsnId" : 24,
+		"distance" : 255.0,
 		"position" : 4
 	}
 ]

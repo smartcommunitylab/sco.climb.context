@@ -1,0 +1,275 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "ROAT CINZIA",
+    "phone" : "347 6405992",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "doinldet",
+    "ownerId" : "MEANO",
+    "objectId" : "a6e7a950-28d0-4153-a6ff-2a8fc99d6506",
+    "creationDate" : ISODate("2016-02-17T09:25:02.681Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.681Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "VACCARO LETIZIA",
+    "phone" : "340 1411385",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "tvvgfehy",
+    "ownerId" : "MEANO",
+    "objectId" : "ce52b49b-fdcc-4da8-b472-0eca70a21f89",
+    "creationDate" : ISODate("2016-02-17T09:25:02.686Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.686Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "VACCARO MANUEL",
+    "phone" : "392 7029603",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "cdjehbpe",
+    "ownerId" : "MEANO",
+    "objectId" : "d27ecd4c-651a-4996-b021-db6bd8a7aa27",
+    "creationDate" : ISODate("2016-02-17T09:25:02.690Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.690Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "UBER ENNIO",
+    "phone" : "348 2801421",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "tlwdsdqm",
+    "ownerId" : "MEANO",
+    "objectId" : "9b8c963b-d6e7-494e-9294-30dfbd8869f0",
+    "creationDate" : ISODate("2016-02-17T09:25:02.697Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.697Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "ZAGO SONIA",
+    "phone" : "347 1156631",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "jgtgeytu",
+    "ownerId" : "MEANO",
+    "objectId" : "fae9747d-65f7-4bcd-a2a0-c22c43eb13fd",
+    "creationDate" : ISODate("2016-02-17T09:25:02.703Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.703Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "LIBARDI MASSIMO",
+    "phone" : "331 6043086",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "lkgineqn",
+    "ownerId" : "MEANO",
+    "objectId" : "40fad182-c9d8-4c6c-9d31-9337301a68d4",
+    "creationDate" : ISODate("2016-02-17T09:25:02.709Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.709Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MEZZANZANICA DARIO",
+    "phone" : "346 9789144",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "duweslio",
+    "ownerId" : "MEANO",
+    "objectId" : "7c279ae1-42f2-4911-a710-6a97f6c55cf5",
+    "creationDate" : ISODate("2016-02-17T09:25:02.714Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.714Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "LODI SANDRA",
+    "phone" : "339 8250838",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "vchehfbd",
+    "ownerId" : "MEANO",
+    "objectId" : "c4a151ca-00f3-4fd2-9c92-d58856d46bc7",
+    "creationDate" : ISODate("2016-02-17T09:25:02.721Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.721Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "LORANDI MICHELA",
+    "phone" : "347 0532465",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "qwgbxtxo",
+    "ownerId" : "MEANO",
+    "objectId" : "d2f639eb-4157-4582-ac3a-28d0083eedcc",
+    "creationDate" : ISODate("2016-02-17T09:25:02.728Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.728Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MAGOTTI UMBERTO",
+    "phone" : "0461 992858",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "qouqpupy",
+    "ownerId" : "MEANO",
+    "objectId" : "667c3b9c-5d82-4459-af3c-632bf18b6ee7",
+    "creationDate" : ISODate("2016-02-17T09:25:02.733Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.733Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MARCHI CRISTINA",
+    "phone" : "329 8830903",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "eooyxxeo",
+    "ownerId" : "MEANO",
+    "objectId" : "dd2415c4-de3e-4632-a519-d6eaa3b489f2",
+    "creationDate" : ISODate("2016-02-17T09:25:02.738Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.738Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MATTIVI FLORA",
+    "phone" : "328 8459295",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "bodnlyjz",
+    "ownerId" : "MEANO",
+    "objectId" : "0eb34d35-9198-4070-a96d-7a13c85a867d",
+    "creationDate" : ISODate("2016-02-17T09:25:02.750Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.750Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "PELLEGRINI SARA",
+    "phone" : "349 3268033",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "rcdgudsi",
+    "ownerId" : "MEANO",
+    "objectId" : "ab388c29-2327-4807-9388-9624f7676fa0",
+    "creationDate" : ISODate("2016-02-17T09:25:02.754Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.754Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MAIRA TATIANA",
+    "phone" : "392 1724415",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "byxcoucw",
+    "ownerId" : "MEANO",
+    "objectId" : "5ebf1a31-08dd-4d41-af85-7159f9af8a80",
+    "creationDate" : ISODate("2016-02-17T09:25:02.760Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.760Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "CLEMENTI MAURO",
+    "phone" : "340 2530040",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "ltvwxhyk",
+    "ownerId" : "MEANO",
+    "objectId" : "45a6d11b-aa83-4ed6-a16a-38f621d82f12",
+    "creationDate" : ISODate("2016-02-17T09:25:02.765Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.765Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "ADAMOLI SABRINA",
+    "phone" : "392 7029606",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "oldruwcq",
+    "ownerId" : "MEANO",
+    "objectId" : "cfed877b-a2d6-4b55-bb41-92f783dd5627",
+    "creationDate" : ISODate("2016-02-17T09:25:02.628Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.628Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "AMADORI VALENTINA",
+    "phone" : "331 6043086",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "rxxuntes",
+    "ownerId" : "MEANO",
+    "objectId" : "fea13880-f2a5-4137-8e91-49f51352dd36",
+    "creationDate" : ISODate("2016-02-17T09:25:02.642Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.642Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "DALMONECH ILARIA",
+    "phone" : "340 4939448",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "fkikegnk",
+    "ownerId" : "MEANO",
+    "objectId" : "22cf4e5a-8760-47f7-b98e-2942a512f958",
+    "creationDate" : ISODate("2016-02-17T09:25:02.649Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.649Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "FAORO LUCA",
+    "phone" : "340 3184432",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "aayofpea",
+    "ownerId" : "MEANO",
+    "objectId" : "692e5595-69f1-4cb7-89b6-1cfa81556b50",
+    "creationDate" : ISODate("2016-02-17T09:25:02.654Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.654Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "MERLER BARBARA",
+    "phone" : "328 6449757",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "sljrinmk",
+    "ownerId" : "MEANO",
+    "objectId" : "4e32f7cf-fa26-492e-9773-6eacdb2722ae",
+    "creationDate" : ISODate("2016-02-17T09:25:02.659Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.659Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "NUVOLI ROBERTO",
+    "phone" : "349 6001128",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "fgcdjusf",
+    "ownerId" : "MEANO",
+    "objectId" : "8fefd6dc-364f-4c13-bb21-65af58f91251",
+    "creationDate" : ISODate("2016-02-17T09:25:02.665Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.665Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "PEGORETTI ALESSANDRO",
+    "phone" : "349 5063273",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "sqomulzq",
+    "ownerId" : "MEANO",
+    "objectId" : "9e885bd4-1554-475a-b610-96f554f10636",
+    "creationDate" : ISODate("2016-02-17T09:25:02.670Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.670Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.Volunteer",
+    "name" : "PERINI MARIANNA",
+    "phone" : "335 8380373",
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "password" : "jirliajb",
+    "ownerId" : "MEANO",
+    "objectId" : "fa08d3b3-98a9-423c-8fc8-60cf9274b93b",
+    "creationDate" : ISODate("2016-02-17T09:25:02.675Z"),
+    "lastUpdate" : ISODate("2016-02-17T09:25:02.675Z")
+}

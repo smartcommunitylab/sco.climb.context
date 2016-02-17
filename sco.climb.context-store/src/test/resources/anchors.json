@@ -1,21 +1,21 @@
 [
 	{
-		"name" : "Fermata 1",
-		"geocoding" : [11.116912, 46.122709],
+		"name" : "Via dei Palustei",
+		"geocoding" : [11.119143, 46.120425],
 		"wsnId" : 21
 	},
 	{
-		"name" : "Fermata 2",
-		"geocoding" : [11.116935, 46.123494],
+		"name" : "Piazza dell'Assunta",
+		"geocoding" : [11.117057, 46.122683],
 		"wsnId" : 22
 	},
 	{
-		"name" : "Fermata 3",
-		"geocoding" : [11.117334, 46.124628],
+		"name" : "Vicolo dei Portoni",
+		"geocoding" : [11.116878, 46.123460],
 		"wsnId" : 23
 	},
 	{
-		"name" : "Fermata 4",
+		"name" : "Scuola",
 		"geocoding" : [11.115939, 46.125042],
 		"wsnId" : 24
 	}
