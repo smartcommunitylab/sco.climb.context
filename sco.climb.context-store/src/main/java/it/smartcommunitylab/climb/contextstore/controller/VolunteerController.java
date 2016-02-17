@@ -108,7 +108,7 @@ public class VolunteerController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteVolunteer[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

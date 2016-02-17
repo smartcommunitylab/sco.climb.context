@@ -132,7 +132,7 @@ public class RouteController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteRoute[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

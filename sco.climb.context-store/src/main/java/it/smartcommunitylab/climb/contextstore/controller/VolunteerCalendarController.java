@@ -155,7 +155,7 @@ public class VolunteerCalendarController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteVolunteerCalendar[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

@@ -125,7 +125,7 @@ public class ChildController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteChild[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

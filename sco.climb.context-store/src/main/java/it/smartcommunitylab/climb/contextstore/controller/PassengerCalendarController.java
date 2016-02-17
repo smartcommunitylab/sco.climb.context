@@ -128,7 +128,7 @@ public class PassengerCalendarController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deletePassengerCalendar[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

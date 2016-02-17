@@ -70,7 +70,7 @@ public class AdminController {
 		if(logger.isInfoEnabled()) {
 			logger.info("add dataSet");
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@RequestMapping(value = "/reload/{ownerId}", method = RequestMethod.GET)
@@ -83,7 +83,7 @@ public class AdminController {
 		if(logger.isInfoEnabled()) {
 			logger.info("reload dataSet");
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -121,7 +121,7 @@ public class AnchorController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteAnchor[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

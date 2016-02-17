@@ -106,7 +106,7 @@ public class SchoolController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteSchool[%s]:%s", ownerId, objectId));
 		}
-		return "OK";
+		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)
