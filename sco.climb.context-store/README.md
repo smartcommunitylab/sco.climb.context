@@ -198,8 +198,8 @@
   GET /api/volunteercal/{ownerId}/{schoolId}
 ```
 #### Params
-  - **dateFrom**: string, optional, "yyyy-MM-dd"
-  - **dateTo**: string, optional, "yyyy-MM-dd"
+  - **dateFrom**: string, mandatory, "yyyy-MM-dd"
+  - **dateTo**: string, mandatory, "yyyy-MM-dd"
 
 #### Result
 		[
@@ -221,8 +221,8 @@
   GET /api/volunteercal/{ownerId}/{schoolId}/{volunteerId}
 ```
 #### Params
-  - **dateFrom**: string, optional, "yyyy-MM-dd"
-  - **dateTo**: string, optional, "yyyy-MM-dd"
+  - **dateFrom**: string, mandatory, "yyyy-MM-dd"
+  - **dateTo**: string, mandatory, "yyyy-MM-dd"
 
 #### Result
 		[
