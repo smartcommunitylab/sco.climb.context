@@ -90,7 +90,7 @@
             46.122709
         ],
         "distance": 0,
-        "wsnId": 21,
+        "wsnId": "id1",
         "position": 1,
         "passengerList": [
             "6f2cd4dc-0eb7-4920-95f7-414cc9f5a509",
@@ -119,7 +119,7 @@
 			"phone": "12345",
 			"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
 			"classRoom": "3C",
-			"wsnId": 1,
+			"wsnId": "id1",
 			"imageUrl": "/img/photo1.png"
 		}
 		]
@@ -146,7 +146,7 @@
 			"phone": "12345",
 			"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
 			"classRoom": "3C",
-			"wsnId": 1,
+			"wsnId": "id1",
 			"imageUrl": "/img/photo1.png"
 		}
 		]
@@ -168,7 +168,7 @@
 				11.116912,
 				46.122709
 			],
-			"wsnId": 21
+			"wsnId": "id1"
 		}
 		]
 
@@ -189,7 +189,7 @@
 			"address": "via sta cippa 13",
 			"phone": "12345",
 			"schoolId": "70b96fe4-0f76-477c-8a09-49911aa5fee2",
-			"wsnId": 11
+			"wsnId": "id1"
 		}
 		]
 		
