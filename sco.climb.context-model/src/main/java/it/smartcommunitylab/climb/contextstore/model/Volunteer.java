@@ -6,7 +6,7 @@ public class Volunteer extends BaseObject {
 	private String phone;
 	private String schoolId;
 	private String password;
-	private int wsnId;
+	private String wsnId;
 	
 	public String getName() {
 		return name;
@@ -32,10 +32,10 @@ public class Volunteer extends BaseObject {
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
 	}
-	public int getWsnId() {
+	public String getWsnId() {
 		return wsnId;
 	}
-	public void setWsnId(int wsnId) {
+	public void setWsnId(String wsnId) {
 		this.wsnId = wsnId;
 	}
 	public String getPassword() {

@@ -8,7 +8,7 @@ public class Child extends BaseObject {
 	private String phone;
 	private String schoolId;
 	private String classRoom;
-	private int wsnId;
+	private String wsnId;
 	private String imageUrl;
 	
 	public String getExternalId() {
@@ -47,10 +47,10 @@ public class Child extends BaseObject {
 	public void setClassRoom(String classRoom) {
 		this.classRoom = classRoom;
 	}
-	public int getWsnId() {
+	public String getWsnId() {
 		return wsnId;
 	}
-	public void setWsnId(int wsnId) {
+	public void setWsnId(String wsnId) {
 		this.wsnId = wsnId;
 	}
 	public String getSurname() {

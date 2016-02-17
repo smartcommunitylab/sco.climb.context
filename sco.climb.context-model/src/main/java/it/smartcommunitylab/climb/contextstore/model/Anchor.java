@@ -3,7 +3,7 @@ package it.smartcommunitylab.climb.contextstore.model;
 public class Anchor extends BaseObject {
 	private String name;
 	double[] geocoding;
-	private int wsnId;
+	private String wsnId;
 	
 	public String getName() {
 		return name;
@@ -17,10 +17,10 @@ public class Anchor extends BaseObject {
 	public void setGeocoding(double[] geocoding) {
 		this.geocoding = geocoding;
 	}
-	public int getWsnId() {
+	public String getWsnId() {
 		return wsnId;
 	}
-	public void setWsnId(int wsnId) {
+	public void setWsnId(String wsnId) {
 		this.wsnId = wsnId;
 	}
 }
