@@ -1,0 +1,47 @@
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.VolunteerCalendar",
+    "date" : ISODate("2016-02-21T23:00:00.000Z"),
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "helperList" : [ 
+        "4e32f7cf-fa26-492e-9773-6eacdb2722ae", 
+        "fae9747d-65f7-4bcd-a2a0-c22c43eb13fd", 
+        "c4a151ca-00f3-4fd2-9c92-d58856d46bc7"
+    ],
+    "ownerId" : "MEANO",
+    "objectId" : "4cfe27d5-bb83-452b-9e0d-a6b1e15dc03d",
+    "creationDate" : ISODate("2016-02-17T13:24:42.162Z"),
+    "lastUpdate" : ISODate("2016-02-17T13:24:42.162Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.VolunteerCalendar",
+    "date" : ISODate("2016-02-22T23:00:00.000Z"),
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "helperList" : [ 
+        "692e5595-69f1-4cb7-89b6-1cfa81556b50", 
+        "9e885bd4-1554-475a-b610-96f554f10636", 
+        "0eb34d35-9198-4070-a96d-7a13c85a867d"
+    ],
+    "ownerId" : "MEANO",
+    "objectId" : "43103936-b1fd-40c9-9a88-e5f8463b2e26",
+    "creationDate" : ISODate("2016-02-17T13:24:42.514Z"),
+    "lastUpdate" : ISODate("2016-02-17T13:24:42.514Z")
+}
+
+{
+    "_class" : "it.smartcommunitylab.climb.contextstore.model.VolunteerCalendar",
+    "date" : ISODate("2016-02-23T23:00:00.000Z"),
+    "schoolId" : "eb80f557-a861-4b70-8188-6abfaa80d09e",
+    "routeId" : "5187f1cf-a6f0-4e4a-a025-cb2fe52a1061",
+    "helperList" : [ 
+        "cfed877b-a2d6-4b55-bb41-92f783dd5627", 
+        "22cf4e5a-8760-47f7-b98e-2942a512f958", 
+        "dd2415c4-de3e-4632-a519-d6eaa3b489f2"
+    ],
+    "ownerId" : "MEANO",
+    "objectId" : "43faa7e7-5c7e-4463-9086-2e64d2ea5dc3",
+    "creationDate" : ISODate("2016-02-17T13:24:42.519Z"),
+    "lastUpdate" : ISODate("2016-02-17T13:24:42.519Z")
+}
