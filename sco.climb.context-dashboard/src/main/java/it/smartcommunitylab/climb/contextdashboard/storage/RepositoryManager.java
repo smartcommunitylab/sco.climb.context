@@ -398,5 +398,6 @@ public class RepositoryManager {
 			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", objectId));
 		}
 		mongoTemplate.findAndRemove(query, VolunteerCalendar.class);
-	}	
+	}
+	
 }

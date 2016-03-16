@@ -16,6 +16,8 @@
 
 package it.smartcommunitylab.climb.contextdashboard.config;
 
+import it.smartcommunitylab.climb.contextdashboard.rest.ContextStoreManager;
+import it.smartcommunitylab.climb.contextdashboard.rest.EventStoreManager;
 import it.smartcommunitylab.climb.contextdashboard.storage.RepositoryManager;
 
 import java.net.UnknownHostException;
@@ -59,7 +61,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	
 	@Autowired
 	@Value("${context.api.url}")
-	private String contectApiUrl;
+	private String contextApiUrl;
 	
 	public AppConfig() {
 	}
@@ -72,6 +74,16 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
 		return new RepositoryManager(getMongo(), defaultLang);
+	}
+	
+	@Bean
+	EventStoreManager getEventStoreManager() {
+		return new EventStoreManager(eventApiUrl);
+	}
+	
+	@Bean
+	ContextStoreManager getContextStoreManager() {
+		return new ContextStoreManager(contextApiUrl);
 	}
 
 	@Bean
