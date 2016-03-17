@@ -1,10 +1,15 @@
+.google-map-container {
+    height: 750px;
+    width: 100%; 
+}
+
 .navbar-inverse {
-	background-color: #639B3D;
-	border-color: #639B3D;
+	background-color: #438699;
+	border-color: #438699;
 }
 
 .navbar-inverse .navbar-brand {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: white;
 }
 
@@ -21,34 +26,34 @@
 }
 
 .navbar-inverse .navbar-nav>.active>a {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: black;
 }
 .navbar-inverse .navbar-nav>.active>a:hover {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: black;
 }
 
 .navbar-inverse .navbar-nav>.active>a:focus {
-	background-color: #639B3D;
+	background-color: #438699;
 }
 
 .navbar-inverse .navbar-nav>.open>a {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: black;
 }
 
 .navbar-inverse .navbar-nav>.open>a:hover {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: black;
 }
 
 .navbar-inverse .navbar-nav>.open>a:focus {
-	background-color: #639B3D;
+	background-color: #438699;
 }
 
 .dropdown-menu>.active>a {
-	background-color: #639B3D;
+	background-color: #438699;
 }
 
 .ac-container .ac-menu {
@@ -92,7 +97,7 @@
 
 .row.list-header {
 	text-transform: uppercase;
-	border-bottom-color: #639B3D;
+	border-bottom-color: #438699;
 	border-bottom-style: solid;
 	border-bottom-width: 3px;
 	text-align: center;
@@ -143,7 +148,7 @@
 }
 
 .modal-header.create {
-	background-color: #639B3D;
+	background-color: #438699;
 	color: white;
 	font-weight: bold;
 }
@@ -171,5 +176,5 @@
 }
 
 .ui-datepicker-trigger {
-	background-color: #00C853;
+	background-color: #438699;
 }

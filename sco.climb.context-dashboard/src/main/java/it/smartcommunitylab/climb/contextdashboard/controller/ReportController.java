@@ -20,7 +20,6 @@ import it.smartcommunitylab.climb.contextdashboard.common.Const;
 import it.smartcommunitylab.climb.contextdashboard.common.Utils;
 import it.smartcommunitylab.climb.contextdashboard.converter.ExcelConverter;
 import it.smartcommunitylab.climb.contextdashboard.exception.InvalidParametersException;
-import it.smartcommunitylab.climb.contextdashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.contextdashboard.model.WsnEvent;
 import it.smartcommunitylab.climb.contextdashboard.rest.ContextStoreManager;
 import it.smartcommunitylab.climb.contextdashboard.rest.EventStoreManager;
@@ -29,6 +28,8 @@ import it.smartcommunitylab.climb.contextdashboard.storage.RepositoryManager;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,8 @@ import com.google.common.collect.Lists;
 @Controller
 public class ReportController {
 	private static final transient Logger logger = LoggerFactory.getLogger(ReportController.class);
-			
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	
 	@Autowired
 	private RepositoryManager storage;
 
@@ -67,12 +69,14 @@ public class ReportController {
 	@Autowired
 	private ContextStoreManager contextStoreManager;
 	
-	@RequestMapping(value = "/api/report/attendance/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody String writeAttendance(@PathVariable String ownerId, 
+	@RequestMapping(value = "/report/context/url", method = RequestMethod.GET)
+	public @ResponseBody String getContextApiUrl() {
+		return "{\"url\":\"" + contextStoreManager.getContextApiUrl() + "\"}";
+	}
+	
+	@RequestMapping(value = "/report/attendance/{ownerId}", method = RequestMethod.GET)
+	public void writeAttendance(@PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
 		List<WsnEvent> eventList = Lists.newArrayList();
 		List<Child> childList = Lists.newArrayList();
 		List<Volunteer> volunteerList = Lists.newArrayList();
@@ -88,12 +92,20 @@ public class ReportController {
  			eventList= eventStoreManager.searchEvents(dateFromString, dateToString, routeId, eventTypeList, dataSetSetup, ownerId);
  			childList = contextStoreManager.getChildList(schoolId, dataSetSetup, ownerId);
  			volunteerList = contextStoreManager.getVolunteerList(schoolId, dataSetSetup, ownerId);
-			ExcelConverter.writeAttendance(new Date(), eventList, childList, volunteerList);
+ 			ByteArrayOutputStream outputBuffer = new ByteArrayOutputStream();
+ 			Date reportDate = sdf.parse(dateFromString);
+			ExcelConverter.writeAttendance(reportDate, eventList, childList, volunteerList, outputBuffer);
+			response.setContentType("application/octet-stream");
+			response.addHeader("Content-Disposition", "attachment; filename=\"report-" + ownerId + ".xls\"");
+			response.addHeader("Content-Transfer-Encoding", "binary");
+			response.addHeader("Cache-control", "no-cache");
+			response.getOutputStream().write(outputBuffer.toByteArray());
+			response.getOutputStream().flush();
+			outputBuffer.close();
 		} catch (Exception e) {
 			logger.error("writeAttendance:" + e.getMessage());
 			throw new InvalidParametersException("Invalid query parameters:" + e.getMessage());
 		}
- 		return "{\"status\":\"OK\"}";
 	}
 	
 	@ExceptionHandler(Exception.class)

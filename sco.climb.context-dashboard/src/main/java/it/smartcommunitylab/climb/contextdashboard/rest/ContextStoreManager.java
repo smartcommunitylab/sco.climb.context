@@ -30,6 +30,10 @@ public class ContextStoreManager {
 		this.contextApiUrl = contextApiUrl;
 	}
 	
+	public String getContextApiUrl() {
+		return contextApiUrl;
+	}
+	
 	public List<Child> getChildList(String schoolId, DataSetSetup dataSetSetup, String ownerId) 
 			throws HttpException, IOException {
 		List<Child> result = Lists.newArrayList();

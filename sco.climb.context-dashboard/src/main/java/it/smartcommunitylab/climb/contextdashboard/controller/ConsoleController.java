@@ -17,15 +17,19 @@
 package it.smartcommunitylab.climb.contextdashboard.controller;
 
 import it.smartcommunitylab.climb.contextdashboard.common.Utils;
+import it.smartcommunitylab.climb.contextdashboard.security.DataSetDetails;
+import it.smartcommunitylab.climb.contextdashboard.security.DataSetInfo;
 import it.smartcommunitylab.climb.contextdashboard.storage.RepositoryManager;
 
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +66,23 @@ public class ConsoleController {
 	@RequestMapping(value = "/console")
 	public String console() {
 		return "console";
+	}
+	
+	@RequestMapping(value = "/console/data")
+	public @ResponseBody DataSetInfo data(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return storage.getDataSetInfo(getOwnerId());
+	}
+	
+	@RequestMapping(value = "/report-appello")
+	public String reportAppello() {
+		return "report-appello";
+	}	
+	
+	private String getOwnerId() {
+		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String name = details.getUsername();
+		return name;
 	}
 
 	@ExceptionHandler(Exception.class)
