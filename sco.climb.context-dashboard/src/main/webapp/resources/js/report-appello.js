@@ -24,8 +24,9 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	
 	$scope.fEventType = -1;
 	$scope.fCopyText = "";
-	$scope.fDateFrom = "2016-03-14";
-	$scope.fDateTo = "2016-03-14";
+	var today = moment();
+	$scope.fDateFrom = today.format('YYYY-MM-DD');
+	$scope.fDateTo = today.format('YYYY-MM-DD');
 	$scope.fHourFrom = "07:30:00";
 	$scope.fHourTo = "08:30:00";
 	$scope.routeList = null;
