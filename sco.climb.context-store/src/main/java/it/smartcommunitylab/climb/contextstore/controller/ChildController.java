@@ -22,18 +22,28 @@ import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,11 +52,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Controller
 public class ChildController {
 	private static final transient Logger logger = LoggerFactory.getLogger(ChildController.class);
+	
+	@Autowired
+	@Value("${image.upload.dir}")
+	private String imageUploadDir;
 	
 	@Autowired
 	private RepositoryManager storage;
@@ -126,6 +141,45 @@ public class ChildController {
 			logger.info(String.format("deleteChild[%s]:%s", ownerId, objectId));
 		}
 		return "{\"status\":\"OK\"}";
+	}
+	
+	@RequestMapping(value = "/api/image/upload/png/{ownerId}/{objectId}", method = RequestMethod.POST)
+	public @ResponseBody String uploadImage(@RequestParam("file") MultipartFile file,
+			@PathVariable String ownerId, @PathVariable String objectId,
+			HttpServletRequest request) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		String name = objectId + ".png";
+		if(logger.isInfoEnabled()) {
+			logger.info("uploadImage:" + name);
+		}
+		if (!file.isEmpty()) {
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
+					new File(imageUploadDir + "/" + name)));
+			FileCopyUtils.copy(file.getInputStream(), stream);
+			stream.close();
+		}
+		return "{\"status\":\"OK\"}";
+	}
+	
+	@RequestMapping(value = "/api/image/download/png/{ownerId}/{objectId}", method = RequestMethod.GET)
+	public @ResponseBody HttpEntity<byte[]> downloadImage(@PathVariable String ownerId, @PathVariable String objectId,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		String name = objectId + ".png";
+		String path = imageUploadDir + "/" + name;
+		if(logger.isInfoEnabled()) {
+			logger.info("downloadImage:" + name);
+		}
+		FileInputStream in = new FileInputStream(new File(path));
+		byte[] image = IOUtils.toByteArray(in);
+		HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.IMAGE_PNG);
+    headers.setContentLength(image.length);
+    return new HttpEntity<byte[]>(image, headers);
 	}
 	
 	@ExceptionHandler(Exception.class)
