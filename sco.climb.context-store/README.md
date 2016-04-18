@@ -238,3 +238,8 @@
     		"helperId": null
   		}
 		]		
+
+### Download Child image
+```
+  GET /api/image/download/png/{ownerId}/{childId}
+```
