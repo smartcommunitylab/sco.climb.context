@@ -93,8 +93,9 @@ public class ReportController {
  			childList = contextStoreManager.getChildList(schoolId, dataSetSetup, ownerId);
  			volunteerList = contextStoreManager.getVolunteerList(schoolId, dataSetSetup, ownerId);
  			ByteArrayOutputStream outputBuffer = new ByteArrayOutputStream();
- 			Date reportDate = sdf.parse(dateFromString);
-			ExcelConverter.writeAttendance(reportDate, eventList, childList, volunteerList, outputBuffer);
+ 			Date dateFrom = sdf.parse(dateFromString);
+ 			Date dateTo = sdf.parse(dateToString);
+			ExcelConverter.writeAttendance(dateFrom, dateTo, eventList, childList, volunteerList, outputBuffer);
 			response.setContentType("application/octet-stream");
 			response.addHeader("Content-Disposition", "attachment; filename=\"report-" + ownerId + ".xls\"");
 			response.addHeader("Content-Transfer-Encoding", "binary");
