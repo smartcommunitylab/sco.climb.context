@@ -163,13 +163,13 @@ public class ChildController {
 		return "{\"status\":\"OK\"}";
 	}
 	
-	@RequestMapping(value = "/api/image/download/png/{ownerId}/{objectId}", method = RequestMethod.GET)
-	public @ResponseBody HttpEntity<byte[]> downloadImage(@PathVariable String ownerId, @PathVariable String objectId,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value = "/api/image/download/{imageType}/{ownerId}/{objectId}", method = RequestMethod.GET)
+	public @ResponseBody HttpEntity<byte[]> downloadImage(@PathVariable String imageType, @PathVariable String ownerId, 
+			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		String name = objectId + ".png";
+		String name = objectId + "." + imageType;
 		String path = imageUploadDir + "/" + name;
 		if(logger.isInfoEnabled()) {
 			logger.info("downloadImage:" + name);
@@ -178,6 +178,15 @@ public class ChildController {
 		byte[] image = IOUtils.toByteArray(in);
 		HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.IMAGE_PNG);
+		if(imageType.toLowerCase().equals("png")) {
+			headers.setContentType(MediaType.IMAGE_PNG);
+		} else if(imageType.toLowerCase().equals("gif")) {
+			headers.setContentType(MediaType.IMAGE_GIF);
+		} else if(imageType.toLowerCase().equals("jpg")) {
+			headers.setContentType(MediaType.IMAGE_JPEG);
+		} else if(imageType.toLowerCase().equals("jpeg")) {
+			headers.setContentType(MediaType.IMAGE_JPEG);
+		}
     headers.setContentLength(image.length);
     return new HttpEntity<byte[]>(image, headers);
 	}
