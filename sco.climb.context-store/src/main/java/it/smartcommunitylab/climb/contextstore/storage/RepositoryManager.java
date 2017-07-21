@@ -3,6 +3,7 @@ package it.smartcommunitylab.climb.contextstore.storage;
 import it.smartcommunitylab.climb.contextstore.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
 import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.PassengerCalendar;
 import it.smartcommunitylab.climb.contextstore.model.Pedibus;
 import it.smartcommunitylab.climb.contextstore.model.Route;
@@ -25,6 +26,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
+	@SuppressWarnings("unused")
 	private static final transient Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
 	
 	private MongoTemplate mongoTemplate;
@@ -183,7 +185,6 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
 		update.set("name", route.getName());
-		update.set("pedibusId", route.getPedibusId());
 		update.set("schoolId", route.getSchoolId());
 		update.set("from", route.getFrom());
 		update.set("to", route.getTo());
@@ -398,5 +399,36 @@ public class RepositoryManager {
 			throw new EntityNotFoundException(String.format("VolunteerCalendar with id %s not found", objectId));
 		}
 		mongoTemplate.findAndRemove(query, VolunteerCalendar.class);
+	}
+
+	public void addInstitute(Institute institute) {
+		Date actualDate = new Date();
+		institute.setCreationDate(actualDate);
+		institute.setLastUpdate(actualDate);
+		mongoTemplate.save(institute);
+	}
+
+	public void updateInstitute(Institute institute) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(institute.getOwnerId())
+				.and("objectId").is(institute.getObjectId()));
+		Institute entityDB = mongoTemplate.findOne(query, Institute.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("Institute with id %s not found", institute.getObjectId()));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("name", institute.getName());
+		update.set("address", institute.getAddress());
+		mongoTemplate.updateFirst(query, update, School.class);
+		
+	}
+
+	public void removeInstitute(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(objectId));
+		Institute institute = mongoTemplate.findOne(query, Institute.class);
+		if(institute == null) {
+			throw new EntityNotFoundException(String.format("School with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, Institute.class);
 	}	
 }

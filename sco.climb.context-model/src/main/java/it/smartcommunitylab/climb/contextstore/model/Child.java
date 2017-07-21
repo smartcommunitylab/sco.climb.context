@@ -7,6 +7,7 @@ public class Child extends BaseObject {
 	private String parentName;
 	private String phone;
 	private String schoolId;
+	private String instituteId;
 	private String classRoom;
 	private String wsnId;
 	private String imageUrl;
@@ -64,5 +65,11 @@ public class Child extends BaseObject {
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getInstituteId() {
+		return instituteId;
+	}
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 }

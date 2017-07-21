@@ -56,7 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @Controller
-public class ChildController {
+public class ChildController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(ChildController.class);
 	
 	@Autowired
@@ -70,13 +70,18 @@ public class ChildController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/child/{ownerId}/{schoolId}", method = RequestMethod.GET)
-	public @ResponseBody List<Child> searchChild(@PathVariable String ownerId,  @PathVariable String schoolId,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+	@RequestMapping(value = "/api/child/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Child> searchChild(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
 		List<Child> result = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchChild[%s]:%d", ownerId, result.size()));
@@ -87,7 +92,8 @@ public class ChildController {
 	@RequestMapping(value = "/api/child/{ownerId}", method = RequestMethod.POST)
 	public @ResponseBody Child addChild(@RequestBody Child child, @PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null, "ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		child.setOwnerId(ownerId);
@@ -100,16 +106,23 @@ public class ChildController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/child/{ownerId}/{schoolId}/classroom", method = RequestMethod.GET)
-	public @ResponseBody List<Child> searchChild(@PathVariable String ownerId, @PathVariable String schoolId, 
-			@RequestParam String classRoom, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+	@RequestMapping(value = "/api/child/{ownerId}/{instituteId}/{schoolId}/classroom", method = RequestMethod.GET)
+	public @ResponseBody List<Child> searchChildByClassroom(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId, 
+			@RequestParam String classRoom, 
+			HttpServletRequest request, 
+			HttpServletResponse response)	throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("schoolId").is(schoolId).and("classRoom").is(classRoom);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId).and("classRoom").is(classRoom);
 		List<Child> result = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("searchChild[%s]:%d", ownerId, result.size()));
+			logger.info(String.format("searchChildByClassroom[%s]:%d", ownerId, result.size()));
 		}
 		return result;
 	}	
@@ -118,7 +131,8 @@ public class ChildController {
 	@RequestMapping(value = "/api/child/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody Child updateChild(@RequestBody Child child, @PathVariable String ownerId, 
 			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null, "ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		child.setOwnerId(ownerId);
@@ -133,7 +147,10 @@ public class ChildController {
 	@RequestMapping(value = "/api/child/{ownerId}/{objectId}", method = RequestMethod.DELETE)
 	public @ResponseBody String deleteChild(@PathVariable String ownerId, @PathVariable String objectId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		storage.removeChild(ownerId, objectId);
@@ -147,7 +164,10 @@ public class ChildController {
 	public @ResponseBody String uploadImage(@RequestParam("file") MultipartFile file,
 			@PathVariable String ownerId, @PathVariable String objectId,
 			HttpServletRequest request) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		String name = objectId + ".png";
@@ -166,7 +186,10 @@ public class ChildController {
 	@RequestMapping(value = "/api/image/download/{imageType}/{ownerId}/{objectId}", method = RequestMethod.GET)
 	public @ResponseBody HttpEntity<byte[]> downloadImage(@PathVariable String imageType, @PathVariable String ownerId, 
 			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		String name = objectId + "." + imageType;

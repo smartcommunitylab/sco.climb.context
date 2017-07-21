@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Pedibus extends BaseObject {
 	private String schoolId;
+	private String instituteId;
 	private Date from;
 	private Date to;
 	private String supervisorId;
@@ -31,5 +32,11 @@ public class Pedibus extends BaseObject {
 	}
 	public void setSupervisorId(String supervisorId) {
 		this.supervisorId = supervisorId;
+	}
+	public String getInstituteId() {
+		return instituteId;
+	}
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 }

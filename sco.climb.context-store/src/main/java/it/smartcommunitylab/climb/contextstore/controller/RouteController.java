@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class RouteController {
+public class RouteController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(RouteController.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -57,13 +57,17 @@ public class RouteController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/route/{ownerId}/school/{schoolId}", method = RequestMethod.GET)
-	public @ResponseBody List<Route> searchRoute(@PathVariable String ownerId,  @PathVariable String schoolId,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value = "/api/route/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Route> searchRoute(
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
 		String dateString = request.getParameter("date");
 		if(Utils.isNotEmpty(dateString)) {
 			Date date = sdf.parse(dateString);

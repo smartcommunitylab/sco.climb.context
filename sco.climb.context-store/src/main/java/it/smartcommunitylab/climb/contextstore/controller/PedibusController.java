@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class PedibusController {
+public class PedibusController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(PedibusController.class);
 			
 	@Autowired
@@ -55,8 +55,10 @@ public class PedibusController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/pedibus/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody List<Pedibus> searchPedibus(@PathVariable String ownerId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody List<Pedibus> searchPedibus(
+			@PathVariable String ownerId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -68,16 +70,38 @@ public class PedibusController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/pedibus/{ownerId}/{schoolId}", method = RequestMethod.GET)
-	public @ResponseBody List<Pedibus> searchPedibus(@PathVariable String ownerId, @PathVariable String schoolId, 
+	@RequestMapping(value = "/api/pedibus/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Pedibus> searchPedibusBySchool(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId);
 		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("searchPedibus[%s]:%d", ownerId, result.size()));
+			logger.info(String.format("searchPedibusBySchool[%s]:%d", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/api/pedibus/{ownerId}/{instituteId}", method = RequestMethod.GET)
+	public @ResponseBody List<Pedibus> searchPedibusByInstitute(
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Criteria criteria = Criteria.where("instituteId").is(instituteId);
+		List<Pedibus> result = (List<Pedibus>) storage.findData(Pedibus.class, criteria, null, ownerId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchPedibusByInstitute[%s]:%d", ownerId, result.size()));
 		}
 		return result;
 	}
@@ -98,8 +122,12 @@ public class PedibusController {
 	}
 
 	@RequestMapping(value = "/api/pedibus/{ownerId}/{objectId}", method = RequestMethod.PUT)
-	public @ResponseBody Pedibus updatePedibus(@RequestBody Pedibus pedibus, @PathVariable String ownerId, 
-			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Pedibus updatePedibus(
+			@RequestBody Pedibus pedibus, 
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -113,8 +141,11 @@ public class PedibusController {
 	}
 	
 	@RequestMapping(value = "/api/pedibus/{ownerId}/{objectId}", method = RequestMethod.DELETE)
-	public @ResponseBody String deletePedibus(@PathVariable String ownerId, @PathVariable String objectId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String deletePedibus(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

@@ -7,6 +7,7 @@ import java.util.List;
 public class VolunteerCalendar extends BaseObject {
 	private Date date;
 	private String schoolId;
+	private String instituteId;
 	private String routeId;
 	private String driverId;
 	private List<String> helperList = new ArrayList<String>();
@@ -40,5 +41,11 @@ public class VolunteerCalendar extends BaseObject {
 	}
 	public void setHelperList(List<String> helperList) {
 		this.helperList = helperList;
+	}
+	public String getInstituteId() {
+		return instituteId;
+	}
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 }

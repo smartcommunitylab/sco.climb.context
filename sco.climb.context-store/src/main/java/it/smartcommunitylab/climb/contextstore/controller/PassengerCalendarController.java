@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 
 
 @Controller
-public class PassengerCalendarController {
+public class PassengerCalendarController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(PassengerCalendarController.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	

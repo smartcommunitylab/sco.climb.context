@@ -18,6 +18,7 @@ package it.smartcommunitylab.climb.contextstore.controller;
 
 import it.smartcommunitylab.climb.contextstore.common.Utils;
 import it.smartcommunitylab.climb.contextstore.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.contextstore.storage.DataSetSetup;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class StopController {
+public class StopController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(StopController.class);
 	
 	@Autowired
@@ -58,10 +59,13 @@ public class StopController {
 	@RequestMapping(value = "/api/stop/{ownerId}/{routeId}", method = RequestMethod.GET)
 	public @ResponseBody List<Stop> searchStop(@PathVariable String ownerId,  @PathVariable String routeId,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("routeId").is(routeId);
+		criteria = Criteria.where("routeId").is(routeId);
 		Sort sort = new Sort(Sort.Direction.ASC, "position");
 		List<Stop> result = (List<Stop>) storage.findData(Stop.class, criteria, sort, ownerId);
 		if(logger.isInfoEnabled()) {
@@ -73,7 +77,10 @@ public class StopController {
 	@RequestMapping(value = "/api/stop/{ownerId}", method = RequestMethod.POST)
 	public @ResponseBody Stop addStop(@RequestBody Stop stop, @PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(stop.getRouteId());
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				route.getObjectId(),	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		stop.setOwnerId(ownerId);
@@ -88,7 +95,10 @@ public class StopController {
 	@RequestMapping(value = "/api/stop/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody Stop updateStop(@RequestBody Stop stop, @PathVariable String ownerId, 
 			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(stop.getRouteId());
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				route.getObjectId(),	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		stop.setOwnerId(ownerId);
@@ -103,7 +113,12 @@ public class StopController {
 	@RequestMapping(value = "/api/stop/{ownerId}/{objectId}", method = RequestMethod.DELETE)
 	public @ResponseBody String deleteStop(@PathVariable String ownerId, @PathVariable String objectId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Stop stop = storage.findOneData(Stop.class, criteria, ownerId);
+		criteria = Criteria.where("objectId").is(stop.getRouteId());
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				route.getObjectId(),	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		storage.removeStop(ownerId, objectId);

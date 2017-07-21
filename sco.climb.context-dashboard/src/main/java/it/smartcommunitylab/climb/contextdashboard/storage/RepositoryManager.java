@@ -189,7 +189,6 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
 		update.set("name", route.getName());
-		update.set("pedibusId", route.getPedibusId());
 		update.set("schoolId", route.getSchoolId());
 		update.set("from", route.getFrom());
 		update.set("to", route.getTo());

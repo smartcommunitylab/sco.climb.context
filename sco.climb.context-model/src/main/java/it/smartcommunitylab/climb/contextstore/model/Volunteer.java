@@ -5,6 +5,7 @@ public class Volunteer extends BaseObject {
 	private String address;
 	private String phone;
 	private String schoolId;
+	private String instituteId;
 	private String password;
 	private String wsnId;
 	
@@ -43,6 +44,12 @@ public class Volunteer extends BaseObject {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getInstituteId() {
+		return instituteId;
+	}
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 	
 }
