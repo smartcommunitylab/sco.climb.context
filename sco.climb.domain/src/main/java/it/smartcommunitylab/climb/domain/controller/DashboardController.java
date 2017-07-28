@@ -87,7 +87,7 @@ public class DashboardController extends AuthController {
 	@Value("${param.class.distance}")	
 	private String paramClassDistance;
 	
-	@RequestMapping(value = "/api/player/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/player/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -106,7 +106,7 @@ public class DashboardController extends AuthController {
 		return players; 
 	}
 	
-	@RequestMapping(value = "/api/team/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/team/{ownerId}/{gameId}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusTeam> getTeams(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -124,7 +124,7 @@ public class DashboardController extends AuthController {
 		return teams; 
 	}
 	
-	@RequestMapping(value = "/api/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
 	public @ResponseBody Boolean saveCalendarDay(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -165,7 +165,7 @@ public class DashboardController extends AuthController {
 		return result.get(Const.MERGED);
 	}
 	
-	@RequestMapping(value = "/api/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<CalendarDay> getCalendarDays(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -188,7 +188,7 @@ public class DashboardController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
 	public @ResponseBody void saveExcursion(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -229,7 +229,7 @@ public class DashboardController extends AuthController {
 		}
 	}	
 	
-	@RequestMapping(value = "/api/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<Excursion> getExcursions(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -252,7 +252,7 @@ public class DashboardController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/notification/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/notification/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<Notification> getNotifications(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -290,7 +290,7 @@ public class DashboardController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/challenge/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/challenge/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<Challenge> getChallenge(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -324,7 +324,7 @@ public class DashboardController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/stat/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/stat/{ownerId}/{gameId}", method = RequestMethod.GET)
 	public @ResponseBody Stats getStats(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId,  

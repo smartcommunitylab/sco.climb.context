@@ -333,7 +333,7 @@ public class GamificationController extends AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/api/leg/{ownerId}/{instituteId}/{schoolId}/{gameId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/leg/{ownerId}/{instituteId}/{schoolId}/{gameId}", method = RequestMethod.POST)
 	public @ResponseBody void createPedibusItineraryLeg(
 			@PathVariable String ownerId, 
 			@PathVariable String instituteId,
@@ -359,7 +359,7 @@ public class GamificationController extends AuthController {
 		}
 	}
 	
-	@RequestMapping(value = "/api/legs/{ownerId}/{instituteId}/{schoolId}/{gameId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/legs/{ownerId}/{instituteId}/{schoolId}/{gameId}", method = RequestMethod.POST)
 	public @ResponseBody void createPedibusItineraryLegs(
 			@PathVariable String ownerId, 
 			@PathVariable String instituteId,
@@ -394,7 +394,7 @@ public class GamificationController extends AuthController {
 		}
 	}	
 
-	@RequestMapping(value = "/api/leg/{ownerId}/{gameId}/{legId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/leg/{ownerId}/{gameId}/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId,
@@ -419,7 +419,7 @@ public class GamificationController extends AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/api/leg/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/leg/{ownerId}/{gameId}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusItineraryLeg> getPedibusItineraryLegs(
 			@PathVariable String ownerId,
 			@PathVariable String gameId,
@@ -442,7 +442,7 @@ public class GamificationController extends AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/api/game/status/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/game/status/{ownerId}/{gameId}", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> getGameStatus(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -534,7 +534,7 @@ public class GamificationController extends AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/api/child/score/{ownerId}/{gameId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/api/game/child/score/{ownerId}/{gameId}", method = RequestMethod.PATCH)
 	public @ResponseBody void increaseChildScore(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 
@@ -596,7 +596,7 @@ public class GamificationController extends AuthController {
 		}
 	}	
 	
-	@RequestMapping(value = "/api/child/reset/{ownerId}/{gameId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/api/game/child/reset/{ownerId}/{gameId}", method = RequestMethod.PATCH)
 	public @ResponseBody void resetChild(
 			@PathVariable String ownerId, 
 			@PathVariable String gameId, 

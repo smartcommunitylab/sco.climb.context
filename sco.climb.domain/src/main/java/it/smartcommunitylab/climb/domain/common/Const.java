@@ -23,6 +23,7 @@ public class Const {
 	public static final String AUTH_ACTION_UPDATE = "UPDATE";
 	public static final String AUTH_ACTION_DELETE = "DELETE";
 	
+	public static final String AUTH_RES_Auth = "Auth";
 	public static final String AUTH_RES_WsnEvent = "WsnEvent";
 	public static final String AUTH_RES_EventLogFile = "EventLogFile";
 	public static final String AUTH_RES_NodeState = "NodeState";

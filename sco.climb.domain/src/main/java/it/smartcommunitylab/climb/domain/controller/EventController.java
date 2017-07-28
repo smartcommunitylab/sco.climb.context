@@ -16,7 +16,9 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
+import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.StatsLogger;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
@@ -39,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -67,16 +70,16 @@ public class EventController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 
-	@RequestMapping(value = "/api/event/{ownerId}/{instituteId}/{schoolId}/{routeId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/event/{ownerId}/{routeId}", method = RequestMethod.GET)
 	public @ResponseBody List<WsnEvent> searchEvents(
 			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
 			@PathVariable String routeId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, routeId, null, 
-				Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		List<WsnEvent> result = Lists.newArrayList();
@@ -103,30 +106,35 @@ public class EventController extends AuthController {
 			result = storage.searchEvents(ownerId, routeId, dateFrom, dateTo, eventTypeList, nodeIdList);
 			if(logger.isInfoEnabled()) {
 				logger.info(String.format("searchEvents[%s]:%d", ownerId, result.size()));
-			}			
+			}
 		} catch (Exception e) {
 			throw new InvalidParametersException("Invalid query parameters:" + e.getMessage());
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/event/{ownerId}/{instituteId}/{schoolId}/{routeId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/event/{ownerId}/{routeId}", method = RequestMethod.POST)
 	public @ResponseBody String addEvents(
 			@RequestBody List<WsnEvent> events, 
 			@PathVariable String ownerId, 
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
 			@PathVariable String routeId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, routeId, null, 
-				Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_ADD, request)) {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		for(WsnEvent event : events) {
 			event.setOwnerId(ownerId);
 			event.setRouteId(routeId);
 			storage.addEvent(event);
+			StatsLogger.logEvent(ownerId, route.getInstituteId(), route.getSchoolId(), routeId, event);
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addEvents[%s]:%d", ownerId, events.size()));
@@ -134,17 +142,17 @@ public class EventController extends AuthController {
 		return "{\"status\":\"OK\"}";
 	}
 
-	@RequestMapping(value = "/api/event/log/upload/{ownerId}/{instituteId}/{schoolId}/{routeId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/event/log/upload/{ownerId}/{routeId}", method = RequestMethod.POST)
 	public @ResponseBody String uploadLog(
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("name") String name, 
 			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
 			@PathVariable String routeId,
 			HttpServletRequest request) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, routeId, null, 
-				Const.AUTH_RES_EventLogFile, Const.AUTH_ACTION_ADD, request)) {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId, null, Const.AUTH_RES_EventLogFile, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		if(logger.isInfoEnabled()) {
@@ -162,16 +170,16 @@ public class EventController extends AuthController {
 		return "{\"status\":\"OK\"}";
 	}
 	
-	@RequestMapping(value = "/api/event/check/{ownerId}/{instituteId}/{schoolId}/{routeId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/event/check/{ownerId}/{routeId}", method = RequestMethod.GET)
 	public @ResponseBody List<NodeState> checkNodes(
 			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
 			@PathVariable String routeId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, routeId, null,
-				Const.AUTH_RES_NodeState, Const.AUTH_ACTION_READ, request)) {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				routeId, null, Const.AUTH_RES_NodeState, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		String dateFromString = request.getParameter("dateFrom");

@@ -1,6 +1,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
+import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
@@ -24,36 +25,52 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class TestController extends AuthController {
-	private static final transient Logger logger = LoggerFactory.getLogger(TestController.class);
+public class AdminController extends AuthController {
+	private static final transient Logger logger = LoggerFactory.getLogger(AdminController.class);
 	@Autowired
 	AuthorizationManager authorizationManager;
 
-	@RequestMapping(value = "/test/auth/schema/upload", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/auth/schema/upload", method = RequestMethod.POST)
 	public @ResponseBody void uploadAuthSchema(
 			@RequestBody String json,
 			HttpServletRequest request) throws Exception {
+//		if(!validateAuthorizationByExp(null, null, null, null, null,
+//				Const.AUTH_RES_Auth, Const.AUTH_ACTION_ADD, request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+//		}
 		authorizationManager.loadAuthSchema(json);
 	}
 	
-	@RequestMapping(value = "/test/auth", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/auth", method = RequestMethod.POST)
 	public @ResponseBody AuthorizationDTO addAuthorization(
 			@RequestBody AuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
+//		if(!validateAuthorizationByExp(null, null, null, null, null,
+//				Const.AUTH_RES_Auth, Const.AUTH_ACTION_ADD, request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+//		}
 		return authorizationManager.insertAuthorization(auth);
 	}
 	
-	@RequestMapping(value = "/test/auth/{authId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/admin/auth/{authId}", method = RequestMethod.DELETE)
 	public @ResponseBody void deleteAuthorization(
 			@PathVariable String authId,
 			HttpServletRequest request) throws Exception {
+//		if(!validateAuthorizationByExp(null, null, null, null, null,
+//				Const.AUTH_RES_Auth, Const.AUTH_ACTION_DELETE, request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+//		}
 		authorizationManager.deleteAuthorization(authId);
 	}
 	
-	@RequestMapping(value = "/test/auth/validate", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/auth/validate", method = RequestMethod.POST)
 	public @ResponseBody String validateAuth(
 			@RequestBody AuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
+//		if(!validateAuthorizationByExp(null, null, null, null, null,
+//				Const.AUTH_RES_Auth, Const.AUTH_ACTION_READ, request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+//		}
 		return Boolean.toString(authorizationManager.validateAuthorization(auth));
 	}
 	
