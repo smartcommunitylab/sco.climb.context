@@ -87,64 +87,69 @@ public class DashboardController extends AuthController {
 	@Value("${param.class.distance}")	
 	private String paramClassDistance;
 	
-	@RequestMapping(value = "/api/game/player/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/player/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<PedibusPlayer> players = storage.getPedibusPlayersByClassRoom(ownerId, gameId, classRoom);
+		List<PedibusPlayer> players = storage.getPedibusPlayersByClassRoom(ownerId, pedibusGameId, classRoom);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getPlayersByClassRoom[%s]: %s - %s", ownerId, gameId, players.size()));
+			logger.info(String.format("getPlayersByClassRoom[%s]: %s - %s", ownerId, 
+					pedibusGameId, players.size()));
 		}
 		return players; 
 	}
 	
-	@RequestMapping(value = "/api/game/team/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/team/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusTeam> getTeams(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, gameId);
+		List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getTeams[%s]: %s - %s", ownerId, gameId, teams.size()));
+			logger.info(String.format("getTeams[%s]: %s - %s", ownerId, pedibusGameId, teams.size()));
 		}
 		return teams; 
 	}
 	
-	@RequestMapping(value = "/api/game/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/calendar/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.POST)
 	public @ResponseBody Boolean saveCalendarDay(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom,
 			@RequestBody CalendarDay calendarDay,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Map<String, Boolean> result = storage.saveCalendarDay(ownerId, gameId, classRoom, calendarDay);
+		Map<String, Boolean> result = storage.saveCalendarDay(ownerId, pedibusGameId, 
+				classRoom, calendarDay);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("saveCalendarDay[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.toString()));
+			logger.info(String.format("saveCalendarDay[%s]: %s - %s - %s", ownerId, pedibusGameId, 
+					classRoom, result.toString()));
 		}
 		if(!result.get(Const.CLOSED)) {
 			for(String childId : calendarDay.getModeMap().keySet()) {
 				ExecutionDataDTO ed = new ExecutionDataDTO();
-				ed.setGameId(gameId);
+				ed.setGameId(game.getGameId());
 				ed.setPlayerId(childId);
 				ed.setActionId(actionCalendar);
 				
@@ -158,40 +163,44 @@ public class DashboardController extends AuthController {
 					gengineUtils.executeAction(ed);
 				} catch (Exception e) {
 					logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
-							ownerId, gameId, classRoom));
+							ownerId, game.getGameId(), classRoom));
 				}
 			}			
 		}
 		return result.get(Const.MERGED);
 	}
 	
-	@RequestMapping(value = "/api/game/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/calendar/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.GET)
 	public @ResponseBody List<CalendarDay> getCalendarDays(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom,
 			@RequestParam Long from, 
 			@RequestParam Long to, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date dateFrom = new Date(from);
 		Date dateTo = new Date(to);
-		List<CalendarDay> result = storage.getCalendarDays(ownerId, gameId, classRoom, dateFrom, dateTo);
+		List<CalendarDay> result = storage.getCalendarDays(ownerId, pedibusGameId, classRoom, 
+				dateFrom, dateTo);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getCalendarDays[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+			logger.info(String.format("getCalendarDays[%s]: %s - %s - %s", ownerId, pedibusGameId, 
+					classRoom, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/game/excursion/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.POST)
 	public @ResponseBody void saveExcursion(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom,
 			@RequestParam String name, 
 			@RequestParam String meteo, 
@@ -199,18 +208,20 @@ public class DashboardController extends AuthController {
 			@RequestParam Integer children, 
 			@RequestParam Double distance, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date day = new Date(date);
-		storage.saveExcursion(ownerId, gameId, classRoom, name, children, distance, day, meteo);
+		storage.saveExcursion(ownerId, pedibusGameId, classRoom, name, children, 
+				distance, day, meteo);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, gameId, classRoom, children, distance));
+			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, 
+					pedibusGameId, classRoom, children, distance));
 		}
 		ExecutionDataDTO ed = new ExecutionDataDTO();
-		ed.setGameId(gameId);
+		ed.setGameId(game.getGameId());
 		ed.setPlayerId(classRoom);
 		ed.setActionId(actionTrip);
 		
@@ -225,50 +236,56 @@ public class DashboardController extends AuthController {
 			gengineUtils.executeAction(ed);
 		} catch (Exception e) {
 			logger.warn(String.format("saveExcursion[%s]: error in GE excecute action %s - %s",
-					ownerId, gameId, classRoom));
+					ownerId, game.getGameId(), classRoom));
 		}
 	}	
 	
-	@RequestMapping(value = "/api/game/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/excursion/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.GET)
 	public @ResponseBody List<Excursion> getExcursions(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom,
 			@RequestParam Long from, 
 			@RequestParam Long to,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date dateFrom = new Date(from);
 		Date dateTo = new Date(to);
-		List<Excursion> result = storage.getExcursions(ownerId, gameId, classRoom, dateFrom, dateTo);
+		List<Excursion> result = storage.getExcursions(ownerId, pedibusGameId, classRoom, 
+				dateFrom, dateTo);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getExcursions[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+			logger.info(String.format("getExcursions[%s]: %s - %s - %s", ownerId, pedibusGameId, 
+					classRoom, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/notification/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/notification/{ownerId}/{pedibusGameId}/{classRoom}", 
+			method = RequestMethod.GET)
 	public @ResponseBody List<Notification> getNotifications(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom, 
 			@RequestParam Long timestamp,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		List<Notification> result = new ArrayList<Notification>();
 		if(game != null) {
-			List<Notification> classNotifications = gengineUtils.getNotification(gameId, classRoom, timestamp);
-			List<Notification> schoolNotifications = gengineUtils.getNotification(gameId, game.getGlobalTeam(), timestamp);
+			List<Notification> classNotifications = gengineUtils.getNotification(game.getGameId(), 
+					classRoom, timestamp);
+			List<Notification> schoolNotifications = gengineUtils.getNotification(game.getGameId(), 
+					game.getGlobalTeam(), timestamp);
 			result.addAll(classNotifications);
 			result.addAll(schoolNotifications);
 			Collections.sort(result, new Comparator<Notification>() {
@@ -285,59 +302,61 @@ public class DashboardController extends AuthController {
 			});
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getNotifications[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+			logger.info(String.format("getNotifications[%s]: %s - %s - %s", ownerId, pedibusGameId, 
+					classRoom, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/challenge/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/challenge/{ownerId}/{pedibusGameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<Challenge> getChallenge(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId, 
+			@PathVariable String pedibusGameId, 
 			@PathVariable String classRoom, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		List<Challenge> result = new ArrayList<Challenge>();
 		if(game != null) {
-			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(gameId, classRoom);
+			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), classRoom);
 			Challenge classChallenge = new Challenge();
-			classChallenge.setGameId(gameId);
+			classChallenge.setGameId(game.getGameId());
 			classChallenge.setPlayerId(classRoom);
 			classChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
 			result.add(classChallenge);
 			
-			playerStatus = gengineUtils.getPlayerStatus(gameId, game.getGlobalTeam());
+			playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), game.getGlobalTeam());
 			Challenge schoolChallenge = new Challenge();
-			schoolChallenge.setGameId(gameId);
+			schoolChallenge.setGameId(game.getGameId());
 			schoolChallenge.setPlayerId(game.getGlobalTeam());
 			schoolChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
 			result.add(schoolChallenge);
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getChallenge[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+			logger.info(String.format("getChallenge[%s]: %s - %s - %s", ownerId, pedibusGameId, 
+					classRoom, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/stat/{ownerId}/{gameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/stat/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
 	public @ResponseBody Stats getStats(
 			@PathVariable String ownerId, 
-			@PathVariable String gameId,  
+			@PathVariable String pedibusGameId,  
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, gameId,	Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Stats result = new Stats();
 		if(game != null) {
-			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(gameId, game.getGlobalTeam());
+			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), game.getGlobalTeam());
 			PointConcept pointConcept = gengineUtils.getPointConcept(playerStatus, env.getProperty("score.name"));
 			if(pointConcept != null) {
 				result.setGameScore(pointConcept.getScore());
@@ -392,7 +411,7 @@ public class DashboardController extends AuthController {
 			}
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getStats[%s]: %s", ownerId, gameId));
+			logger.info(String.format("getStats[%s]: %s", ownerId, pedibusGameId));
 		}
 		return result;
 	}

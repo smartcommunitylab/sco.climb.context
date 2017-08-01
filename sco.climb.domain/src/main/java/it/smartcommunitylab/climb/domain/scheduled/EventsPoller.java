@@ -236,7 +236,7 @@ public class EventsPoller {
 		}
 	}
 	
-	public void updateCalendarDayFromPedibus(String ownerId, String gameId,
+	public void updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, 
 			Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
@@ -246,7 +246,7 @@ public class EventsPoller {
 		}
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived()) {
-				PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
+				PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, pedibusGameId, childStatus.getChildId());
 				if(player != null) {
 					String classRoom = player.getClassRoom();
 					Map<String, String> modeMap = classModeMap.get(classRoom);
@@ -259,13 +259,13 @@ public class EventsPoller {
 			}
 		}
 		
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game != null) {
 			try {
 				Date day = shortSdf.parse(game.getLastDaySeen());
 				for(String classRoom : classModeMap.keySet()) {
 					Map<String, String> modeMap = classModeMap.get(classRoom);
-					storage.updateCalendarDayFromPedibus(ownerId, gameId, classRoom, day, modeMap);
+					storage.updateCalendarDayFromPedibus(ownerId, pedibusGameId, classRoom, day, modeMap);
 				}
 			} catch (ParseException e) {
 				logger.warn(e.getMessage());

@@ -15,6 +15,7 @@ public class PedibusTeam extends BaseObject implements Gamified {
 
 	private String classRoom;
 	private String gameId;
+	private String pedibusGameId;
 	private List<String> childrenId;
 	private Map<String, Collection> badges;
 	private Double score;
@@ -105,6 +106,14 @@ public class PedibusTeam extends BaseObject implements Gamified {
 	@Override
 	public PlayerStateDTO getGameStatus() {
 		return this.playerState;
+	}
+
+	public String getPedibusGameId() {
+		return pedibusGameId;
+	}
+
+	public void setPedibusGameId(String pedibusGameId) {
+		this.pedibusGameId = pedibusGameId;
 	}
 
 }

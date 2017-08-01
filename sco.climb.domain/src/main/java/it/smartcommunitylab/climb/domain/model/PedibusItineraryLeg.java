@@ -6,8 +6,8 @@ import java.util.List;
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 public class PedibusItineraryLeg extends BaseObject implements Comparable<PedibusItineraryLeg> {
-	private String gameId;
-	private String legId;
+	private String pedibusGameId;
+	private String itineraryId;
 	private String badgeId;
 	private String name;
 	private String description;
@@ -19,18 +19,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private int score;
 	private String transport;
 	
-	public String getGameId() {
-		return gameId;
-	}
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
-	}
-	public String getLegId() {
-		return legId;
-	}
-	public void setLegId(String legId) {
-		this.legId = legId;
-	}
 	public String getName() {
 		return name;
 	}
@@ -95,5 +83,17 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setExternalUrls(List<Link> externalUrls) {
 		this.externalUrls = externalUrls;
+	}
+	public String getItineraryId() {
+		return itineraryId;
+	}
+	public void setItineraryId(String itineraryId) {
+		this.itineraryId = itineraryId;
+	}
+	public String getPedibusGameId() {
+		return pedibusGameId;
+	}
+	public void setPedibusGameId(String pedibusGameId) {
+		this.pedibusGameId = pedibusGameId;
 	}
 }

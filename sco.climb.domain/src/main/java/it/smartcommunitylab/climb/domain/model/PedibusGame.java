@@ -19,9 +19,7 @@ public class PedibusGame extends BaseObject {
 	private String gameOwner;
 	private Date from;
 	private Date to;
-	private String token;
 	private String globalTeam;
-	
 	private String fromHour;
 	private String toHour;
 	private String lastDaySeen;
@@ -81,12 +79,6 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setClassRooms(List<String> classRooms) {
 		this.classRooms = classRooms;
-	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
 	}
 	public String getGlobalTeam() {
 		return globalTeam;

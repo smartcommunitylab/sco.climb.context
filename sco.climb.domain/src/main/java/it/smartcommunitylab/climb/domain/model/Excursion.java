@@ -5,7 +5,7 @@ import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 import java.util.Date;
 
 public class Excursion extends BaseObject {
-	private String gameId;
+	private String pedibusGameId;
 	private Date day;
 	private String classRoom;
 	private String meteo;
@@ -13,12 +13,6 @@ public class Excursion extends BaseObject {
 	private Double distance;
 	private String name;
 	
-	public String getGameId() {
-		return gameId;
-	}
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
-	}
 	public Date getDay() {
 		return day;
 	}
@@ -54,5 +48,11 @@ public class Excursion extends BaseObject {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getPedibusGameId() {
+		return pedibusGameId;
+	}
+	public void setPedibusGameId(String pedibusGameId) {
+		this.pedibusGameId = pedibusGameId;
 	}
 }

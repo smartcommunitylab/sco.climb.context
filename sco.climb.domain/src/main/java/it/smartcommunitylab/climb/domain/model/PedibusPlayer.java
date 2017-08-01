@@ -13,7 +13,7 @@ public class PedibusPlayer extends BaseObject {
 	private String surname;
 	private String classRoom;	
 	private String wsnId;
-	private String gameId;
+	private String pedibusGameId;
 
 	public String getChildId() {
 		return childId;
@@ -29,14 +29,6 @@ public class PedibusPlayer extends BaseObject {
 
 	public void setWsnId(String wsnId) {
 		this.wsnId = wsnId;
-	}
-
-	public String getGameId() {
-		return gameId;
-	}
-
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
 	}
 
 	public String getName() {
@@ -61,6 +53,14 @@ public class PedibusPlayer extends BaseObject {
 
 	public void setClassRoom(String classRoom) {
 		this.classRoom = classRoom;
+	}
+
+	public String getPedibusGameId() {
+		return pedibusGameId;
+	}
+
+	public void setPedibusGameId(String pedibusGameId) {
+		this.pedibusGameId = pedibusGameId;
 	}
 	
 }

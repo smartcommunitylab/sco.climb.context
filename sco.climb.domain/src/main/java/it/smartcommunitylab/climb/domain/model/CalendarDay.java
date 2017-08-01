@@ -7,19 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CalendarDay extends BaseObject {
-	private String gameId;
+	private String pedibusGameId;
 	private Date day;
 	private String classRoom;
 	private String meteo;
 	private Map<String, String> modeMap = new HashMap<String, String>();
 	private boolean closed = false;
 	
-	public String getGameId() {
-		return gameId;
-	}
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
-	}
 	public Date getDay() {
 		return day;
 	}
@@ -49,6 +43,12 @@ public class CalendarDay extends BaseObject {
 	}
 	public void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+	public String getPedibusGameId() {
+		return pedibusGameId;
+	}
+	public void setPedibusGameId(String pedibusGameId) {
+		this.pedibusGameId = pedibusGameId;
 	}
 	
 	
