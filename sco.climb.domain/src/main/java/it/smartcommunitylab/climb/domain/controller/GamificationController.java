@@ -196,7 +196,26 @@ public class GamificationController extends AuthController {
 		}
 		storage.savePedibusGame(game, ownerId, false);
 		if (logger.isInfoEnabled()) {
-			logger.info("add pedibusGame");
+			logger.info(String.format("createPedibusGame[%s]: %s", ownerId, game.getObjectId()));
+		}
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}", method = RequestMethod.PUT)
+	public @ResponseBody void updatePedibusGame(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@RequestBody PedibusGame game, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		game.setOwnerId(ownerId);
+		game.setObjectId(pedibusGameId);
+		storage.savePedibusGame(game, ownerId, true);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}
 	}
 	
@@ -403,7 +422,7 @@ public class GamificationController extends AuthController {
 		Collections.sort(legs);
 		int sumValue = 0;
 		try {
-			storage.removePedibusItineraryLegByGameId(ownerId, pedibusGameId);
+			storage.removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, itineraryId);
 			for (PedibusItineraryLeg leg: legs) {
 				leg.setPedibusGameId(pedibusGameId);
 				leg.setItineraryId(itineraryId);
@@ -415,13 +434,49 @@ public class GamificationController extends AuthController {
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
 			}
 			if (logger.isInfoEnabled()) {
-				logger.info("add pedibusItineraryLegs");
+				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
 			}
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 	}	
 
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs", method = RequestMethod.PUT)
+	public @ResponseBody void updatePedibusItineraryLegs(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@RequestBody List<PedibusItineraryLeg> legs, 
+			@RequestParam(required = false) Boolean sum, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Collections.sort(legs);
+		int sumValue = 0;
+		try {
+			storage.removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, itineraryId);
+			for (PedibusItineraryLeg leg: legs) {
+				leg.setPedibusGameId(pedibusGameId);
+				leg.setItineraryId(itineraryId);
+				leg.setOwnerId(ownerId);
+				if (sum != null && sum) {
+					sumValue += leg.getScore();
+					leg.setScore(sumValue);
+				}
+				storage.savePedibusItineraryLeg(leg, ownerId, false);
+			}
+			if (logger.isInfoEnabled()) {
+				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
+			}
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		}
+	}
+	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(
 			@PathVariable String ownerId, 

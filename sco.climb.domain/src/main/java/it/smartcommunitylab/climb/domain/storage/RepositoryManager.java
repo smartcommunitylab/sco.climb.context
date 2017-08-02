@@ -773,10 +773,18 @@ public class RepositoryManager {
 		mongoTemplate.findAndRemove(query, PedibusItineraryLeg.class);
 	}
 	
+	public void removePedibusItineraryLegByItineraryId(String ownerId, String pedibusGameId,
+			String itineraryId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId)
+				.and("itineraryId").is(itineraryId).and("ownerId").is(ownerId));
+		mongoTemplate.findAndRemove(query, PedibusItineraryLeg.class);
+	}
+	
 	public void removePedibusItinerary(String ownerId, String pedibusGameId, String objectId) {
-		Query query = new Query(new Criteria("objectId").is(objectId).and("ownerId").is(ownerId));
+		Query query = new Query(new Criteria("objectId").is(objectId)
+				.and("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
 		mongoTemplate.findAndRemove(query, PedibusItinerary.class);
-		removePedibusItineraryLegByGameId(ownerId, pedibusGameId);
+		removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, objectId);
 	}
 	
 	public void updatePedibusGameLastDaySeen(String ownerId, String gameId, String lastDaySeen) {
@@ -952,6 +960,8 @@ public class RepositoryManager {
 			mongoTemplate.save(itinerary);
 		} else {
 			Update update = new Update();
+			update.set("name", itinerary.getName());
+			update.set("description", itinerary.getDescription());
 			update.set("classRooms", itinerary.getClassRooms());
 			update.set("lastUpdate", actualDate);
 			mongoTemplate.updateFirst(query, update, PedibusItinerary.class);
