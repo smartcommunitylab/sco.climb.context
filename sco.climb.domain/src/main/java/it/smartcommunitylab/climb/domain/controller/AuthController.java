@@ -1,7 +1,8 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.aac.AACProfileService;
-import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
+import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
+import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
@@ -90,7 +91,7 @@ public class AuthController {
 	public boolean validateAuthorizationByExp(String ownerId, String instituteId, 
 			String schoolId, String routeId, String gameId, String resource, String action,	
 			HttpServletRequest request) throws Exception {
-		String subject = getSubject(getAccoutProfile(request));
+		String cf = getCF(getAccoutProfile(request));
 		String resourceName = "pedibus";
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("pedibus-resource", resource);
@@ -109,7 +110,11 @@ public class AuthController {
 		if(Utils.isNotEmpty(gameId)) {
 			attributes.put("pedibus-gameId", gameId);
 		}
-		AuthorizationDTO authorization = authorizationManager.getAuthorization(subject, action, 
+		AccountAttributeDTO account = new AccountAttributeDTO();
+		account.setAccountName(profileAccount);
+		account.setAttributeName(profileAttribute);
+		account.setAttributeValue(cf);
+		RequestedAuthorizationDTO authorization = authorizationManager.getAuthorization(account, action, 
 				resourceName, attributes);
 		if(!authorizationManager.validateAuthorization(authorization)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");

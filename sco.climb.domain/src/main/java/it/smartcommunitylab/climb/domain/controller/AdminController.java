@@ -1,7 +1,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
-import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
@@ -65,7 +65,7 @@ public class AdminController extends AuthController {
 	
 	@RequestMapping(value = "/admin/auth/validate", method = RequestMethod.POST)
 	public @ResponseBody String validateAuth(
-			@RequestBody AuthorizationDTO auth,
+			@RequestBody RequestedAuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
 //		if(!validateAuthorizationByExp(null, null, null, null, null,
 //				Const.AUTH_RES_Auth, Const.AUTH_ACTION_READ, request)) {
