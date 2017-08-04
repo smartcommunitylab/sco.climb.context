@@ -1,0 +1,62 @@
+<div class="row">
+    <!-- Name -->
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Nome:</b></p>
+        <input class="form-control" type="text" ng-model="games[currentGame].gameName" ng-required="true"/>
+    </div>
+    <!-- Description -->
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Descrizione:</b></p>
+        <text-angular ng-model="games[currentGame].gameDescription" ng-required="true"></text-angular>
+    </div>
+    <!-- Start and end date -->
+    <div class="col-lg-6" style="margin-bottom: 20px;">
+        <p style="display: inline-block"><span class="required-sign">*</span> <b>Data di inizio:&emsp;</b></p>
+        <p class="input-group" style="display: inline-block">
+            <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+                   ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </p>
+    </div>
+
+    <div class="col-lg-6" style="margin-bottom: 20px;">
+        <p style="display: inline-block"><span class="required-sign">*</span> <b>Data di fine:&emsp;</b></p>
+        <p class="input-group" style="display: inline-block">
+            <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
+                   ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+        </p>
+    </div>
+    <!-- Intervallo di raccolta dati -->
+    <div class="col-lg-12 field timepicker">
+        <p><span class="required-sign">*</span> <b>Intervallo di raccolta dati:</b></p>
+        <p>dalle:</p> <input class="form-control" type="time" ng-model="$parent.collectFromHour" ng-required="true"/>
+        <p>&emsp;alle:</p> <input class="form-control" type="time" ng-model="$parent.collectToHour" ng-required="true"/>
+    </div>
+    <!-- Scuola
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Scuola di appartenenza:</b></p>
+        <select class="form-control" style="width: 300px" ng-model="$parent.selectedSchoolString" ng-change="parseChoice()">
+            <option value="">Nessuno</option>
+            <option ng-repeat="school in schools" value="{{school}}">{{school.name}} - {{school.objectId}}</option>
+        </select>
+    </div> -->
+    <!-- Classi partecipanti -->
+    <div class="col-lg-12" ng-if="$parent.selectedSchoolString">
+        <p><span class="required-sign">*</span> <b>Classi partecipanti:</b></p>
+        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in $parent.selectedSchool.classes">
+            <label style="font-weight: normal"><input type="checkbox" value="{{classe}}" ng-model="$parent.selectedClasses[$index]" ng-true-value="'{{classe}}'" ng-false-value="''">{{classe}}&ensp;</label>
+        </div>
+    </div>
+    <!-- Linee coinvolte -->
+    <div class="col-lg-12" ng-if="games[currentGame].classes.length > 0">
+        <p><span class="required-sign">*</span> <b>Linee pedibus coinvolte:</b></p>
+        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="line in $parent.selectedSchool.lines">
+            <label style="font-weight: normal"><input type="checkbox" value="{{line.localId}}" ng-model="$parent.selectedLines[$index]" ng-true-value="'{{line.localId}}'" ng-false-value="''">{{line.name}}&ensp;</label>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div ng-include="'templates/upload.html'"></div>
+<div ng-include="'templates/dataset-selection.html'"></div>
+
+<div ng-if="$parent.selectedOwner && $parent.selectedInstitute && $parent.selectedSchool && $parent.selectedGame">
+    <div class="col-lg-12 buttons-tab">
+        <a ui-sref="root.path.info" class="btn btn-info" ng-click="$parent.$parent.pathsModified = true">Crea nuovo</a>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+        <ul class="list-group list-categories">
+            <li class="list-group-item" ng-repeat="path in paths">
+                <div class="row v-center">
+                    <div class="col-md-2">
+                        <img class="path-img" ng-src="{{path.images[0].url}}" alt="{{path.name}}">
+                    </div>
+                    <div class="col-md-8">
+                        <h5>{{path.name}}</h5>
+                        <h5>Tappe: {{path.legs.length}}</h5>
+                    </div>
+                    <div class="col-md-2 right">
+                        <a href="#/path/{{$index}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.pathsModified = true"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a ng-click="delete($index)" class="btn btn-icon btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

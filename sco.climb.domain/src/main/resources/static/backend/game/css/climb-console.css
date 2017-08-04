@@ -1,0 +1,459 @@
+.v-center {
+    display: flex;
+    align-items: center
+}
+
+a {
+    color: #15a4b8
+}
+
+a:hover {
+    color: #117c8b
+}
+
+.path-list-item {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #000
+}
+
+.cat-list-item {
+    border: none
+}
+
+.path-img {
+    max-height: 100%;
+    max-width: 100%
+}
+
+.center {
+    text-align: center
+}
+
+.right {
+    text-align: right
+}
+
+.no-padding {
+    padding: 0
+}
+
+.no-margin {
+    margin: 0
+}
+
+#map {
+    height: 600px;
+    width: 100%
+}
+
+#map-leg {
+    height: 330px;
+    width: 100%
+}
+
+#map-line {
+    height: 400px;
+    width: 90%;
+    margin: auto;
+}
+
+.map-shape-area {
+    width: 100% !important
+}
+
+.delete-menu {
+    position: absolute;
+    background: #fff;
+    padding: 3px;
+    color: #666;
+    font-weight: 700;
+    border: 1px solid #999;
+    font-family: sans-serif;
+    font-size: 12px;
+    box-shadow: 1px 3px 3px rgba(0, 0, 0, .3);
+    margin-top: -10px;
+    margin-left: 10px;
+    cursor: pointer
+}
+
+.delete-menu:hover {
+    background: #eee
+}
+
+.btn {
+    padding-right: 18px;
+    padding-left: 18px;
+    border-radius: 6px
+}
+
+.btn-icon {
+    border: 0;
+    font-size: 18px;
+    padding: 6px 12px
+}
+
+.btn.btn-info {
+    border: 0;
+    background-color: #15a4b8
+}
+
+.btn.btn-primary {
+    border: 0;
+    background-color: #259adb
+}
+
+.btn.btn-danger {
+    border: 0;
+    background-color: #e4001b
+}
+
+.btn.btn-save {
+    border: 0;
+    background-color: #69c134;
+    color: #fff
+}
+
+.btn.btn-save:hover {
+    color: #fff
+}
+
+.btn-reorder, .btn-reorder:hover {
+    border: 0;
+    cursor: move;
+    font-size: 25px;
+    color: #117c8b
+}
+
+.btn-reorder:active {
+    outline: 0;
+    box-shadow: 0;
+    color: #15a4b8
+}
+
+.btn.btn-margin {
+    margin-right: 5px
+}
+
+.btn-group, .ta-text {
+    margin-top: 3px;
+    margin-bottom: 3px
+}
+
+.navbar {
+    min-height: 20px
+}
+
+.navbar-default {
+    background-color: #c1c1c1;
+    border: 0;
+    border-bottom: 5px #118575 solid;
+    border-radius: 0
+}
+
+.navbar-header {
+    width: 250px;
+    height: 40px;
+    padding-top: 5px;
+    text-align: center
+}
+
+.navbar-default .navbar-header > span {
+    color: #118575;
+    font-weight: 700;
+    font-size: 20px
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+    color: #fff;
+    font-weight: 500;
+    background-color: #118575
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #118575;
+    font-weight: 500
+}
+
+.selection-tab, .selection-tab.active a {
+    color: #fff !important
+}
+
+.navbar-nav > li > a {
+    text-align: center;
+    font-size: 15px;
+    width: 115px;
+    padding: 10px 0
+}
+
+.lang-checkers {
+    display: inline-block
+}
+
+.lang-checkers .checkbox {
+    margin-right: 15px;
+    margin-left: 5px
+}
+
+.lang-checkers .checkbox input {
+    margin: 0
+}
+
+hr.border-paths {
+    margin: 10px 0 20px
+}
+
+.form-update {
+    margin-bottom: 30px
+}
+
+.selection-tab {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 6px 0 !important;
+    text-align: center !important;
+    background-color: #c1c1c1 !important;
+    border-bottom: 5px solid #118575 !important;
+    width: 50% !important;     /* cambiato in seguito alla rimozione del tab Categorie; ripristinato all'aggiunta del tab Giochi */
+    display: inline-block !important;
+    margin-bottom: 40px !important;
+    text-decoration: none !important
+}
+
+.field input, .field p, .field select {
+    display: inline-block
+}
+
+.selection-tab.active {
+    background-color: #118575 !important
+}
+
+.buttons-tab {
+    text-align: center;
+    margin-bottom: 40px
+}
+
+.list-categories > .list-group-item {
+    border-radius: 15px;
+    margin-bottom: 15px
+}
+
+.list-categories > .list-group-item h5 {
+    font-size: 15px
+}
+
+.header-path-category {
+    margin-bottom: 40px
+}
+
+.header-path-category h4 {
+    margin-bottom: 0
+}
+
+.header-path-category p {
+    margin-top: 0
+}
+
+.field {
+    margin-bottom: 20px
+}
+
+.field p {
+    margin-right: 15px
+}
+
+.field select {
+    /*width: 100px;*/
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: url(../img/arrow.png) calc(100% - 15px) center no-repeat;
+    border-radius: 6px;
+    border: 1px solid #c1c1c1
+}
+
+p.info-lang-text {
+    font-size: 12px;
+    margin-left: 10px
+}
+
+.field input {
+    height: 29px;
+    border-radius: 6px;
+    width: 350px
+}
+
+input.default-height {
+    height: 34px !important;
+}
+
+input.default-height + .input-group-btn {
+    font-size: inherit;
+}
+
+.timepicker input
+{
+    width: 150px;
+}
+
+.field input:focus {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 1px solid #c1c1c1
+}
+
+.field.image-container {
+    background-color: #c1c1c1;
+    min-height: 200px
+}
+
+.preview-container {
+    margin-bottom: 10px
+}
+
+.preview-title {
+    color: #707070;
+    font-size: 15px
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: 0;
+    background: #fff;
+    cursor: inherit;
+    display: block
+}
+
+.required-sign {
+    color: #e4001b
+}
+
+.tabs-menu {
+    padding-right: 0
+}
+
+.tabs-menu a {
+    cursor: pointer;
+    color: #000;
+    font-weight: 500;
+    display: block;
+    font-size: 15px;
+    text-decoration: none;
+    padding-left: 10px;
+    margin-top: 30px;
+    transition: all .1s;
+    border-bottom: 4px solid #fff
+}
+
+.add-media-label, .check-container p, .check-container > div, .coordinates-label {
+    display: inline-block
+}
+
+.tabs-menu a.active-tab, .tabs-menu a:hover {
+    color: #118575;
+    border-bottom: 4px solid #118575
+}
+
+.tabs-menu a:first-child {
+    margin-top: 0
+}
+
+.tabs-menu a.active-tab {
+    cursor: default
+}
+
+.tabs-container {
+    border-left: 1px solid #c1c1c1
+}
+
+.check-container {
+    margin-bottom: 20px
+}
+
+.check-container p {
+    margin: 0 15px 0 0;
+    vertical-align: top
+}
+
+.check-container .checkbox {
+    margin-top: 0
+}
+
+.add-media {
+    margin-bottom: 14px
+}
+
+.add-media input, .add-media select {
+    width: 250px
+}
+
+.add-stop input {
+    width: 200px
+}
+
+.add-media select {
+    background: url(../img/arrow.png) 230px center no-repeat
+}
+
+.add-media p {
+    margin-bottom: 0
+}
+
+.add-media-label {
+    width: 115px
+}
+
+.add-media hr {
+    background-color: #c1c1c1;
+    height: 1px;
+    margin: 10px 0 0;
+    border: 0
+}
+
+.media-type-title {
+    margin-left: 10px
+}
+
+.map-shape-area {
+    height: 200px !important
+}
+
+.coordinates-label {
+    width: 110px
+}
+
+.form-control.coordinates-input {
+    display: inline-block;
+    width: 220px
+}
+
+.leg-media {
+    margin-top: 50px
+}
+
+.hint
+{
+    font-size: 13px;
+}
+
+p.fixed-width
+{
+    width: 100px;
+}

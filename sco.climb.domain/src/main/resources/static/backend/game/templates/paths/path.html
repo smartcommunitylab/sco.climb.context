@@ -1,0 +1,27 @@
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-8 header-path-category">
+            <h4>{{paths[currentPath].title ? 'MODIFICA PERCORSO: ' + paths[currentPath].title : 'CREA NUOVO PERCORSO'}}</h4>
+            <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+        </div>
+
+        <div class="col-md-4 right">
+            <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva</a>
+            <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Menu tab -->
+        <div class="col-md-2 tabs-menu">
+            <a ng-class="{'active-tab':selectedTab == 'info'}" ui-sref="root.path.info">INFO</a>
+            <a ng-class="{'active-tab':selectedTab == 'legs'}" ui-sref="root.path.legs">TAPPE</a>
+            <a ng-class="{'active-tab':selectedTab == 'map'}" ui-sref="root.path.map">ITINERARIO</a>
+        </div>
+
+        <!-- Tabs container -->
+        <div class="col-md-10 tabs-container">
+            <div ui-view></div>
+        </div>
+    </div>
+</div>
