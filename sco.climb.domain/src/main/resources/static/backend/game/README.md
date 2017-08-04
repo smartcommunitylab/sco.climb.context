@@ -11,7 +11,7 @@ Prima di entrare nel codice dell'app, dovete sapere cosa indicano i nomi dei com
 * ***leg*** (in rari casi *poi*): indica una sezione di percorso compresa tra la tappa precedente e quella che si sta modificando. La modifica di una *leg*, di fatto, è la modifica della posizione di una determinata tappa.
 * ***game***: indica un gioco, sempre legato ad una scuola e che al suo interno può contenere più itinerari/percorsi
 * ***school***: indica una scuola, che al suo interno contiene giochi e linee pedibus
-* ***line***: indica una linea pedibus, che dev'essere per forza legata ad una scuola.
+* ***line*** (in alcuni casi *route*): indica una linea pedibus, che dev'essere per forza legata ad una scuola.
 
 ### Controllers
 
