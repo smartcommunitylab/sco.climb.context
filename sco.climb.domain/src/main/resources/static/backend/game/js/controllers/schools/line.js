@@ -9,15 +9,24 @@ angular.module('consoleControllers.line', [])
     // Create $scope.line variable and init the map
     function InitLinePage() {
         if ($stateParams.idLine)     // se sto modificando una linea già esistente
-            $scope.line = angular.copy($scope.$parent.schools[currentSchool].lines[$stateParams.idLine]);
+        {
+            $scope.line = angular.copy($rootScope.schools[currentSchool].lines[$stateParams.idLine]);
+            $scope.saveData = DataService.editData;
+        }
         else
+        {
             $scope.line = {
                 "name": '',
-                "description": '',
-                "stops": [],
-                "polyline": ''         // TODO: valutare utilità
+                "instituteId": $scope.$parent.selectedInstitute.objectId,
+                "ownerId": $scope.$parent.selectedOwner,
+                "schoolId": $rootScope.schools[currentSchool].objectId,
+                "from": '',             // TODO: DATA DI INIZIO/FINE LINEA
+                "to": '',
+                "distance": '',         // TODO
+                "stops": []
             };
-
+            $scope.saveData = DataService.saveData;
+        }
         drawMapLine.createMap('map-line', $scope.line.stops);
     }
 
@@ -40,16 +49,24 @@ angular.module('consoleControllers.line', [])
         drawMapLine.updateMarkers($scope.line.stops);
     };
 
-    $scope.save = function () {
-        /*$scope.line.polyline = drawMapLine.getPathPolyline();     // ottiene la polyline dal servizio (da fare?)*/
+    $scope.save = function () {     // TODO: da implementare salvataggio fermate
         if (checkFields()) {
-            if ($stateParams.idLine)
-                $scope.$parent.schools[currentSchool].lines[$stateParams.idLine] = $scope.line;
-            else
-                $scope.$parent.schools[currentSchool].lines.push($scope.line);
-
-            // Back to the school
-            $window.history.back();
+            $scope.saveData('route', $scope.line).then(
+                function() {
+                    console.log('Linea salvata.');
+                    DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $rootScope.schools[$scope.currentSchool].instituteId, 'route', $rootScope.schools[$scope.currentSchool].objectId).then(       // riaggiorno la lista delle linee
+                        function(response) {
+                            console.log('Caricamento delle linee a buon fine.');
+                            $rootScope.schools[$scope.currentSchool].lines = response.data;
+                        }, function() {
+                            alert('Errore nel caricamento delle linee.');
+                        }
+                    );
+                    $window.history.back();
+                }, function() {
+                    alert('Errore nel caricamento della linea.');
+                }
+            );
         }
     };
 
@@ -66,20 +83,6 @@ angular.module('consoleControllers.line', [])
         }
         return allCompiled;
     }
-
-    $scope.moveUp = function(origIndex)
-    {
-        var swap = $scope.line.stops[origIndex];
-        $scope.line.stops[origIndex] = $scope.line.stops[origIndex-1];
-        $scope.line.stops[origIndex-1] = swap;
-    };
-
-    $scope.moveDown = function(origIndex)
-    {
-        var swap = $scope.line.stops[origIndex];
-        $scope.line.stops[origIndex] = $scope.line.stops[origIndex+1];
-        $scope.line.stops[origIndex+1] = swap;
-    };
 
     $scope.addStop = function()
     {

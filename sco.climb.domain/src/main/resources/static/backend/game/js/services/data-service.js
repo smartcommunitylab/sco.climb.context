@@ -26,7 +26,7 @@ angular.module('DataService', [])
                 var fetchUrl;
                 if(type === 'school')
                     fetchUrl = baseUrl + "/api/" + type + "/" + owner + "/" + institute.objectId;
-                else if(type === 'game')
+                else if(type === 'game' || type === 'route')
                     fetchUrl = baseUrl + "/api/" + type + "/" + owner + "/" + institute.objectId + "/" + school.objectId;
                 else if(type === 'itinerary')
                     fetchUrl = baseUrl + "/api/game/" + owner + "/" + gameId + "/" + type;
@@ -70,7 +70,7 @@ angular.module('DataService', [])
             saveData: function(type, element)           // TODO: da adattare per tutti i tipi di dati
             {
                 var postUrl;
-                if(type === 'game' || type === 'stop')
+                if(type === 'game' || type === 'route' || type === 'stop')
                     postUrl = baseUrl + "/api/" + type + "/" + element.ownerId;
                 else if(type === 'school')
                     postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
@@ -97,9 +97,9 @@ angular.module('DataService', [])
             logout: logout
         };
     }
-])
+]);
 
-.service('ShareMedia', function () {        // serve?
+/*.service('ShareMedia', function () {        // serve?
     var obj;
 
     return {
@@ -110,4 +110,4 @@ angular.module('DataService', [])
             obj = value;
         }
     };
-});
+});*/

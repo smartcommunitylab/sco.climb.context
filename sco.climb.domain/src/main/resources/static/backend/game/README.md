@@ -38,6 +38,7 @@ I templates HTML sono suddivisi in base alle sezioni dell'app e rappresentano gl
 
 * Gestione anagrafica dei volontari pedibus
 * Login/logout
+* Salvatggio/modifica/cancellazione fermate lato server
 * ...
 
 ### Versioni componenti esterni
