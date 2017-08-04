@@ -1,35 +1,38 @@
 angular.module('consoleControllers.leg', [])
 
 // Edit the leg for the selected path
-.controller('LegCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapPoi, createDialog) {
+.controller('LegCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
     $scope.$parent.selectedTab = 'legs';
     var currentPath = $scope.$parent.currentPath;
     InitLegPage();
 
     // Create $scope.leg variable and init the map
     function InitLegPage() {
-        if ($stateParams.idLeg)     // se sto modificando un LEG già esistente
-            $scope.leg = angular.copy($scope.$parent.paths[currentPath].legs[$stateParams.idLeg]);
+        if ($stateParams.idLeg)     // se sto modificando una tappa già esistente
+        {
+            $scope.leg = angular.copy($scope.$parent.legs[$stateParams.idLeg]);
+            $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
+        }
         else
             $scope.leg = {
-                "title": '',
+                "name": '',
                 "description": '',
-                "featuredImage": '',
+                "imageUrl": '',
                 "coordinates": {
                     lat: 45.8832637,
                     lng: 11.0014507
                 },
                 "score": '',
                 "polyline": '',         // NEW: stringa contenente il percorso compreso tra la tappa e la sua precedente (nel 1° LEG sarà vuota, ovviamente)
-                "arriveBy": 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
-                "multimedia": [],       // NEW: array di oggetti contenente gli elementi multimediali
-                "localId": $scope.$parent.paths[currentPath].legs.length
+                "transport": 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
+                "externalUrls": [],        // NEW: array di oggetti contenente gli elementi multimediali
+                "position": $scope.$parent.legs.length
             };
 
-        if($scope.leg.localId == 0)
-            drawMapPoi.createMap('map-leg', null, $scope.leg.coordinates, $scope.leg.arriveBy);
+        if($scope.leg.position === 0)
+            drawMapLeg.createMap('map-leg', null, $scope.leg.coordinates, $scope.leg.transport);
         else
-            drawMapPoi.createMap('map-leg', $scope.$parent.paths[currentPath].legs[$scope.leg.localId-1].coordinates, $scope.leg.coordinates, $scope.leg.arriveBy);
+            drawMapLeg.createMap('map-leg', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.transport);
     }
 
     $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
@@ -42,17 +45,17 @@ angular.module('consoleControllers.leg', [])
     });
 
     $scope.updateTravelType = function (newTravelType) {
-        drawMapPoi.setTravelType(newTravelType);
+        drawMapLeg.setTravelType(newTravelType);
     };
 
     // Update the marker position when the user change coordinates
     $scope.updateMarkerPosition = function () {
-        drawMapPoi.updateMarker($scope.leg.coordinates.lat, $scope.leg.coordinates.lng);
+        drawMapLeg.updateMarker($scope.leg.coordinates.lat, $scope.leg.coordinates.lng);
     };
 
     $scope.calculateNewMarkerPos = function(distance)
     {
-        drawMapPoi.calculateMarkerPosFromDistance(Number(distance)*1000);
+        drawMapLeg.calculateMarkerPosFromDistance(Number(distance)*1000);
     };
 
     $scope.newMedia = {type: 'image'};      // Necessario a evitare che il campo "Tipologia" rimanga vuoto
@@ -60,12 +63,12 @@ angular.module('consoleControllers.leg', [])
     // Add new media item to the leg
     $scope.addMedia = function ()
     {
-        if(!this.newMedia.url)      // controlla che sia stato inserito un URL
+        if(!this.newMedia.link)      // controlla che sia stato inserito un URL
             alert("Non è stato inserito un indirizzo valido.");
         else
         {
             if ($scope.newMedia.type)
-                $scope.leg.multimedia.push($scope.newMedia);
+                $scope.leg.externalUrls.push($scope.newMedia);
             else
                 alert("Errore: il tipo dell'oggetto non è un tipo valido (solo immagine o video).");
 
@@ -75,13 +78,14 @@ angular.module('consoleControllers.leg', [])
     };
 
     $scope.save = function () {
-        if ($scope.leg.localId > 0)
-            $scope.leg.polyline = drawMapPoi.getPathPolyline();     // ottiene la polyline dal servizio
+        if ($scope.leg.position > 0)
+            $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
         if (checkFields()) {
+            $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
             if ($stateParams.idLeg)
-                $scope.$parent.paths[currentPath].legs[$stateParams.idLeg] = $scope.leg;
+                $scope.$parent.legs[$stateParams.idLeg] = $scope.leg;
             else
-                $scope.$parent.paths[currentPath].legs.push($scope.leg);
+                $scope.$parent.legs.push($scope.leg);
 
             // Back to the path
             $window.history.back();
@@ -92,7 +96,7 @@ angular.module('consoleControllers.leg', [])
         var allCompiled = true;
         var invalidFields = $('.error','.ng-invalid');
         // Get all inputs
-        if (invalidFields.length > 0 || $scope.leg.multimedia.length === 0) {
+        if (invalidFields.length > 0 || $scope.leg.externalUrls.length === 0) {
             $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e di avere inserito almeno un elemento multimediale prima di salvare.";
             $timeout(function () {
                 $rootScope.modelErrors = '';
@@ -115,7 +119,7 @@ angular.module('consoleControllers.leg', [])
     $scope.uploadPic = function (file) {
         uploadImageOnImgur(file).success(function (response) {
             // Update the link of the new media with the imgur link
-            $scope.newMedia.url = response.data.link;
+            $scope.newMedia.link = response.data.link;
             // Reset the input field
             $scope.file = null;
         });
@@ -124,7 +128,7 @@ angular.module('consoleControllers.leg', [])
     $scope.uploadFeaturedPic = function (file) {
         uploadImageOnImgur(file).success(function (response) {
             // Update the link of the new media with the imgur link
-            $scope.leg.featuredImage = response.data.link;
+            $scope.leg.imageUrl = response.data.link;
         });
     };
 
@@ -132,13 +136,13 @@ angular.module('consoleControllers.leg', [])
         createDialog('templates/modals/delete-media.html',{
             id : 'delete-media-dialog',
             title: 'Attenzione!',
-            success: { label: 'Conferma', fn: function() {$scope.leg.multimedia.splice($scope.leg.multimedia.indexOf(element), 1);} }
+            success: { label: 'Conferma', fn: function() {$scope.leg.externalUrls.splice($scope.leg.externalUrls.indexOf(element), 1);} }
         });
     };
 
     $scope.updateElementData = function(index, newTitle, newUrl)
     {
-        $scope.leg.multimedia[index].title = newTitle;
-        $scope.leg.multimedia[index].url = newUrl;
+        $scope.leg.externalUrls[index].name = newTitle;
+        $scope.leg.externalUrls[index].link = newUrl;
     }
 });

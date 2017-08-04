@@ -34,11 +34,15 @@ angular.module('consoleControllers.mainCtrl', [])
         };
 
         $scope.loadSchoolsList = function() {
+            if($scope.selectedInstitute === null) {     // serve a evitare che il campo "Gioco" rimanga visibile anche quando l'istituto viene riselezionato
+                $scope.selectedSchool = '';             // TODO: da testare con più istituti
+                return;
+            }
             DataService.getData($scope.selectedOwner, $scope.selectedInstitute, 'school').then(
                 function(response) {
-                  $rootScope.schools = response.data;
+                    $rootScope.schools = response.data;
                 }, function() {
-                  alert('Errore nella richiesta.');
+                    alert('Errore nella richiesta.');
                 }
             );
         };

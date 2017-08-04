@@ -50,10 +50,16 @@ angular.module('DataService', [])
             editData: function(type, element)
             {
                 var sendUrl;
-                if(type !== 'itinerary')
-                    sendUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
-                else
+                if(type === 'itinerary')
                     sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
+                else if(type === 'legs')      // per le tappe passo alla funzione l'intero oggetto dell'itinerario, quindi l'URL sarà per forza diverso
+                {
+                    sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
+                    return $http.put(sendUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+                }
+                else
+                    sendUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
+
                 return $http.put(sendUrl, element, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
             },
             getInstitutesList: function(owner)
@@ -70,7 +76,8 @@ angular.module('DataService', [])
                     postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
                 else if(type === 'itinerary')
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/" + type;
-                else if(type === 'legs') {      // per le tappe passo alla funzione l'intero oggetto dell'itinerario, quindi l'URL sarà per forza diverso
+                else if(type === 'legs')      // per le tappe passo alla funzione l'intero oggetto dell'itinerario, quindi l'URL sarà per forza diverso
+                {
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
                     return $http.post(postUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
                 }

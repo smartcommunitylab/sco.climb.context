@@ -37,7 +37,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             $scope.$parent.selectedSchool, $rootScope.paths[$scope.currentPath].pedibusGameId, $rootScope.paths[$scope.currentPath].objectId).then(
                 function(response) {
                     console.log('Caricamento delle tappe a buon fine.');
-                    $rootScope.legs = response.data;
+                    $scope.legs = response.data;
                 }, function() {
                     alert('Errore nel caricamento delle tappe.');
                 }
@@ -111,13 +111,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         var isValidate = true;
         var path = $rootScope.paths[$scope.currentPath];
 
-        if (!path.name || !path.description)
-            isValidate = false;
         if (!path.name || !path.description || path.name === "" || path.description === "")
-                isValidate = false;
+            isValidate = false;
 
-        /*if ($scope.legs.length === 0)
-            isValidate = false;*/           // TODO: da decommentare una volta implementato salvataggio/caricamento legs
+        if ($scope.legs.length === 0)
+            isValidate = false;
 
         return isValidate;
     }
@@ -136,94 +134,33 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     $scope.$parent.selectedTab = 'info';
 })
 
-.controller('LegsListCtrl', function ($scope, $rootScope, createDialog) {
+.controller('LegsListCtrl', function ($scope, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'legs';
     $scope.remove = function (idLeg) {
         createDialog('templates/modals/delete-leg.html',{
             id : 'delete-leg-dialog',
             title: 'Attenzione!',
-            success: { label: 'Conferma', fn: function() {$rootScope.paths[$scope.currentPath].legs.splice(idLeg, 1);} }
+            success: { label: 'Conferma', fn: function() {
+                $scope.legs.splice(idLeg, 1);
+                $rootScope.paths[$scope.currentPath].legs = $scope.legs;
+                DataService.editData('legs', $rootScope.paths[$scope.currentPath]).then(
+                    function() {
+                        console.log('Salvataggio dati a buon fine.');
+                    }, function() {
+                        alert('Errore nel salvataggio delle tappe.');
+                    }
+                );
+            } }
         });
     };
 })
-/*
-.controller('MultimediaCtrl', function ($scope, $uibModal, uploadImageOnImgur) {
-    $scope.$parent.selectedTab = 'multimedia';
-    $scope.newMedia = {};
-    // Add media to the current path
-    $scope.addMedia = function () {
-        switch ($scope.data.mediaType) {
-        case 'image':
-            $rootScope.paths[$scope.currentPath].images.push($scope.newMedia);
-            break;
-        case 'video':
-            $rootScope.paths[$scope.currentPath].videos.push($scope.newMedia);
-            break;
-        case 'audio':
-            $rootScope.paths[$scope.currentPath].audios.push($scope.newMedia);
-            break;
-        default:
-            alert("Errore: il tipo dell'oggetto non è un tipo valido (solo immagine, audio o video).");
-        }
-        // Reset the newMedia object
-        $scope.newMedia = {};
-    };
-
-    $scope.delete = function (idx, array) {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'templates/back.html',
-            controller: 'ModalCtrl',
-            size: 'lg',
-            resolve: {
-                titleText: function () {
-                    return 'Attenzione!';
-                },
-                bodyText: function () {
-                    return 'Sei sicuro di voler cancellare questo oggetto?';
-                }
-            }
-        });
-
-        modalInstance.result.then(function () {
-            array.splice(idx, 1);
-        });
-    };
-
-    // Upload image on imgur
-    $scope.uploadPic = function (file) {
-        uploadImageOnImgur(file).success(function (response) {
-            // Update the link of the new media with the imgur link
-            $scope.newMedia.url = response.data.link;
-            // Reset the input field
-            $scope.file = null;
-        });
-    };
-
-    // Switch views
-    $scope.copyOfImages = {};
-    $scope.copyOfVideos = {};
-    $scope.copyOfAudios = {};
-
-    // orArray = original $scope array;
-    // cpArray = copy of original $scope array;
-
-    $scope.push = function (index, orArray, cpArray) {
-        cpArray[index] = angular.copy(orArray[index]);
-    }
-    $scope.pop = function (orArray, cpArray, index, save) {
-        if (save)
-            orArray[index] = cpArray[index];
-
-        cpArray[index] = null;
-    }
-}) NON PIU' NECESSARIO (multimedia rimossi) */
 
 .controller('MapCtrl', function ($scope, $rootScope, $timeout, drawMap, createDialog) {
     $scope.$parent.selectedTab = 'map';
     $scope.toggle = true;
     $scope.initMap = function () {
         // Verifica che ci siano abbastanza tappe
-        if($rootScope.paths[$scope.currentPath].legs.length < 2)
+        if($scope.$parent.legs.length < 2)
         {
             createDialog('templates/modals/err-nolegs.html',{
                 id : 'nolegs-dialog',
@@ -235,7 +172,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             });
         }
         else
-            drawMap.createMap('map', $rootScope.paths[$scope.currentPath].legs);
+            drawMap.createMap('map', $scope.legs);
     };
 
     $scope.computeLength = function() {
