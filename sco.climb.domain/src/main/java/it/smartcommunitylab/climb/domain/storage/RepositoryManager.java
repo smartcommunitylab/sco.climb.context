@@ -535,6 +535,18 @@ public class RepositoryManager {
 		return result;
 	}
 
+	public User getUserByCf(String cf) {
+		Query query = new Query(new Criteria("cf").is(cf));
+		User result = mongoTemplate.findOne(query, User.class);
+		return result;
+	}
+	
+	public User getUserByEmail(String email) {
+		Query query = new Query(new Criteria("email").is(email));
+		User result = mongoTemplate.findOne(query, User.class);
+		return result;
+	}
+	
 	public List<PedibusGame> getPedibusGames() {
 		return mongoTemplate.findAll(PedibusGame.class);		
 	}		
@@ -973,5 +985,31 @@ public class RepositoryManager {
 				.and("schoolId").is(schoolId)
 				.and("ownerId").is(ownerId));
 		return mongoTemplate.find(query, Child.class);
+	}
+	
+	public void addUser(User user) {
+		Date actualDate = new Date();
+		user.setCreationDate(actualDate);
+		user.setLastUpdate(actualDate);
+		mongoTemplate.save(user);
+	}
+	
+	public void updateUser(User user) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("objectId").is(user.getObjectId()));
+		User userDb = mongoTemplate.findOne(query, User.class);
+		if(userDb == null) {
+			throw new EntityNotFoundException(String.format("User with id %s not found", user.getObjectId()));
+		}
+		Date actualDate = new Date();
+		Update update = new Update();
+		update.set("name", user.getName());
+		update.set("surname", user.getSurname());
+		update.set("email", user.getEmail());
+		update.set("cf", user.getCf());
+		update.set("subject", user.getSubject());
+		update.set("ownerIds", user.getOwnerIds());
+		update.set("roles", user.getRoles());
+		update.set("lastUpdate", actualDate);
+		mongoTemplate.updateFirst(query, update, User.class);
 	}
 }

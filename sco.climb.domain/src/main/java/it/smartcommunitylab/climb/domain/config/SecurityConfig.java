@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     tokenServices.setRestTemplate(aacTemplate);
     tokenServices.setPrincipalExtractor(new PrincipalExtractor() {
 			
+			@SuppressWarnings("unchecked")
 			@Override
 			public Object extractPrincipal(Map<String, Object> map) {
 				DataSetInfo dataSetInfo = new DataSetInfo();
@@ -67,6 +68,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				dataSetInfo.setName((String) map.get("name"));
 				dataSetInfo.setSurname((String) map.get("surname"));
 				dataSetInfo.setToken((String) map.get("token"));
+				//TODO get email and cf
+				Map<String, Object> accounts = (Map<String, Object>) map.get("accounts");
+				if(accounts.containsKey("google")) {
+					Map<String, Object> google = (Map<String, Object>) accounts.get("google");
+					dataSetInfo.setEmail((String) google.get("email"));
+				}
+				if(accounts.containsKey("adc")) {
+					Map<String, Object> adc = (Map<String, Object>) accounts.get("adc");
+					dataSetInfo.setEmail((String) adc.get("pat_attribute_codicefiscale"));
+				}
+				//TODO TEST
+				dataSetInfo.setCf("1122334455");
 				DataSetDetails details = new DataSetDetails(dataSetInfo);
 				return details;
 			}

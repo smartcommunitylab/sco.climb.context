@@ -5,16 +5,16 @@
 	<artifactId>sco.climb.domain</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
-	
+
 	<name>domain</name>
-	
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -22,13 +22,13 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>it.smartcommunitylab</groupId>
 			<artifactId>sco.climb.context-model</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.smartcommunitylab</groupId>
 			<artifactId>aac.client</artifactId>
@@ -80,7 +80,7 @@
 			<version>15.0</version>
 			<type>jar</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -101,6 +101,11 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -119,7 +124,7 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.6.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -160,12 +165,12 @@
 		</plugins>
 		<finalName>domain</finalName>
 	</build>
-	
+
 	<repositories>
 		<repository>
 			<id>SmartCommunity-releases</id>
 			<url>http://repository.smartcommunitylab.it/content/repositories/releases</url>
 		</repository>
 	</repositories>
-	
+
 </project>

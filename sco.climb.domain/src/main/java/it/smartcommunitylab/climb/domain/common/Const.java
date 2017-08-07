@@ -18,6 +18,11 @@ public class Const {
 	public static final int END_ROUTE = 402;
 	public static final int BATTERY_STATE = 501;
 	
+	public static final String ROLE_ADMIN = "admin";
+	public static final String ROLE_PARENT = "parent";
+	public static final String ROLE_TEACHER = "teacher";
+	public static final String ROLE_VOLUNTEER = "volunteer";
+	
 	public static final String AUTH_ACTION_READ = "READ";
 	public static final String AUTH_ACTION_ADD = "ADD";
 	public static final String AUTH_ACTION_UPDATE = "UPDATE";

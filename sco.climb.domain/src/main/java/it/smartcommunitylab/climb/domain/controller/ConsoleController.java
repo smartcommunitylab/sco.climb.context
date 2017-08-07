@@ -76,7 +76,7 @@ public class ConsoleController extends AuthController {
 	private DataSetInfo getDataSetInfo(HttpServletRequest request) {
 		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
-		User user = storage.getUserBySubject(details.getApp().getSubject());
+		User user = storage.getUserByCf(details.getApp().getCf());
 		if(user != null) {
 			details.getApp().setOwnerIds(user.getOwnerIds());
 			details.getApp().setRoles(user.getRoles());

@@ -12,6 +12,8 @@ public class DataSetInfo implements Serializable {
 	private String subject;
 	private String name;
 	private String surname;
+	private String email;
+	private String cf;
 	private String token;
 	
 	@Override
@@ -65,6 +67,22 @@ public class DataSetInfo implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCf() {
+		return cf;
+	}
+
+	public void setCf(String cf) {
+		this.cf = cf;
 	}
 
 }
