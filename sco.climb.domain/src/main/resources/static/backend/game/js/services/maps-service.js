@@ -11,8 +11,8 @@ angular.module('MapsService', [])
         // Google Maps + path edit
         map = new google.maps.Map(document.getElementById(idMap), {
             center: {
-                lat: parseFloat(poisArray[0].coordinates.lat),
-                lng: parseFloat(poisArray[0].coordinates.lng)
+                lat: parseFloat(poisArray[0].geocoding[1]),
+                lng: parseFloat(poisArray[0].geocoding[0])
             },
             zoom: 10
         });
@@ -33,7 +33,8 @@ angular.module('MapsService', [])
         drawMarkers(poisArray);
     };
 
-    var generatePath = function (poisArray){
+    var generatePath = function (poisArray)
+    {
         var generatedPath = new google.maps.MVCArray();
         for (var i = 1; i < poisArray.length; i++)
         {
@@ -53,10 +54,11 @@ angular.module('MapsService', [])
         for (var i = 0; i < legs.length; i++) {
             markers.push(new google.maps.Marker({
                 position: {
-                    lat: parseFloat(legs[i].coordinates.lat),
-                    lng: parseFloat(legs[i].coordinates.lng)
+                    lat: parseFloat(legs[i].geocoding[1]),
+                    lng: parseFloat(legs[i].geocoding[0])
                 },
-                map: map
+                map: map,
+                label: (i+1).toString()
             }));
         }
     }
@@ -76,7 +78,7 @@ angular.module('MapsService', [])
 })
 
 // This service draws the map in the leg page
-.service("drawMapPoi", function ($rootScope) {
+.service("drawMapLeg", function ($rootScope) {
     // Proprietà della leg
     var prevPoiCoordinates;
     var travelType;

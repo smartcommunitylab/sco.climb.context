@@ -11,11 +11,11 @@
             <li class="list-group-item" ng-repeat="path in paths">
                 <div class="row v-center">
                     <div class="col-md-2">
-                        <img class="path-img" ng-src="{{path.images[0].url}}" alt="{{path.name}}">
+                        <img class="path-img" alt="Placeholder">
                     </div>
                     <div class="col-md-8">
                         <h5>{{path.name}}</h5>
-                        <h5>Tappe: {{path.legs.length}}</h5>
+                        <h5>{{$parent.$parent.legs.length}}</h5>        <!-- TODO: valutare se mantenere o meno questa possibilità -->
                     </div>
                     <div class="col-md-2 right">
                         <a href="#/path/{{$index}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.pathsModified = true"><i class="fa fa-pencil" aria-hidden="true"></i></a>

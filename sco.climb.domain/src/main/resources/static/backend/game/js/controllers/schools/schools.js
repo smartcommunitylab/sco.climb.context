@@ -23,13 +23,21 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
 })
 
-.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog, $filter) {
+.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
     $scope.$parent.mainView = 'school';
 
     if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         $scope.currentSchool = Number($stateParams.idSchool);
         $scope.saveData = DataService.editData;
+        DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $scope.$parent.selectedInstitute, 'route', $rootScope.schools[$scope.currentSchool]).then(
+            function(response) {
+                console.log('Caricamento delle linee a buon fine.');
+                $rootScope.schools[$scope.currentSchool].lines = response.data;
+            }, function() {
+                alert('Errore nel caricamento delle linee.');
+            }
+        );
     }
     else
     {
@@ -38,8 +46,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             address: '',
             instituteId: $scope.$parent.selectedInstitute.objectId,
             ownerId: $scope.$parent.selectedOwner,
-            classes: [],                        // TODO: da implementare lato API
-            lines: []                           // solo per uso locale
+            classes: []                        // TODO: da implementare lato API
         })-1;
         $scope.saveData = DataService.saveData;
     }
@@ -83,7 +90,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     alert('Errore nella richiesta.');
                 }
             );
-            // TODO: da implementare anche salvataggio linee
         }
         else
         {
@@ -99,7 +105,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         var isValidate = true;
         var invalidFields = $('.ng-invalid');
 
-        if (invalidFields.length > 0 ||$rootScope.schools[$scope.currentSchool].classes.length === 0)
+        if (invalidFields.length > 0 /*|| $rootScope.schools[$scope.currentSchool].classes.length === 0*/)      // da valutare implementazione classi
             isValidate = false;
 
         return isValidate;
@@ -120,13 +126,41 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.$parent.selectedTab = 'info';
 })
 
-.controller('LinesListCtrl', function ($scope, $rootScope, createDialog) {
+.controller('LinesListCtrl', function ($scope, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'lines-list';
+    if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+    {
+        createDialog('templates/modals/newschool-err.html',{
+            id : 'newschoolerr-dialog',
+            title: 'Attenzione!',
+            success: { label: 'Torna indietro', fn: function() {
+                window.history.back();
+            } },
+            footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
+        });
+    }
+
     $scope.remove = function (idLine) {
         createDialog('templates/modals/delete-line.html',{
             id : 'delete-line-dialog',
             title: 'Attenzione!',
-            success: { label: 'Conferma', fn: function() {$rootScope.schools[$scope.currentSchool].lines.splice(idLine, 1);} }
+            success: { label: 'Conferma', fn: function() {
+                DataService.removeData('route', $rootScope.schools[$scope.currentSchool].lines[idLine]).then(
+                    function() {
+                        console.log('Cancellazione della tappa a buon fine.');
+                    }, function() {
+                        alert('Errore nella cancellazione della tappa.');
+                    }
+                );
+                DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $scope.$parent.selectedInstitute, 'route', $rootScope.schools[$scope.currentSchool]).then(
+                    function(response) {
+                        console.log('Caricamento delle linee a buon fine.');
+                        $rootScope.schools[$scope.currentSchool].lines = response.data;
+                    }, function() {
+                        alert('Errore nel caricamento delle linee.');
+                    }
+                );
+            } }
         });
     };
 });

@@ -11,7 +11,7 @@ Prima di entrare nel codice dell'app, dovete sapere cosa indicano i nomi dei com
 * ***leg*** (in rari casi *poi*): indica una sezione di percorso compresa tra la tappa precedente e quella che si sta modificando. La modifica di una *leg*, di fatto, è la modifica della posizione di una determinata tappa.
 * ***game***: indica un gioco, sempre legato ad una scuola e che al suo interno può contenere più itinerari/percorsi
 * ***school***: indica una scuola, che al suo interno contiene giochi e linee pedibus
-* ***line***: indica una linea pedibus, che dev'essere per forza legata ad una scuola.
+* ***line*** (in alcuni casi *route*): indica una linea pedibus, che dev'essere per forza legata ad una scuola.
 
 ### Controllers
 
@@ -38,6 +38,7 @@ I templates HTML sono suddivisi in base alle sezioni dell'app e rappresentano gl
 
 * Gestione anagrafica dei volontari pedibus
 * Login/logout
+* Salvatggio/modifica/cancellazione fermate lato server
 * ...
 
 ### Versioni componenti esterni
@@ -49,3 +50,5 @@ I templates HTML sono suddivisi in base alle sezioni dell'app e rappresentano gl
 * **Angular-ui-sortable**: 0.14.4. Impossibile aggiornare ulteriormente a meno di non portare jQuery almeno alla versione 3.1.
 * **Angular-ui-bootstrap**: 0.14.3. L'aggiornamento è fattibile, ma bisognerebbe adattare il modo in cui vengono configurati alcuni elementi (come i date-picker).
 * **Bootstrap**: 3.2.0. L'aggiornamento al ramo 3.3 dovrebbe essere fattibile.
+
+*Ultimo aggiornamento: 04/08/2017 - Francesco Saltori*

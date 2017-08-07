@@ -4,16 +4,16 @@
         <a class="btn btn-info" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina tappe'}}</a>
     </div>
     <div class="col-lg-12">
-        <ul ui-sortable="sortableOptions" ng-model="paths[currentPath].legs" class="list-group list-categories">
-            <li class="list-group-item" ng-repeat="leg in paths[currentPath].legs">
+        <ul ui-sortable="sortableOptions" ng-model="legs" class="list-group list-categories">
+            <li class="list-group-item" ng-repeat="leg in legs">
                 <div class="row v-center">
                     <div class="col-md-2">
-                        <img class="path-img" ng-src="{{leg.featuredImage}}" alt="{{leg.title}}">
+                        <img class="path-img" ng-src="{{leg.imageUrl}}" alt="{{leg.name}}">
                     </div>
                     <div class="col-md-8">
-                        <h5>{{$index + 1}}. {{leg.title}}</h5>
-                        <h5>Posizione: Lat. {{(leg.coordinates.lat).toFixed(5)}}, Long. {{(leg.coordinates.lng).toFixed(5)}}</h5>
-                        <h5>Elementi multimediali: {{leg.multimedia.length}}</h5>
+                        <h5>{{$index + 1}}. {{leg.name}}</h5>
+                        <h5>Posizione: Lat. {{leg.geocoding[1].toFixed(5)}}, Long. {{leg.geocoding[0].toFixed(5)}}</h5>
+                        <h5>Elementi multimediali: {{leg.externalUrls.length}}</h5>
                     </div>
                     <div class="col-md-2 right">
                         <a ng-hide="enableOrder" ui-sref="root.path.leg({idLeg: $index})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
