@@ -46,7 +46,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             address: '',
             instituteId: $scope.$parent.selectedInstitute.objectId,
             ownerId: $scope.$parent.selectedOwner,
-            classes: []                        // TODO: da implementare lato API
         })-1;
         $scope.saveData = DataService.saveData;
     }
@@ -126,9 +125,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.$parent.selectedTab = 'info';
 })
 
-.controller('LinesListCtrl', function ($scope, $rootScope, createDialog, DataService) {
+.controller('LinesListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'lines-list';
-    if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+    $scope.enableOrder = false;
+    if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         createDialog('templates/modals/newschool-err.html',{
             id : 'newschoolerr-dialog',

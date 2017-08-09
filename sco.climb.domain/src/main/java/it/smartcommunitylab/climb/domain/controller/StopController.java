@@ -95,6 +95,31 @@ public class StopController extends AuthController {
 		return stop;
 	}
 
+	@RequestMapping(value = "/api/stop/{ownerId}/{routeId}", method = RequestMethod.POST)
+	public @ResponseBody void addStops(
+			@RequestBody List<Stop> stops, 
+			@PathVariable String ownerId, 
+			@PathVariable String routeId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		Criteria criteria = Criteria.where("objectId").is(routeId);
+		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+				route.getObjectId(), null, Const.AUTH_RES_Stop, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		storage.removeStopByRouteId(ownerId, routeId);
+		for(Stop stop : stops) {
+			stop.setOwnerId(ownerId);
+			stop.setRouteId(routeId);
+			stop.setObjectId(Utils.getUUID());
+			storage.addStop(stop);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addStops[%s]:%s", ownerId, routeId));
+		}
+	}
+	
 	@RequestMapping(value = "/api/stop/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody Stop updateStop(
 			@RequestBody Stop stop, 

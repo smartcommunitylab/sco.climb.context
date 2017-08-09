@@ -20,9 +20,9 @@ angular.module('consoleControllers.line', [])
                 "instituteId": $scope.$parent.selectedInstitute.objectId,
                 "ownerId": $scope.$parent.selectedOwner,
                 "schoolId": $rootScope.schools[currentSchool].objectId,
-                "from": '',             // TODO: DATA DI INIZIO/FINE LINEA
+                "from": '',             
                 "to": '',
-                "distance": '',         // TODO
+                "distance": '',         
                 "stops": []
             };
             $scope.saveData = DataService.saveData;
@@ -49,11 +49,20 @@ angular.module('consoleControllers.line', [])
         drawMapLine.updateMarkers($scope.line.stops);
     };
 
-    $scope.save = function () {     // TODO: da implementare salvataggio fermate
+    $scope.save = function () {    
         if (checkFields()) {
             $scope.saveData('route', $scope.line).then(
-                function() {
+                function(response) {
                     console.log('Linea salvata.');
+                    $scope.line['objectId'] = response.data.objectId;
+                    //create stops
+                    var stopModelList = [];
+                    $scope.line.stops.forEach(function(stop) {
+                    	var stopModel = {};
+                    	stopModel['name'] = stop.name;
+                    	stopModel['routeId'] = $scope.line.objectId;
+                    	
+                    });
                     DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $rootScope.schools[$scope.currentSchool].instituteId, 'route', $rootScope.schools[$scope.currentSchool].objectId).then(       // riaggiorno la lista delle linee
                         function(response) {
                             console.log('Caricamento delle linee a buon fine.');

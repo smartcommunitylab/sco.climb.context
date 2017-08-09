@@ -212,6 +212,11 @@ public class RepositoryManager {
 		mongoTemplate.findAndRemove(query, Stop.class);
 	}
 
+	public void removeStopByRouteId(String ownerId, String routeId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("routeId").is(routeId));
+		mongoTemplate.findAndRemove(query, Stop.class);
+	}
+	
 	public void addChild(Child child) {
 		Date actualDate = new Date();
 		child.setCreationDate(actualDate);
