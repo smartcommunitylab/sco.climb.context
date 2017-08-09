@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.scheduled;
 
+import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.domain.common.Const;
@@ -205,6 +206,18 @@ public class EventsPoller {
 		}
 		for (ChildStatus childStatus: childrenStatus) {
 			if(childStatus.isArrived()) {
+				//check if is a right classroom
+				Criteria childCriteria = Criteria.where("objectId").is(childStatus.getChildId());
+				try {
+					Child child = storage.findOneData(Child.class, childCriteria, game.getOwnerId());
+					if(!game.getClassRooms().contains(child.getClassRoom())) {
+						continue;
+					}
+				} catch (ClassNotFoundException e) {
+					logger.warn(e.getMessage());
+					continue;
+				}
+				
 				String playerId = childStatus.getChildId();
 				Double score = childStatus.getScore();
 						
@@ -220,6 +233,7 @@ public class EventsPoller {
 					date = shortSdf.parse(game.getLastDaySeen());
 				} catch (ParseException e) {
 					logger.warn("sendScores error:" + e.getMessage());
+					continue;
 				}
 				data.put(paramDate, date.getTime());
 				ed.setData(data);
