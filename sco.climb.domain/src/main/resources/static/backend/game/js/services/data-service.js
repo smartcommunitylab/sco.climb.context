@@ -37,6 +37,8 @@ function ($q, $http, $rootScope, $timeout) {
                   fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
               } else if(type === 'legs') {
                   fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
+              } else if(type === 'children') {
+              	fetchUrl = baseUrl + "/api/child/" + ownerId + "/" + instituteId + "/" + schoolId;
               }
               return $http.get(fetchUrl, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
 

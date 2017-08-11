@@ -169,4 +169,34 @@ angular.module('consoleControllers.line', [])
             success: { label: 'Conferma', fn: function() {$window.history.back();} }
         });
     };
+    
+    $scope.assignPassengers = function(index) {
+      DataService.getData('children',
+      		$rootScope.schools[$scope.currentSchool].ownerId, 
+      		$rootScope.schools[$scope.currentSchool].instituteId, 
+      		$rootScope.schools[$scope.currentSchool].objectId).then(
+          function(response) {
+          	$scope.children = response.data; 
+            console.log('Caricamento degli scolari a buon fine.');
+          	createDialog('templates/modals/assign-passengers.html',
+          		{
+              	id : 'assign-passengers-dialog',
+              	title: 'Assegna i passeggeri alla fermata',
+              	controller: 'AssignPassegersModalController'
+          		},
+          		{
+          			stop: $scope.line.stops[index],
+          			children: $scope.children
+          		}
+          	);
+          }, function() {
+            alert('Errore nel caricamento degli scolari.');
+          }
+      );
+    }; 
+})
+
+.controller('AssignPassegersModalController', function($scope, stop, children) {
+	$scope.stop = stop;
+	$scope.children = children;
 });
