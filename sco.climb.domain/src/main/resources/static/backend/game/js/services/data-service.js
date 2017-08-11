@@ -22,17 +22,22 @@ function ($q, $http, $rootScope, $timeout) {
               });
               return deferred.promise;
           },
-          getData: function(owner, institute, type, school, gameId, itineraryId)
+          getData: function(type, ownerId, instituteId, schoolId, routeId, gameId, itineraryId)
           {
               var fetchUrl;
-              if(type === 'school')
-                  fetchUrl = baseUrl + "/api/" + type + "/" + owner + "/" + institute.objectId;
-              else if(type === 'game' || type === 'route')
-                  fetchUrl = baseUrl + "/api/" + type + "/" + owner + "/" + institute.objectId + "/" + school.objectId;
-              else if(type === 'itinerary')
-                  fetchUrl = baseUrl + "/api/game/" + owner + "/" + gameId + "/" + type;
-              else if(type === 'legs')
-                  fetchUrl = baseUrl + "/api/game/" + owner + "/" + gameId + "/itinerary/" + itineraryId + "/" + type;
+              if(type === 'school') {
+                  fetchUrl = baseUrl + "/api/school/" + ownerId + "/" + instituteId;
+              } else if(type === 'game') {
+                  fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId;
+              } else if(type === 'route') {
+              	fetchUrl = baseUrl + "/api/route/" + ownerId + "/" + instituteId + "/" + schoolId;
+              } else if(type == 'stops') {
+              	fetchUrl = baseUrl + "/api/stop/" + ownerId + "/" + routeId;
+              } else if(type === 'itinerary') {
+                  fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
+              } else if(type === 'legs') {
+                  fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
+              }
               return $http.get(fetchUrl, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
 
               // PER IL TESTING IN LOCALE CON IL LOCAL STORAGE
@@ -48,12 +53,17 @@ function ($q, $http, $rootScope, $timeout) {
           {
               var sendUrl;
               if(type === 'itinerary') {
-                  sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
+                sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
               } else if(type === 'legs') {
-                  sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
-                  return $http.put(sendUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+              	sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
+                return $http.put(sendUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
               } else if(type == 'school') {
               	sendUrl = baseUrl + "/api/school/" + element.ownerId + "/" + element.objectId;
+              } else if(type == 'stops') {
+              	sendUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.routeId;              	
+             	 	return $http.post(sendUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+              } else if(type == 'route') {
+              	sendUrl = baseUrl + "/api/route/" + element.ownerId + "/" + element.objectId;
               } else {
               	sendUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
               }
@@ -64,22 +74,23 @@ function ($q, $http, $rootScope, $timeout) {
               var urlInstituteList = baseUrl + "/api/institute/" + owner;
               return $http.get(urlInstituteList, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
           },
-          saveData: function(type, element)           // TODO: da adattare per
-																											// tutti i tipi di dati
+          saveData: function(type, element)           
           {
               var postUrl;
               if(type === 'game' || type === 'route' || type === 'stop') {
-                  postUrl = baseUrl + "/api/" + type + "/" + element.ownerId;
+              	postUrl = baseUrl + "/api/" + type + "/" + element.ownerId;
               } else if(type === 'school') {
-                  postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
+                postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
               } else if(type === 'itinerary') {
-                  postUrl = baseUrl + "/api/gam/" + element.ownerId + "/" + element.pedibusGameId + "/" + type;
+                postUrl = baseUrl + "/api/gam/" + element.ownerId + "/" + element.pedibusGameId + "/" + type;
               } else if(type === 'legs') {
-                  postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
-                  return $http.post(postUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+                postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
+                return $http.post(postUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
               } else if(type == 'stops') {
-              	postUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.objectId;              	
-              	 return $http.post(postUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+              	postUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.routeId;              	
+              	return $http.post(postUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
+              } else if(type == 'route') {
+              	postUrl = baseUrl + "/api/route/" + element.ownerId + "/" + element.objectId;
               }
               return $http.post(postUrl, element, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
 

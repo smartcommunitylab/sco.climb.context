@@ -227,9 +227,12 @@ angular.module('MapsService', [])
 
         serviceScope.updateMarkers(stops);
     };
+    
+    this.getMapCenter = function() {
+    	return map.getCenter();
+    };
 
-    this.updateMarkers = function(stops)
-    {
+    this.updateMarkers = function(stops) {
         for(var i = 0; i < stopsMarkers.length; i++)
             stopsMarkers[i].setMap(null);
 
@@ -239,8 +242,8 @@ angular.module('MapsService', [])
         {
             stopsMarkers.push(new google.maps.Marker({
                 position: {
-                    lat: parseFloat(stopsArray[i].coordinates.lat),
-                    lng: parseFloat(stopsArray[i].coordinates.lng)
+                    lat: parseFloat(stopsArray[i].geocoding[1]),
+                    lng: parseFloat(stopsArray[i].geocoding[0])
                 },
                 map: map,
                 draggable: true,

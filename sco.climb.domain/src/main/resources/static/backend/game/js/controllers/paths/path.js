@@ -33,8 +33,13 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     {
         $scope.currentPath = Number($stateParams.idPath);
         $scope.saveData = DataService.editData;
-        DataService.getData($rootScope.paths[$scope.currentPath].ownerId, $scope.$parent.selectedInstitute, 'legs',
-            $scope.$parent.selectedSchool, $rootScope.paths[$scope.currentPath].pedibusGameId, $rootScope.paths[$scope.currentPath].objectId).then(
+        DataService.getData('legs', 
+        		$rootScope.paths[$scope.currentPath].ownerId, 
+        		$scope.$parent.selectedInstitute.objectId,
+        		$scope.$parent.selectedSchool.objectId,
+        		null,
+        		$rootScope.paths[$scope.currentPath].pedibusGameId, 
+        		$rootScope.paths[$scope.currentPath].objectId).then(
                 function(response) {
                     console.log('Caricamento delle tappe a buon fine.');
                     $scope.legs = response.data;

@@ -30,7 +30,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     {
         $scope.currentSchool = Number($stateParams.idSchool);
         $scope.saveData = DataService.editData;
-        DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $scope.$parent.selectedInstitute, 'route', $rootScope.schools[$scope.currentSchool]).then(
+        DataService.getData('route', 
+        		$rootScope.schools[$scope.currentSchool].ownerId, 
+        		$scope.$parent.selectedInstitute.objectId, 
+        		$rootScope.schools[$scope.currentSchool].objectId).then(
             function(response) {
                 console.log('Caricamento delle linee a buon fine.');
                 $rootScope.schools[$scope.currentSchool].lines = response.data;
@@ -75,6 +78,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.sortClasses = function()
     {
         $rootScope.schools[$scope.currentSchool].classes.sort();
+    };
+    
+    $scope.isNewSchool = function() {
+    	return ($stateParams.idSchool == null || $stateParams.idSchool == '');
     };
 
     // Save the changes made to the path
@@ -152,7 +159,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                         alert('Errore nella cancellazione della tappa.');
                     }
                 );
-                DataService.getData($rootScope.schools[$scope.currentSchool].ownerId, $scope.$parent.selectedInstitute, 'route', $rootScope.schools[$scope.currentSchool]).then(
+                DataService.getData('route',
+                		$rootScope.schools[$scope.currentSchool].ownerId, 
+                		$scope.$parent.selectedInstitute.objectId, 
+                		$rootScope.schools[$scope.currentSchool].objectId).then(
                     function(response) {
                         console.log('Caricamento delle linee a buon fine.');
                         $rootScope.schools[$scope.currentSchool].lines = response.data;

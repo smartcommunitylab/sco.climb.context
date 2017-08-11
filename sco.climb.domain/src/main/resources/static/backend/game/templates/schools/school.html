@@ -1,7 +1,8 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-8 header-path-category">
-            <h4>{{school[currentSchool].name ? 'MODIFICA SCUOLA: ' + school[currentSchool].name : 'CREA NUOVA SCUOLA'}}</h4>
+            <h4 ng-if="isNewSchool()">CREA NUOVA SCUOLA</h4>
+            <h4 ng-if="!isNewSchool()">MODIFICA SCUOLA: {{school[currentSchool].name}}</h4>
             <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
         </div>
 

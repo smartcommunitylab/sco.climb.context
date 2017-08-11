@@ -38,7 +38,9 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.selectedSchool = '';             // TODO: da testare con più istituti
                 return;
             }
-            DataService.getData($scope.selectedOwner, $scope.selectedInstitute, 'school').then(
+            DataService.getData('school', 
+            		$scope.selectedOwner, 
+            		$scope.selectedInstitute.objectId).then(
                 function(response) {
                     $rootScope.schools = response.data;
                 }, function() {
@@ -50,7 +52,9 @@ angular.module('consoleControllers.mainCtrl', [])
         $scope.loadData = function(type) {
             if(type === 'all')              // valutare se effettivamente servirà
             {
-                DataService.getData($scope.selectedOwner, $scope.selectedInstitute, 'school').then(
+                DataService.getData('school',
+                		$scope.selectedOwner, 
+                		$scope.selectedInstitute.objectId).then(
                     function(response) {
                         $rootScope.schools = response.data;
                     }, function() {
@@ -58,7 +62,10 @@ angular.module('consoleControllers.mainCtrl', [])
                     }
                 );
 
-                DataService.getData($scope.selectedOwner, $scope.selectedInstitute, 'game', $scope.selectedSchool).then(
+                DataService.getData('game', 
+                		$scope.selectedOwner, 
+                		$scope.selectedInstitute.objectId, 
+                		$scope.selectedSchool.objectId).then(
                     function(response) {
                         $rootScope.games = response.data;
                     }, function() {
@@ -66,7 +73,12 @@ angular.module('consoleControllers.mainCtrl', [])
                     }
                 );
 
-                DataService.getData($scope.selectedOwner, $scope.selectedInstitute, 'itinerary', $scope.selectedSchool, $scope.selectedGame.objectId).then(
+                DataService.getData('itinerary', 
+                		$scope.selectedOwner, 
+                		$scope.selectedInstitute.objectId, 
+                		$scope.selectedSchool.objectId, 
+                		null,
+                		$scope.selectedGame.objectId).then(
                     function(response) {
                         $rootScope.paths = response.data;
                         console.log(response.data);
@@ -76,7 +88,12 @@ angular.module('consoleControllers.mainCtrl', [])
                 );
             }
             else
-                DataService.getData($scope.selectedOwner, $scope.selectedInstitute, type, $scope.selectedSchool, $scope.selectedGame.objectId).then(
+                DataService.getData(type, 
+                		$scope.selectedOwner, 
+                		$scope.selectedInstitute.objectId, 
+                		$scope.selectedSchool.objectId,
+                		null,
+                		$scope.selectedGame.objectId).then(
                     function(response) {
                         if(type !== 'itinerary') {
                             eval("$rootScope." + type + "s = response.data");
