@@ -34,7 +34,7 @@ consoleApp.config(['$provide', function ($provide) {
 
 
 consoleApp.config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/schools-list');
+    $urlRouterProvider.otherwise('/games-list');
     $stateProvider
         .state('root', {
             url: '',

@@ -37,26 +37,11 @@
         <p>dalle:</p> <input class="form-control" type="time" ng-model="$parent.collectFromHour" ng-required="true"/>
         <p>&emsp;alle:</p> <input class="form-control" type="time" ng-model="$parent.collectToHour" ng-required="true"/>
     </div>
-    <!-- Scuola
-    <div class="col-lg-12 field">
-        <p><span class="required-sign">*</span> <b>Scuola di appartenenza:</b></p>
-        <select class="form-control" style="width: 300px" ng-model="$parent.selectedSchoolString" ng-change="parseChoice()">
-            <option value="">Nessuno</option>
-            <option ng-repeat="school in schools" value="{{school}}">{{school.name}} - {{school.objectId}}</option>
-        </select>
-    </div> -->
     <!-- Classi partecipanti -->
     <div class="col-lg-12" ng-if="$parent.selectedSchoolString">
         <p><span class="required-sign">*</span> <b>Classi partecipanti:</b></p>
-        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in $parent.selectedSchool.classes">
+        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in $parent.selectedSchool.classRooms">
             <label style="font-weight: normal"><input type="checkbox" value="{{classe}}" ng-model="$parent.selectedClasses[$index]" ng-true-value="'{{classe}}'" ng-false-value="''">{{classe}}&ensp;</label>
-        </div>
-    </div>
-    <!-- Linee coinvolte -->
-    <div class="col-lg-12" ng-if="games[currentGame].classes.length > 0">
-        <p><span class="required-sign">*</span> <b>Linee pedibus coinvolte:</b></p>
-        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="line in $parent.selectedSchool.lines">
-            <label style="font-weight: normal"><input type="checkbox" value="{{line.localId}}" ng-model="$parent.selectedLines[$index]" ng-true-value="'{{line.localId}}'" ng-false-value="''">{{line.name}}&ensp;</label>
         </div>
     </div>
 </div>

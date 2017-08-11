@@ -44,8 +44,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
     // Variabili per selezione scuola, classi e linee corrispondenti
     $scope.selectedSchool = {};
     $scope.selectedSchoolString = '';
-    $scope.selectedClasses = [];
-    $scope.selectedLines = [];
+    $scope.classesMap = {};
+    
+    
 
     // Funzioni per caricamento dati di scuole e linee
     $scope.findSchoolById = function(schoolId)
@@ -60,21 +61,28 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             return foundSchool;
     };
 
-    /*$scope.initializeCheckboxes = function(){               // TODO: da decommentare quando la parte lato server sarà pronta
-        $scope.selectedSchool.classes.forEach(function(currentElem) {
-        if($rootScope.games[$scope.currentGame].classes.indexOf(currentElem) !== -1)
-            $scope.selectedClasses.push(currentElem);
-        else
-            $scope.selectedClasses.push('');
-        });
-
-        $scope.selectedSchool.lines.forEach(function(currentElem) {
-            if($rootScope.games[$scope.currentGame].lines.indexOf(currentElem.localId.toString()) !== -1)
-                $scope.selectedLines.push(currentElem.localId.toString());
-            else
-                $scope.selectedLines.push('');
-        });
-    };*/
+    $scope.initializeClasses = function() {
+    	DataService.getData('classes',
+    			$scope.$parent.selectedOwner, 
+    			$scope.$parent.selectedInstitute.objectId, 
+    			$scope.$parent.selectedSchool.objectId).then(
+          function(response) {
+          	var classes = response.data;
+          	if(classes != null) {
+          		classes.forEach(function(entry) {
+          			$scope.classesMap[entry] = false;
+          		});
+          		if($rootScope.games[$scope.currentGame].classRooms != null) {
+          			$rootScope.games[$scope.currentGame].classRooms.forEach(function(entry) {
+          				$scope.classesMap[entry] = true;
+          			});
+          		}
+          	}
+          }, function() {
+            alert('Errore nel caricamento delle classi.');
+          }
+      );
+    };
 
     if ($stateParams.idGame)        // controlla se si sta modificando un percorso esistente
     {
@@ -90,7 +98,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.selectedSchool = $scope.findSchoolById($rootScope.games[$scope.currentGame].school);
         if($scope.selectedSchool != '')
             $scope.selectedSchoolString = JSON.stringify($scope.selectedSchool);
-        //$scope.initializeCheckboxes();                // TODO: da decommentare quando la parte lato server sarà pronta
+        $scope.initializeClasses();             
         $scope.saveData = DataService.editData;
     }
     else
@@ -139,20 +147,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             // Salvataggio orari di inizio e fine raccolta dati
             $rootScope.games[$scope.currentGame].fromHour = $scope.collectFromHour.toTimeString().slice(0,5);
             $rootScope.games[$scope.currentGame].toHour = $scope.collectToHour.toTimeString().slice(0,5);
-
-            // Salvataggio classi
-            $rootScope.games[$scope.currentGame].classes = [];
-            $scope.selectedClasses.forEach(function(currentElem) {
-                if(currentElem != '')
-                    $rootScope.games[$scope.currentGame].classes.push(currentElem);
-            });
-
-            // Salvataggio linee
-            $rootScope.games[$scope.currentGame].lines = [];
-            $scope.selectedLines.forEach(function(currentElem) {
-                if(currentElem != '')
-                    $rootScope.games[$scope.currentGame].lines.push(currentElem);
-            });
 
             $scope.saveData('game', $rootScope.games[$scope.currentGame]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                 function() {
