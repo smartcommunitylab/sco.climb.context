@@ -434,7 +434,7 @@ public class GamificationController extends AuthController {
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
 			}
 			if (logger.isInfoEnabled()) {
-				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
+				logger.info(String.format("createPedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
 			}
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));

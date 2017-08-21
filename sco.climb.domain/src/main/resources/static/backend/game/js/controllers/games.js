@@ -44,7 +44,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
     // Variabili per selezione scuola, classi e linee corrispondenti
     $scope.selectedSchool = {};
     $scope.selectedSchoolString = '';
-    $scope.classesMap = {};
+    $scope.classes = [];
     
     
 
@@ -70,13 +70,16 @@ angular.module('consoleControllers.games', ['ngSanitize'])
           	var classes = response.data;
           	if(classes != null) {
           		classes.forEach(function(entry) {
-          			$scope.classesMap[entry] = false;
+          			var classEntry = {};
+          			classEntry.value = false;
+          			classEntry.name = entry;
+          			if($rootScope.games[$scope.currentGame].classRooms != null) {
+          				if($rootScope.games[$scope.currentGame].classRooms.includes(entry)) {
+          					classEntry.value = true;
+          				}
+          			}
+          			$scope.classes.push(classEntry);
           		});
-          		if($rootScope.games[$scope.currentGame].classRooms != null) {
-          			$rootScope.games[$scope.currentGame].classRooms.forEach(function(entry) {
-          				$scope.classesMap[entry] = true;
-          			});
-          		}
           	}
           }, function() {
             alert('Errore nel caricamento delle classi.');
@@ -96,41 +99,29 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         // Caricamento del campo della scuola
         $scope.selectedSchool = $scope.findSchoolById($rootScope.games[$scope.currentGame].school);
-        if($scope.selectedSchool != '')
+        if($scope.selectedSchool != '') {
             $scope.selectedSchoolString = JSON.stringify($scope.selectedSchool);
+        }
         $scope.initializeClasses();             
         $scope.saveData = DataService.editData;
     }
     else
     {
-        $scope.currentGame = $rootScope.games.push({            // variabile che indica la posizione nell'array del gioco che sta venendo editato
+        $scope.currentGame = $rootScope.games.push({ // variabile che indica la posizione nell'array del path che sta venendo editato           
             gameName: '',
             gameDescription: '',
-            from: '',                                           // data di inizio del gioco
+            from: '',                                           
             to: '',
             fromHour: '',
             toHour: '',
-            school: '',                                         // ID della scuola corrispondente al gioco
-            classRooms: [],                                     // classi e linee coinvolte nel gioco
-            lines: [],                                          // TODO: probabilmente da togliere in futuro
+            school: '',                                         
+            classRooms: [],                                     
             ownerId: $scope.$parent.selectedOwner,
             schoolId: $scope.$parent.selectedSchool.objectId,
             instituteId: $scope.$parent.selectedInstitute.objectId
         })-1;
         $scope.saveData = DataService.saveData;
     }
-
-    /*function makeid() {         // GENERATI DAL SERVER, possono tornare utili per testing in locale
-        var id = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var date = new Date();
-        date = $filter('date')(date,'ddMMyy-hhmmss','+0100');
-
-        for (var i = 0; i < 4; i++)
-            id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return date + '_' + id;
-    }*/
 
     $scope.parseChoice = function() {     // parsing della stringa dell'oggetto school selezionato dal dropdown
         $scope.selectedSchool = JSON.parse($scope.selectedSchoolString);
@@ -147,6 +138,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             // Salvataggio orari di inizio e fine raccolta dati
             $rootScope.games[$scope.currentGame].fromHour = $scope.collectFromHour.toTimeString().slice(0,5);
             $rootScope.games[$scope.currentGame].toHour = $scope.collectToHour.toTimeString().slice(0,5);
+            
+          	$rootScope.games[$scope.currentGame].classRooms = [];
+            $scope.classes.forEach(function(entry) {
+            	if(entry.value) {
+            		$rootScope.games[$scope.currentGame].classRooms.push(entry.name);
+            	}
+            });
 
             $scope.saveData('game', $rootScope.games[$scope.currentGame]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                 function() {

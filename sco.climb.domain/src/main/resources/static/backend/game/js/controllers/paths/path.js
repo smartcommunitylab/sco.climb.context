@@ -28,11 +28,28 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 // Edit an existing path
 .controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
     $scope.$parent.mainView = 'itinerary';
+    
+    $scope.classes = [];
+    if($scope.$parent.selectedGame.classRooms != null) {
+    	$scope.$parent.selectedGame.classRooms.forEach(function(entry) {
+    		var classEntry = {};
+  			classEntry.value = false;
+  			classEntry.name = entry;
+  			$scope.classes.push(classEntry);
+    	});
+    }
 
     if ($stateParams.idPath)    // controlla se si sta modificando un percorso esistente
     {
         $scope.currentPath = Number($stateParams.idPath);
         $scope.saveData = DataService.editData;
+        $scope.classes.forEach(function(entry) {
+        	if($rootScope.paths[$scope.currentPath].classRooms != null) {
+        		if($rootScope.paths[$scope.currentPath].classRooms.includes(entry.name)) {
+        			entry.value = true;
+        		}
+        	}
+        });
         DataService.getData('legs', 
         		$rootScope.paths[$scope.currentPath].ownerId, 
         		$scope.$parent.selectedInstitute.objectId,
@@ -61,46 +78,48 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.saveData = DataService.saveData;
     }
 
-    /*function makeid() {         // data e ora di creazione + codice random di 4 caratteri -- GENERATI DAL SERVER, possono tornare utili per testing in locale
-        var id = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var date = new Date();
-        date = $filter('date')(date,'ddMMyy-hhmmss','+0100');
-
-        for (var i = 0; i < 4; i++)
-            id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return date + '_' + id;
-    }*/
-
     // Reorder of the legs
     $scope.sortableOptions = {
         handle: ' .handle',
-        axis: 'y'
+        axis: 'y',
+        stop: function(e, ui) {
+        	for (i = 0; i < $scope.legs.length; i++) { 
+        		$scope.legs[i].position = i;
+        	}
+        }
     };
 
     // Save the changes made to the path
     $scope.save = function () {
-        if (checkFields())
-        {
-            $scope.saveData($scope.$parent.mainView, $rootScope.paths[$scope.currentPath]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+        if (checkFields()) {
+        	$rootScope.paths[$scope.currentPath].classRooms = [];
+          $scope.classes.forEach(function(entry) {
+          	if(entry.value) {
+          		$rootScope.paths[$scope.currentPath].classRooms.push(entry.name);
+          	}
+          });
+        	
+            $scope.saveData('itinerary', $rootScope.paths[$scope.currentPath]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                 function(response) {
                     console.log('Salvataggio del percorso a buon fine.');
                     $rootScope.paths[$scope.currentPath] = response.data;
+                  	for (i = 0; i < $scope.legs.length; i++) { 
+                  		$scope.legs[i].position = i;
+                  	}
+                    $rootScope.paths[$scope.currentPath].legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
+                    $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
+                        function() {
+                            console.log('Salvataggio dati a buon fine.');
+                            $location.path('paths-list');
+                        }, function() {
+                            alert('Errore nel salvataggio delle tappe.');
+                        }
+                    );
                 }, function() {
                     alert('Errore nel salvataggio del percorso.');
                 }
             );
 
-            $rootScope.paths[$scope.currentPath].legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
-            $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
-                function() {
-                    console.log('Salvataggio dati a buon fine.');
-                    $location.path('paths-list');
-                }, function() {
-                    alert('Errore nel salvataggio delle tappe.');
-                }
-            );
         }
         else
         {
@@ -117,9 +136,6 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         var path = $rootScope.paths[$scope.currentPath];
 
         if (!path.name || !path.description || path.name === "" || path.description === "")
-            isValidate = false;
-
-        if ($scope.legs.length === 0)
             isValidate = false;
 
         return isValidate;
@@ -147,6 +163,9 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
                 $scope.legs.splice(idLeg, 1);
+              	for (i = 0; i < $scope.legs.length; i++) { 
+              		$scope.legs[i].position = i;
+              	}
                 $rootScope.paths[$scope.currentPath].legs = $scope.legs;
                 DataService.editData('legs', $rootScope.paths[$scope.currentPath]).then(
                     function() {

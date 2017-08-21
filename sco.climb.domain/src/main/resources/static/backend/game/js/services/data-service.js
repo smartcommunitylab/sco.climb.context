@@ -86,7 +86,7 @@ function ($q, $http, $rootScope, $timeout) {
               } else if(type === 'school') {
                 postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
               } else if(type === 'itinerary') {
-                postUrl = baseUrl + "/api/gam/" + element.ownerId + "/" + element.pedibusGameId + "/" + type;
+                postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary";
               } else if(type === 'legs') {
                 postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
                 return $http.post(postUrl, element.legs, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});

@@ -78,15 +78,16 @@ angular.module('consoleControllers.leg', [])
     };
 
     $scope.save = function () {
-        if ($scope.leg.position > 0)
-            $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+        if ($scope.leg.position > 0) {
+        	$scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+        }
         if (checkFields()) {
             $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
-            if ($stateParams.idLeg)
-                $scope.$parent.legs[$stateParams.idLeg] = $scope.leg;
-            else
-                $scope.$parent.legs.push($scope.leg);
-
+            if ($stateParams.idLeg) {
+             $scope.$parent.legs[$stateParams.idLeg] = $scope.leg;
+            } else {
+             $scope.$parent.legs.push($scope.leg);
+            }
             // Back to the path
             $window.history.back();
         }
@@ -96,8 +97,8 @@ angular.module('consoleControllers.leg', [])
         var allCompiled = true;
         var invalidFields = $('.error','.ng-invalid');
         // Get all inputs
-        if (invalidFields.length > 0 || $scope.leg.externalUrls.length === 0) {
-            $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e di avere inserito almeno un elemento multimediale prima di salvare.";
+        if (invalidFields.length > 0) {
+            $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
             $timeout(function () {
                 $rootScope.modelErrors = '';
             }, 5000);

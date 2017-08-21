@@ -9,4 +9,11 @@
         <p><span class="required-sign">*</span> <b>Descrizione:</b></p>
         <text-angular ng-model="paths[currentPath].description"></text-angular>
     </div>
+    <!-- Classi partecipanti -->
+    <div class="col-lg-12">
+        <p><span class="required-sign">*</span> <b>Classi partecipanti:</b></p>
+        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in classes">
+            <label style="font-weight: normal"><input type="checkbox" value="{{classe.value}}" ng-model="classe.value">{{classe.name}}&ensp;</label>
+        </div>
+    </div>
 </div>

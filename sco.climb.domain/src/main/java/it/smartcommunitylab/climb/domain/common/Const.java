@@ -56,9 +56,9 @@ public class Const {
 	public static final String MODE_ASSENTE = "absent";
 	public static final String MODE_BONUS = "bonus";
 	
-	public static final String TRANSPORT_FOOT = "piedi";
-	public static final String TRANSPORT_BOAT = "nave";
-	public static final String TRANSPORT_AIRPLANE = "volo";
+	public static final String TRANSPORT_FOOT = "foot";
+	public static final String TRANSPORT_BOAT = "boat";
+	public static final String TRANSPORT_AIRPLANE = "plane";
 	
 	public static final String MERGED = "MERGED";
 	public static final String CLOSED = "CLOSED";
