@@ -170,6 +170,8 @@ angular.module('consoleControllers.line', [])
         });
     };
     
+    
+    
     $scope.assignPassengers = function(index) {
       DataService.getData('children',
       		$rootScope.schools[$scope.currentSchool].ownerId, 
@@ -199,4 +201,107 @@ angular.module('consoleControllers.line', [])
 .controller('AssignPassegersModalController', function($scope, stop, children) {
 	$scope.stop = stop;
 	$scope.children = children;
+	$scope.data = {
+		childrenSelected: [],
+		stopSelected: []
+	};
+	$scope.childrenMap = {};
+	$scope.passengers = [];
+	
+	$scope.children.forEach(function(entry) {
+		$scope.childrenMap[entry.objectId] = entry;
+	});
+	
+	if($scope.stop.passengerList !=  null) {
+		$scope.stop.passengerList.forEach(function(entry) {
+			var child = $scope.childrenMap[entry];
+			if(child != null) {
+				$scope.passengers.push(child);
+			}
+			var index = findIndexById($scope.children, entry);
+			if(index > -1) {
+				$scope.children.splice(index, 1);
+			}			
+		});
+		$scope.passengers.sort(compareChild);
+	}
+	$scope.children.sort(compareChild);
+	
+	$scope.getChildName = function(child) {
+		return child.name + " " + child.surname;
+	}
+	
+	$scope.getChildNameById = function(id) {
+		var child = $scope.childrenMap[id];
+		if(child != null) {
+			return child.name + " " + child.surname;
+		} else {
+			return "";
+		}
+	}
+	
+	function findById(source, id) {
+	  for (var i = 0; i < source.length; i++) {
+	    if (source[i].objectId === id) {
+	      return source[i];
+	    }
+	  }
+	  return null;
+	}
+	
+	function findIndexById(source, id) {
+	  for (var i = 0; i < source.length; i++) {
+	    if (source[i].objectId === id) {
+	      return i;
+	    }
+	  }
+	  return -1;
+	}
+	
+	function compareChild(a,b) {
+		var aName = a.name + " " + a.surname;
+		var bName = b.name + " " + b.surname;
+	  if (aName < bName)
+	    return -1;
+	  if (aName > bName)
+	    return 1;
+	  return 0;
+	}
+	
+	$scope.fillPassengers = function() {
+		if($scope.stop.passengerList ==  null) {
+			$scope.stop.passengerList = [];
+		}
+		$scope.stop.passengerList.splice(0, $scope.stop.passengerList.length);
+		$scope.passengers.forEach(function(entry) {
+			$scope.stop.passengerList.push(entry.objectId);
+		});
+	}
+	
+	$scope.moveToStop = function() {
+		$scope.data.childrenSelected.forEach(function(entry) {
+			$scope.passengers.push(entry);
+			var index = findIndexById($scope.children, entry.objectId);
+			if(index > -1) {
+				$scope.children.splice(index, 1);
+			}
+		});
+		$scope.passengers.sort(compareChild);
+		$scope.fillPassengers();
+		$scope.data.childrenSelected.splice(0, $scope.data.childrenSelected.length);
+	}
+	
+	$scope.moveFromStop = function() {
+		$scope.data.stopSelected.forEach(function(entry) {
+			$scope.children.push(entry);
+			var index = findIndexById($scope.passengers, entry.objectId);
+			if(index > -1) {
+				$scope.passengers.splice(index, 1);
+			}
+		});
+		$scope.fillPassengers();
+		$scope.children.sort(compareChild);
+		$scope.data.stopSelected.splice(0, $scope.data.stopSelected.length);
+	}
+	
 });
