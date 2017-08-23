@@ -68,8 +68,8 @@ function ($q, $http, $rootScope, $timeout) {
              	 	return $http.post(sendUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
               } else if(type == 'route') {
               	sendUrl = baseUrl + "/api/route/" + element.ownerId + "/" + element.objectId;
-              } else {
-              	sendUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
+              } else if(type == 'child') {
+              	sendUrl = baseUrl + "/api/child/" + element.ownerId + "/" + element.objectId;
               }
               return $http.put(sendUrl, element, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
           },
@@ -81,7 +81,7 @@ function ($q, $http, $rootScope, $timeout) {
           saveData: function(type, element)           
           {
               var postUrl;
-              if(type === 'game' || type === 'route' || type === 'stop') {
+              if(type === 'game' || type === 'stop') {
               	postUrl = baseUrl + "/api/" + type + "/" + element.ownerId;
               } else if(type === 'school') {
                 postUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.instituteId;
@@ -95,6 +95,8 @@ function ($q, $http, $rootScope, $timeout) {
               	return $http.post(postUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
               } else if(type == 'route') {
               	postUrl = baseUrl + "/api/route/" + element.ownerId + "/" + element.objectId;
+              } else if(type == 'child') {
+              	postUrl = baseUrl + "/api/child/" + element.ownerId;
               }
               return $http.post(postUrl, element, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
 
@@ -105,10 +107,13 @@ function ($q, $http, $rootScope, $timeout) {
           removeData: function(type, element)
           {
               var deleteUrl;
-              if(type !== 'itinerary')
-                  deleteUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
-              else
-                  deleteUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/" + type + "/" + element.objectId;
+              if(type == 'itinerary') {
+              	deleteUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
+              } else if(type == 'child') {
+              	deleteUrl = baseUrl + "/api/child/" + element.ownerId + "/" + element.objectId;
+              } else {
+              	deleteUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
+              }
               return $http.delete(deleteUrl, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
           },
           logout: logout

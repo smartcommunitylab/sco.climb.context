@@ -112,6 +112,16 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/schools/line.html',
             controller: 'LineCtrl'
         })
+        .state('root.school.children-list', {
+          url: '/children-list',
+          templateUrl: 'templates/schools/tabs/children-list.html',
+          controller: 'ChildrenCtrl'
+      })
+      .state('root.school.child', {
+        url: '/child/:idChild',
+        templateUrl: 'templates/schools/child.html',
+        controller: 'ChildCtrl'
+    })
 });
 
 consoleApp.run(['$rootScope', '$q', '$location', 'DataService',

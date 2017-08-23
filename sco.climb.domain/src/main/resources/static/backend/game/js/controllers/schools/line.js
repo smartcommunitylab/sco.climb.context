@@ -3,7 +3,7 @@ angular.module('consoleControllers.line', [])
 // Edit the line for the selected school
 .controller('LineCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, 
 		uploadImageOnImgur, drawMapLine, createDialog) {
-    $scope.$parent.selectedTab = 'lines';
+    $scope.$parent.selectedTab = 'lines-list';
     var currentSchool = $scope.$parent.currentSchool;
     $scope.enableOrder = false;
     
@@ -134,7 +134,7 @@ angular.module('consoleControllers.line', [])
         var invalidFields = $('.ng-invalid');
         // Get all inputs
         if (invalidFields.length > 0) {
-            $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e di aver inserito almeno due fermate.";
+            $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
             $timeout(function () {
                 $rootScope.modelErrors = '';
             }, 5000);

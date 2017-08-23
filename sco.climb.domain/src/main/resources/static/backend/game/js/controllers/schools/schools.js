@@ -83,6 +83,14 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.isNewSchool = function() {
     	return ($stateParams.idSchool == null || $stateParams.idSchool == '');
     };
+    
+    $scope.getSchoolName = function() {
+    	if(!$scope.isNewSchool()) {
+    		return $rootScope.schools[$scope.currentSchool].name;
+    	} else {
+    		return "";
+    	} 
+    }
 
     // Save the changes made to the path
     $scope.save = function () {
@@ -173,4 +181,143 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             } }
         });
     };
+})
+
+.controller('ChildrenCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
+    $scope.$parent.selectedTab = 'children-list';
+    $scope.children = [];
+    if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+    {
+        createDialog('templates/modals/newschool-err.html',{
+            id : 'newschoolerr-dialog',
+            title: 'Attenzione!',
+            success: { label: 'Torna indietro', fn: function() {
+                window.history.back();
+            } },
+            footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
+        });
+    }
+    
+    $scope.init = function() {
+      DataService.getData('children',
+      		$rootScope.schools[$scope.currentSchool].ownerId, 
+      		$rootScope.schools[$scope.currentSchool].instituteId, 
+      		$rootScope.schools[$scope.currentSchool].objectId).then(
+          function(response) {
+          	$rootScope.schools[$scope.currentSchool].children = response.data;
+          	$rootScope.schools[$scope.currentSchool].children.sort(compareChild);
+          	$scope.children = $rootScope.schools[$scope.currentSchool].children; 
+            console.log('Caricamento degli scolari a buon fine.');
+          }, function() {
+            alert('Errore nel caricamento degli scolari.');
+          }
+      );    	
+    };
+
+    $scope.remove = function (idChild) {
+        createDialog('templates/modals/delete-child.html',{
+            id : 'delete-child-dialog',
+            title: 'Attenzione!',
+            success: { 
+            	label: 'Conferma', 
+            	fn: function() {
+                DataService.removeData('child', $scope.children[idChild]).then(
+                    function() {
+                        console.log('Cancellazione dello scolaro a buon fine.');
+                        $scope.children.splice(idChild, 1);
+                    }, function() {
+                        alert('Errore nella cancellazione dello scolaro.');
+                    }
+                );
+            	} 
+            }
+        });
+    };
+    
+  	$scope.getChildName = function(child) {
+  		return child.name + " " + child.surname;
+  	}
+
+  	function compareChild(a,b) {
+  		var aName = a.name + " " + a.surname;
+  		var bName = b.name + " " + b.surname;
+  	  if (aName < bName)
+  	    return -1;
+  	  if (aName > bName)
+  	    return 1;
+  	  return 0;
+  	}
+  	
+  	$scope.init();
+})
+
+.controller('ChildCtrl', function ($scope, $stateParams, $rootScope, $window, createDialog, DataService) {
+	$scope.$parent.selectedTab = 'children-list';
+	$scope.selectedChild = {};
+	initData();
+	
+	function initData() {
+		if ($stateParams.idChild) {
+			$scope.selectedChild = $rootScope.schools[$scope.currentSchool].children[$stateParams.idChild];
+			$scope.saveData = DataService.editData;
+		} else {
+			$scope.selectedChild = {
+          "name": '',
+          "surname": '',
+          "parentName": '',
+          "phone": '',
+          "classRoom": '',
+          "wsnId": '',
+          "ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
+          "instituteId": $rootScope.schools[$scope.currentSchool].instituteId,
+          "schoolId": $rootScope.schools[$scope.currentSchool].objectId
+      };
+      $scope.saveData = DataService.saveData;
+		}
+	}
+	
+  $scope.isNewChild = function() {
+  	return ($stateParams.idChild == null || $stateParams.idChild == '');
+  }
+  
+	$scope.getChildName = function(child) {
+		return child.name + " " + child.surname;
+	}
+	
+  // Exit without saving changes
+  $scope.back = function () {
+      createDialog('templates/modals/back.html',{
+          id : 'back-dialog',
+          title: 'Sei sicuro di voler uscire senza salvare?',
+          success: { label: 'Conferma', fn: function() {$window.history.back();} }
+      });
+  }
+  
+  $scope.save = function () {  
+  	if (checkFields()) {
+  		$scope.saveData('child', $scope.selectedChild).then(
+				function(response) {
+					console.log('Scolaro salvato.');
+					$window.history.back();
+				},
+				function() {
+          alert('Errore nel salvataggio dello scolaro.');
+				}
+  		);
+  	}
+  }
+  
+  function checkFields() {
+    var allCompiled = true;
+    var invalidFields = $('.ng-invalid');
+    // Get all inputs
+    if (invalidFields.length > 0) {
+        $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+        $timeout(function () {
+            $rootScope.modelErrors = '';
+        }, 5000);
+        allCompiled = false;
+    }
+    return allCompiled;
+  }
 });

@@ -233,7 +233,7 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("lastUpdate", new Date());
 		update.set("name", child.getName());
-		update.set("surname", child.getName());
+		update.set("surname", child.getSurname());
 		update.set("externalId", child.getExternalId());
 		update.set("parentName", child.getParentName());
 		update.set("phone", child.getPhone());
