@@ -102,7 +102,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         if($scope.selectedSchool != '') {
             $scope.selectedSchoolString = JSON.stringify($scope.selectedSchool);
         }
-        $scope.initializeClasses();             
         $scope.saveData = DataService.editData;
     }
     else
@@ -122,6 +121,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         })-1;
         $scope.saveData = DataService.saveData;
     }
+    $scope.initializeClasses();
 
     $scope.parseChoice = function() {     // parsing della stringa dell'oggetto school selezionato dal dropdown
         $scope.selectedSchool = JSON.parse($scope.selectedSchoolString);

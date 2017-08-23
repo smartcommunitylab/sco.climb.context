@@ -756,6 +756,7 @@ public class RepositoryManager {
 			update.set("gameName", game.getGameName());
 			update.set("gameDescription", game.getGameDescription());
 			update.set("gameOwner", game.getGameOwner());
+			update.set("globalTeam", game.getGlobalTeam());
 			update.set("from", game.getFrom());
 			update.set("to", game.getTo());
 			update.set("lastDaySeen", game.getLastDaySeen());
