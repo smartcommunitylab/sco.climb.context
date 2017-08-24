@@ -94,7 +94,7 @@ function ($q, $http, $rootScope, $timeout) {
               	postUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.routeId;              	
               	return $http.post(postUrl, element.stops, {headers: {'Autorization': 'Bearer ' + $rootScope.profile.token}});
               } else if(type == 'route') {
-              	postUrl = baseUrl + "/api/route/" + element.ownerId + "/" + element.objectId;
+              	postUrl = baseUrl + "/api/route/" + element.ownerId;
               } else if(type == 'child') {
               	postUrl = baseUrl + "/api/child/" + element.ownerId;
               }

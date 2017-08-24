@@ -14,6 +14,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 DataService.removeData($scope.$parent.mainView, $rootScope.games[gameIndex]).then(
                     function() {
                         console.log("Rimozione effettuata con successo.");
+                        $rootScope.games.splice(gameIndex, 1);
                         $scope.$parent.loadData($scope.$parent.mainView);
                     }, function() {
                         alert("Errore nella richiesta.");

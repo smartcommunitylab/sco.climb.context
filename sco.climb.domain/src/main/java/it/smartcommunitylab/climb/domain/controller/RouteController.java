@@ -150,6 +150,7 @@ public class RouteController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		storage.removeRoute(ownerId, objectId);
+		storage.removeStopByRouteId(ownerId, objectId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteRoute[%s]:%s", ownerId, objectId));
 		}

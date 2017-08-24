@@ -85,43 +85,38 @@ angular.module('consoleControllers.line', [])
                 function(response) {
                     console.log('Linea salvata.');
                     $scope.line['objectId'] = response.data.objectId;
-                    if($scope.line.stops.length > 0) {
-                      //create stops
-                    	for (i = 0; i < $scope.line.stops.length; i++) { 
-                    		$scope.line.stops[i].position = i;
-                    	}
-                      var routeModel = {
-                      		"routeId": '',
-                      		"ownerId": '',
-                      		"stops": []
-                      }
-                      routeModel['ownerId'] = $scope.line.ownerId;
-                      routeModel['routeId'] = $scope.line.objectId;
-                      routeModel['stops'] = $scope.line.stops;
-                      $scope.saveData('stops', routeModel).then(
-                    		function(response) {
-                          // riaggiorno la lista delle linee
-                          DataService.getData('route', 
-                          	$rootScope.schools[$scope.currentSchool].ownerId, 
-                          	$rootScope.schools[$scope.currentSchool].instituteId, 
-                          	$rootScope.schools[$scope.currentSchool].objectId).then(       
-                              function(response) {
-                                  console.log('Caricamento delle linee a buon fine.');
-                                  $rootScope.schools[$scope.currentSchool].lines = response.data;
-                                  $window.history.back();
-                              }, function() {
-                                  alert('Errore nel caricamento delle linee.');
-                              }
-                          );
-                    		},
-                    		function(error) {
-                    			alert('Errore nel salvataggio delle fermate.');
-                    		}
-                    	);
-                    } else {
-                    	$rootScope.schools[currentSchool].lines[$stateParams.idLine] = angular.copy($scope.line);
-                    	$window.history.back();
+                    //create stops
+                  	for (i = 0; i < $scope.line.stops.length; i++) { 
+                  		$scope.line.stops[i].position = i;
+                  	}
+                    var routeModel = {
+                    		"routeId": '',
+                    		"ownerId": '',
+                    		"stops": []
                     }
+                    routeModel['ownerId'] = $scope.line.ownerId;
+                    routeModel['routeId'] = $scope.line.objectId;
+                    routeModel['stops'] = $scope.line.stops;
+                    $scope.saveData('stops', routeModel).then(
+                  		function(response) {
+                        // riaggiorno la lista delle linee
+                        DataService.getData('route', 
+                        	$rootScope.schools[$scope.currentSchool].ownerId, 
+                        	$rootScope.schools[$scope.currentSchool].instituteId, 
+                        	$rootScope.schools[$scope.currentSchool].objectId).then(       
+                            function(response) {
+                                console.log('Caricamento delle linee a buon fine.');
+                                $rootScope.schools[$scope.currentSchool].lines = response.data;
+                                $window.history.back();
+                            }, function() {
+                                alert('Errore nel caricamento delle linee.');
+                            }
+                        );
+                  		},
+                  		function(error) {
+                  			alert('Errore nel salvataggio delle fermate.');
+                  		}
+                  	);
                 }, function() {
                     alert('Errore nel salvataggio della linea.');
                 }
