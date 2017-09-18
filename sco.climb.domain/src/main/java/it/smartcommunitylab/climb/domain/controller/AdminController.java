@@ -139,8 +139,8 @@ public class AdminController extends AuthController {
 	
 	private boolean validateRole(String role, HttpServletRequest request) {
 		boolean result = false;
-		String cf = getCF(getAccoutProfile(request));
-		User user = storage.getUserByCf(cf);
+		String email = getAccountByEmail(getAccoutProfile(request)).getAttributeValue();
+		User user = storage.getUserByEmail(email);
 		if(user != null) {
 			result = user.getRoles().contains(role);
 		}

@@ -35,14 +35,6 @@ public class AuthController {
 	private String profileServerUrl;
 
 	@Autowired
-	@Value("${profile.account}")
-	private String profileAccount;
-
-	@Autowired
-	@Value("${profile.attribute}")
-	private String profileAttribute;
-	
-	@Autowired
 	AuthorizationManager authorizationManager;
 
 	private AACProfileService profileConnector;
@@ -51,25 +43,34 @@ public class AuthController {
 	public void init() throws Exception {
 		profileConnector = new AACProfileService(profileServerUrl);
 	}
-
-	protected String getCF(AccountProfile accountProfile) {
-		String result = null;
-		if(accountProfile != null) {
-			result = accountProfile.getAttribute(profileAccount, profileAttribute);
-		}
-		//TODO TEST
-		return "1122334455";
-		//return result;
-	}
 	
+	protected AccountAttributeDTO getAccountByEmail(AccountProfile accountProfile) {
+		String email = null;
+		if(Utils.isNotEmpty(
+				accountProfile.getAttribute("adc", "pat_attribute_email"))) {
+			email = accountProfile.getAttribute("adc", "pat_attribute_email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("google", "email"))) {
+			email = accountProfile.getAttribute("google", "email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("facebook", "email"))) {
+			email = accountProfile.getAttribute("facebook", "email");
+		}
+		AccountAttributeDTO account = new AccountAttributeDTO();
+		account.setAccountName("climb");
+		account.setAttributeName("email");
+		//TODO TEST
+		account.setAttributeValue("smartcommunitytester@gmail.com");
+		//account.setAttributeValue(email);
+		return account;
+	}
+
 	protected String getSubject(AccountProfile accountProfile) {
 		String result = null;
 		if(accountProfile != null) {
 			result = accountProfile.getUserId();
 		}
-		//TODO TEST
-		return "429";
-		//return result;
+		return result;
 	}
 	
 	protected AccountProfile getAccoutProfile(HttpServletRequest request) {
@@ -91,7 +92,7 @@ public class AuthController {
 	public boolean validateAuthorizationByExp(String ownerId, String instituteId, 
 			String schoolId, String routeId, String gameId, String resource, String action,	
 			HttpServletRequest request) throws Exception {
-		String cf = getCF(getAccoutProfile(request));
+		AccountAttributeDTO account = getAccountByEmail(getAccoutProfile(request));
 		String resourceName = "pedibus";
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("pedibus-resource", resource);
@@ -110,10 +111,6 @@ public class AuthController {
 		if(Utils.isNotEmpty(gameId)) {
 			attributes.put("pedibus-gameId", gameId);
 		}
-		AccountAttributeDTO account = new AccountAttributeDTO();
-		account.setAccountName(profileAccount);
-		account.setAttributeName(profileAttribute);
-		account.setAttributeValue(cf);
 		RequestedAuthorizationDTO authorization = authorizationManager.getAuthorization(account, action, 
 				resourceName, attributes);
 		if(!authorizationManager.validateAuthorization(authorization)) {

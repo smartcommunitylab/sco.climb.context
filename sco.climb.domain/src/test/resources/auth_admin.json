@@ -1,17 +1,17 @@
 {
 	"subject": {
 		"accountAttribute": {
-			"accountName": "adc",
-			"attributeName": "pat_attribute_codicefiscale",
-			"attributeValue": "1122334455"
+			"accountName": "climb",
+			"attributeName": "email",
+			"attributeValue": "smartcommunitytester@gmail.com"
 		},
 		"type": "user"
 	},
 	"entity": {
 		"accountAttribute": {
-			"accountName": "adc",
-			"attributeName": "pat_attribute_codicefiscale",
-			"attributeValue": "1122334455"
+			"accountName": "climb",
+			"attributeName": "email",
+			"attributeValue": "smartcommunitytester@gmail.com"
 		},
 		"type": "user"
 	},
