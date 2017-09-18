@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 
 
 @Controller
-public class VolunteerCalendarController {
+public class VolunteerCalendarController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(VolunteerCalendarController.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	

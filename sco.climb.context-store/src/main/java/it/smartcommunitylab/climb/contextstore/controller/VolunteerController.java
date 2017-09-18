@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class VolunteerController {
+public class VolunteerController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(VolunteerController.class);
 	
 	@Autowired
@@ -54,13 +54,18 @@ public class VolunteerController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/volunteer/{ownerId}/{schoolId}", method = RequestMethod.GET)
-	public @ResponseBody List<Volunteer> searchVolunteer(@PathVariable String ownerId, @PathVariable String schoolId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+	@RequestMapping(value = "/api/volunteer/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<Volunteer> searchVolunteer(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("schoolId").is(schoolId);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
 		List<Volunteer> result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteer[%s]:%d", ownerId, result.size()));
@@ -71,7 +76,8 @@ public class VolunteerController {
 	@RequestMapping(value = "/api/volunteer/{ownerId}", method = RequestMethod.POST)
 	public @ResponseBody Volunteer addVolunteer(@RequestBody Volunteer volunteer, @PathVariable String ownerId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		volunteer.setOwnerId(ownerId);
@@ -86,7 +92,8 @@ public class VolunteerController {
 	@RequestMapping(value = "/api/volunteer/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody Volunteer updateVolunteer(@RequestBody Volunteer volunteer, @PathVariable String ownerId, 
 			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		volunteer.setOwnerId(ownerId);
@@ -101,7 +108,10 @@ public class VolunteerController {
 	@RequestMapping(value = "/api/volunteer/{ownerId}/{objectId}", method = RequestMethod.DELETE)
 	public @ResponseBody String deleteVolunteer(@PathVariable String ownerId, @PathVariable String objectId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Volunteer volunteer = storage.findOneData(Volunteer.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+				null,	"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		storage.removeVolunteer(ownerId, objectId);

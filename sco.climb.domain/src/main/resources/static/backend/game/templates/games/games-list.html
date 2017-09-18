@@ -1,0 +1,27 @@
+<div ng-include="'templates/dataset-selection.html'"></div>
+
+<div ng-if="$parent.selectedOwner && $parent.selectedInstitute && $parent.selectedSchool">
+    <div class="col-lg-12 buttons-tab">
+        <a ui-sref="root.game.info" class="btn btn-info" ng-click="$parent.$parent.gamesModified = true">Crea nuovo</a>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+        <ul class="list-group list-categories">
+            <li class="list-group-item" ng-repeat="game in games">
+                <div class="row v-center">
+                    <div class="col-md-2">
+                        <img class="path-img" alt="Placeholder">
+                    </div>
+                    <div class="col-md-8">
+                        <h5>{{game.gameName}}</h5>
+                        <h5>Inizio: {{game.from | date : 'dd/MM/yyyy'}} - Fine: {{game.to | date : 'dd/MM/yyyy'}}</h5>
+                    </div>
+                    <div class="col-md-2 right">
+                        <a href="#/game/{{$index}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.gamesModified = true"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a ng-click="delete($index)" class="btn btn-icon btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

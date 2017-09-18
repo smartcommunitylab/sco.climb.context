@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class AnchorController {
+public class AnchorController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AnchorController.class);
 	
 	@Autowired

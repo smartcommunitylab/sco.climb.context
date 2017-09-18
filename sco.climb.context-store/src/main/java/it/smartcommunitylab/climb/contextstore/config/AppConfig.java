@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.climb.contextstore.config;
 
+import it.smartcommunitylab.climb.contextstore.security.AuthorizationManager;
 import it.smartcommunitylab.climb.contextstore.storage.RepositoryManager;
 
 import java.net.UnknownHostException;
@@ -65,7 +66,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
 		return new RepositoryManager(getMongo(), defaultLang);
 	}
-
+	
+	@Bean
+	AuthorizationManager getAuthorizationManager() {
+		return new AuthorizationManager();
+	}
+	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		return new PropertySourcesPlaceholderConfigurer();

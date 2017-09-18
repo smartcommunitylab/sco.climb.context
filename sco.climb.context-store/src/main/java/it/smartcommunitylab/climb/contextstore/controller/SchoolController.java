@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,7 +44,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class SchoolController {
+public class SchoolController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(SchoolController.class);
 			
 	@Autowired
@@ -53,26 +54,37 @@ public class SchoolController {
 	private DataSetSetup dataSetSetup;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/school/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody List<School> searchSchool(@PathVariable String ownerId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+	@RequestMapping(value = "/api/school/{ownerId}/{instituteId}", method = RequestMethod.GET)
+	public @ResponseBody List<School> searchSchool(
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, null, null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<School> result = (List<School>) storage.findData(School.class, null, null, ownerId);
+		Criteria criteria = Criteria.where("instituteId").is(instituteId);
+		List<School> result = (List<School>) storage.findData(School.class, criteria, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchSchool[%s]:%d", ownerId, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/school/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody School addSchool(@RequestBody School school, @PathVariable String ownerId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+	@RequestMapping(value = "/api/school/{ownerId}/{instituteId}", method = RequestMethod.POST)
+	public @ResponseBody School addSchool(
+			@RequestBody School school, 
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, null, null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
+		}		
 		school.setOwnerId(ownerId);
+		school.setInstituteId(instituteId);
 		school.setObjectId(Utils.getUUID());
 		storage.addSchool(school);
 		if(logger.isInfoEnabled()) {
@@ -84,7 +96,8 @@ public class SchoolController {
 	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.PUT)
 	public @ResponseBody School updateSchool(@RequestBody School school, @PathVariable String ownerId, 
 			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		school.setOwnerId(ownerId);
@@ -99,7 +112,10 @@ public class SchoolController {
 	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.DELETE)
 	public @ResponseBody String deleteSchool(@PathVariable String ownerId, @PathVariable String objectId, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+		Criteria criteria = Criteria.where("ownerId").is(ownerId).and("objectId").is(objectId);
+		School school = storage.findOneData(School.class, criteria, ownerId);
+		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), null, 
+				"ALL", request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		storage.removeSchool(ownerId, objectId);

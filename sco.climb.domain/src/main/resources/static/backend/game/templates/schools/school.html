@@ -1,0 +1,28 @@
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-8 header-path-category">
+            <h4 ng-if="isNewSchool()">CREA NUOVA SCUOLA</h4>
+            <h4 ng-if="!isNewSchool()">MODIFICA SCUOLA: {{getSchoolName()}}</h4>
+            <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+        </div>
+
+        <div class="col-md-4 right">
+            <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva</a>
+            <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Menu tab -->
+        <div class="col-md-2 tabs-menu">
+            <a ng-class="{'active-tab':selectedTab == 'info'}" ui-sref="root.school.info">DETTAGLI</a>
+            <a ng-class="{'active-tab':selectedTab == 'lines-list'}" ui-sref="root.school.lines-list">LINEE PEDIBUS</a>
+            <a ng-class="{'active-tab':selectedTab == 'children-list'}" ui-sref="root.school.children-list">SCOLARI</a>
+        </div>
+
+        <!-- Tabs container -->
+        <div class="col-md-10 tabs-container">
+            <div ui-view></div>
+        </div>
+    </div>
+</div>
