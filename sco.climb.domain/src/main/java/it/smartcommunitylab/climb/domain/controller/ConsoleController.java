@@ -76,7 +76,9 @@ public class ConsoleController extends AuthController {
 	private DataSetInfo getDataSetInfo(HttpServletRequest request) {
 		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
-		User user = storage.getUserByCf(details.getApp().getCf());
+		//TODO TEST
+		details.getApp().setEmail("smartcommunitytester@gmail.com");
+		User user = storage.getUserByEmail(details.getApp().getEmail());
 		if(user != null) {
 			details.getApp().setOwnerIds(user.getOwnerIds());
 			details.getApp().setRoles(user.getRoles());
