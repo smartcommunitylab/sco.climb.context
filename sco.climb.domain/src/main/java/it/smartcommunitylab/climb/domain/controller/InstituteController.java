@@ -19,6 +19,8 @@ package it.smartcommunitylab.climb.domain.controller;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -106,8 +108,11 @@ public class InstituteController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/institute/{ownerId}/{objectId}", method = RequestMethod.DELETE)
-	public @ResponseBody String deleteInstitute(@PathVariable String ownerId, @PathVariable String objectId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String deleteInstitute(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		if(!validateAuthorizationByExp(ownerId, null, null, null, null,
 				Const.AUTH_RES_Institute, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -119,11 +124,28 @@ public class InstituteController extends AuthController {
 		return "{\"status\":\"OK\"}";
 	}
 	
+	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
 		return Utils.handleError(exception);
-	}
+	}		
 	
 }

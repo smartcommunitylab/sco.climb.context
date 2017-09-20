@@ -20,7 +20,9 @@ import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.StatsLogger;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.NodeState;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
@@ -78,6 +80,9 @@ public class EventController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(routeId);
 		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(route == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -122,6 +127,9 @@ public class EventController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(routeId);
 		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(route == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -151,6 +159,9 @@ public class EventController extends AuthController {
 			HttpServletRequest request) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(routeId);
 		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(route == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_EventLogFile, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -178,6 +189,9 @@ public class EventController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(routeId);
 		Route route = storage.findOneData(Route.class, criteria, ownerId);
+		if(route == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_NodeState, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -198,11 +212,28 @@ public class EventController extends AuthController {
  		return result;
 	}
 
+	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
 		return Utils.handleError(exception);
-	}
+	}		
 	
 }

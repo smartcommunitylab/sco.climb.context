@@ -21,7 +21,9 @@ import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -104,11 +106,28 @@ public class ReportController extends AuthController {
 		}
 	}
 	
+	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
 		return Utils.handleError(exception);
-	}
+	}		
 	
 }

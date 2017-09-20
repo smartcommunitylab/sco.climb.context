@@ -96,6 +96,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -115,6 +118,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -136,6 +142,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -181,6 +190,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -209,6 +221,9 @@ public class DashboardController extends AuthController {
 			@RequestParam Double distance, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -251,6 +266,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -276,6 +294,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -316,6 +337,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -350,6 +374,9 @@ public class DashboardController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");

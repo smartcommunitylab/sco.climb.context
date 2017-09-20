@@ -19,6 +19,8 @@ package it.smartcommunitylab.climb.domain.controller;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -71,9 +73,9 @@ public class SchoolController extends AuthController {
 	
 	@RequestMapping(value = "/api/school/{ownerId}/{instituteId}", method = RequestMethod.POST)
 	public @ResponseBody School addSchool(
-			@RequestBody School school, 
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
+			@RequestBody School school, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		if(!validateAuthorizationByExp(ownerId, instituteId, null, null, null,
@@ -91,8 +93,15 @@ public class SchoolController extends AuthController {
 	}
 
 	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.PUT)
-	public @ResponseBody School updateSchool(@RequestBody School school, @PathVariable String ownerId, 
-			@PathVariable String objectId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody School updateSchool(
+			@PathVariable String ownerId,
+			@PathVariable String objectId,
+			@RequestBody School school,  
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(school == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), 
 				null, null, Const.AUTH_RES_School, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -107,10 +116,16 @@ public class SchoolController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/school/{ownerId}/{objectId}", method = RequestMethod.DELETE)
-	public @ResponseBody String deleteSchool(@PathVariable String ownerId, @PathVariable String objectId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String deleteSchool(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("ownerId").is(ownerId).and("objectId").is(objectId);
 		School school = storage.findOneData(School.class, criteria, ownerId);
+		if(school == null) {
+			throw new EntityNotFoundException("route not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), 
 				null, null, Const.AUTH_RES_School, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -122,11 +137,28 @@ public class SchoolController extends AuthController {
 		return "{\"status\":\"OK\"}";
 	}
 	
+	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
 		return Utils.handleError(exception);
-	}
+	}	
 	
 }

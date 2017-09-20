@@ -46,6 +46,9 @@ public class AuthController {
 	
 	protected AccountAttributeDTO getAccountByEmail(AccountProfile accountProfile) {
 		String email = null;
+		if(accountProfile == null) {
+			return null;
+		}
 		if(Utils.isNotEmpty(
 				accountProfile.getAttribute("adc", "pat_attribute_email"))) {
 			email = accountProfile.getAttribute("adc", "pat_attribute_email");
@@ -93,6 +96,9 @@ public class AuthController {
 			String schoolId, String routeId, String gameId, String resource, String action,	
 			HttpServletRequest request) throws Exception {
 		AccountAttributeDTO account = getAccountByEmail(getAccoutProfile(request));
+		if(account == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
 		String resourceName = "pedibus";
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("pedibus-resource", resource);

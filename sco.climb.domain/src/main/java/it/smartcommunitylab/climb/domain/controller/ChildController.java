@@ -19,6 +19,8 @@ package it.smartcommunitylab.climb.domain.controller;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -87,8 +89,14 @@ public class ChildController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/child/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody Child addChild(@RequestBody Child child, @PathVariable String ownerId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Child addChild(
+			@RequestBody Child child, 
+			@PathVariable String ownerId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), null, null, 
 				Const.AUTH_RES_Child, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -132,6 +140,9 @@ public class ChildController extends AuthController {
 			@PathVariable String objectId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null, null, Const.AUTH_RES_Child, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -153,6 +164,9 @@ public class ChildController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(objectId);
 		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Child, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -172,6 +186,9 @@ public class ChildController extends AuthController {
 			HttpServletRequest request) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(objectId);
 		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -198,6 +215,9 @@ public class ChildController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		Criteria criteria = Criteria.where("objectId").is(objectId);
 		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -224,11 +244,28 @@ public class ChildController extends AuthController {
     return new HttpEntity<byte[]>(image, headers);
 	}
 	
+	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
 		return Utils.handleError(exception);
-	}
+	}		
 	
 }
