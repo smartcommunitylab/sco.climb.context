@@ -90,6 +90,31 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	} else {
     		return "";
     	} 
+    };
+    
+    $scope.uploadFile = function() {
+    	var fileInput = document.getElementById('upload-file');
+    	if(fileInput.files.length == 0) {
+    		alert('Scegliere un file da caricare');
+    		return;
+    	}
+    	var file = fileInput.files[0];
+    	var formData = new FormData();
+    	formData.append('file', file);
+    	var element = {
+    			"ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
+    			"instituteId": $scope.$parent.selectedInstitute.objectId,
+    			"schoolId": $rootScope.schools[$scope.currentSchool].objectId,
+    			"formdata": formData 	
+    	};
+    	DataService.uploadFile(element).then(
+          function(response) {
+              console.log('Caricamento dati a buon fine.');
+              $location.path('schools-list');
+          }, function() {
+              alert('Errore nel caricamento delle linee.');
+          }
+      );
     }
 
     // Save the changes made to the path
@@ -134,7 +159,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         });
     };
 })
-
 
 .controller('SchoolInfoCtrl', function ($scope) {
     $scope.$parent.selectedTab = 'info';
@@ -321,3 +345,5 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     return allCompiled;
   }
 });
+
+

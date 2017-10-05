@@ -1,10 +1,16 @@
 package it.smartcommunitylab.climb.domain.controller;
 
+import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
 import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
 import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -137,9 +143,45 @@ public class AdminController extends AuthController {
 		}
 	}
 	
-	private boolean validateRole(String role, HttpServletRequest request) {
+	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.POST)
+	public @ResponseBody void uploadData(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_ADMIN, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
+				ownerId, instituteId, schoolId);
+		Map<String, Stop> stopsMap = ExcelConverter.readStops(file.getInputStream(), 
+				ownerId, instituteId, schoolId, routesMap);
+		Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
+				ownerId, instituteId, schoolId, stopsMap);
+		Map<String, Volunteer> volunteersMap = ExcelConverter.readVolunteers(file.getInputStream(), 
+				ownerId, instituteId, schoolId);
+		for(Route route : routesMap.values()) {
+			storage.addRoute(route);
+		}
+		for(Stop stop : stopsMap.values()) {
+			storage.addStop(stop);
+		}
+		for(Child child : childrenMap.values()) {
+			storage.addChild(child);
+		}
+		for(Volunteer volunteer : volunteersMap.values()) {
+			storage.addVolunteer(volunteer);
+		}
+	}
+	
+	private boolean validateRole(String role, HttpServletRequest request) throws Exception {
 		boolean result = false;
-		String email = getAccountByEmail(getAccoutProfile(request)).getAttributeValue();
+		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
+		if(accountByEmail == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		String email = accountByEmail.getAttributeValue();
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
 			result = user.getRoles().contains(role);

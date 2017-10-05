@@ -116,6 +116,18 @@ function ($q, $http, $rootScope, $timeout) {
               }
               return $http.delete(deleteUrl, {headers: {'Authorization': 'Bearer ' + $rootScope.profile.token}});
           },
+          uploadFile: function(element) 
+          {
+          	var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId;
+          	return $http.post(postUrl, element.formdata, 
+          			{
+          				headers: {
+          					'Authorization': 'Bearer ' + $rootScope.profile.token,
+          					'Content-Type': undefined 
+          				},
+          				transformRequest: angular.identity
+          			});
+          },
           logout: logout
       };
   }

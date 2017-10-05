@@ -58,6 +58,9 @@ public class AuthController {
 		} else if(Utils.isNotEmpty(
 				accountProfile.getAttribute("facebook", "email"))) {
 			email = accountProfile.getAttribute("facebook", "email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("internal", "email"))) {
+			email = accountProfile.getAttribute("internal", "email");
 		}
 		AccountAttributeDTO account = new AccountAttributeDTO();
 		account.setAccountName("climb");
