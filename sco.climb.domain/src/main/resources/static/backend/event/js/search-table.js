@@ -115,7 +115,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	
 	$scope.changeOwner = function() {
 		var urlInstituteList = baseUrl + "/api/institute/" + $scope.selectedOwner;
-		$http.get(urlInstituteList, {headers: {'Autorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(urlInstituteList, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 			function (response) {
 				$scope.instituteList = response.data;
 			},
@@ -130,7 +130,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	$scope.changeInstitute = function() {
 		var urlSchoolList = baseUrl + "/api/school/" + $scope.selectedOwner
 		+ "/" + $scope.selectedInstitute.objectId;
-		$http.get(urlSchoolList, {headers: {'Autorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(urlSchoolList, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 			function (response) {
 				$scope.schoolList = response.data;
 			},
@@ -146,7 +146,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 		var urlRouteList = baseUrl + "/api/route/" + $scope.selectedOwner 
 		+ "/" + $scope.selectedInstitute.objectId
 		+ "/" + $scope.selectedSchool.objectId;
-		$http.get(urlRouteList, {headers: {'Autorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(urlRouteList, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 		function (response) {
 			$scope.routeList = response.data;
 		},
@@ -282,7 +282,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 		}
 		
 		//console.log("urlSearch:" + urlSearch);
-		$http.get(urlSearch, {headers: {'Autorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(urlSearch, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 		function (response) {
 			$scope.events = response.data;
 			$window.spinner.stop();
