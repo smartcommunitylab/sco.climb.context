@@ -66,8 +66,8 @@ public class AuthController {
 		account.setAccountName("climb");
 		account.setAttributeName("email");
 		//TODO TEST
-		account.setAttributeValue("smartcommunitytester@gmail.com");
-		//account.setAttributeValue(email);
+		//account.setAttributeValue("smartcommunitytester@gmail.com");
+		account.setAttributeValue(email);
 		return account;
 	}
 

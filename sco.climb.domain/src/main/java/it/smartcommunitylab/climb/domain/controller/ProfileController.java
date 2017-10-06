@@ -50,7 +50,7 @@ public class ProfileController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		String email = getAccountByEmail(getAccoutProfile(request)).getAttributeValue();
 		//TODO TEST
-		email = "smartcommunitytester@gmail.com";
+		//email = "smartcommunitytester@gmail.com";
 		User user = storage.getUserByEmail(email);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getProfile:%s - %s", email, user));
