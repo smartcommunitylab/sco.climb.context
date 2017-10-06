@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.config;
 
+import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.security.AacUserInfoTokenServices;
 import it.smartcommunitylab.climb.domain.security.DataSetDetails;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
@@ -69,17 +70,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				dataSetInfo.setSurname((String) map.get("surname"));
 				dataSetInfo.setToken((String) map.get("token"));
 				Map<String, Object> accounts = (Map<String, Object>) map.get("accounts");
-				if(accounts.containsKey("google")) {
-					Map<String, Object> google = (Map<String, Object>) accounts.get("google");
-					dataSetInfo.setEmail((String) google.get("email"));
-				}
 				if(accounts.containsKey("adc")) {
 					Map<String, Object> adc = (Map<String, Object>) accounts.get("adc");
 					dataSetInfo.setEmail((String) adc.get("pat_attribute_codicefiscale"));
 				}
+				if(accounts.containsKey("google")) {
+					Map<String, Object> google = (Map<String, Object>) accounts.get("google");
+					dataSetInfo.setEmail((String) google.get("email"));
+				}
 				if(accounts.containsKey("facebook")) {
 					Map<String, Object> facebook = (Map<String, Object>) accounts.get("facebook");
 					dataSetInfo.setEmail((String) facebook.get("email"));
+				}
+				if(accounts.containsKey("internal")) {
+					Map<String, Object> internal = (Map<String, Object>) accounts.get("internal");
+					dataSetInfo.setEmail((String) internal.get("email"));
 				}
 				DataSetDetails details = new DataSetDetails(dataSetInfo);
 				return details;
