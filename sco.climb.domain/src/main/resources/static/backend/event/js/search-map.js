@@ -268,8 +268,6 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 		}
 		
 		var urlSearch = baseUrl + "/api/event/" + $scope.selectedOwner
-		+ "/" + $scope.selectedInstitute.objectId
-		+ "/" + $scope.selectedSchool.objectId
 		+ "/" + $scope.selectedRoute.objectId
 		+ "?dateFrom=" + dateFrom + "&dateTo=" + dateTo;
 		
