@@ -134,10 +134,6 @@ public class EventController extends AuthController {
 				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
-				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_ADD, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
 		for(WsnEvent event : events) {
 			event.setOwnerId(ownerId);
 			event.setRouteId(routeId);
