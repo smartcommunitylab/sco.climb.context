@@ -104,21 +104,21 @@ public class AuthController {
 		}
 		String resourceName = "pedibus";
 		Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put("pedibus-resource", resource);
+		attributes.put("resource", resource);
 		if(Utils.isNotEmpty(ownerId)) {
-			attributes.put("pedibus-ownerId", ownerId);
+			attributes.put("ownerId", ownerId);
 		}
 		if(Utils.isNotEmpty(instituteId)) {
-			attributes.put("pedibus-instituteId", instituteId);
+			attributes.put("instituteId", instituteId);
 		}
 		if(Utils.isNotEmpty(schoolId)) {
-			attributes.put("pedibus-schoolId", schoolId);
+			attributes.put("schoolId", schoolId);
 		}
 		if(Utils.isNotEmpty(routeId)) {
-			attributes.put("pedibus-routeId", routeId);
+			attributes.put("routeId", routeId);
 		}
 		if(Utils.isNotEmpty(gameId)) {
-			attributes.put("pedibus-gameId", gameId);
+			attributes.put("gameId", gameId);
 		}
 		RequestedAuthorizationDTO authorization = authorizationManager.getAuthorization(account, action, 
 				resourceName, attributes);
