@@ -12,94 +12,98 @@ public class StatsLogger {
 	public static void logEvent(String ownerId, String instituteId, String schoolId, 
 			String routeId, WsnEvent event) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("type=WsnEvent ");
-		sb.append("ownerId=" + addWordField(ownerId));
-		sb.append("instituteId=" + addUUIDField(instituteId));
-		sb.append("schoolId=" + addUUIDField(schoolId));
-		sb.append("routeId=" + addUUIDField(routeId));
-		sb.append("eventType=" + addNumberField(event.getEventType()));
-		sb.append("timestamp=" + addNumberField(event.getTimestamp().getTime()));
-		sb.append("wsnNodeId=" + addQuotedField(event.getWsnNodeId()));
-		switch (event.getEventType()) {
-		case Const.NODE_IN_RANGE:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.NODE_CHECKIN:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.NODE_CHECKOUT:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.NODE_AT_DESTINATION:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.NODE_OUT_OF_RANGE:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			sb.append("lastCheck=" + addNumberField((Long) event.getPayload().get("lastCheck")));
-			break;
-		case Const.STOP_REACHED:
-			sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.SET_DRIVER:
-			sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.SET_HELPER:
-			sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.DRIVER_POSITION:
-			sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.START_ROUTE:
-			sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.END_ROUTE:
-			sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			break;
-		case Const.BATTERY_STATE:
-			sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
-			sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
-			sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
-			sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
-			sb.append("batteryVoltage=" + addNumberField((Integer) event.getPayload().get("batteryVoltage")));
-			sb.append("batteryLevel=" + addNumberField((Integer) event.getPayload().get("batteryLevel")));
-			break;
-		default:
-			break;
+		try {
+			sb.append("type=WsnEvent ");
+			sb.append("ownerId=" + addWordField(ownerId));
+			sb.append("instituteId=" + addUUIDField(instituteId));
+			sb.append("schoolId=" + addUUIDField(schoolId));
+			sb.append("routeId=" + addUUIDField(routeId));
+			sb.append("eventType=" + addNumberField(event.getEventType()));
+			sb.append("timestamp=" + addNumberField(event.getTimestamp().getTime()));
+			sb.append("wsnNodeId=" + addQuotedField(event.getWsnNodeId()));
+			switch (event.getEventType()) {
+			case Const.NODE_IN_RANGE:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.NODE_CHECKIN:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.NODE_CHECKOUT:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.NODE_AT_DESTINATION:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.NODE_OUT_OF_RANGE:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				sb.append("lastCheck=" + addNumberField((Long) event.getPayload().get("lastCheck")));
+				break;
+			case Const.STOP_REACHED:
+				sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.SET_DRIVER:
+				sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.SET_HELPER:
+				sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.DRIVER_POSITION:
+				sb.append("volunteerId=" + addUUIDField((String) event.getPayload().get("volunteerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.START_ROUTE:
+				sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.END_ROUTE:
+				sb.append("stopId=" + addUUIDField((String) event.getPayload().get("stopId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				break;
+			case Const.BATTERY_STATE:
+				sb.append("passengerId=" + addUUIDField((String) event.getPayload().get("passengerId")));
+				sb.append("latitude=" + addNumberField((Double) event.getPayload().get("latitude")));
+				sb.append("longitude=" + addNumberField((Double) event.getPayload().get("longitude")));
+				sb.append("accuracy=" + addNumberField((Number) event.getPayload().get("accuracy")));
+				sb.append("batteryVoltage=" + addNumberField((Integer) event.getPayload().get("batteryVoltage")));
+				sb.append("batteryLevel=" + addNumberField((Integer) event.getPayload().get("batteryLevel")));
+				break;
+			default:
+				break;
+			}
+			logger.info(sb.toString());			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		logger.info(sb.toString());
 	}
 	
 	public static String addQuotedField(String field) {
