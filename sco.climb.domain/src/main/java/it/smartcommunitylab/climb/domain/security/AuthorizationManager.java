@@ -10,9 +10,11 @@ import it.smartcommunitylab.aac.authorization.beans.AuthorizationResourceDTO;
 import it.smartcommunitylab.aac.authorization.beans.AuthorizationUserDTO;
 import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -105,6 +107,37 @@ public class AuthorizationManager {
 		userDTO.setType(userType);
 		result.setEntity(userDTO);
 		result.setAction(action);
+		AuthorizationResourceDTO resource= new AuthorizationResourceDTO();
+		resource.setQnameRef(resourceName);
+		resource.setValues(new ArrayList<AuthorizationNodeValueDTO>());
+		for(String key : attributes.keySet()) {
+			String value = attributes.get(key);
+			int indexOf = key.lastIndexOf("-");
+			String attrName = key.substring(indexOf + 1);
+			String qname = key.substring(0, indexOf);
+			AuthorizationNodeValueDTO nodeValue = new AuthorizationNodeValueDTO();
+			nodeValue.setQname(qname);
+			nodeValue.setName(attrName);
+			nodeValue.setValue(value);
+			resource.getValues().add(nodeValue);
+		}
+		result.setResource(resource);
+		return result;
+	}
+	
+	public AuthorizationDTO getAuthorizationDTO(String email, List<String> actions,
+			String resourceName, Map<String, String> attributes) {
+		AuthorizationDTO result = new AuthorizationDTO();
+		
+		AccountAttributeDTO attributeDTO = new AccountAttributeDTO(Const.AUTH_ACCOUNT_NAME, 
+				Const.AUTH_ATTRIBUTE_NAME, email);
+		
+		AuthorizationUserDTO authUser = new AuthorizationUserDTO(attributeDTO, userType);
+		
+		result.setEntity(authUser);
+		result.setSubject(authUser);
+		result.setAction(actions);
+
 		AuthorizationResourceDTO resource= new AuthorizationResourceDTO();
 		resource.setQnameRef(resourceName);
 		resource.setValues(new ArrayList<AuthorizationNodeValueDTO>());

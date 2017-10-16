@@ -22,6 +22,7 @@ public class Const {
 	public static final String ROLE_PARENT = "parent";
 	public static final String ROLE_TEACHER = "teacher";
 	public static final String ROLE_VOLUNTEER = "volunteer";
+	public static final String ROLE_OWNER = "owner";
 	
 	public static final String AUTH_ACTION_READ = "READ";
 	public static final String AUTH_ACTION_ADD = "ADD";
@@ -41,6 +42,9 @@ public class Const {
 	public static final String AUTH_RES_Institute = "Institute";
 	public static final String AUTH_RES_Attendance = "Attendance";
 	public static final String AUTH_RES_PedibusGame = "PedibusGame";
+	
+	public static final String AUTH_ACCOUNT_NAME = "climb";
+	public static final String AUTH_ATTRIBUTE_NAME = "email";
 	
 	public static final String METEO_SOLE = "sunny";
 	public static final String METEO_NUVOLE = "cloudy";

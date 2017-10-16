@@ -4,6 +4,7 @@ import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
 import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
@@ -63,8 +64,8 @@ public class AuthController {
 			email = accountProfile.getAttribute("internal", "email");
 		}
 		AccountAttributeDTO account = new AccountAttributeDTO();
-		account.setAccountName("climb");
-		account.setAttributeName("email");
+		account.setAccountName(Const.AUTH_ACCOUNT_NAME);
+		account.setAttributeName(Const.AUTH_ATTRIBUTE_NAME);
 		//TODO TEST
 		//account.setAttributeValue("smartcommunitytester@gmail.com");
 		account.setAttributeValue(email);

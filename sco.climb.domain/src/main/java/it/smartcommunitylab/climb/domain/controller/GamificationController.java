@@ -578,12 +578,12 @@ public class GamificationController extends AuthController {
 			@PathVariable String itineraryId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, itineraryId);
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				itineraryId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		try {
