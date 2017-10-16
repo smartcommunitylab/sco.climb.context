@@ -2,11 +2,13 @@ angular.module('climbGame.services.login', [])
   .factory('loginService', function ($http, $q, $rootScope, configService) {
     var loginService = {};
     var OWNERID = "USERNAME";
+    var INSTITUTEID = "INSTITUTEID";
+    var SCHOOLID = "SCHOOLID";
     var GAMEID = "GAMEID";
+    var ITINERARYID = "ITINERARYID";
     var USERTOKEN = "USERTOKEN";
     var CLASS = "CLASS";
     var CLASSES = "CLASSES";
-
 
     loginService.login = function (user) {
       var deferred = $q.defer();
@@ -65,12 +67,36 @@ angular.module('climbGame.services.login', [])
         return loginService.ownId;
       }
     }
+    loginService.getInstituteId = function () {
+      if (loginService.instituteId) {
+        return loginService.instituteId;
+      } else {
+        loginService.instituteId = localStorage.getItem(INSTITUTEID);
+        return loginService.instituteId;
+      }
+    }
+    loginService.getSchoolId = function () {
+      if (loginService.schoolId) {
+        return loginService.schoolId;
+      } else {
+        loginService.schoolId = localStorage.getItem(SCHOOLID);
+        return loginService.schoolId;
+      }
+    }
     loginService.getGameId = function () {
       if (loginService.gameId) {
         return loginService.gameId;
       } else {
         loginService.gameId = localStorage.getItem(GAMEID);
         return loginService.gameId;
+      }
+    }
+    loginService.getItineraryId = function () {
+      if (loginService.itineraryId) {
+        return loginService.itineraryId;
+      } else {
+        loginService.itineraryId = localStorage.getItem(ITINERARYID);
+        return loginService.itineraryId;
       }
     }
     loginService.getUserToken = function () {
@@ -81,6 +107,18 @@ angular.module('climbGame.services.login', [])
         return loginService.userToken;
       }
     }
+    loginService.getAllOwners = function() {
+    	return loginService.ownerIds;
+    }
+    loginService.getAllInstitutes = function() {
+    	return loginService.instituteIds;
+    }
+    loginService.getAllSchools = function() {
+    	return loginService.schoolIds;
+    }    
+    loginService.getAllItineraies = function() {
+    	return loginService.itineraryIds;
+    }    
     loginService.getAllClasses = function () {
       if (loginService.classes) {
         return loginService.classes;
@@ -101,13 +139,37 @@ angular.module('climbGame.services.login', [])
       localStorage.setItem(OWNERID, id);
       loginService.ownId = id;
     }
+    loginService.setInstituteId = function (id) {
+      localStorage.setItem(INSTITUTEID, id);
+      loginService.instituteId = id;
+    }
+    loginService.setSchoolId = function (id) {
+      localStorage.setItem(SCHOOLID, id);
+      loginService.schoolId = id;
+    }
     loginService.setGameId = function (id) {
       localStorage.setItem(GAMEID, id);
       loginService.gameId = id;
     }
+    loginService.setItineraryId = function (id) {
+      localStorage.setItem(ITINERARYID, id);
+      loginService.itineraryId = id;
+    }
     loginService.setUserToken = function (token) {
       localStorage.setItem(USERTOKEN, token);
       loginService.userToken = token;
+    }
+    loginService.setAllOwners = function (ownerIds) {
+      loginService.ownerIds = ownerIds;
+    }
+    loginService.setAllInstitutes = function (instituteIds) {
+      loginService.instituteIds = instituteIds;
+    }
+    loginService.setAllSchools = function (schoolIds) {
+      loginService.schoolIds = schoolIds;
+    }
+    loginService.setAllItineraies = function (itineraryIds) {
+      loginService.itineraryIds = itineraryIds;
     }
     loginService.setAllClasses = function (classes) {
       localStorage.setItem(CLASSES, JSON.stringify(classes));
@@ -130,11 +192,13 @@ angular.module('climbGame.services.login', [])
       loginService.userToken = null;
       loginService.classes = null;
       loginService.classRoom = null;
-      localStorage.removeItem(OWNERID)
-      localStorage.removeItem(GAMEID)
-      localStorage.removeItem(USERTOKEN)
-      localStorage.removeItem(CLASS)
-      localStorage.removeItem(CLASSES)
+      localStorage.removeItem(OWNERID);
+      localStorage.removeItem(INSTITUTEID);
+      localStorage.removeItem(SCHOOLID);
+      localStorage.removeItem(GAMEID);
+      localStorage.removeItem(USERTOKEN);
+      localStorage.removeItem(CLASS);
+      localStorage.removeItem(CLASSES);
     }
     return loginService;
   });

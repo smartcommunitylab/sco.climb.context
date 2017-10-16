@@ -15,12 +15,18 @@ angular.module('climbGame', [
   'climbGame.controllers.excursions',
   'climbGame.controllers.notifications',
   'climbGame.controllers.login',
+  'climbGame.controllers.ownerSelection',
+  'climbGame.controllers.instituteSelection',
+  'climbGame.controllers.schoolSelection',
+  'climbGame.controllers.gameSelection',
+  'climbGame.controllers.itinerarySelection',
   'climbGame.controllers.classSelection',
   'climbGame.services.cache',
   'climbGame.services.data',
   'climbGame.services.conf',
   'climbGame.services.map',
   'climbGame.services.login',
+  'climbGame.services.profile',
   'climbGame.services.map',
   'climbGame.services.calendar',
   'climbGame.services.classSelection'
@@ -60,16 +66,17 @@ angular.module('climbGame', [
     //  $urlRouterProvider.otherwise('/')
     $urlRouterProvider.otherwise(function ($injector, $location) {
       var $state = $injector.get('$state')
+      var profileService = $injector.get('profileService')
       var loginService = $injector.get('loginService')
-      if (loginService.getOwnerId() && loginService.getClassRoom()) {
-        $state.go('home')
-          // $state.go('home.stats')
-      } else if (loginService.getOwnerId()) {
-        // if only user go to class
-        $state.go('classSelection')
-      } else {
-        $state.go('login')
-      }
+      profileService.getProfile().then(function(profile) {
+      	loginService.setUserToken(profile.token)
+      	loginService.setAllOwners(profile.ownerIds)
+        $state.go('ownerSelection')
+      }, function (err) {
+        console.log(err)
+        // Toast the Problem
+        $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+      });
       // login default
       return $location.path()
     })
@@ -81,6 +88,51 @@ angular.module('climbGame', [
           '@': {
             templateUrl: 'templates/login.html',
             controller: 'loginCtrl'
+          }
+        }
+      })
+      .state('ownerSelection', {
+        url: '/owner',
+        views: {
+          '@': {
+            templateUrl: 'templates/owner-selection.html',
+            controller: 'ownerSelectionCtrl'
+          }
+        }
+      })
+      .state('instituteSelection', {
+        url: '/institute',
+        views: {
+          '@': {
+            templateUrl: 'templates/institute-selection.html',
+            controller: 'instituteSelectionCtrl'
+          }
+        }
+      })
+      .state('schoolSelection', {
+        url: '/school',
+        views: {
+          '@': {
+            templateUrl: 'templates/school-selection.html',
+            controller: 'schoolSelectionCtrl'
+          }
+        }
+      })
+      .state('gameSelection', {
+        url: '/game',
+        views: {
+          '@': {
+            templateUrl: 'templates/game-selection.html',
+            controller: 'gameSelectionCtrl'
+          }
+        }
+      })
+      .state('itinerarySelection', {
+        url: '/itinerary',
+        views: {
+          '@': {
+            templateUrl: 'templates/itinerary-selection.html',
+            controller: 'itinerarySelectionCtrl'
           }
         }
       })

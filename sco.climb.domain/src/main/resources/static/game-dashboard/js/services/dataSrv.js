@@ -3,15 +3,108 @@ angular.module('climbGame.services.data', [])
   .factory('dataService', function ($q, $http, configService, loginService) {
     var dataService = {}
 
+    // get institute
+    dataService.getInstitute = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/institute/' 
+        + loginService.getOwnerId(), 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
+    // get school
+    dataService.getSchool = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/school/' 
+        + loginService.getOwnerId()
+        + '/' + loginService.getInstituteId(),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
+    // get game
+    dataService.getGame = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/' 
+        + loginService.getOwnerId()
+        + '/' + loginService.getInstituteId()
+        + '/' + loginService.getSchoolId(),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
+    // get status of the game
+    dataService.getItinerary = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId()
+        + '/itinerary/',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
     // get status of the game
     dataService.getStatus = function () {
       var deferred = $q.defer()
       $http({
         method: 'GET',
-        url: configService.getGameStatusURL() + loginService.getOwnerId() + '/' + loginService.getGameId(),
+        url: configService.getURL() + '/api/game/game/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId()
+        + '/itinerary/' + loginService.getItineraryId()
+        + '/status',
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
@@ -28,14 +121,17 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
       $http({
         method: 'GET',
-        url: configService.getCalendarURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/calendar/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId() 
+        + '/' + loginService.getClassRoom(),
         params: {
           from: from,
           to: to
         },
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
@@ -52,10 +148,13 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
       $http({
         method: 'GET',
-        url: configService.getPlayersURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/player/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId() 
+        + '/' + loginService.getClassRoom(),
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
@@ -71,10 +170,13 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
       $http({
         method: 'POST',
-        url: configService.getCalendarURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/calendar/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId() 
+        + '/' + loginService.getClassRoom(),
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         data: {
           'day': data.day,
@@ -96,10 +198,12 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
       $http({
         method: 'GET',
-        url: configService.getStatsURL() + loginService.getOwnerId() + '/' + loginService.getGameId(),
+        url: configService.getURL() + '/api/game/stat/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId(), 
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
@@ -116,19 +220,21 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
 
       if (!from) {
-        from = new Date(2016, 9, 1, 0, 0, 0, 0).getTime()
+        from = new Date(2017, 9, 1, 0, 0, 0, 0).getTime()
       }
 
       if (!to) {
-        to = new Date(2017, 6, 30, 0, 0, 0, 0).getTime()
+        to = new Date(2018, 6, 30, 0, 0, 0, 0).getTime()
       }
 
       $http({
         method: 'GET',
-        url: configService.getExcursionsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/excursion/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId(), 
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout(),
         params: {
@@ -155,10 +261,12 @@ angular.module('climbGame.services.data', [])
 
       $http({
         method: 'POST',
-        url: configService.getExcursionsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/excursion/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId(), 
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout(),
         params: {
@@ -188,10 +296,13 @@ angular.module('climbGame.services.data', [])
 
       $http({
         method: 'GET',
-        url: configService.getNotificationsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/notification/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId()
+        + '/' + loginService.getClassRoom(),
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout(),
         params: {
@@ -212,10 +323,13 @@ angular.module('climbGame.services.data', [])
 
       $http({
         method: 'GET',
-        url: configService.getChallengesURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        url: configService.getURL() + '/api/game/challenge/' 
+        + loginService.getOwnerId() 
+        + '/' + loginService.getGameId()
+        + '/' + loginService.getClassRoom(),
         headers: {
           'Accept': 'application/json',
-          'x-access-token': loginService.getUserToken()
+          'Authorization': 'Bearer ' + loginService.getUserToken()
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
