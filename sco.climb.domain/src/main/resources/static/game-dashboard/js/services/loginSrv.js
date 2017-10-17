@@ -196,9 +196,11 @@ angular.module('climbGame.services.login', [])
       localStorage.removeItem(INSTITUTEID);
       localStorage.removeItem(SCHOOLID);
       localStorage.removeItem(GAMEID);
+      localStorage.removeItem(ITINERARYID);
       localStorage.removeItem(USERTOKEN);
       localStorage.removeItem(CLASS);
       localStorage.removeItem(CLASSES);
+      return configService.getURL() + '/logout'
     }
     return loginService;
   });

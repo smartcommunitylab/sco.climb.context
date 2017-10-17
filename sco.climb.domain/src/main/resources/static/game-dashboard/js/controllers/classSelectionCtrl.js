@@ -3,7 +3,10 @@ angular.module('climbGame.controllers.classSelection', [])
   .controller('classSelectionCtrl', ['$scope', '$state', '$mdToast', '$filter', 'loginService', 'CacheSrv',
     function ($scope, $state, $mdToast, $filter, loginService, CacheSrv) {
       $scope.classes = loginService.getAllClasses()
-
+      if(loginService.getClassRoom()) {
+      	$state.go('home')
+      }
+      
       $scope.select = function () {
         if ($scope.selectedClass) {
           CacheSrv.resetLastCheck('calendar')

@@ -2,7 +2,7 @@
 angular.module('climbGame.services.data', [])
   .factory('dataService', function ($q, $http, configService, loginService) {
     var dataService = {}
-
+    
     // get institute
     dataService.getInstitute = function () {
       var deferred = $q.defer()

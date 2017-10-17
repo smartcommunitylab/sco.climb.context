@@ -66,18 +66,7 @@ angular.module('climbGame', [
     //  $urlRouterProvider.otherwise('/')
     $urlRouterProvider.otherwise(function ($injector, $location) {
       var $state = $injector.get('$state')
-      var profileService = $injector.get('profileService')
-      var loginService = $injector.get('loginService')
-      profileService.getProfile().then(function(profile) {
-      	loginService.setUserToken(profile.token)
-      	loginService.setAllOwners(profile.ownerIds)
-        $state.go('ownerSelection')
-      }, function (err) {
-        console.log(err)
-        // Toast the Problem
-        $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
-      });
-      // login default
+      $state.go('login')
       return $location.path()
     })
 

@@ -3,8 +3,8 @@ angular.module('climbGame.services.conf', [])
   .factory('configService', function () {
     var configService = {}
     var DEVELOPMENT = true
-    var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
-    //var URL = 'http://localhost:6020/domain'
+    //var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
+    var URL = 'http://192.168.42.60:6020/domain'
     var FOOT_CONSTANT = 'piedi'
     var BOAT_CONSTANT = 'nave'
     var PLANE_CONSTANT = 'aereo'
@@ -16,42 +16,6 @@ angular.module('climbGame.services.conf', [])
 
     configService.getURL = function () {
       return URL
-    }
-
-    configService.getGameStatusURL = function () {
-      return URL + '/game-dashboard/api/game/status/'
-    }
-
-    configService.getCalendarURL = function () {
-      return URL + '/game-dashboard/api/calendar/'
-    }
-
-    configService.getPlayersURL = function () {
-      return URL + '/game-dashboard/api/player/'
-    }
-
-    configService.getStatsURL = function () {
-      return URL + '/game-dashboard/api/stat/'
-    }
-
-    configService.getExcursionsURL = function () {
-      return URL + '/game-dashboard/api/excursion/'
-    }
-
-    configService.getNotificationsURL = function () {
-      return URL + '/game-dashboard/api/notification/'
-    }
-
-    configService.getChallengesURL = function () {
-      return URL + '/game-dashboard/api/challenge/'
-    }
-
-    configService.getTokenURL = function () {
-      return URL + '/game-dashboard/token'
-    }
-
-    configService.getGameId = function () {
-      return URL + '/game-dashboard/api/game/'
     }
 
     configService.httpTimout = function () {

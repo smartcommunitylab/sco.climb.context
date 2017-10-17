@@ -1,16 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.home', [])
-  .controller('HomeCtrl', [
-    '$rootScope',
-    '$scope',
-    '$log',
-    '$state',
-    '$mdSidenav',
-    '$timeout',
-    '$location',
-    'loginService',
-    'CacheSrv',
-    function ($rootScope, $scope, $log, $state, $mdSidenav, $timeout, $location, loginService, CacheSrv) {
+  .controller('HomeCtrl', function ($rootScope, $scope, $log, $state, $mdToast, $filter, $mdSidenav, 
+  		$timeout, $location, $window, loginService, CacheSrv) {
       $state.go('home.class')
       // $state.go('home.stats')
 
@@ -26,10 +17,9 @@ angular.module('climbGame.controllers.home', [])
       $scope.logout = function () {
         CacheSrv.resetLastCheck('calendar')
         CacheSrv.resetLastCheck('notifications')
-        // delete storage
-        loginService.logout()
-        // go to login
-        $state.go('login')
+        var logoutUrl = loginService.logout()
+        logoutUrl = logoutUrl + '?target=' + $location.path('/').absUrl()
+        $window.location.href = logoutUrl
       }
 
       $scope.changeClass = function (path) {
@@ -55,4 +45,4 @@ angular.module('climbGame.controllers.home', [])
         return obj
       }
     }
-  ])
+  )

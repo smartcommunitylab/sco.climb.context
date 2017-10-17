@@ -2,7 +2,10 @@
 angular.module('climbGame.controllers.ownerSelection', [])
   .controller('ownerSelectionCtrl', function ($scope, $state, $mdToast, $filter, loginService, CacheSrv) {
       $scope.ownerIds = loginService.getAllOwners();
-
+      if(loginService.getOwnerId()) {
+      	$state.go('instituteSelection');
+      }
+      
       $scope.select = function () {
         if ($scope.selectedOwnerId) {
           loginService.setOwnerId($scope.selectedOwnerId);

@@ -2,16 +2,21 @@
 angular.module('climbGame.controllers.itinerarySelection', [])
   .controller('itinerarySelectionCtrl', function ($scope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
       $scope.itineraries = []; 
-      dataService.getItinerary().then(
-      	function(data) {
-      		$scope.itineraries = data;
-      	}, 
-      	function (err) {
-      		console.log(err)
-      		//Toast the Problem
-      		$mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
-      	}
-      );	
+      if(loginService.getItineraryId()) {
+      	$state.go('classSelection')
+      } else {
+        dataService.getItinerary().then(
+          	function(data) {
+          		$scope.itineraries = data;
+          	}, 
+          	function (err) {
+          		console.log(err)
+          		//Toast the Problem
+          		$mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+          	}
+          );	
+      	
+      }
 
       $scope.select = function () {
         if ($scope.selectedItinerary) {

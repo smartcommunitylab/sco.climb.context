@@ -1,6 +1,5 @@
 package it.smartcommunitylab.climb.domain.config;
 
-import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.security.AacUserInfoTokenServices;
 import it.smartcommunitylab.climb.domain.security.DataSetDetails;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
@@ -10,6 +9,7 @@ import java.util.Map;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,8 +30,15 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableOAuth2Client
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	@Value("${oauth.serverUrl}")
+	private String oauthServerUrl;
+	
   @Autowired
   OAuth2ClientContext oauth2ClientContext;
+  
+  @Autowired
+  CustomLogoutSuccessHandler customLogoutSuccessHandler;
   
   @Bean
   @ConfigurationProperties("security.oauth2.client")
@@ -100,11 +107,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.headers()
 			.frameOptions().disable();
 		http
+			.logout()
+				.clearAuthentication(true)
+				.deleteCookies("JSESSIONID")
+				.invalidateHttpSession(true)
+				.logoutSuccessHandler(customLogoutSuccessHandler)
+			.and()
 			.csrf()
 				.disable()
 			.antMatcher("/**")
 				.authorizeRequests()
-			.antMatchers("/", "/index.html", "/login**", "/swagger-ui.html", "/v2/api-docs**")
+			.antMatchers("/", "/index.html", "/login**", "/logout**", "/swagger-ui.html", "/v2/api-docs**")
 				.permitAll()
 			.antMatchers("/", "/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**")
 				.authenticated()
