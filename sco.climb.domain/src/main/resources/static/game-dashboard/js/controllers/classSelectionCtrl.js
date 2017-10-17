@@ -14,7 +14,7 @@ angular.module('climbGame.controllers.classSelection', [])
           loginService.setClassRoom($scope.selectedClass)
           $state.go('home')
         } else {
-          $mdToast.show($mdToast.simple().content($filter('translate')('class_choose_room')))
+          $mdToast.show($mdToast.simple().content($filter('translate')('choose_classroom')))
         }
       }
     }

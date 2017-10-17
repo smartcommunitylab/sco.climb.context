@@ -11,7 +11,7 @@ angular.module('climbGame.controllers.ownerSelection', [])
           loginService.setOwnerId($scope.selectedOwnerId);
           $state.go('instituteSelection')
         } else {
-          $mdToast.show($mdToast.simple().content($filter('translate')('class_choose_room')))
+          $mdToast.show($mdToast.simple().content($filter('translate')('choose_owner')))
         }
       }
     }

@@ -12,7 +12,7 @@ angular.module('climbGame.controllers.instituteSelection', [])
           	function (err) {
           		console.log(err)
           		//Toast the Problem
-          		$mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+          		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
           	}
         );	
       }
@@ -22,7 +22,7 @@ angular.module('climbGame.controllers.instituteSelection', [])
           loginService.setInstituteId($scope.selectedInstitute.objectId);
           $state.go('schoolSelection')
         } else {
-          $mdToast.show($mdToast.simple().content($filter('translate')('class_choose_room')))
+          $mdToast.show($mdToast.simple().content($filter('translate')('choose_institute')))
         }
       }
   })

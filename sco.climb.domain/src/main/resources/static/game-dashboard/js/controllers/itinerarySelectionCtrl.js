@@ -12,7 +12,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
           	function (err) {
           		console.log(err)
           		//Toast the Problem
-          		$mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+          		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
           	}
           );	
       	
@@ -24,7 +24,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
           loginService.setAllClasses($scope.selectedItinerary.classRooms);
           $state.go('classSelection')
         } else {
-          $mdToast.show($mdToast.simple().content($filter('translate')('class_choose_room')))
+          $mdToast.show($mdToast.simple().content($filter('translate')('choose_itinerary')))
         }
       }
   })
