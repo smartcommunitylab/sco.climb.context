@@ -11,6 +11,7 @@ public class Child extends BaseObject {
 	private String classRoom;
 	private String wsnId;
 	private String imageUrl;
+	private String cf;
 	
 	public String getExternalId() {
 		return externalId;
@@ -71,5 +72,11 @@ public class Child extends BaseObject {
 	}
 	public void setInstituteId(String instituteId) {
 		this.instituteId = instituteId;
+	}
+	public String getCf() {
+		return cf;
+	}
+	public void setCf(String cf) {
+		this.cf = cf;
 	}
 }
