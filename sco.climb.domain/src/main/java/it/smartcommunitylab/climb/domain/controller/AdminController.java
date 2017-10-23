@@ -32,6 +32,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -172,6 +173,37 @@ public class AdminController extends AuthController {
 		}
 		for(Volunteer volunteer : volunteersMap.values()) {
 			storage.addVolunteer(volunteer);
+		}
+	}
+	
+	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}/child", method = RequestMethod.POST)
+	public @ResponseBody void addChildren(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_ADMIN, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addChildren: %s %s %s", ownerId, instituteId, schoolId));
+		}
+		Map<String, Child> childrenMap = ExcelConverter.readSimpleChildren(file.getInputStream(), 
+				ownerId, instituteId, schoolId);
+		for(Child child : childrenMap.values()) {
+			Criteria criteria = Criteria.where("schoolId").is(schoolId)
+					.and("instituteId").is(instituteId)
+					.and("name").is(child.getName())
+					.and("surname").is(child.getSurname());
+			Child childDb = storage.findOneData(Child.class, criteria, ownerId);
+			if(childDb != null) {
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("Child already exists: %s %s", child.getName(), child.getSurname()));
+				}
+				continue;
+			}
+			storage.addChild(child);
 		}
 	}
 	

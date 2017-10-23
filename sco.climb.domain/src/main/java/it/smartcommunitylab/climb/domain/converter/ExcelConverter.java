@@ -153,6 +153,7 @@ public class ExcelConverter {
 		}
 		
     wb.write(outputStream);
+    wb.close();
 	}
 	
 	public static Map<String, Route> readRoutes(InputStream excel, 
@@ -279,6 +280,40 @@ public class ExcelConverter {
 				child.setWsnId(nodo);
 				
 				stop.getPassengerList().add(child.getObjectId());
+				
+				result.put(child.getObjectId(), child);
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			wb.close();
+		}
+		return result;
+	}
+	
+	public static Map<String, Child> readSimpleChildren(InputStream excel,
+			String ownerId, String instituteId, String schoolId) throws Exception {
+		Map<String, Child> result = new HashMap<String, Child>();
+		XSSFWorkbook wb = new XSSFWorkbook(excel);
+		try {
+			XSSFSheet sheet = wb.getSheet("Bambini");
+			if(sheet == null) {
+				throw new InvalidParametersException("Bambini sheet not found");
+			}
+			for(int i=1; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+				String cognome = row.getCell(0).getStringCellValue();
+				String nome = row.getCell(1).getStringCellValue();
+				String classe = row.getCell(2).getStringCellValue();
+				
+				Child child = new Child();
+				child.setOwnerId(ownerId);
+				child.setInstituteId(instituteId);
+				child.setSchoolId(schoolId);
+				child.setObjectId(Utils.getUUID());
+				child.setName(nome);
+				child.setSurname(cognome);
+				child.setClassRoom(classe);
 				
 				result.put(child.getObjectId(), child);
 			}
