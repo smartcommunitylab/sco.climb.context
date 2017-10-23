@@ -56,7 +56,9 @@ function ($q, $http, $rootScope, $timeout) {
           editData: function(type, element)
           {
               var sendUrl;
-              if(type === 'itinerary') {
+              if(type === 'game') {
+              	sendUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId; 
+              } else if(type === 'itinerary') {
                 sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
               } else if(type === 'legs') {
               	sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
