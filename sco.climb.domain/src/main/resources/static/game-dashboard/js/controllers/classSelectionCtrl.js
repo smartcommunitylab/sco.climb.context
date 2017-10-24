@@ -1,8 +1,8 @@
 /* global angular */
 angular.module('climbGame.controllers.classSelection', [])
-  .controller('classSelectionCtrl', ['$scope', '$state', '$mdToast', '$filter', 'loginService', 'CacheSrv',
-    function ($scope, $state, $mdToast, $filter, loginService, CacheSrv) {
-      $scope.classes = loginService.getAllClasses()
+  .controller('classSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv) {
+  		$rootScope.isLoading = false;	
+  		$scope.classes = loginService.getAllClasses()
       if(loginService.getClassRoom()) {
       	$state.go('home')
       }
@@ -18,4 +18,4 @@ angular.module('climbGame.controllers.classSelection', [])
         }
       }
     }
-  ])
+  )

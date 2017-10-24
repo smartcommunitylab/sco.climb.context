@@ -1,13 +1,19 @@
 /* global angular */
 angular.module('climbGame.controllers.instituteSelection', [])
-  .controller('instituteSelectionCtrl', function ($scope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
-      $scope.institutes = []; 
+  .controller('instituteSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
+  		$rootScope.isLoading = true;
+  		$scope.institutes = []; 
       if(loginService.getInstituteId()) {
       	$state.go('schoolSelection')
       } else {
         dataService.getInstitute().then(
           	function(data) {
           		$scope.institutes = data;
+          		if($scope.institutes.length == 1) {
+          			loginService.setInstituteId($scope.institutes[0].objectId)
+          			$state.go('schoolSelection')
+          		}
+          		$rootScope.isLoading = false;
           	}, 
           	function (err) {
           		console.log(err)

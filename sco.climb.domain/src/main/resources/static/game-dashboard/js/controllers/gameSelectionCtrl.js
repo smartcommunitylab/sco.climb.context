@@ -1,6 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.gameSelection', [])
-  .controller('gameSelectionCtrl', function ($scope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
+  .controller('gameSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
+  		$rootScope.isLoading = true;
       $scope.games = []; 
       if(loginService.getGameId()) {
       	$state.go('itinerarySelection')
@@ -8,6 +9,11 @@ angular.module('climbGame.controllers.gameSelection', [])
         dataService.getGame().then(
           	function(data) {
           		$scope.games = data;
+          		if($scope.games.length == 1) {
+          			loginService.setGameId($scope.games[0].objectId)
+          			$state.go('itinerarySelection')
+          		}
+          		$rootScope.isLoading = false;
           	}, 
           	function (err) {
           		console.log(err)

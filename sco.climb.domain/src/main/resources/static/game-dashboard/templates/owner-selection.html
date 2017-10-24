@@ -5,8 +5,9 @@
       <img src="img/CLIMB_logo.png">
       <!--</div>-->
     </div>
+		<md-progress-circular md-mode="indeterminate" ng-show="$root.isLoading"></md-progress-circular>
     <div layout="column" flex="50">
-      <md-content layout="vertical" flex id="content">
+      <md-content layout="vertical" flex id="content">      	
         <div layout="row" class="login-view" layout-align="center center" layout-fill>
           <div layout="column" layout-padding>
             <label class="login-label">{{'login_select_owner' | translate}}</label>

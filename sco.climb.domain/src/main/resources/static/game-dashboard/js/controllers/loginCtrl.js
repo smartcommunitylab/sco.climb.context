@@ -1,8 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.login', [])
   .controller('loginCtrl', function ($scope, $state, $mdToast, $filter, loginService, profileService) {
-  	
-	  	profileService.getProfile().then(function(profile) {
+  		profileService.getProfile().then(function(profile) {
 	    	loginService.setUserToken(profile.token)
 	    	loginService.setAllOwners(profile.ownerIds)
 	      $state.go('ownerSelection')
