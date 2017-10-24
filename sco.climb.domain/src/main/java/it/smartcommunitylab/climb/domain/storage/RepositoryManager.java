@@ -707,7 +707,7 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public void updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String classRoom, 
+	public boolean updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String classRoom, 
 			Date day, Map<String, String> modeMap) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId)
 				.and("classRoom").is(classRoom).and("day").is(day));
@@ -724,15 +724,17 @@ public class RepositoryManager {
 			calendarDay.setDay(day);
 			calendarDay.setModeMap(modeMap);
 			mongoTemplate.save(calendarDay);
+			return true;
 		} else {
 			if(calendarDayDB.isClosed()) {
-				return;
+				return false;
 			} else {
 				calendarDayDB.getModeMap().putAll(modeMap);
 				Update update = new Update();
 				update.set("modeMap", calendarDayDB.getModeMap());
 				update.set("lastUpdate", now);
 				mongoTemplate.updateFirst(query, update, CalendarDay.class);
+				return true;
 			}
 		}
 	}

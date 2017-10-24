@@ -658,9 +658,10 @@ public class GamificationController extends AuthController {
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId);
 				if(!eventsPoller.isEmptyResponse(childrenStatus)) {
-					eventsPoller.sendScores(childrenStatus, game);
+					Map<String, Boolean> updateClassScores = 
+							eventsPoller.updateCalendarDayFromPedibus(ownerId, pedibusGameId, childrenStatus); 
+					eventsPoller.sendScores(childrenStatus, updateClassScores, game);
 					storage.updatePollingFlag(ownerId, pedibusGameId, routeId, Boolean.FALSE);
-					eventsPoller.updateCalendarDayFromPedibus(ownerId, pedibusGameId, childrenStatus);
 				}
 			}
 			return childrenStatusMap;

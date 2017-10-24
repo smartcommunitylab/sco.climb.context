@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -42,6 +43,7 @@ import com.mongodb.MongoException;
 
 @Configuration
 @EnableSwagger2
+@EnableScheduling
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired

@@ -69,7 +69,7 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 5,10,15 8-10 * * MON-FRI") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 5,10,15 17-18 * * MON-FRI") // second, minute, hour, day, month, weekday
 	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
@@ -98,9 +98,10 @@ public class EventsPoller {
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
-					sendScores(childrenStatus, game);
-					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), routeId, Boolean.FALSE);
-					updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatus);
+					Map<String, Boolean> updateClassScores = 
+							updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), childrenStatus);
+					sendScores(childrenStatus, updateClassScores, game);
+					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.FALSE);
 				}
 			}
 			results.putAll(childrenStatusMap);
@@ -199,7 +200,8 @@ public class EventsPoller {
 		return results;
 	}
 	
-	public void sendScores(Collection<ChildStatus> childrenStatus, PedibusGame game) {
+	public void sendScores(Collection<ChildStatus> childrenStatus, 
+			Map<String, Boolean> updateClassScores, PedibusGame game) {
 		String address = gamificationURL + "/gengine/execute";
 		if(childrenStatus == null) { 
 			return;
@@ -211,6 +213,10 @@ public class EventsPoller {
 				try {
 					Child child = storage.findOneData(Child.class, childCriteria, game.getOwnerId());
 					if(!game.getClassRooms().contains(child.getClassRoom())) {
+						continue;
+					}
+					Boolean updateClassScore = updateClassScores.get(child.getClassRoom());
+					if((updateClassScore == null) || (!updateClassScore)) {
 						continue;
 					}
 				} catch (ClassNotFoundException e) {
@@ -250,13 +256,14 @@ public class EventsPoller {
 		}
 	}
 	
-	public void updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, 
+	public Map<String, Boolean> updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, 
 			Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
+		Map<String, Boolean> classUpdateScoreMap = new HashMap<String, Boolean>();
 		
 		if(childrenStatus == null) {
-			return;
+			return classUpdateScoreMap;
 		}
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived()) {
@@ -279,12 +286,14 @@ public class EventsPoller {
 				Date day = shortSdf.parse(game.getLastDaySeen());
 				for(String classRoom : classModeMap.keySet()) {
 					Map<String, String> modeMap = classModeMap.get(classRoom);
-					storage.updateCalendarDayFromPedibus(ownerId, pedibusGameId, classRoom, day, modeMap);
+					Boolean update = storage.updateCalendarDayFromPedibus(ownerId, pedibusGameId, classRoom, day, modeMap);
+					classUpdateScoreMap.put(classRoom, update);
 				}
 			} catch (ParseException e) {
 				logger.warn(e.getMessage());
 			}
 		}
+		return classUpdateScoreMap;
 	}
 	
 	public boolean isEmptyResponse(Collection<ChildStatus> childrenStatus) {
