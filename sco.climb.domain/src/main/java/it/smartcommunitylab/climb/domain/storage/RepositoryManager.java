@@ -241,6 +241,7 @@ public class RepositoryManager {
 		update.set("classRoom", child.getClassRoom());
 		update.set("wsnId", child.getWsnId());
 		update.set("imageUrl", child.getImageUrl());
+		update.set("cf", child.getCf());
 		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 

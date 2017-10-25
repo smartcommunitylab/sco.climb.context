@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -252,15 +253,17 @@ public class ExcelConverter {
 			if(sheet == null) {
 				throw new InvalidParametersException("Bambini sheet not found");
 			}
+			DataFormatter fmt = new DataFormatter();
 			for(int i=1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
 				String cognome = row.getCell(0).getStringCellValue();
 				String nome = row.getCell(1).getStringCellValue();
-				String genitore = row.getCell(2).getStringCellValue();
-				String telefono = row.getCell(3).getStringCellValue();
-				String classe = row.getCell(4).getStringCellValue();
+				String genitore = fmt.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+				String telefono = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+				String classe = fmt.formatCellValue(row.getCell(4));
 				String fermata = row.getCell(5).getStringCellValue();
-				String nodo = row.getCell(7).getStringCellValue();
+				String cf = row.getCell(6).getStringCellValue();
+				String nodo = fmt.formatCellValue(row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 				
 				Stop stop = stopsMap.get(fermata);
 				if(stop == null) {
@@ -272,6 +275,7 @@ public class ExcelConverter {
 				child.setInstituteId(instituteId);
 				child.setSchoolId(schoolId);
 				child.setObjectId(Utils.getUUID());
+				child.setCf(cf);
 				child.setName(nome);
 				child.setSurname(cognome);
 				child.setParentName(genitore);
@@ -305,6 +309,7 @@ public class ExcelConverter {
 				String cognome = row.getCell(0).getStringCellValue();
 				String nome = row.getCell(1).getStringCellValue();
 				String classe = row.getCell(2).getStringCellValue();
+				String cf = row.getCell(3).getStringCellValue();
 				
 				Child child = new Child();
 				child.setOwnerId(ownerId);
@@ -314,6 +319,7 @@ public class ExcelConverter {
 				child.setName(nome);
 				child.setSurname(cognome);
 				child.setClassRoom(classe);
+				child.setCf(cf);
 				
 				result.put(child.getObjectId(), child);
 			}

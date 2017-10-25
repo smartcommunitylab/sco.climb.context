@@ -275,7 +275,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	$scope.init();
 })
 
-.controller('ChildCtrl', function ($scope, $stateParams, $rootScope, $window, createDialog, DataService) {
+.controller('ChildCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
 	$scope.$parent.selectedTab = 'children-list';
 	$scope.selectedChild = {};
 	initData();
