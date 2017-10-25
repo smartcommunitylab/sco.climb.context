@@ -27,6 +27,40 @@ angular.module('climbGame.controllers.home', [])
         $state.go('classSelection')
       }
 
+      $scope.changeItinerary = function (path) {
+      	loginService.removeClass()
+      	loginService.removeClasses()
+        loginService.removeItinerary()
+        $state.go('itinerarySelection')
+      }
+      
+      $scope.changeGame = function (path) {
+      	loginService.removeClass()
+      	loginService.removeClasses()
+        loginService.removeItinerary()
+        loginService.removeGame()
+        $state.go('gameSelection')
+      }
+      
+      $scope.changeSchool = function (path) {
+      	loginService.removeClass()
+      	loginService.removeClasses()
+        loginService.removeItinerary()
+        loginService.removeGame()
+        loginService.removeSchool()
+        $state.go('schoolSelection')
+      }
+      
+      $scope.changeInstitute = function (path) {
+      	loginService.removeClass()
+      	loginService.removeClasses()
+        loginService.removeItinerary()
+        loginService.removeGame()
+        loginService.removeSchool()
+        loginService.removeInstitute()
+        $state.go('instituteSelection')
+      }
+      
       $scope.openSideNavPanel = function () {
         $mdSidenav('leftMenu').open()
       }

@@ -186,12 +186,35 @@ angular.module('climbGame.services.login', [])
       localStorage.removeItem(CLASS);
       loginService.classRoom = null;
     }
+    loginService.removeItinerary = function () {
+      localStorage.removeItem(ITINERARYID);
+      loginService.itineraryId = null;
+    }
+    loginService.removeGame = function () {
+      localStorage.removeItem(GAMEID);
+      loginService.gameId = null;
+    }
+    loginService.removeSchool = function () {
+      localStorage.removeItem(SCHOOLID);
+      loginService.schoolId = null;
+    }
+    loginService.removeInstitute = function () {
+      localStorage.removeItem(INSTITUTEID);
+      loginService.instituteId = null;
+    }
+    loginService.removeClasses = function () {
+      localStorage.removeItem(CLASSES);
+      loginService.classes = null;
+    }
     loginService.logout = function () {
       loginService.ownId = null;
-      loginService.gameId = null;
       loginService.userToken = null;
-      loginService.classes = null;
+      loginService.instituteId = null;
+      loginService.schoolId = null;
+      loginService.gameId = null;
+      loginService.itineraryId = null;
       loginService.classRoom = null;
+      loginService.classes = null;
       localStorage.removeItem(OWNERID);
       localStorage.removeItem(INSTITUTEID);
       localStorage.removeItem(SCHOOLID);
