@@ -764,6 +764,7 @@ public class RepositoryManager {
 			update.set("lastDaySeen", game.getLastDaySeen());
 			update.set("fromHour", game.getFromHour());
 			update.set("toHour", game.getToHour());
+			update.set("lateSchedule", game.isLateSchedule());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {

@@ -69,13 +69,22 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 5,10,15 17-18 * * MON-FRI") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 5,10,15 8 * * MON-FRI") // second, minute, hour, day, month, weekday
 	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
-	public void scheduledPollEvents() throws Exception {
+	public void earlyScheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
 			logger.info("scheduledPollEvents");
 		}
-		pollEvents(true);
+		pollEvents(true, false);
+	}
+	
+	@Scheduled(cron = "0 5,10,15 18 * * MON-FRI") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
+	public void lateScheduledPollEvents() throws Exception {
+		if(logger.isInfoEnabled()) {
+			logger.info("scheduledPollEvents");
+		}
+		pollEvents(true, true);
 	}
 	
 	@Scheduled(cron = "0 45,55 7 * * *") // second, minute, hour, day, month, weekday
@@ -89,11 +98,16 @@ public class EventsPoller {
 		}
 	}
 	
-	public Map<String, Collection<ChildStatus>> pollEvents(boolean checkDate) throws Exception {
+	public Map<String, Collection<ChildStatus>> pollEvents(boolean checkDate, 
+			boolean lateSchedule) throws Exception {
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
 			logger.info("Reading game " + game.getGameId() + " events.");
+			if(game.isLateSchedule() ^ lateSchedule) {
+				logger.info("Reading game " + game.getGameId() + " skip is not scheduled now.");
+				continue;
+			}
 			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 

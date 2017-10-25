@@ -37,6 +37,13 @@
         <p>dalle:</p> <input class="form-control" type="time" ng-model="$parent.collectFromHour" ng-required="true"/>
         <p>&emsp;alle:</p> <input class="form-control" type="time" ng-model="$parent.collectToHour" ng-required="true"/>
     </div>
+    <!-- Scheduling -->
+    <div class="col-lg-12">
+        <p>
+        	<span class="required-sign">*</span> <b>Raccolta dati serale (18):</b>
+        	<input type="checkbox" ng-model="games[currentGame].lateSchedule">
+        </p>
+    </div>
     <!-- Classi partecipanti -->
     <div class="col-lg-12">
         <p><span class="required-sign">*</span> <b>Classi partecipanti:</b></p>

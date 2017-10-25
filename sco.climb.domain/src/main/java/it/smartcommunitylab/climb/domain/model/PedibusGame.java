@@ -23,6 +23,7 @@ public class PedibusGame extends BaseObject {
 	private String fromHour;
 	private String toHour;
 	private String lastDaySeen;
+	private boolean lateSchedule;
 	
 	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
 	
@@ -115,6 +116,12 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setInstituteId(String instituteId) {
 		this.instituteId = instituteId;
+	}
+	public boolean isLateSchedule() {
+		return lateSchedule;
+	}
+	public void setLateSchedule(boolean lateSchedule) {
+		this.lateSchedule = lateSchedule;
 	}
 
 }
