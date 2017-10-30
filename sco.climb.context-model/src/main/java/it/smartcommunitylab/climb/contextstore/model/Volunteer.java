@@ -8,6 +8,7 @@ public class Volunteer extends BaseObject {
 	private String instituteId;
 	private String password;
 	private String wsnId;
+	private String cf;
 	
 	public String getName() {
 		return name;
@@ -50,6 +51,12 @@ public class Volunteer extends BaseObject {
 	}
 	public void setInstituteId(String instituteId) {
 		this.instituteId = instituteId;
+	}
+	public String getCf() {
+		return cf;
+	}
+	public void setCf(String cf) {
+		this.cf = cf;
 	}
 	
 }

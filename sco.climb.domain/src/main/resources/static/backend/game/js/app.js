@@ -122,6 +122,16 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: 'templates/schools/child.html',
         controller: 'ChildCtrl'
     })
+    .state('root.school.volunteer-list', {
+      url: '/volunteer-list',
+      templateUrl: 'templates/schools/tabs/volunteer-list.html',
+      controller: 'VolunteerListCtrl'
+    })
+    .state('root.school.volunteer', {
+      url: '/volunteer/:idVolunteer',
+      templateUrl: 'templates/schools/volunteer.html',
+      controller: 'VolunteerCtrl'
+    })
 });
 
 consoleApp.run(['$rootScope', '$q', '$location', 'DataService',

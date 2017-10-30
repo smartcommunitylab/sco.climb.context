@@ -344,6 +344,136 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     }
     return allCompiled;
   }
+})
+
+.controller('VolunteerListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
+    $scope.$parent.selectedTab = 'volunteer-list';
+    $scope.children = [];
+    if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+    {
+        createDialog('templates/modals/newschool-err.html',{
+            id : 'newschoolerr-dialog',
+            title: 'Attenzione!',
+            success: { label: 'Torna indietro', fn: function() {
+                window.history.back();
+            } },
+            footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
+        });
+    }
+    
+    $scope.init = function() {
+      DataService.getData('volunteers',
+      		$rootScope.schools[$scope.currentSchool].ownerId, 
+      		$rootScope.schools[$scope.currentSchool].instituteId, 
+      		$rootScope.schools[$scope.currentSchool].objectId).then(
+          function(response) {
+          	$rootScope.schools[$scope.currentSchool].volunteers = response.data;
+          	$rootScope.schools[$scope.currentSchool].volunteers.sort(compareVolunteer);
+          	$scope.volunteers = $rootScope.schools[$scope.currentSchool].volunteers; 
+            console.log('Caricamento dei volontari a buon fine.');
+          }, function() {
+            alert('Errore nel caricamento dei volontari.');
+          }
+      );    	
+    };
+
+    $scope.remove = function (idVolunteer) {
+        createDialog('templates/modals/delete-volunteer.html',{
+            id : 'delete-volunteer-dialog',
+            title: 'Attenzione!',
+            success: { 
+            	label: 'Conferma', 
+            	fn: function() {
+                DataService.removeData('volunteer', $scope.volunteers[idVolunteer]).then(
+                    function() {
+                        console.log('Cancellazione del volontario a buon fine.');
+                        $scope.volunteers.splice(idVolunteer, 1);
+                    }, function() {
+                        alert('Errore nella cancellazione del volontario.');
+                    }
+                );
+            	} 
+            }
+        });
+    };
+    
+  	function compareVolunteer(a,b) {
+  		var aName = a.name;
+  		var bName = b.name;
+  	  if (aName < bName)
+  	    return -1;
+  	  if (aName > bName)
+  	    return 1;
+  	  return 0;
+  	}
+  	
+  	$scope.init();
+})
+
+.controller('VolunteerCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
+	$scope.$parent.selectedTab = 'volunteer-list';
+	$scope.selectedVolunteer = {};
+	initData();
+	
+	function initData() {
+		if ($stateParams.idVolunteer) {
+			$scope.selectedVolunteer = $rootScope.schools[$scope.currentSchool].volunteers[$stateParams.idVolunteer];
+			$scope.saveData = DataService.editData;
+		} else {
+			$scope.selectedVolunteer = {
+          "name": '',
+          "address": '',
+          "phone": '',
+          "wsnId": '',
+          "cf": '',
+          "ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
+          "instituteId": $rootScope.schools[$scope.currentSchool].instituteId,
+          "schoolId": $rootScope.schools[$scope.currentSchool].objectId
+      };
+      $scope.saveData = DataService.saveData;
+		}
+	}
+	
+  $scope.isNewVolunteer = function() {
+  	return ($stateParams.idVolunteer == null || $stateParams.idVolunteer == '');
+  }
+  
+  // Exit without saving changes
+  $scope.back = function () {
+      createDialog('templates/modals/back.html',{
+          id : 'back-dialog',
+          title: 'Sei sicuro di voler uscire senza salvare?',
+          success: { label: 'Conferma', fn: function() {$window.history.back();} }
+      });
+  }
+  
+  $scope.save = function () {  
+  	if (checkFields()) {
+  		$scope.saveData('volunteer', $scope.selectedVolunteer).then(
+				function(response) {
+					console.log('Volontario salvato.');
+					$window.history.back();
+				},
+				function() {
+          alert('Errore nel salvataggio del volontario.');
+				}
+  		);
+  	}
+  }
+  
+  function checkFields() {
+    var allCompiled = true;
+    var invalidFields = $('.ng-invalid');
+    // Get all inputs
+    if (invalidFields.length > 0) {
+        $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+        $timeout(function () {
+            $rootScope.modelErrors = '';
+        }, 5000);
+        allCompiled = false;
+    }
+    return allCompiled;
+  }
 });
 
 
