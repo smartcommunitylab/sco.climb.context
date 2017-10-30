@@ -606,12 +606,7 @@ public class GamificationController extends AuthController {
 
 			// teams score
 			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
-			List<PedibusTeam> itineraryTeams = new ArrayList<PedibusTeam>();
 			for (PedibusTeam team : teams) {
-				//only team for this itinerary
-				if(!itinerary.getClassRooms().contains(team.getClassRoom())) {
-					continue;
-				}
 				updateGamificationData(team, pedibusGameId, game.getGameId(), team.getClassRoom());
 
 				// find "current" leg
@@ -628,14 +623,13 @@ public class GamificationController extends AuthController {
 					team.setScoreToNext(team.getCurrentLeg().getScore() - team.getScore());
 				}
 				team.setScoreToEnd(lastLeg.getScore() - team.getScore());
-				itineraryTeams.add(team);
 			}
 
 			Map<String, Object> result = Maps.newTreeMap();
 			result.put("game", game);
 			result.put("legs", legs);
 			//result.put("players", players);
-			result.put("teams", itineraryTeams);
+			result.put("teams", teams);
 
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("getGameStatus[%s]: %s", ownerId, pedibusGameId));
