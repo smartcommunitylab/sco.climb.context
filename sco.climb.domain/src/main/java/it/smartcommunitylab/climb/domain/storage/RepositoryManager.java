@@ -585,6 +585,13 @@ public class RepositoryManager {
 		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
 	}		
 	
+	public PedibusItinerary getPedibusItinerary(String ownerId, String pedibusGameId, String itineraryId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("pedibusGameId").is(pedibusGameId)
+				.and("objectId").is(itineraryId));
+		return mongoTemplate.findOne(query, PedibusItinerary.class);		
+	}
+	
 	public List<PedibusItinerary> getPedibusItineraryByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId));
 		return mongoTemplate.find(query, PedibusItinerary.class);

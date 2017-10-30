@@ -582,6 +582,10 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
+		PedibusItinerary itinerary = storage.getPedibusItinerary(ownerId, pedibusGameId, itineraryId);
+		if(itinerary == null) {
+			throw new EntityNotFoundException("itinerary not found");
+		}
 		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -602,7 +606,12 @@ public class GamificationController extends AuthController {
 
 			// teams score
 			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
+			List<PedibusTeam> itineraryTeams = new ArrayList<PedibusTeam>();
 			for (PedibusTeam team : teams) {
+				//only team for this itinerary
+				if(!itinerary.getClassRooms().contains(team.getClassRoom())) {
+					continue;
+				}
 				updateGamificationData(team, pedibusGameId, game.getGameId(), team.getClassRoom());
 
 				// find "current" leg
@@ -619,14 +628,14 @@ public class GamificationController extends AuthController {
 					team.setScoreToNext(team.getCurrentLeg().getScore() - team.getScore());
 				}
 				team.setScoreToEnd(lastLeg.getScore() - team.getScore());
-				
+				itineraryTeams.add(team);
 			}
 
 			Map<String, Object> result = Maps.newTreeMap();
 			result.put("game", game);
 			result.put("legs", legs);
 			//result.put("players", players);
-			result.put("teams", teams);
+			result.put("teams", itineraryTeams);
 
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("getGameStatus[%s]: %s", ownerId, pedibusGameId));

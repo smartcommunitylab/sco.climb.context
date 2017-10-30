@@ -8,6 +8,8 @@ import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
+import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.Stats;
@@ -388,7 +390,7 @@ public class DashboardController extends AuthController {
 			if(pointConcept != null) {
 				result.setGameScore(pointConcept.getScore());
 			}
-			result.setMaxGameScore(Double.valueOf(env.getProperty("score.final")));
+			result.setMaxGameScore(getMaxGameScore(ownerId, pedibusGameId));
 			
 			String key = env.getProperty("stat." + Const.MODE_PIEDI_SOLO);
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
@@ -443,6 +445,19 @@ public class DashboardController extends AuthController {
 		return result;
 	}
 	
+	private Double getMaxGameScore(String ownerId, String pedibusGameId) {
+		double result = 0.0;
+		List<PedibusItinerary> list = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+		if(list.size() > 0) {
+			PedibusItinerary pedibusItinerary = list.get(0);
+			List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
+					pedibusGameId, pedibusItinerary.getObjectId());
+			PedibusItineraryLeg lastLeg = Collections.max(legs);
+			result = lastLeg.getScore();
+		}
+		return result;
+	}
+
 	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody
