@@ -13,6 +13,7 @@
                     <div class="col-md-8">
                         <h5>{{$index + 1}}. {{leg.name}}</h5>
                         <h5>Posizione: Lat. {{leg.geocoding[1].toFixed(5)}}, Long. {{leg.geocoding[0].toFixed(5)}}</h5>
+                        <h5>Punteggio: {{leg.score}}</h5>
                         <h5>Elementi multimediali: {{leg.externalUrls.length}}</h5>
                     </div>
                     <div class="col-md-2 right">
