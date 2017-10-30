@@ -89,6 +89,10 @@ public class DashboardController extends AuthController {
 	@Value("${param.class.distance}")	
 	private String paramClassDistance;
 	
+	@Autowired
+	@Value("${challenge.concept}")	
+	private String challengeConcept;
+
 	@RequestMapping(value = "/api/game/player/{ownerId}/{pedibusGameId}/{classRoom}", 
 			method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(
@@ -352,14 +356,14 @@ public class DashboardController extends AuthController {
 			Challenge classChallenge = new Challenge();
 			classChallenge.setGameId(game.getGameId());
 			classChallenge.setPlayerId(classRoom);
-			classChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
+			classChallenge.setState(playerStatus.getState().get(challengeConcept));
 			result.add(classChallenge);
 			
 			playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), game.getGlobalTeam());
 			Challenge schoolChallenge = new Challenge();
 			schoolChallenge.setGameId(game.getGameId());
 			schoolChallenge.setPlayerId(game.getGlobalTeam());
-			schoolChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
+			schoolChallenge.setState(playerStatus.getState().get(challengeConcept));
 			result.add(schoolChallenge);
 		}
 		if(logger.isInfoEnabled()) {

@@ -58,6 +58,49 @@ public class HTTPUtils {
 		return res;
 	}
 	
+	public static String delete(String address, String token,
+			String basicAuthUser, String basicAuthPassowrd) throws Exception {
+		StringBuffer response = new StringBuffer();
+
+		URL url = new URL(address);
+
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("DELETE");
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		if(Utils.isNotEmpty(basicAuthUser) && Utils.isNotEmpty(basicAuthPassowrd)) {
+			String authString = basicAuthUser + ":" + basicAuthPassowrd;
+			byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
+			String authStringEnc = new String(authEncBytes);
+			conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
+		}
+		
+		if (token != null) {
+			conn.setRequestProperty("X-ACCESS-TOKEN", token);
+		}
+
+		if (conn.getResponseCode() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.defaultCharset()));
+
+		String output = null;
+		while ((output = br.readLine()) != null) {
+			response.append(output);
+		}
+
+		conn.disconnect();
+
+		String res = new String(response.toString().getBytes(), Charset.forName("UTF-8"));
+	
+		return res;
+	}
+	
 	public static String post(String address, Object content, String token,
 			String basicAuthUser, String basicAuthPassowrd) throws Exception {
 		StringBuffer response = new StringBuffer();

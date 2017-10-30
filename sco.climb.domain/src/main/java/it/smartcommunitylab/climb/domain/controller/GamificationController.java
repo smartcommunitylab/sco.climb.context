@@ -93,7 +93,7 @@ public class GamificationController extends AuthController {
 
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/init", method = RequestMethod.PUT)
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/init", method = RequestMethod.GET)
 	public @ResponseBody void initGame(
 		@PathVariable String ownerId, 
 		@PathVariable String pedibusGameId, 
@@ -680,11 +680,11 @@ public class GamificationController extends AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/api/game/child/score/{ownerId}/{pedibusGameId}/{playerId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/api/game/child/score/{ownerId}/{pedibusGameId}/{playerId}", method = RequestMethod.GET)
 	public @ResponseBody void increaseChildScore(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
-			@RequestParam String playerId, 
+			@PathVariable String playerId, 
 			@RequestParam Double score, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
@@ -715,7 +715,7 @@ public class GamificationController extends AuthController {
 		}			
 	}
 	
-	@RequestMapping(value = "/api/game/reset/{ownerId}/{pedibusGameId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/api/game/reset/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
 	public @ResponseBody void resetGame(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
@@ -775,13 +775,14 @@ public class GamificationController extends AuthController {
 	}		
 	
 	private void resetChild(String gameId, String playerId) throws Exception {
-		ExecutionDataDTO ed = new ExecutionDataDTO();
-		ed.setGameId(gameId);
-		ed.setPlayerId(playerId);
-		ed.setActionId(actionReset);
-		Map<String, Object> data = Maps.newTreeMap();
-		ed.setData(data);
-		gengineUtils.executeAction(ed);
+//		ExecutionDataDTO ed = new ExecutionDataDTO();
+//		ed.setGameId(gameId);
+//		ed.setPlayerId(playerId);
+//		ed.setActionId(actionReset);
+//		Map<String, Object> data = Maps.newTreeMap();
+//		ed.setData(data);
+//		gengineUtils.executeAction(ed);
+		gengineUtils.deletePlayerState(gameId, playerId);
 	}
 	
 

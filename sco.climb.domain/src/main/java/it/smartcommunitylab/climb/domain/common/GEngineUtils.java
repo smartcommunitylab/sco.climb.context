@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class GEngineUtils {
-	public static String challengeConcept = "ChallengeConcept"; 
-	
 	@Autowired
 	@Value("${gamification.url}")
 	private String gamificationURL;
@@ -54,7 +52,7 @@ public class GEngineUtils {
 	}
 
 	public void executeAction(ExecutionDataDTO executionData) throws Exception {
-		String address = gamificationURL + "/gengine/execute";
+		String address = gamificationURL + "/exec/game/" + executionData.getGameId() + "/action/" + executionData.getActionId();
 		HTTPUtils.post(address, executionData, null, gamificationUser, gamificationPassword);
 	}
 	
@@ -69,26 +67,25 @@ public class GEngineUtils {
 	}
 	
 	public void createPlayer(String gameId, PlayerStateDTO player) throws Exception {
-		String address = gamificationURL + "/console/game/" + gameId + "/player";
+		String address = gamificationURL + "/data/game/" + gameId + "/player/" + player.getPlayerId();
 		HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void createTeam(String gameId, TeamDTO team) throws Exception {
-		String address = gamificationURL + "/console/game/" + gameId + "/team";
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + team.getPlayerId();
 		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 	}
 	
-	public void createTeamMembers(String gameId, String teamId, List<String> memeberList) throws Exception {
-		String address = gamificationURL + "/console/game/" + gameId + "/team/" 
-				+ URLEncoder.encode(teamId, "UTF-8") + "/members";
-		HTTPUtils.post(address, memeberList, null, gamificationUser, gamificationPassword);
-	}
-	
 	public PlayerStateDTO getPlayerStatus(String gameId, String playerId) throws Exception {
-		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(playerId, "UTF-8");
+		String address = gamificationURL + "/data/game/" + gameId + "/player/" + URLEncoder.encode(playerId, "UTF-8");
 		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
 		PlayerStateDTO result = mapper.readValue(json, PlayerStateDTO.class);
 		return result;
+	}
+	
+	public void deletePlayerState(String gameId, String playerId) throws Exception {
+		String address = gamificationURL + "/data/game/" + gameId + "/player/" + playerId;
+		HTTPUtils.delete(address, null, gamificationUser, gamificationPassword);
 	}
 	
 }
