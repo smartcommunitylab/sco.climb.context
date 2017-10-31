@@ -231,7 +231,8 @@ angular.module('climbGame.services.data', [])
         method: 'GET',
         url: configService.getURL() + '/api/game/excursion/' 
         + loginService.getOwnerId() 
-        + '/' + loginService.getGameId(), 
+        + '/' + loginService.getGameId()
+        + '/' + loginService.getClassRoom(), 
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()
@@ -263,7 +264,8 @@ angular.module('climbGame.services.data', [])
         method: 'POST',
         url: configService.getURL() + '/api/game/excursion/' 
         + loginService.getOwnerId() 
-        + '/' + loginService.getGameId(), 
+        + '/' + loginService.getGameId()
+        + '/' + loginService.getClassRoom(), 
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()

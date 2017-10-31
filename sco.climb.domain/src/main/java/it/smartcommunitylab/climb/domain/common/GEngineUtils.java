@@ -58,8 +58,8 @@ public class GEngineUtils {
 	
 	public List<Notification> getNotification(String gameId, String playerId, long timestamp) 
 			throws Exception {
-		String address = gamificationURL + "/gengine/notification/" + gameId + "/" 
-			+ URLEncoder.encode(playerId, "UTF-8") + "?timestamp=" + timestamp;
+		String address = gamificationURL + "/notification/game/" + gameId + "/team/" 
+			+ URLEncoder.encode(playerId, "UTF-8") + "?fromTs=" + timestamp;
 		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
 		Notification[] notifications = mapper.readValue(json, Notification[].class);
 		List<Notification> result = Arrays.asList(notifications);
