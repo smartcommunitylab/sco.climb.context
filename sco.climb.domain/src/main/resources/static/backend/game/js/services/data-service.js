@@ -13,6 +13,9 @@ function ($q, $http, $rootScope, $timeout) {
           return data.promise;
       };
       return {
+      		getBaseUrl: function () {
+      			return baseUrl;
+      		},
           getProfile: function () {
               var deferred = $q.defer();
               $http.get(baseUrl + "/console/data").success(function (data) {       

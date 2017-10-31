@@ -1,6 +1,6 @@
 var searchTableApp = angular.module('report-appello', ['DataService', 'ngclipboard']);
 
-var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $http, $window, DataService) {
+var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $http, $location, $window, DataService) {
 	$scope.selectedMenu = "report";
 	$scope.selectedTab = "menu-report-appello";
 	$scope.language = "it";
@@ -41,6 +41,11 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	var getUrl = window.location;
 	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 
+  $scope.logout = function() {
+    var logoutUrl = baseUrl + '/logout?target=' + $location.path('/').absUrl();
+    $window.location.href = logoutUrl;
+  }
+  
 	DataService.getProfile().then(
 		function(p) {
 			$scope.initData(p);

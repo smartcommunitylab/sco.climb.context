@@ -1,7 +1,6 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', ['$scope', '$rootScope', '$location', 'DataService', '$window',
-    function ($scope, $rootScope, $location, DataService)
+.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window)
     {
         $scope.selectedOwner = '';
         $scope.selectedInstitute = '';
@@ -22,6 +21,19 @@ angular.module('consoleControllers.mainCtrl', [])
             $scope.profile = p;
             $rootScope.profile = $scope.profile;
         });
+        
+        $scope.logout = function() {
+          $scope.selectedOwner = '';
+          $scope.selectedInstitute = '';
+          $scope.selectedSchool = '';
+          $scope.institutesList = [];
+          $scope.selectedGame = '';  
+          $scope.profile = null;
+          $rootScope.profile = null;
+          var logoutUrl = DataService.getBaseUrl();
+          logoutUrl = logoutUrl + '/logout?target=' + $location.path('/').absUrl();
+          $window.location.href = logoutUrl;
+        }
 
         $scope.loadInstitutesList = function() {
             DataService.getInstitutesList($scope.selectedOwner).then(
@@ -132,4 +144,4 @@ angular.module('consoleControllers.mainCtrl', [])
             window.open('console/exportexcel', '_blank');
         };
     }
-]);
+);

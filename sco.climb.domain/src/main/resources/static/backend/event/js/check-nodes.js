@@ -1,6 +1,6 @@
 var searchTableApp = angular.module('check-nodes', ['DataService', 'ngclipboard']);
 
-var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $http, $window, DataService) {
+var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $location, $http, $window, DataService) {
 	DataService.getProfile().then(
 	function(p) {
 		$scope.initData(p);
@@ -54,6 +54,11 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	var getUrl = window.location;
 	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 
+  $scope.logout = function() {
+    var logoutUrl = baseUrl + '/logout?target=' + $location.path('/').absUrl();
+    $window.location.href = logoutUrl;
+  }
+  
 	$scope.initData = function(profile) {
 		$scope.profile = profile;
 		$scope.ownerList = $scope.profile.ownerIds;
