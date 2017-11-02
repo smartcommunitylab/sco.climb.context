@@ -12,8 +12,10 @@ angular.module('consoleControllers.leg', [])
         {
             $scope.leg = angular.copy($scope.$parent.legs[$stateParams.idLeg]);
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
+            $scope.saveData = DataService.editData;
         }
-        else
+        else 
+        {
             $scope.leg = {
                 "name": '',
                 "description": '',
@@ -28,11 +30,12 @@ angular.module('consoleControllers.leg', [])
                 "externalUrls": [],        // NEW: array di oggetti contenente gli elementi multimediali
                 "position": $scope.$parent.legs.length
             };
-
-        if($scope.leg.position === 0)
+        }
+        if($scope.leg.position === 0) {
             drawMapLeg.createMap('map-leg', null, $scope.leg.coordinates, $scope.leg.transport);
-        else
+        } else {
             drawMapLeg.createMap('map-leg', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.transport);
+        }
     }
 
     $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
@@ -88,8 +91,20 @@ angular.module('consoleControllers.leg', [])
             } else {
              $scope.$parent.legs.push($scope.leg);
             }
-            // Back to the path
-            $window.history.back();
+            $rootScope.paths[$scope.currentPath].legs = $scope.$parent.legs;
+            $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
+                function() {
+                    console.log('Salvataggio dati a buon fine.');
+                    $window.history.back();
+                }, function() {
+                    alert('Errore nel salvataggio delle tappe.');
+                }
+            );
+        } else {
+          $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco, di avere inserito almeno una foto e un punto di interesse prima di salvare.";
+          $timeout(function () {
+              $rootScope.modelErrors = '';
+          }, 5000);
         }
     };
 
