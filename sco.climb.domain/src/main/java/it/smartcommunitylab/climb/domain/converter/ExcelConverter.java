@@ -304,11 +304,12 @@ public class ExcelConverter {
 			if(sheet == null) {
 				throw new InvalidParametersException("Bambini sheet not found");
 			}
+			DataFormatter fmt = new DataFormatter();
 			for(int i=1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
 				String cognome = row.getCell(0).getStringCellValue();
 				String nome = row.getCell(1).getStringCellValue();
-				String classe = row.getCell(2).getStringCellValue();
+				String classe = fmt.formatCellValue(row.getCell(2));
 				String cf = row.getCell(3).getStringCellValue();
 				
 				Child child = new Child();
