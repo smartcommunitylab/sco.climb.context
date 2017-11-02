@@ -262,7 +262,7 @@ public class ExcelConverter {
 				String telefono = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 				String classe = fmt.formatCellValue(row.getCell(4));
 				String fermata = row.getCell(5).getStringCellValue();
-				String cf = row.getCell(6).getStringCellValue();
+				String cf = row.getCell(6).getStringCellValue().toUpperCase();
 				String nodo = fmt.formatCellValue(row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 				
 				Stop stop = stopsMap.get(fermata);
@@ -310,7 +310,7 @@ public class ExcelConverter {
 				String cognome = row.getCell(0).getStringCellValue();
 				String nome = row.getCell(1).getStringCellValue();
 				String classe = fmt.formatCellValue(row.getCell(2));
-				String cf = row.getCell(3).getStringCellValue();
+				String cf = row.getCell(3).getStringCellValue().toUpperCase();
 				
 				Child child = new Child();
 				child.setOwnerId(ownerId);

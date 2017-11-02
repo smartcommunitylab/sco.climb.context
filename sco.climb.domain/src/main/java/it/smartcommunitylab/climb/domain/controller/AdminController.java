@@ -169,7 +169,7 @@ public class AdminController extends AuthController {
 			storage.addStop(stop);
 		}
 		for(Child child : childrenMap.values()) {
-			storage.addChild(child);
+			storeChild(child);
 		}
 		for(Volunteer volunteer : volunteersMap.values()) {
 			storage.addVolunteer(volunteer);
@@ -192,19 +192,36 @@ public class AdminController extends AuthController {
 		Map<String, Child> childrenMap = ExcelConverter.readSimpleChildren(file.getInputStream(), 
 				ownerId, instituteId, schoolId);
 		for(Child child : childrenMap.values()) {
-			Criteria criteria = Criteria.where("schoolId").is(schoolId)
-					.and("instituteId").is(instituteId)
-					.and("name").is(child.getName())
-					.and("surname").is(child.getSurname());
-			Child childDb = storage.findOneData(Child.class, criteria, ownerId);
+			storeChild(child);
+		}
+	}
+	
+	private void storeChild(Child child) throws ClassNotFoundException {
+		Criteria criteriaBase = Criteria.where("schoolId").is(child.getSchoolId())
+				.and("instituteId").is(child.getInstituteId());
+		Child childDb;
+		if(Utils.isNotEmpty(child.getCf())) {
+			Criteria criteriaCf = criteriaBase.and("cf").is(child.getCf());
+			childDb = storage.findOneData(Child.class, criteriaCf, child.getOwnerId());
 			if(childDb != null) {
 				if(logger.isInfoEnabled()) {
-					logger.info(String.format("Child already exists: %s %s", child.getName(), child.getSurname()));
+					logger.info(String.format("Child already exists: %s %s", 
+							child.getName(), child.getSurname()));
 				}
-				continue;
+				return;
 			}
-			storage.addChild(child);
 		}
+		Criteria criteriaName = criteriaBase.and("name").is(child.getName())
+				.and("surname").is(child.getSurname());
+		childDb = storage.findOneData(Child.class, criteriaName, child.getOwnerId());
+		if(childDb != null) {
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("Child already exists: %s %s", 
+						child.getName(), child.getSurname()));
+			}
+			return;
+		}
+		storage.addChild(child);
 	}
 	
 	private boolean validateRole(String role, HttpServletRequest request) throws Exception {
