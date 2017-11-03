@@ -2,7 +2,9 @@ package it.smartcommunitylab.climb.contextstore.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User {
 	private String objectId;
@@ -15,6 +17,7 @@ public class User {
 	private String surname;
 	private String email;
 	private String cf;
+	private Map<String, List<String>> authorizations = new HashMap<String, List<String>>();
 	
 	public String getObjectId() {
 		return objectId;
@@ -75,6 +78,12 @@ public class User {
 	}
 	public void setCf(String cf) {
 		this.cf = cf;
+	}
+	public Map<String, List<String>> getAuthorizations() {
+		return authorizations;
+	}
+	public void setAuthorizations(Map<String, List<String>> authorizations) {
+		this.authorizations = authorizations;
 	}
 	
 }
