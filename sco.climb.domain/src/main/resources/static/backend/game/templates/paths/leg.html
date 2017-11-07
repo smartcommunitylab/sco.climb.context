@@ -48,6 +48,18 @@
             <option value="boat">Nave/Traghetto</option>
         </select>
     </div>
+    <div class="col-md-12 field" ng-if="leg.position > 0">
+        <p><b>Icona da visualizzare:</b></p>
+        <select class="form-control" style="width: 200px" ng-model="leg.icon">
+            <option value="foot">A piedi</option>
+            <option value="plane">Aereo</option>
+            <option value="boat">Nave/Traghetto</option>
+            <option value="balloon">Mongolfiera</option>
+            <option value="zeppelin">Dirigibile</option>
+            <option value="train">Treno</option>
+            <option value="sled">Slitta</option>
+        </select>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-5">
