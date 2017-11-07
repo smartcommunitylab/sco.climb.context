@@ -20,6 +20,11 @@ angular.module('consoleControllers.mainCtrl', [])
         DataService.getProfile().then(function (p) {
             $scope.profile = p;
             $rootScope.profile = $scope.profile;
+
+            if ($scope.profile.ownerIds.length == 1) {
+                $scope.selectedOwner = $scope.profile.ownerIds[0]; 
+                $scope.loadInstitutesList();
+            }
         });
         
         $scope.logout = function() {
@@ -39,6 +44,10 @@ angular.module('consoleControllers.mainCtrl', [])
             DataService.getInstitutesList($scope.selectedOwner).then(
                 function(response) {
                     $scope.institutesList = response.data;
+                    if ($scope.institutesList.length == 1) {
+                        $scope.selectedInstitute = $scope.institutesList[0];
+                        $scope.loadSchoolsList();
+                    }
                 }, function() {
                     alert('Errore nella richiesta.');
                 }
@@ -55,6 +64,10 @@ angular.module('consoleControllers.mainCtrl', [])
             		$scope.selectedInstitute.objectId).then(
                 function(response) {
                     $rootScope.schools = response.data;
+                    if ($rootScope.schools.length == 1) {
+                        $scope.selectedSchool = $scope.schools[0];
+                        $scope.loadData('game');
+                    }
                 }, function() {
                     alert('Errore nella richiesta.');
                 }
@@ -110,6 +123,14 @@ angular.module('consoleControllers.mainCtrl', [])
                         if(type !== 'itinerary') {
                             eval("$rootScope." + type + "s = response.data");
                             eval("$scope." + type + "sModified = false");
+
+                            if (type == 'game') {
+                                if ($rootScope.games.length == 1) {
+                                    $scope.selectedGame = $scope.games[0];
+                                    $scope.loadData('itinerary');
+                                }
+                            }
+
                         }
                         else {
                             $rootScope.paths = response.data;
