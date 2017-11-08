@@ -15,6 +15,8 @@ public class DataSetInfo implements Serializable {
 	private String email;
 	private String cf;
 	private String token;
+	private long expiration;
+	private String refreshToken;
 	
 	@Override
 	public String toString() {
@@ -83,6 +85,22 @@ public class DataSetInfo implements Serializable {
 
 	public void setCf(String cf) {
 		this.cf = cf;
+	}
+
+	public long getExpiration() {
+		return expiration;
+	}
+
+	public void setExpiration(long expiration) {
+		this.expiration = expiration;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 
 }

@@ -1,9 +1,12 @@
 package it.smartcommunitylab.climb.domain.controller;
 
+import it.smartcommunitylab.aac.AACException;
 import it.smartcommunitylab.aac.AACProfileService;
+import it.smartcommunitylab.aac.AACService;
 import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
 import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
@@ -24,6 +27,10 @@ public class AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
+	@Value("${oauth.serverUrl}")	
+	private String oauthServerUrl;
+	
+	@Autowired
 	@Value("${security.oauth2.client.clientId}")	
 	private String clientId;
 
@@ -38,11 +45,18 @@ public class AuthController {
 	@Autowired
 	AuthorizationManager authorizationManager;
 
+	private AACService aacService;
+	
 	private AACProfileService profileConnector;
-
+	
 	@PostConstruct
 	public void init() throws Exception {
+		aacService = new AACService(oauthServerUrl, clientId, clientSecret);
 		profileConnector = new AACProfileService(profileServerUrl);
+	}
+	
+	protected TokenData refreshToken(String refreshToken) throws SecurityException, AACException {
+		return aacService.refreshToken(refreshToken);
 	}
 	
 	protected AccountAttributeDTO getAccountByEmail(AccountProfile accountProfile) {

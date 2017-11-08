@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.Authoriti
 import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedPrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,7 +67,7 @@ public class AacUserInfoTokenServices implements ResourceServerTokenServices {
 	public OAuth2Authentication loadAuthentication(String accessToken)
 			throws AuthenticationException, InvalidTokenException {
 		Map<String, Object> map = getMap(this.userInfoEndpointUrl, accessToken);
-		map.put("token", accessToken);
+		//map.put("token", accessToken);
 		if (map.containsKey("error")) {
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("userinfo returned error: " + map.get("error"));
@@ -118,15 +117,26 @@ public class AacUserInfoTokenServices implements ResourceServerTokenServices {
 				resource.setClientId(this.clientId);
 				restTemplate = new OAuth2RestTemplate(resource);
 			}
+			String token = null;
+			String refreshToken = null;
+			long expiration = -1;
 			OAuth2AccessToken existingToken = restTemplate.getOAuth2ClientContext()
 					.getAccessToken();
 			if (existingToken == null || !accessToken.equals(existingToken.getValue())) {
-				DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(
+				DefaultOAuth2AccessToken dafaultToken = new DefaultOAuth2AccessToken(
 						accessToken);
-				token.setTokenType(this.tokenType);
-				restTemplate.getOAuth2ClientContext().setAccessToken(token);
+				dafaultToken.setTokenType(this.tokenType);
+				restTemplate.getOAuth2ClientContext().setAccessToken(dafaultToken);
+			} else {
+				token = existingToken.getValue();
+				expiration = existingToken.getExpiration().getTime();
+				refreshToken = existingToken.getRefreshToken().getValue();
 			}
-			return restTemplate.getForEntity(path, Map.class).getBody();
+			Map<String, Object> map = restTemplate.getForEntity(path, Map.class).getBody();
+			map.put("token", token);
+			map.put("refreshToken", refreshToken);
+			map.put("expiration", expiration);
+			return map;
 		}
 		catch (Exception ex) {
 			this.logger.warn("Could not fetch user details: " + ex.getClass() + ", "

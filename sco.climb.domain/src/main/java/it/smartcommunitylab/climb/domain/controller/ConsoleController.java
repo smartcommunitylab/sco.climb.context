@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
+import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.security.DataSetDetails;
@@ -73,17 +74,33 @@ public class ConsoleController extends AuthController {
 		return getDataSetInfo(request);
 	}
 	
-	private DataSetInfo getDataSetInfo(HttpServletRequest request) {
+	private DataSetInfo getDataSetInfo(HttpServletRequest request) throws Exception {
 		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
+		//check token expiration
+		long now = System.currentTimeMillis();
+		if(now > details.getApp().getExpiration()) {
+			TokenData tokenData = refreshToken(details.getApp().getRefreshToken());
+			details.getApp().setToken(tokenData.getAccess_token());
+			details.getApp().setRefreshToken(tokenData.getRefresh_token());
+			details.getApp().setExpiration(tokenData.getExpires_on());
+		}
+		DataSetInfo dsInfo = new DataSetInfo();
+		dsInfo.setCf(details.getApp().getCf());
+		dsInfo.setEmail(details.getApp().getEmail());
+		dsInfo.setName(details.getApp().getName());
+		dsInfo.setSurname(details.getApp().getSurname());
+		dsInfo.setSubject(details.getApp().getSubject());
+		dsInfo.setToken(details.getApp().getToken());
+		dsInfo.setExpiration(details.getApp().getExpiration());
 		//TODO TEST
-		//details.getApp().setEmail("smartcommunitytester@gmail.com");
+		//dsInfo.setEmail("smartcommunitytester@gmail.com");
 		User user = storage.getUserByEmail(details.getApp().getEmail());
 		if(user != null) {
-			details.getApp().setOwnerIds(user.getOwnerIds());
-			details.getApp().setRoles(user.getRoles());
+			dsInfo.setOwnerIds(user.getOwnerIds());
+			dsInfo.setRoles(user.getRoles());
 		}
-		return details.getApp();
+		return dsInfo;
 	}
 
 	@ExceptionHandler(Exception.class)
