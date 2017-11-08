@@ -190,6 +190,21 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             } }
         });
     };
+    $scope.saveOrder = function() {
+        if ($scope.enableOrder) {            
+            $rootScope.paths[$scope.currentPath].legs = $scope.legs;
+            DataService.editData('legs', $rootScope.paths[$scope.currentPath]).then(
+                function() {
+                    console.log('Salvataggio ordine tappe a buon fine.');    
+                    $scope.enableOrder = false;
+                }, function() {
+                    alert('Errore nel salvataggio dell\'ordine tappe.');
+                }
+            );
+        } else {
+            $scope.enableOrder = true;
+        }
+    };
 })
 
 .controller('MapCtrl', function ($scope, $rootScope, $timeout, $state, drawMap, createDialog) {

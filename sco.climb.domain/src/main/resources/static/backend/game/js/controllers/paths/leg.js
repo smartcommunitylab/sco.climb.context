@@ -1,9 +1,19 @@
-angular.module('consoleControllers.leg', [])
+angular.module('consoleControllers.leg', ['isteven-multi-select'])
 
 // Edit the leg for the selected path
 .controller('LegCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
     $scope.$parent.selectedTab = 'legs';
     var currentPath = $scope.$parent.currentPath;
+    $scope.viewIconsModels = [
+        { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
+        { icon: "<img src=img/POI_airplane_full.png />", name: "Aereo", value:"plane"},
+        { icon: "<img src=img/POI_boat_full.png />", name: "Nave/Traghetto", value:"boat"},
+        { icon: "<img src=img/POI_baloon_full.png />", name: "Mongolfiera", value:"balloon"},
+        { icon: "<img src=img/POI_zeppelin_full.png />", name: "Dirigibile", value:"zeppelin"},
+        { icon: "<img src=img/POI_train_full.png />", name: "Treno", value:"train"},
+        { icon: "<img src=img/POI_sleigh_full.png />", name: "Slitta", value:"sled"}
+    ]; 
+
     InitLegPage();
 
     // Create $scope.leg variable and init the map
@@ -13,6 +23,11 @@ angular.module('consoleControllers.leg', [])
             $scope.leg = angular.copy($scope.$parent.legs[$stateParams.idLeg]);
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
+            
+            $scope.viewIconsModels.forEach(function(element) {
+                element.ticked = (element.value == $scope.leg.icon); 
+            }, this);
+
         }
         else 
         {
@@ -81,6 +96,10 @@ angular.module('consoleControllers.leg', [])
     };
 
     $scope.save = function () {
+        $scope.leg.icon = undefined;
+        for (var i = 0; i < $scope.viewIconsModels.length && !$scope.leg.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
+            if ($scope.viewIconsModels[i].ticked) $scope.leg.icon = $scope.viewIconsModels[i].value;
+        }
         if ($scope.leg.position > 0) {
         	$scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
         }

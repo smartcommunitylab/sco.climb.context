@@ -50,15 +50,15 @@
     </div>
     <div class="col-md-12 field" ng-if="leg.position > 0">
         <p><b>Icona da visualizzare:</b></p>
-        <select class="form-control" style="width: 200px" ng-model="leg.icon">
-            <option value="foot">A piedi</option>
-            <option value="plane">Aereo</option>
-            <option value="boat">Nave/Traghetto</option>
-            <option value="balloon">Mongolfiera</option>
-            <option value="zeppelin">Dirigibile</option>
-            <option value="train">Treno</option>
-            <option value="sled">Slitta</option>
-        </select>
+        <div isteven-multi-select
+            input-model="viewIconsModels"
+            output-model="selectedIconToView"
+            button-label="icon name"
+            item-label="icon name"
+            tick-property="ticked"
+            selection-mode="single"
+            helper-elements=""
+            style="display:inline-block;"/>
     </div>
 </div>
 <div class="row">
@@ -148,7 +148,7 @@
 
     <!-- List of available media -->
     <div class="col-lg-12 right">
-        <a class="btn btn-info" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
+        <a class="btn" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
     </div>
 
     <div class="col-lg-12 media-type-title">
