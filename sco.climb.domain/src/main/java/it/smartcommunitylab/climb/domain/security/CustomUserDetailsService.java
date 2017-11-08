@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = storage.getUserByEmail(username);
+		User user = storage.getUserBySubject(username);
 		if(user == null) {
 			throw new UsernameNotFoundException(String.format("user %s not found", username));
 		}
