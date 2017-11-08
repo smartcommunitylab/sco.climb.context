@@ -24,6 +24,7 @@ import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -551,6 +552,44 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("email").is(email));
 		User result = mongoTemplate.findOne(query, User.class);
 		return result;
+	}
+	
+	public DataSetInfo getDataSetInfoBySubject(String subject) {
+		Query query = new Query(new Criteria("subject").is(subject));
+		DataSetInfo dataSetInfo = mongoTemplate.findOne(query, DataSetInfo.class);
+		return dataSetInfo;
+	}
+	
+	public void saveDataSetInfo(DataSetInfo dataSetInfo) {
+		Criteria criteria = null;
+		if(Utils.isNotEmpty(dataSetInfo.getSubject())) {
+			criteria = new Criteria("subject").is(dataSetInfo.getSubject());
+		} else if(Utils.isNotEmpty(dataSetInfo.getEmail())) {
+			criteria = new Criteria("email").is(dataSetInfo.getEmail());
+		} else if(Utils.isNotEmpty(dataSetInfo.getCf())) {
+			criteria = new Criteria("cf").is(dataSetInfo.getCf());
+		}
+		DataSetInfo dataSetInfoDb = null;
+		if(criteria != null) {
+			Query query = new Query(criteria);
+			dataSetInfoDb = mongoTemplate.findOne(query, DataSetInfo.class);
+			if(dataSetInfoDb!= null) {
+				Update update = new Update();
+				update.set("subject", dataSetInfo.getSubject());
+				update.set("name", dataSetInfo.getName());
+				update.set("surname", dataSetInfo.getSurname());
+				update.set("email", dataSetInfo.getEmail());
+				update.set("cf", dataSetInfo.getCf());
+				update.set("token", dataSetInfo.getToken());
+				update.set("expiration", dataSetInfo.getExpiration());
+				update.set("refreshToken", dataSetInfo.getRefreshToken());
+				mongoTemplate.updateFirst(query, update, DataSetInfo.class);
+			} else {
+				mongoTemplate.save(dataSetInfo);
+			}
+		} else {
+			mongoTemplate.save(dataSetInfo);
+		}
 	}
 	
 	public List<PedibusGame> getPedibusGames() {

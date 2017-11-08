@@ -67,7 +67,6 @@ public class AacUserInfoTokenServices implements ResourceServerTokenServices {
 	public OAuth2Authentication loadAuthentication(String accessToken)
 			throws AuthenticationException, InvalidTokenException {
 		Map<String, Object> map = getMap(this.userInfoEndpointUrl, accessToken);
-		//map.put("token", accessToken);
 		if (map.containsKey("error")) {
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("userinfo returned error: " + map.get("error"));

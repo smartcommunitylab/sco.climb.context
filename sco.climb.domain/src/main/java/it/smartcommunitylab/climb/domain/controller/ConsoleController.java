@@ -85,6 +85,9 @@ public class ConsoleController extends AuthController {
 			details.getApp().setRefreshToken(tokenData.getRefresh_token());
 			details.getApp().setExpiration(tokenData.getExpires_on());
 		}
+		//save info
+		storage.saveDataSetInfo(details.getApp());
+		//create response
 		DataSetInfo dsInfo = new DataSetInfo();
 		dsInfo.setCf(details.getApp().getCf());
 		dsInfo.setEmail(details.getApp().getEmail());

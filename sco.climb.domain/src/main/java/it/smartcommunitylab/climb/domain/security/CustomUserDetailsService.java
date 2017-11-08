@@ -16,7 +16,6 @@
 
 package it.smartcommunitylab.climb.domain.security;
 
-import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = storage.getUserBySubject(username);
-		if(user == null) {
+		DataSetInfo dataSetInfo = storage.getDataSetInfoBySubject(username);
+		if(dataSetInfo == null) {
 			throw new UsernameNotFoundException(String.format("user %s not found", username));
 		}
-		DataSetInfo dataSetInfo = new DataSetInfo();
-		dataSetInfo.setCf(user.getCf());
-		dataSetInfo.setEmail(user.getEmail());
-		dataSetInfo.setName(user.getName());
-		dataSetInfo.setSurname(user.getSurname());
-		dataSetInfo.setSubject(user.getSubject());
-		dataSetInfo.setRoles(user.getRoles());
-		dataSetInfo.setOwnerIds(user.getOwnerIds());
 		return new DataSetDetails(dataSetInfo);
 	}
 
