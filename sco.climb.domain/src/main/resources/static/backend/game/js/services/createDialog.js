@@ -1,6 +1,7 @@
 /*
 *   SERVIZIO PER LA CREAZIONE SEMPLIFICATA DI MODALS BOOTSTRAP
 *   Documentazione: http://fundoo-solutions.github.io/angularjs-modal-service/ e https://github.com/Fundoo-Solutions/angularjs-modal-service/blob/master/README.md
+*   20171107 Modificata con options.noCancelBtn
 */
 
 angular.module('fundoo.services', []).factory('createDialog', ["$document", "$compile", "$rootScope", "$controller", "$timeout",
@@ -40,8 +41,10 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
 
             var key;
             var idAttr = options.id ? ' id="' + options.id + '" ' : '';
-            var defaultFooter = '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>' +
-                                '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
+            var defaultFooter = '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
+            if (!options.noCancelBtn) {
+                defaultFooter += '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
+            }
             var footerTemplate = '<div class="modal-footer">' +
                 (options.footerTemplate || defaultFooter) +
                 '</div>';

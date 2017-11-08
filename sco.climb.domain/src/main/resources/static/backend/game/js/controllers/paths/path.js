@@ -26,7 +26,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 
 // Edit an existing path
-.controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
+.controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $state, $timeout, DataService, createDialog) {
     $scope.$parent.mainView = 'itinerary';
     
     $scope.classes = [];
@@ -38,9 +38,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
   			$scope.classes.push(classEntry);
     	});
     }
-
+    $scope.isNewPath = true;
     if ($stateParams.idPath)    // controlla se si sta modificando un percorso esistente
     {
+        $scope.isNewPath = false;
         $scope.currentPath = Number($stateParams.idPath);
         $scope.saveData = DataService.editData;
         $scope.classes.forEach(function(entry) {
@@ -109,7 +110,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     $rootScope.paths[$scope.currentPath].legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
                     $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
                         function() {
-                            console.log('Salvataggio dati a buon fine.');
+                            console.log('Salvataggio dati a buon fine.');                            
                             $location.path('paths-list');
                         }, function() {
                             alert('Errore nel salvataggio delle tappe.');
@@ -149,6 +150,17 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             success: { label: 'Conferma', fn: function() {$location.path('paths-list');} }
         });
     };
+
+    $scope.legsTabSelected = function() {
+        if ($scope.isNewPath) { //New path, need to save before creating legs
+            $state.go('root.path.info');
+            createDialog('templates/modals/save-path-before-edit-leg.html',{
+                id : 'save-path-limit-dialog',
+                title: 'Salva le info',
+                noCancelBtn: true
+            });
+        }
+    }
 })
 
 .controller('InfoCtrl', function ($scope, $rootScope) {
@@ -157,6 +169,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 .controller('LegsListCtrl', function ($scope, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'legs';
+    $scope.$parent.legsTabSelected();
     $scope.remove = function (idLeg) {
         createDialog('templates/modals/delete-leg.html',{
             id : 'delete-leg-dialog',
@@ -179,20 +192,25 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     };
 })
 
-.controller('MapCtrl', function ($scope, $rootScope, $timeout, drawMap, createDialog) {
+.controller('MapCtrl', function ($scope, $rootScope, $timeout, $state, drawMap, createDialog) {
     $scope.$parent.selectedTab = 'map';
     $scope.toggle = true;
     $scope.initMap = function () {
         // Verifica che ci siano abbastanza tappe
         if($scope.$parent.legs.length < 2)
         {
+            if ($scope.$parent.isNewPath) { //new path, return to info
+                $state.go('root.path.info');
+            } else {
+                $state.go('root.path.legs');
+            }
+
+            
             createDialog('templates/modals/err-nolegs.html',{
                 id : 'nolegs-dialog',
                 title: 'Non ci sono abbastanza tappe!',
-                success: { label: 'Torna indietro', fn: function() {
-                    window.history.back();
-                } },
-                footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
+                success: { label: 'OK', fn: null },
+                noCancelBtn: true
             });
         }
         else
