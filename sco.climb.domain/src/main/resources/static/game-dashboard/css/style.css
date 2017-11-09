@@ -206,6 +206,78 @@ md-sidenav {
   line-height: 30px;
 }
 
+.external-urls-viewer {
+  width: 100%;
+  overflow: auto;
+  white-space: nowrap;
+  text-align: center;
+}
+.external-urls-viewer .url-view-col {
+  display: inline-block;
+  margin: 8px;
+  max-width: 200px;
+  max-height: 200px;
+}
+.external-urls-viewer .url-view-col-image img {
+  max-width: 200px;
+  max-height: 200px
+}
+.external-urls-viewer .url-view-col-image div {
+  white-space: nowrap;
+  line-height: 30px;
+}
+
+.external-urls-viewer {
+  width: 100%;
+  overflow-y: auto;
+  white-space: nowrap;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
+  max-height: 270px;
+}
+.external-urls-viewer .url-view-col {
+  float: left;
+  margin: 8px;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: bottom;
+}
+.external-urls-viewer .url-view-col img {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 4px 4px 0px 0px;
+}
+.external-urls-viewer .url-view-col div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px 8px;
+}
+.external-urls-viewer .url-view-col:nth-child(4n) {
+  clear: left;
+}
+.external-urls-viewer .url-view-col a {
+  text-decoration: none;
+  color:black;
+}
+.external-urls-viewer .url-view-col-video-yt {
+  position: relative;  
+}
+.external-urls-viewer .url-view-play {
+  position: absolute;
+  left: 52px;
+  top: 36px;
+  opacity: 0.85;
+}
+.leaflet-popup-content {
+  min-width: 685px;
+  max-width: 685px;
+  max-height: 400px;
+}
+
 .gallery-arrow {
   color: #F39C12;
   font-size: 60px;

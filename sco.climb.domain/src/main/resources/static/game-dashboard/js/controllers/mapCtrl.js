@@ -305,11 +305,29 @@ angular.module("climbGame.controllers.map", [])
               latlngs: mapService.decode(data.legs[i].polyline)
             }
             //create div of external url
-          var externalUrl = "<div>";
+          var externalUrl = '<div class="external-urls-viewer">';
           for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
-            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank">' + data.legs[i].externalUrls[k].name + '</a></div>';
+            switch (data.legs[i].externalUrls[k].type) {
+              case 'image':
+                externalUrl = externalUrl + '<div class="url-view-col url-view-col-image"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="' + data.legs[i].externalUrls[k].link + '"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                break;
+              case 'video':
+                //try to find thumbnail from youtube
+                var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match = data.legs[i].externalUrls[k].link.match(regExp);
+                if (match && match[2].length == 11) {
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="img/ic_play.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+          
+                } else {
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_video.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                }
+                break;
+              case 'link':
+                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_link.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                break;
+            }
           }
-          externalUrl = externalUrl + '</div>';
+          externalUrl += '</div>';
           var icon = getMarkerIcon(data.legs[i]);
           if ((data.legs[i].position < $scope.currentLeg.position) || $scope.endReached) {
             $scope.pathMarkers.push(getMarker(data.legs[i], externalUrl, icon, i));
@@ -411,31 +429,6 @@ angular.module("climbGame.controllers.map", [])
       if (leg.position == $scope.legs.length - 1) {
         return './img/POI_destination.png'
       }
-      /*switch (leg.transport) {
-      case configService.getFootConstant():
-        if (leg.position < $scope.currentLeg.position) {
-          return './img/POI_walk_full.png';
-        }
-        return './img/POI_walk_empty.png';
-        break;
-      case configService.getPlaneConstant():
-        if (leg.position < $scope.currentLeg.position) {
-          return './img/POI_airplane_full.png';
-        }
-        return './img/POI_airplane_empty.png';
-        break;
-      case configService.getBoatConstant():
-        if (leg.position < $scope.currentLeg.position) {
-          return './img/POI_boat_full.png';
-        }
-        return './img/POI_boat_empty.png';
-        break;
-      default:
-        if (leg.position < $scope.currentLeg.position) {
-          return './img/POI_full.png';
-        }
-        return './img/POI_empty.png';
-      }*/
       return configService.getIconImg(leg.icon, leg.position < $scope.currentLeg.position); 
     }
 
@@ -450,8 +443,7 @@ angular.module("climbGame.controllers.map", [])
           lng: data.geocoding[0],
           message: '<div class="map-balloon">' +
             '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.name + '</h4>' +
-            '<div class="row">' +
-            '<div class="col">' + url + '</div>' +
+            '<div class="row">' + url +
             '</div>' +
             '</div>',
           icon: {
