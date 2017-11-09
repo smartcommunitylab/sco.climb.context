@@ -411,7 +411,7 @@ angular.module("climbGame.controllers.map", [])
       if (leg.position == $scope.legs.length - 1) {
         return './img/POI_destination.png'
       }
-      switch (leg.transport) {
+      /*switch (leg.transport) {
       case configService.getFootConstant():
         if (leg.position < $scope.currentLeg.position) {
           return './img/POI_walk_full.png';
@@ -435,9 +435,8 @@ angular.module("climbGame.controllers.map", [])
           return './img/POI_full.png';
         }
         return './img/POI_empty.png';
-      }
-
-
+      }*/
+      return configService.getIconImg(leg.icon, leg.position < $scope.currentLeg.position); 
     }
 
     function getMarker(data, url, icon, i) {

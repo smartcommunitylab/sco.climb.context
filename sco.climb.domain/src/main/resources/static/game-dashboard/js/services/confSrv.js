@@ -4,15 +4,34 @@ angular.module('climbGame.services.conf', [])
     var configService = {}
     var DEVELOPMENT = true
     var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
-    //var URL = 'http://192.168.42.60:6020/domain'
-    var FOOT_CONSTANT = 'foot'
-    var BOAT_CONSTANT = 'boat'
-    var PLANE_CONSTANT = 'plane'
+
+    configService.FOOT_CONSTANT = 'foot'
+    configService.PLANE_CONSTANT = 'plane'
+    configService.BOAT_CONSTANT = 'boat'
+    configService.BALLOON_CONSTANT = 'balloon'
+    configService.ZEPPELIN_CONSTANT = 'zeppelin'
+    configService.TRAIN_CONSTANT = 'train'
+    configService.SLED_CONSTANT = 'sled'
+
     var httpTimeout = 10000
     var DEFAULT_CENTER_MAP = [37.973378, 23.730957]
     var DEFAULT_ZOOM_MAP = 4
     var DEFAULT_ZOOM_POI = 9
       // var APP_BUILD = ''
+
+    configService.TRAVEL_ICONS_MAP = {
+      [configService.FOOT_CONSTANT]: 'img/POI_foot',
+      [configService.PLANE_CONSTANT]: 'img/POI_airplane',
+      [configService.BOAT_CONSTANT]: 'img/POI_boat',
+      [configService.BALLOON_CONSTANT]: 'img/POI_baloon',
+      [configService.ZEPPELIN_CONSTANT]: 'img/POI_zeppelin',
+      [configService.TRAIN_CONSTANT]: 'img/POI_train',
+      [configService.SLED_CONSTANT]: 'img/POI_sleigh'
+    };
+    configService.TRAVEL_ICONS_STATE_MAP = {
+      true: '_full.png',
+      false: '_empty.png'
+    }
 
     configService.getURL = function () {
       return URL
@@ -41,6 +60,12 @@ angular.module('climbGame.services.conf', [])
     }
     configService.getDefaultZoomPoiConstant = function () {
       return DEFAULT_ZOOM_POI
+    }
+
+    configService.getIconImg = function (iconName, state) {
+      var iconImg = configService.TRAVEL_ICONS_MAP[iconName];
+      if (!iconImg) iconImg = configService.TRAVEL_ICONS_MAP[configService.FOOT_CONSTANT];
+      return iconImg + configService.TRAVEL_ICONS_STATE_MAP[state];
     }
 
     return configService
