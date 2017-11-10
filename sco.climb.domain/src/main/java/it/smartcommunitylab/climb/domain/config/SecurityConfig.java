@@ -3,7 +3,6 @@ package it.smartcommunitylab.climb.domain.config;
 import it.smartcommunitylab.climb.domain.security.AacUserInfoTokenServices;
 import it.smartcommunitylab.climb.domain.security.DataSetDetails;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
-import it.smartcommunitylab.climb.domain.security.RememberMeOAuthFilter;
 
 import java.util.Map;
 
@@ -115,10 +114,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return aacFilter;
   }
 
-  public RememberMeOAuthFilter rememberMeOAuthAuthenticationFilter() throws Exception {
-    return new RememberMeOAuthFilter(tokenBasedRememberMeService());
-  }
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -127,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.logout()
 				.clearAuthentication(true)
-				.deleteCookies("JSESSIONID", "rememeberme")
+				.deleteCookies("rememberme", "JSESSIONID")
 				.invalidateHttpSession(true)
 				.logoutSuccessHandler(customLogoutSuccessHandler);
 		http
@@ -146,7 +141,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
-				.addFilterBefore(rememberMeOAuthAuthenticationFilter(), BasicAuthenticationFilter.class)
 				.rememberMe();
 					
 		http

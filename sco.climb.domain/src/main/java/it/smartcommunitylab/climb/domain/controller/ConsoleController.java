@@ -27,10 +27,13 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +51,9 @@ public class ConsoleController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	
+	@Autowired
+	private RememberMeServices rememberMeServices; 
 	
 	@RequestMapping(value = "/")
 	public View root() {
@@ -70,11 +76,13 @@ public class ConsoleController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/console/data")
-	public @ResponseBody DataSetInfo data(HttpServletRequest request) throws Exception {
-		return getDataSetInfo(request);
+	public @ResponseBody DataSetInfo data(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return getDataSetInfo(request, response);
 	}
 	
-	private DataSetInfo getDataSetInfo(HttpServletRequest request) throws Exception {
+	private DataSetInfo getDataSetInfo(HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		//check token expiration
@@ -103,6 +111,10 @@ public class ConsoleController extends AuthController {
 			dsInfo.setOwnerIds(user.getOwnerIds());
 			dsInfo.setRoles(user.getRoles());
 		}
+		//save rememeberme
+		Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
+		rememberMeServices.loginSuccess((HttpServletRequest)request, 
+				(HttpServletResponse)response, existingAuth);
 		return dsInfo;
 	}
 
