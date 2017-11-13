@@ -91,7 +91,7 @@ angular.module('MapsService', [])
     var directionsService = new google.maps.DirectionsService();
     var directionsDisplay;
 
-    this.createMap = function (idMap, prevPoiCoords, thisPoiCoordinates, arriveBy) {       // (prevPoiCoordinates: coordinate del leg precedente (==null se il metodo viene chiamato dal 1° leg))
+    this.createMap = function (idMap, idHintField, prevPoiCoords, thisPoiCoordinates, arriveBy) {       // (prevPoiCoordinates: coordinate del leg precedente (==null se il metodo viene chiamato dal 1° leg))
         // Inizializza variabili del servizio
         prevPoiCoordinates = prevPoiCoords;
         travelType = arriveBy;
@@ -104,6 +104,29 @@ angular.module('MapsService', [])
             },
             zoom: 13
         });
+
+        var autocomplete = new google.maps.places.Autocomplete(document.getElementById(idHintField));        
+        autocomplete.bindTo('bounds', map);
+
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+              // User entered the name of a Place that was not suggested and
+              // pressed the Enter key, or the Place Details request failed.
+              window.alert("Nessun luogo trovato per: '" + place.name + "'");
+              return;
+            }
+  
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+              map.fitBounds(place.geometry.viewport);
+            } else {
+              map.setCenter(place.geometry.location);
+            }
+            thisPoiMarker.setPosition(place.geometry.location);
+            reloadMarkerPosition();
+          });
+        
 
         // Inizializza l'oggetto polyline per la tratta in linea d'aria, nel caso venga usata
         polyPath = new google.maps.Polyline({
@@ -133,10 +156,7 @@ angular.module('MapsService', [])
         });
 
         drawPolyline();
-        thisPoiMarker.addListener('mouseup', function() {       // listener che ridisegna il percorso/polyline ogniqualvolta si sposta il marker
-            drawPolyline();
-            $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), true);       // avviso che la posizione del marker è cambiata
-        });
+        thisPoiMarker.addListener('mouseup', reloadMarkerPosition);
     };
 
     this.setTravelType = function(newTravelType)
@@ -178,6 +198,11 @@ angular.module('MapsService', [])
                 polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
         }
     };
+
+    var reloadMarkerPosition = function() {
+        drawPolyline();
+        $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), true);       // avviso che la posizione del marker è cambiata
+    }
 
     this.calculateMarkerPosFromDistance = function(distance)
     {

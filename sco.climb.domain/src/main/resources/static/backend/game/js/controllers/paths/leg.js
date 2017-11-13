@@ -47,17 +47,17 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
             };
         }
         if($scope.leg.position === 0) {
-            drawMapLeg.createMap('map-leg', null, $scope.leg.coordinates, $scope.leg.transport);
+            drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, $scope.leg.transport);
         } else {
-            drawMapLeg.createMap('map-leg', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.transport);
+            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.transport);
         }
     }
 
     $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
         $scope.leg.coordinates.lat = newLat;
         $scope.leg.coordinates.lng = newLng;
-        if(wipeAirDistance)
-            document.getElementById('airDistance').value = '';       // pulisci la textbox per il calcolo della lunghezza della linea
+        /*if(wipeAirDistance)
+            document.getElementById('airDistance').value = '';       // pulisci la textbox per il calcolo della lunghezza della linea*/
         if(!$scope.$$phase)
             $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
     });
