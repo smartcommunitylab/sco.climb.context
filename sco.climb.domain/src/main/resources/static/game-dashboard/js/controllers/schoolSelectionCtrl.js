@@ -8,7 +8,8 @@ angular.module('climbGame.controllers.schoolSelection', [])
       } else {
         dataService.getSchool().then(
           	function(data) {
-          		$scope.schools = data;
+              $scope.schools = data;              
+							loginService.setSingleSchool($scope.schools.length == 1);
           		if($scope.schools.length == 1) {
           			loginService.setSchoolId($scope.schools[0].objectId)
           			$state.go('gameSelection')

@@ -2,7 +2,8 @@
 angular.module('climbGame.controllers.classSelection', [])
   .controller('classSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv) {
   		$rootScope.isLoading = false;	
-  		$scope.classes = loginService.getAllClasses()
+      $scope.classes = loginService.getAllClasses()
+      loginService.setSingleClass($scope.classes.length == 1);
       if(loginService.getClassRoom()) {
       	$state.go('home')
       }

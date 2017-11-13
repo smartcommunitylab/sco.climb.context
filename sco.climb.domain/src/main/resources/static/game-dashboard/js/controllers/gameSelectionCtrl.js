@@ -9,6 +9,7 @@ angular.module('climbGame.controllers.gameSelection', [])
         dataService.getGame().then(
           	function(data) {
           		$scope.games = data;
+              loginService.setSingleGame($scope.games.length == 1);
           		if($scope.games.length == 1) {
           			loginService.setGameId($scope.games[0].objectId)
           			$state.go('itinerarySelection')

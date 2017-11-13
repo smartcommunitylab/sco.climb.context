@@ -78,5 +78,21 @@ angular.module('climbGame.controllers.home', [])
         })
         return obj
       }
+
+      $scope.showChangeOption = function(type) {
+        switch (type) {
+          case 'institute':
+            return !loginService.getSingleInstitute();
+          case 'school':
+            return !loginService.getSingleSchool();
+          case 'class':
+            return !loginService.getSingleClass();
+          case 'game':
+            return !loginService.getSingleGame();
+          case 'itinerary':
+            return !loginService.getSingleItinerary();
+        }
+      }
+
     }
   )
