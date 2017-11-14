@@ -39,7 +39,8 @@
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header">
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
-          <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData()" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
+          <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
+          <span ng-if="isPast(dayIndex) && DEVELOPMENT" ng-click="switchDevEditMode(dayIndex)" class="cal-interactive-button">{{isCurrentEditDay(dayIndex) ? ('cal_edit_save_dev_data_button'| translate) : ('cal_edit_dev_data_button'| translate)}}</span>
         </div>
       </div>
       <div layout="row" class="days-row">
@@ -64,11 +65,11 @@
               <md-button class="md-icon-button wheater-button "><i layout="column" flex="25" class="weather-icon icon-rain_outline"></i></md-button>
               <md-button class="md-icon-button wheater-button "><i layout="column" flex="25" class="weather-icon icon-snow_outline"></i></md-button>
             </div>
-            <div layout="row" ng-class="{'cal-today-middle':today(dayIndex)}" ng-if="today(dayIndex) && !weekData[dayIndex].closed" flex="100">
-              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('sunny')"><i layout="column" flex="25" class="weather-icon" ng-class="{'icon-sun':selectedWeather=='sunny','icon-sun_outline':selectedWeather!='sunny'}"></i></md-button>
-              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('cloudy')"><i layout="column" flex="25" class="weather-icon" ng-class="{'icon-cloudy':selectedWeather=='cloudy','icon-cloudy_outline':selectedWeather!='cloudy'}"></i></md-button>
-              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('rain')"><i layout="column" flex="25" class="weather-icon" ng-class="{'icon-rain':selectedWeather=='rain','icon-rain_outline':selectedWeather!='rain'}"></i></md-button>
-              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('snow')"><i layout="column" flex="25" class="weather-icon" ng-class="{'icon-snow':selectedWeather=='snow','icon-snow_outline':selectedWeather!='snow'}"></i></md-button>
+            <div layout="row" ng-class="{'cal-today-middle':today(dayIndex)}" ng-if="(today(dayIndex) && !weekData[dayIndex].closed) || isCurrentEditDay(dayIndex)" flex="100">
+              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('sunny')"><i layout="column" flex="25" class="weather-icon" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : {'icon-sun':selectedWeather=='sunny','icon-sun_outline':selectedWeather!='sunny'}"></i></md-button>
+              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('cloudy')"><i layout="column" flex="25" class="weather-icon" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : {'icon-cloudy':selectedWeather=='cloudy','icon-cloudy_outline':selectedWeather!='cloudy'}"></i></md-button>
+              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('rain')"><i layout="column" flex="25" class="weather-icon" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : {'icon-rain':selectedWeather=='rain','icon-rain_outline':selectedWeather!='rain'}"></i></md-button>
+              <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('snow')"><i layout="column" flex="25" class="weather-icon" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : {'icon-snow':selectedWeather=='snow','icon-snow_outline':selectedWeather!='snow'}"></i></md-button>
             </div>
           </div>
         </div>
@@ -81,8 +82,8 @@
               <!--              ******* *******-->
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
-              <md-button ng-if="!today(dayIndex) || weekData[dayIndex].closed" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
-              <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
+              <md-button ng-if="(!today(dayIndex) || weekData[dayIndex].closed) && !isCurrentEditDay(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
+              <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed || (isCurrentEditDay(dayIndex))" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
             </div>
           </div>
         </md-list>

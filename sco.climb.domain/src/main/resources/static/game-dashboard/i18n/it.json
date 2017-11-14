@@ -34,6 +34,8 @@
   "excursion_form_weather": "Seleziona il meteo:",
   "excursion_form_send": "Aggiungi gita",
   "cal_send_data_button": "INVIA DATI",
+  "cal_edit_dev_data_button": "MODIFICA DATI",
+  "cal_edit_save_dev_data_button": "SALVA DATI",
   "toast_uname_not_valid": "Nome utente o password non validi",
   "toast_api_error": "Errore nel caricamento dati",
   "cal_notifications": "Notifiche",

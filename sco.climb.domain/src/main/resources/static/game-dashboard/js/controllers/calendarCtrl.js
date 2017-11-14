@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.calendar', [])
-  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService',
-    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService) {
+  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService',
+    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService) {
       $scope.week = []
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
@@ -18,6 +18,7 @@ angular.module('climbGame.controllers.calendar', [])
         babies: [],
         means: {}
       }
+      $scope.DEVELOPMENT = configService.DEVELOPMENT;
 
       setTodayIndex()
       setClassSize()
@@ -129,7 +130,7 @@ angular.module('climbGame.controllers.calendar', [])
         return index === $scope.todayIndex
       }
 
-      $scope.sendData = function () {
+      $scope.sendData = function (dayIndex) {
         if (dataAreComplete()) {
           $mdDialog.show({
             // targetEvent: $event,
@@ -155,7 +156,7 @@ angular.module('climbGame.controllers.calendar', [])
                 if (!$scope.sendingData) {
                   $scope.sendingData = true
                   $scope.todayData.meteo = $scope.selectedWeather
-                  $scope.todayData.day = new Date().setHours(0, 0, 0, 0)
+                  $scope.todayData.day = $scope.week[dayIndex].setHours(0, 0, 0, 0);
                   var babiesMap = {}
                   for (var i = 0; i < $scope.todayData.babies.length; i++) {
                     if ($scope.todayData.babies[i].mean) {
@@ -167,7 +168,7 @@ angular.module('climbGame.controllers.calendar', [])
 
                   calendarService.sendData($scope.todayData).then(function (returnValue) {
                     // change weekdata to closed
-                    $scope.weekData[$scope.todayIndex].closed = true
+                    $scope.weekData[dayIndex].closed = true
                       // check if merged or not
                     if (returnValue) {
                       // popup dati backend cambiati
@@ -202,6 +203,7 @@ angular.module('climbGame.controllers.calendar', [])
                         }
                       })
                     } else {
+                      $scope.isDevEditMode = undefined;
                       // sent data
                       $mdToast.show($mdToast.simple().content('Dati inviati'))
                         // reload and show
@@ -248,11 +250,30 @@ angular.module('climbGame.controllers.calendar', [])
         }
       }
 
+      $scope.switchDevEditMode = function(dayIndex) {
+        if (!$scope.DEVELOPMENT) return;
+        if ($scope.isCurrentEditDay(dayIndex)) {
+          $scope.sendData(dayIndex);
+        } else {
+          //reset: todayData is also for past days in DEVELOPMENT mode
+          for (var i=0; i < $scope.todayData.babies.length; i++) {
+            $scope.todayData.babies[i].color = '';
+            $scope.todayData.babies[i].mean = '';
+          }
+          $scope.todayData.means = [];
+
+          $scope.isDevEditMode = {};
+          $scope.isDevEditMode.dayIndex = dayIndex;
+        }
+      }
+
       $scope.prevWeek = function () {
         changeWeek(-1)
+        $scope.isDevEditMode = undefined;
       }
       $scope.nextWeek = function () {
         changeWeek(1)
+        $scope.isDevEditMode = undefined;
       }
 
       $scope.scrollUp = function () {
@@ -268,6 +289,10 @@ angular.module('climbGame.controllers.calendar', [])
 
       $scope.isPast = function (dayIndex) {
         return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0))
+      }
+
+      $scope.isCurrentEditDay = function (dayIndex) {
+        return $scope.isDevEditMode && $scope.isDevEditMode.dayIndex == dayIndex;
       }
 
       function dataAreComplete() {
