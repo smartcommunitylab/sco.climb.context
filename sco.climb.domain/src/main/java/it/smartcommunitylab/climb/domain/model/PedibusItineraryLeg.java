@@ -19,6 +19,7 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private int score;
 	private String transport;
 	private String icon;
+	private List<Marker> additionalPoints = new ArrayList<Marker>();
 	
 	public String getName() {
 		return name;
@@ -102,5 +103,11 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+	public List<Marker> getAdditionalPoints() {
+		return additionalPoints;
+	}
+	public void setAdditionalPoints(List<Marker> additionalPoints) {
+		this.additionalPoints = additionalPoints;
 	}
 }
