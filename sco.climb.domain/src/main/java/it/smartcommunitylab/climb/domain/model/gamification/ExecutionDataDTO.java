@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.climb.domain.model.gamification;
 
+import java.util.Date;
 import java.util.Map;
 
 public class ExecutionDataDTO {
@@ -23,6 +24,7 @@ public class ExecutionDataDTO {
 	public String actionId;
 	public String playerId;
 	public Map<String, Object> data;
+	private Date executionMoment;
 
 	public ExecutionDataDTO() {
 	}
@@ -57,6 +59,14 @@ public class ExecutionDataDTO {
 
 	public void setData(Map<String, Object> data) {
 		this.data = data;
+	}
+
+	public Date getExecutionMoment() {
+		return executionMoment;
+	}
+
+	public void setExecutionMoment(Date executionMoment) {
+		this.executionMoment = executionMoment;
 	}
 
 }

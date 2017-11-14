@@ -167,6 +167,7 @@ public class DashboardController extends AuthController {
 				ed.setGameId(game.getGameId());
 				ed.setPlayerId(childId);
 				ed.setActionId(actionCalendar);
+				ed.setExecutionMoment(calendarDay.getDay());
 				
 				Map<String, Object> data = Maps.newTreeMap();
 				data.put(paramMode, calendarDay.getModeMap().get(childId));
