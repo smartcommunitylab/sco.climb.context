@@ -9,6 +9,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
         dataService.getItinerary().then(
           	function(data) {
           		$scope.itineraries = data;
+              loginService.setSingleItinerary($scope.itineraries.length == 1);
           		if($scope.itineraries.length == 1) {
           			loginService.setItineraryId($scope.itineraries[0].objectId)
           			loginService.setAllClasses($scope.itineraries[0].classRooms);

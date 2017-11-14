@@ -8,10 +8,11 @@ angular.module('climbGame.controllers.instituteSelection', [])
       } else {
         dataService.getInstitute().then(
           	function(data) {
-          		$scope.institutes = data;
+							$scope.institutes = data;
+							loginService.setSingleInstitute($scope.institutes.length == 1);
           		if($scope.institutes.length == 1) {
           			loginService.setInstituteId($scope.institutes[0].objectId)
-          			$state.go('schoolSelection')
+								$state.go('schoolSelection')
           		}
           		$rootScope.isLoading = false;
           	}, 

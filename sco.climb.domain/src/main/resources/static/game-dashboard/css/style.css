@@ -496,6 +496,9 @@ md-sidenav {
 .cal-listbabies {
   padding: 0px!important;
 }
+.baby-list, .cal-listbabies .layout-row, .state-row, .days-row, .weather-row {
+  width: 100%;  
+}
 
 .state-row {
   height: 30px;

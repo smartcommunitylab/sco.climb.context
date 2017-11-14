@@ -63,7 +63,7 @@
 </div>
 <div class="row">
     <div class="col-md-5">
-        <div class="row">
+        <div class="row">            
             <div class="col-lg-12 field">
                 <div class="coordinates-label">
                     <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
@@ -76,12 +76,12 @@
                 </div>
                 <input ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}" class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lng" />
             </div>
-            <div class="col-lg-12 field" ng-show="leg.transport !== 'foot'" ng-init="distance = ''">
+            <!-- <div class="col-lg-12 field" ng-show="leg.transport !== 'foot'" ng-init="distance = ''">
                 <div class="coordinates-label">
                     <p><b>Lunghezza linea (km):</b></p>
                 </div>
                 <input id="airDistance" ng-blur="calculateNewMarkerPos(distance)" class="form-control coordinates-input" type="number" ng-model="distance"/>
-            </div>
+            </div> -->
             <div class="col-lg-12">
                 <p class="hint">Suggerimento: trascina il segnaposto rosso o inserisci le coordinate geografiche in base decimale per impostare la posizione della tappa. Verrà calcolato l'itinerario a piedi con partenza dalla tappa precedente.<br>
                 Se la destinazione non è raggiungibile a piedi, seleziona un mezzo di arrivo adeguato.</p>
@@ -90,6 +90,12 @@
         </div>
     </div>
     <div class="col-md-7">
+        <div class="col-lg-12 field">
+            <div class="geocode-hint">
+                <p><b>Cerca posizione:</b></p>
+            </div>
+            <input class="form-control geocode-hint-input" type="text" id="geocodeHintInput" />
+        </div>        
         <div id="map-leg"></div>
     </div>
 </div>

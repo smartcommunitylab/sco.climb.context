@@ -3,7 +3,8 @@ angular.module("climbGame.controllers.map", [])
     var init = function () {
       angular.extend($scope, {
         defaults: {
-          zoomControl: false
+          zoomControl: false,
+          worldCopyJump: true
         },
         center: {
           lat: configService.getDefaultMapCenterConstant()[0],

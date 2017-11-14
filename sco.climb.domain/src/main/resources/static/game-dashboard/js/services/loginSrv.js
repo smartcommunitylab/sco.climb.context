@@ -135,6 +135,21 @@ angular.module('climbGame.services.login', [])
         return loginService.classRoom;
       }
     }
+    loginService.getSingleInstitute = function() {      
+      return localStorage.getItem('singleInstitute') == 'true'; //terrible workaround, boolean saved as text
+    }
+    loginService.getSingleSchool = function() {
+      return localStorage.getItem('singleSchool') == 'true';
+    }
+    loginService.getSingleClass = function() {
+      return localStorage.getItem('singleClass') == 'true';
+    }
+    loginService.getSingleItinerary = function() {
+      return localStorage.getItem('singleItinerary') == 'true';
+    }
+    loginService.getSingleGame = function() {
+      return localStorage.getItem('singleGame') == 'true';
+    }
     loginService.setOwnerId = function (id) {
       localStorage.setItem(OWNERID, id);
       loginService.ownId = id;
@@ -174,6 +189,21 @@ angular.module('climbGame.services.login', [])
     loginService.setAllClasses = function (classes) {
       localStorage.setItem(CLASSES, JSON.stringify(classes));
       loginService.classes = classes;
+    }
+    loginService.setSingleInstitute = function (single) {
+      localStorage.setItem('singleInstitute', single);
+    }
+    loginService.setSingleSchool = function (single) {
+      localStorage.setItem('singleSchool', single);
+    }
+    loginService.setSingleClass = function (single) {
+      localStorage.setItem('singleClass', single);
+    }
+    loginService.setSingleItinerary = function (single) {
+      localStorage.setItem('singleItinerary', single);
+    }
+    loginService.setSingleGame = function (single) {
+      localStorage.setItem('singleGame', single);
     }
     loginService.setClassRoom = function (classRoom) {
       localStorage.setItem(CLASS, classRoom);
