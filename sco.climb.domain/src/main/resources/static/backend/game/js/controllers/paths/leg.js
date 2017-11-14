@@ -47,9 +47,9 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
             };
         }
         if($scope.leg.position === 0) {
-            drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, $scope.leg.transport);
+            drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, null, $scope.leg.transport);
         } else {
-            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.transport);
+            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
         }
     }
 
@@ -58,6 +58,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
         $scope.leg.coordinates.lng = newLng;
         /*if(wipeAirDistance)
             document.getElementById('airDistance').value = '';       // pulisci la textbox per il calcolo della lunghezza della linea*/
+        if(!$scope.$$phase)
+            $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
+    });
+
+    $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
+        $scope.leg.totalDistance = newDistance;
         if(!$scope.$$phase)
             $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
     });
@@ -101,7 +107,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
             if ($scope.viewIconsModels[i].ticked) $scope.leg.icon = $scope.viewIconsModels[i].value;
         }
         if ($scope.leg.position > 0) {
-        	$scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+            $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+            $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
         if (checkFields()) {
             $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"

@@ -91,7 +91,7 @@ angular.module('MapsService', [])
     var directionsService = new google.maps.DirectionsService();
     var directionsDisplay;
 
-    this.createMap = function (idMap, idHintField, prevPoiCoords, thisPoiCoordinates, arriveBy) {       // (prevPoiCoordinates: coordinate del leg precedente (==null se il metodo viene chiamato dal 1° leg))
+    this.createMap = function (idMap, idHintField, prevPoiCoords, thisPoiCoordinates, customWaypoints, arriveBy) {       // (prevPoiCoordinates: coordinate del leg precedente (==null se il metodo viene chiamato dal 1° leg))
         // Inizializza variabili del servizio
         prevPoiCoordinates = prevPoiCoords;
         travelType = arriveBy;
@@ -139,8 +139,14 @@ angular.module('MapsService', [])
         });
 
         // Inizializza il servizio per il rendering del percorso a piedi
-        directionsDisplay = new google.maps.DirectionsRenderer();
-        directionsDisplay.setMap(map);
+        directionsDisplay = new google.maps.DirectionsRenderer({
+            draggable: true,
+            map: map
+        });
+
+        directionsDisplay.addListener('directions_changed', function() {
+            $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(directionsDisplay.getDirections()));
+        });
 
         // Inizializza gli oggetti marker
         prevPoiMarker = new google.maps.Marker({
@@ -155,7 +161,7 @@ angular.module('MapsService', [])
             position: thisPoiCoordinates
         });
 
-        drawPolyline();
+        drawPolyline(customWaypoints);
         thisPoiMarker.addListener('mouseup', reloadMarkerPosition);
     };
 
@@ -176,16 +182,29 @@ angular.module('MapsService', [])
         drawPolyline();
     };
 
-    var drawPolyline = function()
+    var drawPolyline = function(customWaypoints)
     {
         if(prevPoiCoordinates !== null)     // se si tratta del 1° LEG ovviamente la polyline non viene disegnata
         {
             if(travelType === 'foot')       // calcola l'itinerario seguendo le strade
             {
+                var getFormattedWaypoints = function() {
+                    var toRtn = [];
+                    if (customWaypoints) {                        
+                        customWaypoints.forEach(function (waypoint) {
+                            toRtn.push({
+                                location: new google.maps.LatLng(waypoint.latitude, waypoint.longitude),
+                                stopover: false
+                            }); 
+                        });
+                    }
+                    return toRtn;
+                };
                 var request = {
                     origin: prevPoiCoordinates,
                     destination: thisPoiMarker.getPosition(),
-                    travelMode: 'WALKING'
+                    travelMode: 'WALKING',
+                    waypoints: getFormattedWaypoints()
                 };
                 directionsService.route(request, function(result, status) {
                     if (status === 'OK')
@@ -198,6 +217,15 @@ angular.module('MapsService', [])
                 polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
         }
     };
+    var computeTotalDistance = function(result) {
+        var total = 0;
+        var myroute = result.routes[0];
+        for (var i = 0; i < myroute.legs.length; i++) {
+          total += myroute.legs[i].distance.value;
+        }
+        total = total / 1000;
+        return total;
+      }
 
     var reloadMarkerPosition = function() {
         drawPolyline();
@@ -219,6 +247,18 @@ angular.module('MapsService', [])
         else
             return google.maps.geometry.encoding.encodePath(polyPath.getPath());
     };
+    this.getCustomWayPoint = function() {
+        var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
+        var customWayPoints = [];
+        for (var i = 0; i < tmp.length; i++) {
+            var obj = {
+                latitude: tmp[i].location.lat(),
+                longitude: tmp[i].location.lng()
+            };
+            customWayPoints[i] = obj;
+        }
+        return customWayPoints;
+    }
 
     this.updateMarker = function (lat, lng) {           // se le coordinate vengono inserite attraverso i campi di testo
         thisPoiMarker.setPosition(new google.maps.LatLng(lat, lng));
