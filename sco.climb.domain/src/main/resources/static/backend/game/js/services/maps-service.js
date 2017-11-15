@@ -119,21 +119,15 @@ angular.module('MapsService', [])
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             if (!place.geometry) {
-              // User entered the name of a Place that was not suggested and
-              // pressed the Enter key, or the Place Details request failed.
-              window.alert("Nessun luogo trovato per: '" + place.name + "'");
-              return;
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                window.alert("Nessun luogo trovato per: '" + place.name + "'");
+                return;
             }
-  
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-              map.fitBounds(place.geometry.viewport);
-            } else {
-              map.setCenter(place.geometry.location);
-            }
+
             thisPoiMarker.setPosition(place.geometry.location);
             reloadMarkerPosition();
-          });
+        });
         
 
         // Inizializza l'oggetto polyline per la tratta in linea d'aria, nel caso venga usata
@@ -149,7 +143,9 @@ angular.module('MapsService', [])
         // Inizializza il servizio per il rendering del percorso a piedi
         directionsDisplay = new google.maps.DirectionsRenderer({
             draggable: true,
-            map: map
+            map: map,
+            suppressMarkers: true,
+            preserveViewport: true
         });
 
         directionsDisplay.addListener('directions_changed', function() {
@@ -161,7 +157,7 @@ angular.module('MapsService', [])
             position: prevPoiCoordinates,
             label: 'P',
             draggable: false,
-            map: null
+            map: map
         });
         thisPoiMarker = new google.maps.Marker({
             map: map,
@@ -169,8 +165,8 @@ angular.module('MapsService', [])
             position: thisPoiCoordinates
         });
 
-        drawPolyline(customWaypoints);
-        thisPoiMarker.addListener('mouseup', reloadMarkerPosition);
+        thisPoiMarker.addListener('dragend', reloadMarkerPosition);
+        drawPolyline(customWaypoints, true);
     };
 
     this.setTravelType = function(newTravelType)
@@ -190,7 +186,7 @@ angular.module('MapsService', [])
         drawPolyline();
     };
 
-    var drawPolyline = function(customWaypoints)
+    var drawPolyline = function(customWaypoints, zoomToFit)
     {
         if(prevPoiCoordinates !== null)     // se si tratta del 1° LEG ovviamente la polyline non viene disegnata
         {
@@ -215,8 +211,14 @@ angular.module('MapsService', [])
                     waypoints: getFormattedWaypoints()
                 };
                 directionsService.route(request, function(result, status) {
-                    if (status === 'OK')
+                    if (status === 'OK') {
+                        if (zoomToFit) {
+                            directionsDisplay.setOptions({ preserveViewport: false });
+                        } else {
+                            directionsDisplay.setOptions({ preserveViewport: true });
+                        }
                         directionsDisplay.setDirections(result);
+                    }
                     else
                         window.alert('Errore nella richiesta: ' + status);
                 });
@@ -233,11 +235,16 @@ angular.module('MapsService', [])
         }
         total = total / 1000;
         return total;
-      }
+    }
 
     var reloadMarkerPosition = function() {
         drawPolyline();
+        centerOnLastMarker();
         $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), true);       // avviso che la posizione del marker è cambiata
+    }
+    var centerOnLastMarker = function() {
+        map.panTo(thisPoiMarker.getPosition());
+        if (map.getZoom() < 10) map.setZoom(10);
     }
 
     this.calculateMarkerPosFromDistance = function(distance)

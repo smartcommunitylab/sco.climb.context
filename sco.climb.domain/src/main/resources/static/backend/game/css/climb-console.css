@@ -457,3 +457,11 @@ p.fixed-width
 {
     width: 100px;
 }
+.time-picker-control {
+    display: inline-block;
+}
+.time-picker-control > *{
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 8px; 
+}

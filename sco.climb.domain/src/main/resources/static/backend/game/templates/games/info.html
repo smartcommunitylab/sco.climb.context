@@ -34,8 +34,10 @@
     <!-- Intervallo di raccolta dati -->
     <div class="col-lg-12 field timepicker">
         <p><span class="required-sign">*</span> <b>Intervallo di validità per gli eventi del Pedibus:</b></p>
-        <p>dalle:</p> <input class="form-control" type="time" step="300" ng-model="$parent.collectFromHour" ng-required="true"/>
-        <p>&emsp;alle:</p> <input class="form-control" type="time" step="300" ng-model="$parent.collectToHour" ng-required="true"/>
+        <div>
+            <div class="time-picker-control"><label>dalle:</label><div uib-timepicker hour-step="1" minute-step="5" show-meridian="ismeridian" ng-model="$parent.collectFromHour" ng-required="true"></div></div>
+            <div class="time-picker-control"><label>alle:</label><div uib-timepicker hour-step="1" minute-step="5" show-meridian="ismeridian" ng-model="$parent.collectToHour" ng-required="true"></div></div>
+        </div>
     </div>
     <!-- Scheduling -->
     <div class="col-lg-12">
