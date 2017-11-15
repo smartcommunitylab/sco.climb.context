@@ -81,7 +81,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
           			}
           			$scope.classes.push(classEntry);
           		});
-          	}
+              }
+              $scope.$broadcast('updateSelectedClassesState');
           }, function() {
             alert('Errore nel caricamento delle classi.');
           }
@@ -190,4 +191,20 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 .controller('GameInfoCtrl', function ($scope) {
     $scope.$parent.selectedTab = 'info';
+
+    $scope.$on('updateSelectedClassesState', function(e) {  
+        $scope.classToggled();            
+    });
+
+
+
+    $scope.toggleSelectedClasses = function() {
+        $scope.$parent.classes.forEach(function(currentClass) {
+            currentClass.value = $scope.classesAllSelected;
+        });
+    }
+    $scope.classToggled = function(){
+        $scope.classesAllSelected = $scope.$parent.classes.every(function(cl){ return cl.value; })
+    }
+
 });

@@ -165,6 +165,18 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 .controller('InfoCtrl', function ($scope, $rootScope) {
     $scope.$parent.selectedTab = 'info';
+
+
+    $scope.toggleSelectedClasses = function() {
+        $scope.$parent.classes.forEach(function(currentClass) {
+            currentClass.value = $scope.classesAllSelected;
+        });
+    }
+    $scope.classToggled = function(){
+        $scope.classesAllSelected = $scope.$parent.classes.every(function(cl){ return cl.value; })
+    }
+
+    $scope.classToggled();
 })
 
 .controller('LegsListCtrl', function ($scope, $rootScope, createDialog, DataService) {

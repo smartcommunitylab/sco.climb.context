@@ -31,7 +31,15 @@ angular.module('MapsService', [])
         generatePath(poisArray);
         // Draw markers on the map
         drawMarkers(poisArray);
+        zoomToCoverPath(map, polyPath);
     };
+    var zoomToCoverPath = function(map, path) {
+        var bounds = new google.maps.LatLngBounds();
+        path.getPath().forEach(function(latLng) {
+            bounds.extend(latLng);
+        });
+        map.fitBounds(bounds);                    
+    }
 
     var generatePath = function (poisArray)
     {
