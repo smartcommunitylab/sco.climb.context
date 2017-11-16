@@ -2,11 +2,11 @@ angular.module('consoleControllers.mainCtrl', [])
 
 .controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window)
     {
-        $scope.selectedOwner = '';
-        $scope.selectedInstitute = '';
-        $scope.selectedSchool = '';
+        $scope.selectedOwner = JSON.parse(localStorage.getItem("selectedOwner"));
+        $scope.selectedInstitute = JSON.parse(localStorage.getItem("selectedInstitute"));
+        $scope.selectedSchool = JSON.parse(localStorage.getItem("selectedSchool"));
         $scope.institutesList = [];
-        $scope.selectedGame = '';               // Per selezione itinerario
+        $scope.selectedGame = ''//JSON.parse(localStorage.getItem("selectedGame")); // Per selezione itinerario
 
         // Variabili per evitare continue chiamate inutili al server
         $scope.pathsModified = false;
@@ -20,9 +20,10 @@ angular.module('consoleControllers.mainCtrl', [])
         DataService.getProfile().then(function (p) {
             $scope.profile = p;
             $rootScope.profile = $scope.profile;
+            localStorage.setItem("local_profile", JSON.stringify($scope.profile));
 
             if ($scope.profile.ownerIds.length == 1) {
-                $scope.selectedOwner = $scope.profile.ownerIds[0]; 
+                $scope.selectedOwner = $scope.profile.ownerIds[0];
                 $scope.loadInstitutesList();
             }
         });
@@ -32,7 +33,8 @@ angular.module('consoleControllers.mainCtrl', [])
           $scope.selectedInstitute = '';
           $scope.selectedSchool = '';
           $scope.institutesList = [];
-          $scope.selectedGame = '';  
+          $scope.selectedGame = ''; 
+          //TODO: logout remove localStorage 
           $scope.profile = null;
           $rootScope.profile = null;
           var logoutUrl = DataService.getBaseUrl();
@@ -41,6 +43,7 @@ angular.module('consoleControllers.mainCtrl', [])
         }
 
         $scope.loadInstitutesList = function() {
+            localStorage.setItem("selectedOwner", JSON.stringify($scope.selectedOwner));
             DataService.getInstitutesList($scope.selectedOwner).then(
                 function(response) {
                     $scope.institutesList = response.data;
@@ -59,11 +62,15 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.selectedSchool = '';             // TODO: da testare con più istituti
                 return;
             }
+            localStorage.setItem("selectedInstitute", JSON.stringify($scope.selectedInstitute));
             DataService.getData('school', 
             		$scope.selectedOwner, 
             		$scope.selectedInstitute.objectId).then(
                 function(response) {
-                    $rootScope.schools = response.data;
+                    if ($rootScope.schools == undefined) { //already parsed from localstorage, not fresh data but needed for refresh in child controller
+                        $rootScope.schools = response.data;
+                        localStorage.setItem("local_schools", JSON.stringify($scope.schools));
+                    }
                     if ($rootScope.schools.length == 1) {
                         $scope.selectedSchool = $scope.schools[0];
                         $scope.loadData('game');
@@ -75,6 +82,7 @@ angular.module('consoleControllers.mainCtrl', [])
         };
 
         $scope.loadData = function(type) {
+            localStorage.setItem("selectedSchool", JSON.stringify($scope.selectedSchool));
             if(type === 'all')              // valutare se effettivamente servirà
             {
                 DataService.getData('school',
@@ -82,6 +90,7 @@ angular.module('consoleControllers.mainCtrl', [])
                 		$scope.selectedInstitute.objectId).then(
                     function(response) {
                         $rootScope.schools = response.data;
+                        localStorage.setItem("local_schools", JSON.stringify($scope.schools));
                     }, function() {
                         alert('Errore nella richiesta.');
                     }
@@ -93,6 +102,7 @@ angular.module('consoleControllers.mainCtrl', [])
                 		$scope.selectedSchool.objectId).then(
                     function(response) {
                         $rootScope.games = response.data;
+                        localStorage.setItem("local_games", JSON.stringify($scope.games));
                     }, function() {
                         alert('Errore nella richiesta.');
                     }
@@ -106,6 +116,7 @@ angular.module('consoleControllers.mainCtrl', [])
                 		$scope.selectedGame.objectId).then(
                     function(response) {
                         $rootScope.paths = response.data;
+                        localStorage.setItem("local_paths", JSON.stringify($scope.paths));
                         console.log(response.data);
                     }, function() {
                         alert('Errore nella richiesta.');
@@ -123,6 +134,7 @@ angular.module('consoleControllers.mainCtrl', [])
                         if(type !== 'itinerary') {
                             eval("$rootScope." + type + "s = response.data");
                             eval("$scope." + type + "sModified = false");
+                            localStorage.setItem("local_"+type+"s", JSON.stringify(response.data));
 
                             if (type == 'game') {
                                 if ($rootScope.games.length == 1) {

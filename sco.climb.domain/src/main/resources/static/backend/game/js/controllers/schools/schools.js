@@ -25,6 +25,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
     $scope.$parent.mainView = 'school';
+    if (!$rootScope.schools) { //the page was reloaded, recover from localStorage
+        $rootScope.schools = JSON.parse(localStorage.getItem("local_schools"));
+        $rootScope.profile = JSON.parse(localStorage.getItem("local_profile"));
+    }
 
     if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
@@ -209,7 +213,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('ChildrenCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'children-list';
-    $scope.children = [];
     if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         createDialog('templates/modals/newschool-err.html',{
@@ -230,7 +233,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
           function(response) {
           	$rootScope.schools[$scope.currentSchool].children = response.data;
           	$rootScope.schools[$scope.currentSchool].children.sort(compareChild);
-          	$scope.children = $rootScope.schools[$scope.currentSchool].children; 
+            localStorage.setItem("local_children", JSON.stringify($rootScope.schools[$scope.currentSchool].children));
             console.log('Caricamento degli scolari a buon fine.');
           }, function() {
             alert('Errore nel caricamento degli scolari.');
@@ -245,10 +248,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             success: { 
             	label: 'Conferma', 
             	fn: function() {
-                DataService.removeData('child', $scope.children[idChild]).then(
+                DataService.removeData('child', $rootScope.schools[$scope.currentSchool].children[idChild]).then(
                     function() {
                         console.log('Cancellazione dello scolaro a buon fine.');
-                        $scope.children.splice(idChild, 1);
+                        $rootScope.schools[$scope.currentSchool].children.splice(idChild, 1);
                     }, function() {
                         alert('Errore nella cancellazione dello scolaro.');
                     }
@@ -257,7 +260,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             }
         });
     };
-    
+        
   	$scope.getChildName = function(child) {
   		return child.name + " " + child.surname;
   	}
@@ -348,7 +351,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('VolunteerListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'volunteer-list';
-    $scope.children = [];
     if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         createDialog('templates/modals/newschool-err.html',{
