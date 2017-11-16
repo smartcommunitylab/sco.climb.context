@@ -574,12 +574,18 @@ md-dialog {
   display: table;
   margin: 0 auto;
 }
+.send-dialog-delete:not([disabled]):hover {
+  background-color: #9E9E9E;
+}
 
 .send-dialog-confirm {
   color: white;
   background-color: #F39C12;
   display: table;
   margin: 0 auto;
+}
+.send-dialog-confirm:not([disabled]):hover {
+  background-color: #d38313;
 }
 
 .cal-interactive-button {
