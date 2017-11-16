@@ -18,7 +18,7 @@ angular.module('climbGame.controllers.calendar', [])
         babies: [],
         means: {}
       }
-      $scope.DEVELOPMENT = configService.DEVELOPMENT;
+      $scope.ENABLE_PAST_DAYS_EDIT = configService.ENABLE_PAST_DAYS_EDIT;
 
       setTodayIndex()
       setClassSize()
@@ -251,11 +251,11 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       $scope.switchDevEditMode = function(dayIndex) {
-        if (!$scope.DEVELOPMENT) return;
+        if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
         if ($scope.isCurrentEditDay(dayIndex)) {
           $scope.sendData(dayIndex);
         } else {
-          //reset: todayData is also for past days in DEVELOPMENT mode
+          //reset: todayData is also for past days in ENABLE_PAST_DAYS_EDIT mode
           for (var i=0; i < $scope.todayData.babies.length; i++) {
             $scope.todayData.babies[i].color = '';
             $scope.todayData.babies[i].mean = '';

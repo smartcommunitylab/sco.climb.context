@@ -40,7 +40,7 @@
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
-          <span ng-if="isPast(dayIndex) && DEVELOPMENT" ng-click="switchDevEditMode(dayIndex)" class="cal-interactive-button">{{isCurrentEditDay(dayIndex) ? ('cal_edit_save_dev_data_button'| translate) : ('cal_edit_dev_data_button'| translate)}}</span>
+          <span ng-if="isPast(dayIndex) && ENABLE_PAST_DAYS_EDIT" ng-click="switchDevEditMode(dayIndex)" class="cal-interactive-button">{{isCurrentEditDay(dayIndex) ? ('cal_edit_save_dev_data_button'| translate) : ('cal_edit_dev_data_button'| translate)}}</span>
         </div>
       </div>
       <div layout="row" class="days-row">

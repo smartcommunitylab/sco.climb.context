@@ -2,7 +2,8 @@
 angular.module('climbGame.services.conf', [])
   .factory('configService', function () {
     var configService = {}
-    configService.DEVELOPMENT = false
+    configService.DEVELOPMENT = true
+    configService.ENABLE_PAST_DAYS_EDIT = true
     var URL = 'https://' + (configService.DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
     
     configService.FOOT_CONSTANT = 'foot'
