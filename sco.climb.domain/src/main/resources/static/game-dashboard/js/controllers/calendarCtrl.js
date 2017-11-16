@@ -18,7 +18,7 @@ angular.module('climbGame.controllers.calendar', [])
         babies: [],
         means: {}
       }
-      $scope.DEVELOPMENT = configService.DEVELOPMENT;
+      $scope.ENABLE_PAST_DAYS_EDIT = configService.ENABLE_PAST_DAYS_EDIT;
 
       setTodayIndex()
       setClassSize()
@@ -137,8 +137,8 @@ angular.module('climbGame.controllers.calendar', [])
             scope: $scope, // use parent scope in template
             preserveScope: true, // do not forget this if use parent scope
             template: '<md-dialog>' +
-              '  <div class="cal-dialog-title"> Invio dati  </div><md-divider></md-divider>' +
-              '  <div class="cal-dialog-text">Invia dati definitivi al sistema, completata l\'operazione non sarà piu possibile modificarli.</div>' +
+              '  <div class="cal-dialog-title">{{\'cal_save_popup_title\'|translate}}</div><md-divider></md-divider>' +
+              '  <div class="cal-dialog-text">{{\'cal_save_popup_content\'|translate}}</div>' +
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Annulla' +
               '   </div> </md-button>' +
@@ -251,11 +251,11 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       $scope.switchDevEditMode = function(dayIndex) {
-        if (!$scope.DEVELOPMENT) return;
+        if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
         if ($scope.isCurrentEditDay(dayIndex)) {
           $scope.sendData(dayIndex);
         } else {
-          //reset: todayData is also for past days in DEVELOPMENT mode
+          //reset: todayData is also for past days in ENABLE_PAST_DAYS_EDIT mode
           for (var i=0; i < $scope.todayData.babies.length; i++) {
             $scope.todayData.babies[i].color = '';
             $scope.todayData.babies[i].mean = '';
