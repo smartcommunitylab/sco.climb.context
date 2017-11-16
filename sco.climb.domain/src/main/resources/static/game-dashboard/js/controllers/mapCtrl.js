@@ -557,6 +557,9 @@ angular.module("climbGame.controllers.map", [])
       if (i >= 5) {
         document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
       }
+      if ($scope.selectedPosition !== undefined) {
+        $scope.pathMarkers[$scope.selectedPosition].focus = false;
+      }
       $scope.selectedPosition = Number(i) - 1;
     }
     $scope.goToPoi = function (leg) {
@@ -566,8 +569,10 @@ angular.module("climbGame.controllers.map", [])
           var latlng = L.latLng(leg.geocoding[1], leg.geocoding[0]);
           //map.panTo(latlng);
           // map.setZoom(8);
-          setInterval($scope.pathMarkers[leg.position].focus = true, 2000);
+          $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          $scope.pathMarkers[leg.position].focus = true;
           map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
+          var asd = L.marker([48.85749, 2.35107]);
           //open popup
           $scope.selectedPosition = leg.position;
           // map.invalidateSize();
@@ -625,7 +630,7 @@ angular.module("climbGame.controllers.map", [])
 
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
       // Args will contain the marker name and other relevant information
-      console.log(args);
+      //console.log(args);
       var markerName = args.leafletEvent.target.options.name; //has to be set above
       //marker is clickable and already reached
       if (args.model.message) {
