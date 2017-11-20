@@ -137,7 +137,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(-offset, 0), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -156,7 +156,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(offset, 0), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -175,7 +175,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(0, -offset), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -194,7 +194,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(0, offset), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -251,7 +251,8 @@ angular.module("climbGame.controllers.map", [])
                 //              map.setZoom(4);
                 //              map.panTo([37.973378, 23.730957]);
 
-                map.setView([configService.getDefaultMapCenterConstant()[0], configService.getDefaultMapCenterConstant()[1]], configService.getDefaultZoomMapConstant());
+                map.fitBounds($scope.myInitialBounds);
+                //map.setView([configService.getDefaultMapCenterConstant()[0], configService.getDefaultMapCenterConstant()[1]], configService.getDefaultZoomMapConstant());
                 // map.invalidateSize();
 
               }
@@ -281,6 +282,7 @@ angular.module("climbGame.controllers.map", [])
         $scope.status = data;
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
+        $scope.myInitialBounds = new L.latLngBounds();
         // get actual situation
         for (var i = 0; i < data.teams.length; i++) {
           if (data.teams[i].classRoom == $scope.globalTeam) {
@@ -338,10 +340,20 @@ angular.module("climbGame.controllers.map", [])
             $scope.pathMarkers.push(getMarker(data.legs[i], null, icon, i));
           }
 
+          if (data.legs[i].position - $scope.currentLeg.position <= 1 && data.legs[i].position - $scope.currentLeg.position >= -2) {       
+              $scope.myInitialBounds.extend(L.latLng(data.legs[i].geocoding[1], data.legs[i].geocoding[0]));
+          }
+
         }
+
         addPlayerPosition();
         //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
         setGallerySize();
+        leafletData.getMap('map').then(function (map) {
+          map.fitBounds($scope.myInitialBounds);         
+        }, function (err) {
+
+        });
       },
       function (err) {
         //error with status
@@ -572,7 +584,6 @@ angular.module("climbGame.controllers.map", [])
           $scope.pathMarkers[$scope.selectedPosition].focus = false;
           $scope.pathMarkers[leg.position].focus = true;
           map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
-          var asd = L.marker([48.85749, 2.35107]);
           //open popup
           $scope.selectedPosition = leg.position;
           // map.invalidateSize();
@@ -603,7 +614,7 @@ angular.module("climbGame.controllers.map", [])
         g = d.getElementsByTagName('body')[0],
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight || g.clientHeight;
-      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64) + "px");
+      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64 - 140) + "px");
       leafletData.getMap('map').then(function (map) {
         map.invalidateSize();
       });
