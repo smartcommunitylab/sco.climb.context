@@ -308,6 +308,7 @@ md-sidenav {
   height: 80px;
   width: 80px;
   margin: 6px;
+  object-fit: cover;
 }
 
 .map-gallery-question {
