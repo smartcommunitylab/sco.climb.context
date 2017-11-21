@@ -66,9 +66,13 @@ public class EventController extends AuthController {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	
 	@Autowired
+	@Value("${vlab.token}")
+	private String vlabToken;
+			
+	@Autowired
 	@Value("${log.upload.dir}")
 	private String logUploadDir;
-			
+	
 	@Autowired
 	private RepositoryManager storage;
 
@@ -146,6 +150,34 @@ public class EventController extends AuthController {
 		return "{\"status\":\"OK\"}";
 	}
 
+	@RequestMapping(value = "/api/event/{ownerId}/{routeId}/vlab", method = RequestMethod.POST)
+	public @ResponseBody String addEventsVlab(
+			@RequestBody List<WsnEvent> events, 
+			@PathVariable String ownerId, 
+			@PathVariable String routeId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		String token = request.getHeader("Authorization");
+		if (Utils.isNotEmpty(token)) {
+			token = token.replace("Bearer ", "");
+			if(!vlabToken.equals(token)) {
+				throw new UnauthorizedException("Unauthorized Exception: token not valid");
+			}
+		} else {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		for(WsnEvent event : events) {
+			event.setOwnerId(ownerId);
+			event.setRouteId(routeId);
+			storage.addEvent(event);
+			//StatsLogger.logEvent(ownerId, route.getInstituteId(), route.getSchoolId(), routeId, event);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addEventsVlab[%s]:%d", ownerId, events.size()));
+		}
+		return "{\"status\":\"OK\"}";
+	}
+	
 	@RequestMapping(value = "/api/event/log/upload/{ownerId}/{routeId}", method = RequestMethod.POST)
 	public @ResponseBody String uploadLog(
 			@RequestParam("file") MultipartFile file,

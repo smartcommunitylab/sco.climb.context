@@ -17,6 +17,7 @@ public class Const {
 	public static final int START_ROUTE = 401;
 	public static final int END_ROUTE = 402;
 	public static final int BATTERY_STATE = 501;
+	public static final int TEST_STATE = 901;
 	
 	public static final String ROLE_ADMIN = "admin";
 	public static final String ROLE_PARENT = "parent";
