@@ -138,7 +138,7 @@ public class EventController extends AuthController {
 			event.setOwnerId(ownerId);
 			event.setRouteId(routeId);
 			storage.addEvent(event);
-			StatsLogger.logEvent(ownerId, route.getInstituteId(), route.getSchoolId(), routeId, event);
+			//StatsLogger.logEvent(ownerId, route.getInstituteId(), route.getSchoolId(), routeId, event);
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addEvents[%s]:%d", ownerId, events.size()));
