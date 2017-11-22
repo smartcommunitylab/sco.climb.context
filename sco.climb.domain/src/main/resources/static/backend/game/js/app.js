@@ -8,6 +8,7 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'consoleControllers.schools',
 'consoleControllers.line',
 'DataService',
+'MainDataService',
 'MapsService',
 'ImgurService',
 'ngUpload',
@@ -93,7 +94,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'SchoolsListCtrl'
         })
         .state('root.school', {
-            url: '/school/:idSchool',
+            url: '/school/:idDomain/:idInstitute/:idSchool',
             templateUrl: 'templates/schools/school.html',
             controller: 'SchoolCtrl'
         })

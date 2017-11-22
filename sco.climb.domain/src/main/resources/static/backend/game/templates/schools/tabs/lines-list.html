@@ -4,8 +4,8 @@
         <a class="btn btn-info" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina linee'}}</a>
     </div>
     <div class="col-lg-12">
-        <ul ui-sortable="sortableOptions" ng-model="schools[currentSchool].lines" class="list-group list-categories">
-            <li class="list-group-item" ng-repeat="line in schools[currentSchool].lines">
+        <ul ui-sortable="sortableOptions" ng-model="currentSchool.lines" class="list-group list-categories">
+            <li class="list-group-item" ng-repeat="line in currentSchool.lines">
                 <div class="row v-center">
                     <div class="col-md-2">
                         <img class="path-img" alt="Placeholder">

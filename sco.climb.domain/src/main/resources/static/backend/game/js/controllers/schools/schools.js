@@ -3,8 +3,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 // Schools controller
 .controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog) {
     $scope.$parent.mainView = 'school';
-    if($scope.$parent.selectedOwner && $scope.$parent.selectedInstitute && $scope.$parent.schoolsModified)
-        $scope.$parent.loadData($scope.$parent.mainView);
 
     $scope.delete = function (schoolIndex) {
         createDialog('templates/modals/delete-school.html',{
@@ -23,65 +21,64 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
 })
 
-.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
-    $scope.$parent.mainView = 'school';
-    if (!$rootScope.schools) { //the page was reloaded, recover from localStorage
-        $rootScope.schools = JSON.parse(localStorage.getItem("local_schools"));
-        $rootScope.profile = JSON.parse(localStorage.getItem("local_profile"));
-    }
+.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
+    $scope.$parent.mainView = 'school'; 
 
-    if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
-    {
-        $scope.currentSchool = Number($stateParams.idSchool);
-        $scope.saveData = DataService.editData;
-        DataService.getData('route', 
-        		$rootScope.schools[$scope.currentSchool].ownerId, 
-        		$scope.$parent.selectedInstitute.objectId, 
-        		$rootScope.schools[$scope.currentSchool].objectId).then(
-            function(response) {
-                console.log('Caricamento delle linee a buon fine.');
-                $rootScope.schools[$scope.currentSchool].lines = response.data;
-            }, function() {
-                alert('Errore nel caricamento delle linee.');
+    $scope.initController = function() {
+        if ($scope.currentSchool) { //edit school
+            $scope.saveData = DataService.editData;
+            DataService.getData('route', 
+                    $stateParams.idDomain, 
+                    $stateParams.idInstitute, 
+                    $stateParams.idSchool).then(
+                function(response) {
+                    console.log('Caricamento delle linee a buon fine.');
+                    $scope.currentSchool.lines = response.data;
+                }, function() {
+                    alert('Errore nel caricamento delle linee.');
+                }
+            );
+            $scope.$broadcast('schoolLoaded');
+        } else {
+            $scope.currentSchool = {
+                name: '',
+                address: '',
+                instituteId: $stateParams.idInstitute,
+                ownerId: $stateParams.idDomain,
             }
-        );
-    }
-    else
-    {
-        $scope.currentSchool = $rootScope.schools.push({        // variabile che indica la posizione nell'array della scuola che sta venendo editata
-            name: '',
-            address: '',
-            instituteId: $scope.$parent.selectedInstitute.objectId,
-            ownerId: $scope.$parent.selectedOwner,
-        })-1;
-        $scope.saveData = DataService.saveData;
+            $scope.saveData = DataService.saveData;
+        }
     }
 
-    /*function makeid() {         // data e ora di creazione + codice random di 4 caratteri -- GENERATI DAL SERVER, possono tornare utili per testing in locale
-        var id = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var date = new Date();
-        date = $filter('date')(date,'ddMMyy-hhmmss','+0100');
-
-        for (var i = 0; i < 4; i++)
-            id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return date + '_' + id;
-    }*/
+    if ($stateParams.idSchool) {
+        MainDataService.getDomains().then(function (response) {
+            MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
+                MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
+                    var schools = response.data;
+                    for (var i = 0; i < schools.length && !$scope.currentSchool; i++) {
+                        if (schools[i].objectId == $stateParams.idSchool) $scope.currentSchool = schools[i];
+                    }
+                    $scope.initController();
+                });
+            });
+        });
+    } else { //new school
+        $scope.initController();
+    }
 
     $scope.newClass = '';
     $scope.addNewClass = function()
     {
-        $rootScope.schools[$scope.currentSchool].classes.push($scope.newClass);
+        $scope.currentSchool.classes.push($scope.newClass);
         $scope.newClass = '';
     };
     $scope.deleteClass = function(index)
     {
-        $rootScope.schools[$scope.currentSchool].classes.splice(index,1);
+        $scope.currentSchool.classes.splice(index,1);
     };
     $scope.sortClasses = function()
     {
-        $rootScope.schools[$scope.currentSchool].classes.sort();
+        $scope.currentSchool.classes.sort();
     };
     
     $scope.isNewSchool = function() {
@@ -89,8 +86,9 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
     
     $scope.getSchoolName = function() {
+        if (!$scope.currentSchool) return ''; 
     	if(!$scope.isNewSchool()) {
-    		return $rootScope.schools[$scope.currentSchool].name;
+    		return $scope.currentSchool.name;
     	} else {
     		return "";
     	} 
@@ -106,9 +104,9 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	var formData = new FormData();
     	formData.append('file', file);
     	var element = {
-    			"ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
+    			"ownerId": $scope.currentSchool.ownerId,
     			"instituteId": $scope.$parent.selectedInstitute.objectId,
-    			"schoolId": $rootScope.schools[$scope.currentSchool].objectId,
+    			"schoolId": $scope.currentSchool.objectId,
     			"formdata": formData 	
     	};
     	DataService.uploadFile(element).then(
@@ -125,10 +123,11 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.save = function () {
         if (checkFields())
         {
-            $scope.saveData($scope.$parent.mainView, $rootScope.schools[$scope.currentSchool]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+            $scope.saveData('school', $scope.currentSchool).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                 function() {
                     console.log('Salvataggio dati a buon fine.');
                     $location.path('schools-list');
+                    $scope.$parent.schools.push($scope.currentSchool);
                 }, function() {
                     alert('Errore nella richiesta.');
                 }
@@ -148,7 +147,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         var isValidate = true;
         var invalidFields = $('.ng-invalid');
 
-        if (invalidFields.length > 0 /*|| $rootScope.schools[$scope.currentSchool].classes.length === 0*/)      // da valutare implementazione classi
+        if (invalidFields.length > 0 /*|| $scope.currentSchool.classes.length === 0*/)      // da valutare implementazione classi
             isValidate = false;
 
         return isValidate;
@@ -213,6 +212,32 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('ChildrenCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'children-list';
+    
+
+    $scope.initController = function() {
+        DataService.getData('children',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            $scope.currentSchool.children = response.data;
+            $scope.currentSchool.children.sort(compareChild);
+            console.log('Caricamento degli scolari a buon fine.');
+        }, function() {
+            alert('Errore nel caricamento degli scolari.');
+        }
+        );
+    }
+
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }
+
     if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         createDialog('templates/modals/newschool-err.html',{
@@ -225,22 +250,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         });
     }
     
-    $scope.init = function() {
-      DataService.getData('children',
-      		$rootScope.schools[$scope.currentSchool].ownerId, 
-      		$rootScope.schools[$scope.currentSchool].instituteId, 
-      		$rootScope.schools[$scope.currentSchool].objectId).then(
-          function(response) {
-          	$rootScope.schools[$scope.currentSchool].children = response.data;
-          	$rootScope.schools[$scope.currentSchool].children.sort(compareChild);
-            localStorage.setItem("local_children", JSON.stringify($rootScope.schools[$scope.currentSchool].children));
-            console.log('Caricamento degli scolari a buon fine.');
-          }, function() {
-            alert('Errore nel caricamento degli scolari.');
-          }
-      );    	
-    };
-
     $scope.remove = function (idChild) {
         createDialog('templates/modals/delete-child.html',{
             id : 'delete-child-dialog',
@@ -274,8 +283,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	    return 1;
   	  return 0;
   	}
-  	
-  	$scope.init();
 })
 
 .controller('ChildCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
@@ -351,6 +358,30 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('VolunteerListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'volunteer-list';
+
+    $scope.initController = function() {
+        DataService.getData('volunteers',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+            function(response) {
+                $scope.currentSchool.volunteers = response.data;
+                $scope.currentSchool.volunteers.sort(compareVolunteer);
+                console.log('Caricamento dei volontari a buon fine.');
+            }, function() {
+                alert('Errore nel caricamento dei volontari.');
+            }
+        );
+    }    
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }
+
     if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
     {
         createDialog('templates/modals/newschool-err.html',{
@@ -363,22 +394,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         });
     }
     
-    $scope.init = function() {
-      DataService.getData('volunteers',
-      		$rootScope.schools[$scope.currentSchool].ownerId, 
-      		$rootScope.schools[$scope.currentSchool].instituteId, 
-      		$rootScope.schools[$scope.currentSchool].objectId).then(
-          function(response) {
-          	$rootScope.schools[$scope.currentSchool].volunteers = response.data;
-          	$rootScope.schools[$scope.currentSchool].volunteers.sort(compareVolunteer);
-          	$scope.volunteers = $rootScope.schools[$scope.currentSchool].volunteers; 
-            console.log('Caricamento dei volontari a buon fine.');
-          }, function() {
-            alert('Errore nel caricamento dei volontari.');
-          }
-      );    	
-    };
-
     $scope.remove = function (idVolunteer) {
         createDialog('templates/modals/delete-volunteer.html',{
             id : 'delete-volunteer-dialog',
@@ -408,8 +423,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	    return 1;
   	  return 0;
   	}
-  	
-  	$scope.init();
+
 })
 
 .controller('VolunteerCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
