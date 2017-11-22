@@ -565,38 +565,21 @@ angular.module("climbGame.controllers.map", [])
     $scope.scrollToPoint = function (i) {
       //get the bar
       var imagesBar = document.getElementById('gallery');
-      //      get the the width
-      var widthBar = imagesBar.width;
-      //get the dimension of 1
       var widhtImages = 100;
-      //go to i-th place
-      document.getElementById('gallery').scrollLeft = 0;
-      if (i >= 5) {
-        document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
-      }
-      if ($scope.selectedPosition !== undefined) {
-        $scope.pathMarkers[$scope.selectedPosition].focus = false;
-      }
-      $scope.selectedPosition = Number(i) - 1;
+      imagesBar.scrollLeft = widhtImages * (i+1) - imagesBar.offsetWidth / 2 + widhtImages / 2;
     }
     $scope.goToPoi = function (leg) {
       if (leg.position <= ($scope.currentLeg.position)) {
         leafletData.getMap('map').then(function (map) {
-          //center and zoom
-          var latlng = L.latLng(leg.geocoding[1], leg.geocoding[0]);
-          //map.panTo(latlng);
-          // map.setZoom(8);
-          $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          if ($scope.selectedPosition !== undefined) {
+            $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          }
           $scope.pathMarkers[leg.position].focus = true;
           map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
-          //open popup
           $scope.selectedPosition = leg.position;
-          // map.invalidateSize();
-          //          $scope.scrollToPoint($scope.selectedPosition);
-        }, function (err) {
-
-        });
-
+        }, function (err) {});
+        $scope.scrollToPoint(leg.position);
+        
       }
     }
     $scope.getSelected = function (index) {
@@ -650,8 +633,14 @@ angular.module("climbGame.controllers.map", [])
       var markerName = args.leafletEvent.target.options.name; //has to be set above
       //marker is clickable and already reached
       if (args.model.message) {
-        $scope.scrollToPoint(Number(args.modelName) + 1)
-          //      console.log(markerName);
+        leafletData.getMap('map').then(function (map) {
+          map.setView([args.model.lat, args.model.lng], configService.getDefaultZoomPoiConstant());
+          if ($scope.selectedPosition !== undefined) {
+            $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          }
+          $scope.selectedPosition = Number(args.modelName);
+          $scope.scrollToPoint($scope.selectedPosition);
+        }, function (err) {});        
       }
     });
   }]);
