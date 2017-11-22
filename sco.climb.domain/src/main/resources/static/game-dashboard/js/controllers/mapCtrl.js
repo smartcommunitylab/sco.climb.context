@@ -17,12 +17,17 @@ angular.module("climbGame.controllers.map", [])
           baselayers: {
             altro: {
               name: 'Watercolor',
-              url: 'http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+              url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+              type: 'xyz'
+            },
+            satellite: {
+              name: 'Satellite',
+              url: 'https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}',
               type: 'xyz'
             },
             osm: {
               name: 'OpenStreetMap',
-              url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               type: 'xyz'
             }
 
