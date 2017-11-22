@@ -445,6 +445,10 @@ md-sidenav {
   background-color: #F39C12 !important;
 }
 
+md-tooltip.calendar-fab-tooltip  {
+  padding-right:24px; 
+}
+
 .cal-foot-friend-col {
   background-color: #ef5350 !important;
 }

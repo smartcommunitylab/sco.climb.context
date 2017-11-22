@@ -147,24 +147,24 @@
         <md-icon md-svg-src="img/ic_color.svg " class="menu-cal"></md-icon>
       </md-button>
     </md-fab-trigger>
-    <md-fab-actions>
+    <md-fab-actions class="calendar-fab">
       <md-button aria-label="A piedi o accompagnati da un adulto " class="md-fab md-raised md-mini cal-foot-friend-col " ng-click="selectGeneralMean( 'zeroImpact_solo') ">
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_zeroImpact_solo'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_zeroImpact_solo'|translate}}</md-tooltip>
       </md-button>
       <md-button aria-label="A piedi o accompagnati da un adulto " class="md-fab md-raised md-mini cal-foot-adult-col " ng-click="selectGeneralMean( 'zeroImpact_wAdult') ">
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_zeroImpact_wAdult'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_zeroImpact_wAdult'|translate}}</md-tooltip>
       </md-button>
       <md-button aria-label="Con scuolabus o autobus " class="md-fab md-raised md-mini cal-bus-col " ng-click="selectGeneralMean( 'bus') ">
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_bus'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_bus'|translate}}</md-tooltip>
       </md-button>
       <md-button aria-label="In macchina fino alla piazzola di sosta " class="md-fab md-raised md-mini cal-car-square-col " ng-click="selectGeneralMean( 'pandr') ">
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_pandr'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_pandr'|translate}}</md-tooltip>
       </md-button>
       <md-button aria-label="In macchina fino a scuola " class="md-fab md-raised md-mini cal-car-school-col " ng-click="selectGeneralMean( 'car') ">
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_car'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_car'|translate}}</md-tooltip>
       </md-button>
       <md-button aria-label="Assente " class="md-fab md-raised md-mini cal-away-col " ng-click="selectGeneralMean( 'absent') ">A
-        <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_absent'|translate}}</md-tooltip>
+        <md-tooltip class="calendar-fab-tooltip" md-visible="cal.meanOpen " md-direction="left">{{'cal_mean_absent'|translate}}</md-tooltip>
       </md-button>
     </md-fab-actions>
   </md-fab-speed-dial>
