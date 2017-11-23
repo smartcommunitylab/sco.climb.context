@@ -18,6 +18,7 @@ angular.module('climbGame.services.conf', [])
     var DEFAULT_CENTER_MAP = [37.973378, 23.730957]
     var DEFAULT_ZOOM_MAP = 4
     var DEFAULT_ZOOM_POI = 9
+    configService.DEFAULT_POI_POPUP_OFFSET = 0.4
       // var APP_BUILD = ''
 
     configService.TRAVEL_ICONS_MAP = {

@@ -7,6 +7,7 @@ angular.module('climbGame', [
   'ngAria',
   'ngMessages',
   'leaflet-directive',
+  'ng-drag-scroll',
   'pascalprecht.translate',
   'climbGame.controllers.home',
   'climbGame.controllers.map',

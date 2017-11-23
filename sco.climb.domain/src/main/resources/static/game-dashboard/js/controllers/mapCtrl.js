@@ -575,11 +575,21 @@ angular.module("climbGame.controllers.map", [])
             $scope.pathMarkers[$scope.selectedPosition].focus = false;
           }
           $scope.pathMarkers[leg.position].focus = true;
-          map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
+          map.setView([leg.geocoding[1] + configService.DEFAULT_POI_POPUP_OFFSET, leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
           $scope.selectedPosition = leg.position;
         }, function (err) {});
         $scope.scrollToPoint(leg.position);
         
+      }
+    }
+    $scope.mapGalleryDragging = function (mousedown, event, leg) { //used to prevent bug of dragging library that doesn't stop click propagation when dragging
+      if (mousedown) {
+        $scope.mapGalleryX = event.screenX;
+        $scope.mapGalleryY = event.screenY;
+      } else { //click filtered by initial and final position of mouse
+        if (Math.abs($scope.mapGalleryX - event.screenX) < 10 && Math.abs($scope.mapGalleryY - event.screenY) < 10) {
+          $scope.goToPoi(leg);
+        }
       }
     }
     $scope.getSelected = function (index) {
@@ -634,7 +644,7 @@ angular.module("climbGame.controllers.map", [])
       //marker is clickable and already reached
       if (args.model.message) {
         leafletData.getMap('map').then(function (map) {
-          map.setView([args.model.lat, args.model.lng], configService.getDefaultZoomPoiConstant());
+          map.setView([args.model.lat + configService.DEFAULT_POI_POPUP_OFFSET, args.model.lng], configService.getDefaultZoomPoiConstant());
           if ($scope.selectedPosition !== undefined) {
             $scope.pathMarkers[$scope.selectedPosition].focus = false;
           }
