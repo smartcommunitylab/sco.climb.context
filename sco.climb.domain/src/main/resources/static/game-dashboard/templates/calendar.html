@@ -97,7 +97,7 @@
       Totale
     </div>
     <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index">
-      <div layout="row" ng-if="!today(dayIndex)">
+      <div layout="row" ng-if="(!today(dayIndex) && !isCurrentEditDay(dayIndex)) || (today(dayIndex) && isDevEditMode)">
         <div layout="column" flex="15" class="cal-foot-friend-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].zeroImpact_solo">{{weekData[dayIndex].zeroImpact_solo}}</span><span ng-if="!weekData[dayIndex].zeroImpact_solo">0</span>
         </div>
@@ -117,7 +117,7 @@
           <span ng-if="weekData[dayIndex].absent">{{weekData[dayIndex].absent}}</span><span ng-if="!weekData[dayIndex].absent">0</span>
         </div>
       </div>
-      <div layout="row" ng-if="today(dayIndex)">
+      <div layout="row" ng-if="!isDevEditMode && today(dayIndex) || (isCurrentEditDay(dayIndex))">
         <div layout="column" flex="15" class="cal-foot-friend-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="todayData.means['zeroImpact_solo']">{{todayData.means['zeroImpact_solo']}}</span><span ng-if="!todayData.means['zeroImpact_solo']">0</span>
         </div>
