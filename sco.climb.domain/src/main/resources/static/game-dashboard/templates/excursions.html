@@ -85,7 +85,7 @@
   </div>
   <div layout="column" flex>
     <h1 class="md-title">{{'excursions_history' | translate}}</h1>
-    <md-content id="excursions-list">
+    <md-content id="excursions-list" drag-scroll="enabled" axis="y">
       <div layout="row" layout-wrap>
         <div flex="50" ng-repeat="ex in excursions">
           <md-card md-theme="default">

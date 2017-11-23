@@ -504,6 +504,9 @@ md-tooltip.calendar-fab-tooltip  {
 .baby-list, .cal-listbabies .layout-row, .state-row, .days-row, .weather-row {
   width: 100%;  
 }
+main.layout-row.flex {
+  height: 100%;
+}
 
 .state-row {
   height: 30px;
@@ -754,7 +757,8 @@ md-dialog {
 /* Excursions */
 
 .excursions {
-  height: 695px;
+  min-height: 530px;
+  height: 90%;
   overflow: hidden;
 }
 
@@ -806,7 +810,8 @@ md-dialog {
 /* Notifications */
 
 .notifications {
-  height: 695px;
+  min-height: 695px;
+  height: 90%;
 }
 
 .notifications #notifications-list {
