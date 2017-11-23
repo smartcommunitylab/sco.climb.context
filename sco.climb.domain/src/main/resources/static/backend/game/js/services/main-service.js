@@ -88,13 +88,7 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
 
     mainDataService.setSelectedDomain = function(domain) {
         currentDomain = domain;
-    } /*
-    mainDataService.setSelectedInstitute = function(institute) {
-        currentInstitute = institute;
-    } 
-    mainDataService.setSelectedSchool = function(school) {
-        currentSchool = school;
-    }*/
+    }
     mainDataService.setSelectedGame = function(game) {
         currentGame = game;
     }
