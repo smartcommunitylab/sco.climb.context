@@ -2,12 +2,12 @@
     <!-- Name -->
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b></p>
-        <input class="form-control" type="text" ng-model="games[currentGame].gameName" ng-required="true"/>
+        <input class="form-control" type="text" ng-model="currentGame.gameName" ng-required="true"/>
     </div>
     <!-- Description -->
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Descrizione:</b></p>
-        <text-angular ng-model="games[currentGame].gameDescription" ng-required="true"></text-angular>
+        <text-angular ng-model="currentGame.gameDescription" ng-required="true"></text-angular>
     </div>
     <!-- Start and end date -->
     <div class="col-lg-6" style="margin-bottom: 20px;">
@@ -43,7 +43,7 @@
     <div class="col-lg-12">
         <p>
         	<b>Raccolta dati del Pedibus serale (18):</b>
-        	<input type="checkbox" ng-model="games[currentGame].lateSchedule">
+        	<input type="checkbox" ng-model="currentGame.lateSchedule">
         </p>
     </div>
     <!-- Classi partecipanti -->
@@ -59,11 +59,11 @@
     <!-- GameId -->
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>GameId:</b></p>
-        <input class="form-control" type="text" ng-model="games[currentGame].gameId" ng-required="true"/>
+        <input class="form-control" type="text" ng-model="currentGame.gameId" ng-required="true"/>
     </div>
 		<!-- Global Team -->
     <div class="col-lg-12 field">
         <p><b>Nome Team globale:</b></p>
-        <input class="form-control" type="text" ng-model="games[currentGame].globalTeam" />
+        <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
     </div>		    
 </div>

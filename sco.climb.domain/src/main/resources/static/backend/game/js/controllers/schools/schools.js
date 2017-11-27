@@ -4,15 +4,15 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 .controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog) {
     $scope.$parent.mainView = 'school';
 
-    $scope.delete = function (schoolIndex) {
+    $scope.delete = function (school) {
         createDialog('templates/modals/delete-school.html',{
             id : 'delete-dialog',
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
-                DataService.removeData($scope.$parent.mainView, $rootScope.schools[schoolIndex]).then(
+                DataService.removeData('school', school).then(
                     function() {
                         console.log("Rimozione effettuata con successo.");
-                        $scope.$parent.loadData($scope.$parent.mainView);
+                        $scope.schools.splice($scope.schools.indexOf(school), 1);
                     }, function() {
                         alert("Errore nella richiesta.");
                     });
@@ -21,7 +21,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
 })
 
-.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
+.controller('SchoolCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
     $scope.$parent.mainView = 'school'; 
 
     $scope.initController = function() {
@@ -54,9 +54,9 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         MainDataService.getDomains().then(function (response) {
             MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
                 MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
-                    var schools = response.data;
-                    for (var i = 0; i < schools.length && !$scope.currentSchool; i++) {
-                        if (schools[i].objectId == $stateParams.idSchool) $scope.currentSchool = schools[i];
+                    $scope.schools = response.data;
+                    for (var i = 0; i < $scope.schools.length && !$scope.currentSchool; i++) {
+                        if ($scope.schools[i].objectId == $stateParams.idSchool) $scope.currentSchool = angular.copy($scope.schools[i]);
                     }
                     $scope.initController();
                 });
@@ -112,7 +112,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	DataService.uploadFile(element).then(
           function(response) {
               console.log('Caricamento dati a buon fine.');
-              $location.path('schools-list');
+              $state.go('root.schools-list');
           }, function() {
               alert('Errore nel caricamento delle linee.');
           }
@@ -124,10 +124,16 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         if (checkFields())
         {
             $scope.saveData('school', $scope.currentSchool).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                function() {
+                function(response) {
                     console.log('Salvataggio dati a buon fine.');
-                    $location.path('schools-list');
-                    $scope.$parent.schools.push($scope.currentSchool);
+                    if ($scope.currentSchool.objectId) { //edited
+                        for (var i = 0; i < $scope.schools.length; i++) {
+                            if ($scope.schools[i].objectId == $scope.currentSchool.objectId) $scope.schools[i] = $scope.currentSchool;
+                        }
+                    } else {
+                        $scope.schools.push(response.data);
+                    }
+                    $state.go('root.schools-list');
                 }, function() {
                     alert('Errore nella richiesta.');
                 }
@@ -158,7 +164,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$location.path('schools-list');} }
+            success: { label: 'Conferma', fn: function() {$state.go('root.schools-list');} }
         });
     };
 })

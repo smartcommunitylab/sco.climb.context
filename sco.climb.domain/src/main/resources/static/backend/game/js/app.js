@@ -79,7 +79,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'GamesListCtrl'
         })
         .state('root.game', {
-            url: '/game/:idGame',
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame',
             templateUrl: 'templates/games/game.html',
             controller: 'GameCtrl'
         })
