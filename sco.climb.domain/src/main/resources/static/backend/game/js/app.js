@@ -117,22 +117,22 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
           url: '/children-list',
           templateUrl: 'templates/schools/tabs/children-list.html',
           controller: 'ChildrenCtrl'
-      })
-      .state('root.school.child', {
-        url: '/child/:idChild',
-        templateUrl: 'templates/schools/child.html',
-        controller: 'ChildCtrl'
-    })
-    .state('root.school.volunteer-list', {
-      url: '/volunteer-list',
-      templateUrl: 'templates/schools/tabs/volunteer-list.html',
-      controller: 'VolunteerListCtrl'
-    })
-    .state('root.school.volunteer', {
-      url: '/volunteer/:idVolunteer',
-      templateUrl: 'templates/schools/volunteer.html',
-      controller: 'VolunteerCtrl'
-    })
+        })
+        .state('root.school.child', {
+            url: '/child/:idChild',
+            templateUrl: 'templates/schools/child.html',
+            controller: 'ChildCtrl'
+        })
+        .state('root.school.volunteer-list', {
+            url: '/volunteer-list',
+            templateUrl: 'templates/schools/tabs/volunteer-list.html',
+            controller: 'VolunteerListCtrl'
+        })
+        .state('root.school.volunteer', {
+            url: '/volunteer/:idVolunteer',
+            templateUrl: 'templates/schools/volunteer.html',
+            controller: 'VolunteerCtrl'
+        })
 });
 
 consoleApp.run(['$rootScope', '$q', '$location', 'DataService',
