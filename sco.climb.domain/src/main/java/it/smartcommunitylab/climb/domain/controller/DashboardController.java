@@ -70,6 +70,10 @@ public class DashboardController extends AuthController {
 	private String actionTrip;
 	
 	@Autowired
+	@Value("${action.filled}")	
+	private String actionCalendarDayFilled;
+	
+	@Autowired
 	@Value("${param.date}")	
 	private String paramDate;	
 	
@@ -182,6 +186,17 @@ public class DashboardController extends AuthController {
 							ownerId, game.getGameId(), classRoom));
 				}
 			}			
+			ExecutionDataDTO ed = new ExecutionDataDTO();
+			ed.setGameId(game.getGameId());
+			ed.setPlayerId(classRoom);
+			ed.setActionId(actionCalendarDayFilled);
+			//ed.setExecutionMoment(calendarDay.getDay());
+			try {
+				gengineUtils.executeAction(ed);
+			} catch (Exception e) {
+				logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
+						ownerId, game.getGameId(), classRoom));
+			}		
 		}
 		return result.get(Const.MERGED);
 	}
