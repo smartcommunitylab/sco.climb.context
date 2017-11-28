@@ -142,9 +142,9 @@ angular.module('climbGame.controllers.calendar', [])
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Annulla' +
               '   </div> </md-button>' +
-              '<div layout"column" flex="50" ><md-button ng-click = "confirmSend()" class = "send-dialog-confirm" > ' +
-              '      Invia' +
-              '    </md-button></div>' +
+              '<div layout"column" flex="50" ><md-button ng-click="confirmSend()" class="send-dialog-confirm" ng-disabled="sendingData"> ' +
+              '    <span ng-show="!sendingData">Invia</span>' +
+              '    <md-progress-circular class="send-dialog-progress" style="margin:auto;border-color:white;" md-mode="indeterminate" md-diameter="20" ng-show="sendingData"></md-progress-circular></md-button></div>' +
               '</div></md-dialog>',
             controller: function DialogController($scope, $mdDialog) {
               $scope.closeDialog = function () {
@@ -219,7 +219,12 @@ angular.module('climbGame.controllers.calendar', [])
                         }
                       )
                     }
-                    $scope.closeDialog()
+                    for (var i=0; i < $scope.todayData.babies.length; i++) {
+                      $scope.todayData.babies[i].color = '';
+                      $scope.todayData.babies[i].mean = '';
+                    }
+                    $scope.todayData.means = [];
+                    $scope.closeDialog();
                   }, function () {
                     // TODO get error
                     $scope.sendingData = false
@@ -334,6 +339,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function changeWeek(skipWeek) {
+        $scope.isLoadingCalendar = true; 
         // take date of week[0] and go 1 week before or after
         var monday = $scope.week[0]
         monday.setDate(monday.getDate() + 7 * skipWeek)
@@ -439,6 +445,7 @@ angular.module('climbGame.controllers.calendar', [])
             // add entire day of null data
           }
         }
+        $scope.isLoadingCalendar = false; 
       }
 
       /*

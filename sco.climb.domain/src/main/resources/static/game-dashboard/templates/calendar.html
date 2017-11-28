@@ -75,7 +75,8 @@
         </div>
       </div>
       <md-content id="table" class="baby-list">
-        <md-list class="cal-listbabies">
+        <md-progress-circular md-mode="indeterminate" ng-show="isLoadingCalendar" md-diameter="100" style="margin:auto;margin-top:20px;"></md-progress-circular>
+        <md-list class="cal-listbabies" ng-show="!isLoadingCalendar">
           <div layout="row" ng-repeat="baby in class track by $index" ng-init="babyIndex = $index" class="cal-baby">
             <div layout="column" flex="25" class="cal-name">
               {{baby.name}} {{baby.surname}}

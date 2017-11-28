@@ -20,11 +20,6 @@ angular.module("climbGame.controllers.map", [])
               url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
               type: 'xyz'
             },
-            satellite: {
-              name: 'Satellite',
-              url: 'https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}',
-              type: 'xyz'
-            },
             osm: {
               name: 'OpenStreetMap',
               url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

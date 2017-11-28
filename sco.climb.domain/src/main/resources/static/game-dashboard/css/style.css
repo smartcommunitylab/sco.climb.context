@@ -595,6 +595,10 @@ md-dialog {
 .send-dialog-confirm:not([disabled]):hover {
   background-color: #d38313;
 }
+.send-dialog-confirm:disabled {
+  background-color: rgb(243, 181, 87);
+}
+md-progress-circular.send-dialog-progress svg path { stroke: white; }
 
 .cal-interactive-button {
   color: #F39C12;
