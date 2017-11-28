@@ -188,7 +188,7 @@ public class GamificationController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusGame(
+	public @ResponseBody PedibusGame createPedibusGame(
 			@PathVariable String ownerId, 
 			@RequestBody PedibusGame game, 
 			HttpServletRequest request, 
@@ -200,14 +200,15 @@ public class GamificationController extends AuthController {
 				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		storage.savePedibusGame(game, ownerId, false);
+		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusGame[%s]: %s", ownerId, game.getObjectId()));
 		}
+		return result;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}", method = RequestMethod.PUT)
-	public @ResponseBody void updatePedibusGame(
+	public @ResponseBody PedibusGame updatePedibusGame(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
 			@RequestBody PedibusGame game, 
@@ -222,10 +223,11 @@ public class GamificationController extends AuthController {
 		}
 		game.setOwnerId(ownerId);
 		game.setObjectId(pedibusGameId);
-		storage.savePedibusGame(game, ownerId, true);
+		PedibusGame result = storage.savePedibusGame(game, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}
+		return result;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}", method = RequestMethod.DELETE)

@@ -786,7 +786,7 @@ public class RepositoryManager {
 		}
 	}
 
-	public void savePedibusGame(PedibusGame game, String ownerId, boolean canUpdate) throws StorageException {
+	public PedibusGame savePedibusGame(PedibusGame game, String ownerId, boolean canUpdate) throws StorageException {
 		Query query = new Query(new Criteria("objectId").is(game.getObjectId()).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
@@ -817,6 +817,7 @@ public class RepositoryManager {
 		} else {
 			logger.warn("Cannot update existing PedibusGame with gameId " + game.getGameId());
 		}
+		return game;
 	}
 	
 	public PedibusGame removePedibusGame(String ownerId, String pedibusGameId) throws EntityNotFoundException {
