@@ -49,7 +49,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'PathsCtrl'
         })
         .state('root.path', {
-            url: '/path/:idPath',
+            url: '/path/:idDomain/:idInstitute/:idSchool/:idGame/:idPath',
             templateUrl: 'templates/paths/path.html',
             controller: 'PathCtrl'
         })

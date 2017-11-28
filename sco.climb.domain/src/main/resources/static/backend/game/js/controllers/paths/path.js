@@ -3,18 +3,16 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 // Paths controller
 .controller('PathsCtrl', function ($scope, $rootScope, DataService, createDialog) {
     $scope.$parent.mainView = 'itinerary';
-    if($scope.$parent.selectedOwner && $scope.$parent.selectedInstitute && $scope.$parent.selectedSchool && $scope.$parent.selectedGame && $scope.$parent.pathsModified)
-        $scope.$parent.loadData($scope.$parent.mainView);
 
-    $scope.delete = function (pathIndex) {
+    $scope.delete = function (path) {
         createDialog('templates/modals/delete-path.html',{
             id : 'delete-dialog',
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
-                DataService.removeData($scope.$parent.mainView, $rootScope.paths[pathIndex]).then(
+                DataService.removeData('itinerary', path).then(
                     function() {
                         console.log("Rimozione effettuata con successo.");
-                        $scope.$parent.loadData($scope.$parent.mainView);
+                        $scope.games.splice($scope.games.indexOf(path), 1);
                     }, function() {
                         alert("Errore nella richiesta.");
                     });
@@ -26,57 +24,77 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 
 // Edit an existing path
-.controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $state, $timeout, DataService, createDialog) {
+.controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $state, $timeout, DataService, MainDataService, createDialog) {
     $scope.$parent.mainView = 'itinerary';
     
     $scope.classes = [];
-    if($scope.$parent.selectedGame.classRooms != null) {
-    	$scope.$parent.selectedGame.classRooms.forEach(function(entry) {
-    		var classEntry = {};
-  			classEntry.value = false;
-  			classEntry.name = entry;
-  			$scope.classes.push(classEntry);
-    	});
-    }
-    $scope.isNewPath = true;
-    if ($stateParams.idPath)    // controlla se si sta modificando un percorso esistente
-    {
-        $scope.isNewPath = false;
-        $scope.currentPath = Number($stateParams.idPath);
-        $scope.saveData = DataService.editData;
-        $scope.classes.forEach(function(entry) {
-        	if($rootScope.paths[$scope.currentPath].classRooms != null) {
-        		if($rootScope.paths[$scope.currentPath].classRooms.includes(entry.name)) {
-        			entry.value = true;
-        		}
-        	}
-        });
-        DataService.getData('legs', 
-        		$rootScope.paths[$scope.currentPath].ownerId, 
-        		$scope.$parent.selectedInstitute.objectId,
-        		$scope.$parent.selectedSchool.objectId,
-        		null,
-        		$rootScope.paths[$scope.currentPath].pedibusGameId, 
-        		$rootScope.paths[$scope.currentPath].objectId).then(
-                function(response) {
-                    console.log('Caricamento delle tappe a buon fine.');
-                    $scope.legs = response.data;
-                }, function() {
-                    alert('Errore nel caricamento delle tappe.');
+
+    $scope.initController = function() {
+
+        if($scope.selectedGame.classRooms != null) {
+            $scope.selectedGame.classRooms.forEach(function(entry) {
+                var classEntry = {
+                    value: false,
+                    name: entry
+                };
+                $scope.classes.push(classEntry);
+            });
+        }
+
+
+        if ($scope.currentPath) { //edit path
+            $scope.isNewPath = false;
+            $scope.saveData = DataService.editData;
+            $scope.classes.forEach(function(entry) {
+                if($scope.currentPath.classRooms != null) {
+                    if($scope.currentPath.classRooms.includes(entry.name)) {
+                        entry.value = true;
+                    }
                 }
-        );
+            });
+            DataService.getData('legs', 
+                    $stateParams.idDomain, 
+                    $stateParams.idInstitute, 
+                    $stateParams.idSchool,
+                    null,
+                    $stateParams.idGame,
+                    $scope.currentPath.objectId).then(
+                    function(response) {
+                        console.log('Caricamento delle tappe a buon fine.');
+                        $scope.legs = response.data;
+                    }, function() {
+                        alert('Errore nel caricamento delle tappe.');
+                    }
+            );
+        } else {
+            $scope.currentPath = {
+                name: '',
+                description: '',
+                pedibusGameId: $stateParams.idGame.objectId,               
+                ownerId: $stateParams.idDomain,
+                classRooms: []
+            }
+            $scope.legs = [];
+            $scope.saveData = DataService.saveData;
+        }
     }
-    else
-    {
-        $scope.currentPath = $rootScope.paths.push({        // variabile che indica la posizione nell'array del path che sta venendo editato
-            name: '',
-            description: '',
-            pedibusGameId: $scope.$parent.selectedGame.objectId,     // NEW: id del gioco di appartenenza
-            ownerId: $scope.$parent.selectedOwner,
-            classRooms: []
-        })-1;
-        $scope.legs = [];
-        $scope.saveData = DataService.saveData;
+
+    if ($stateParams.idPath) {
+        MainDataService.getDomains().then(function (response) {
+            MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
+                MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
+                    MainDataService.getGames($stateParams.idSchool).then(function (response) {
+                        MainDataService.getItineraries($stateParams.idGame).then(function (response) {
+                            $scope.paths = response.data;
+                            $scope.currentPath = angular.copy($scope.paths.find(function (e) {return e.objectId == $stateParams.idPath})); 
+                            $scope.initController();
+                        });
+                    });
+                });
+            });
+        });
+    } else { //new path
+        $scope.initController();
     }
 
     // Reorder of the legs

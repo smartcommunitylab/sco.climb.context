@@ -98,13 +98,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
                     MainDataService.getGames($stateParams.idSchool).then(function (response) {
                         $scope.games = response.data;
-                        $scope.currentGame = $scope.games.find(function (e) {return e.objectId == $stateParams.idGame}); 
+                        $scope.currentGame = angular.copy($scope.games.find(function (e) {return e.objectId == $stateParams.idGame})); 
                         $scope.initController();
                     });
                 });
             });
         });
-    } else { //new school
+    } else { //new game
         $scope.initController();
     }
 

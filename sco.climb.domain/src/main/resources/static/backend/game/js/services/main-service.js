@@ -74,13 +74,13 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
         var deferred = $q.defer();
         
         if (itineraries == undefined || gameID != currentGame) {
-            DataService.getData('itinerary', currentDomain, currentInstitute, currentSchool, gameID).then(function (data) {
+            DataService.getData('itinerary', currentDomain, currentInstitute, currentSchool, null, gameID).then(function (data) {
                 itineraries = data;
                 currentGame = gameID;
-                deferred.resolve(games);
+                deferred.resolve(itineraries);
             });
         } else {
-            deferred.resolve(games);
+            deferred.resolve(itineraries);
         }
 
         return deferred.promise;

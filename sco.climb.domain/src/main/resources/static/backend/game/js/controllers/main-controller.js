@@ -65,13 +65,16 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.games = response.data;
                 if ($scope.games.length == 1) {
                     $scope.selectedGame = $scope.games[0];
+                    $scope.loadItineraries($scope.games[0]);
                 }
             });  
         };
-
-        $scope.setCurrentGame = function(game) {
-            MainDataService.setSelectedGame(game);
-        }
+        $scope.loadItineraries = function(game) {
+            if (!game) return;          
+            MainDataService.getItineraries(game.objectId).then(function (response) {
+                $scope.paths = response.data;
+            });  
+        };
 
         $scope.uploadComplete = function (content) {
             if (content.id) {
