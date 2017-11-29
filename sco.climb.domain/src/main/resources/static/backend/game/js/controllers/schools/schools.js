@@ -131,7 +131,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                             if ($scope.schools[i].objectId == $scope.currentSchool.objectId) $scope.schools[i] = $scope.currentSchool;
                         }
                     } else {
-                        $scope.schools.push(response.data);
+                        if ($scope.schools) $scope.schools.push(response.data);
                     }
                     $state.go('root.schools-list');
                 }, function() {

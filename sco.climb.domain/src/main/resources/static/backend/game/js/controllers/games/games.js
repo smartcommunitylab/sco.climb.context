@@ -12,7 +12,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 DataService.removeData('game', game).then(
                     function() {
                         console.log("Rimozione gioco effettuata con successo.");
-                        $scope.games.splice($scope.games.indexOf(school), 1);
+                        $scope.games.splice($scope.games.indexOf(game), 1);
                     }, function() {
                         alert("Errore nella richiesta.");
                     });
@@ -135,7 +135,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
                         }
                     } else {
-                        $scope.games.push(response.data);
+                        if ($scope.games) $scope.games.push(response.data);
                     }
                     $state.go('root.games-list');
                 }, function() {

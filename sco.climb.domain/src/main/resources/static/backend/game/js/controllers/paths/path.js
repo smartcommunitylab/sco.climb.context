@@ -12,7 +12,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 DataService.removeData('itinerary', path).then(
                     function() {
                         console.log("Rimozione effettuata con successo.");
-                        $scope.games.splice($scope.games.indexOf(path), 1);
+                        $scope.paths.splice($scope.paths.indexOf(path), 1);
                     }, function() {
                         alert("Errore nella richiesta.");
                     });
@@ -24,26 +24,25 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 
 // Edit an existing path
-.controller('PathCtrl', function ($scope, $stateParams, $rootScope, $location, $state, $timeout, DataService, MainDataService, createDialog) {
+.controller('PathCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
     $scope.$parent.mainView = 'itinerary';
     
     $scope.classes = [];
 
     $scope.initController = function() {
 
-        if($scope.selectedGame.classRooms != null) {
-            $scope.selectedGame.classRooms.forEach(function(entry) {
+        if($scope.currentGame.classRooms != null) {
+            $scope.currentGame.classRooms.forEach(function(entry) {
                 var classEntry = {
                     value: false,
                     name: entry
                 };
                 $scope.classes.push(classEntry);
             });
+            $scope.$broadcast('pathLoaded');
         }
 
-
         if ($scope.currentPath) { //edit path
-            $scope.isNewPath = false;
             $scope.saveData = DataService.editData;
             $scope.classes.forEach(function(entry) {
                 if($scope.currentPath.classRooms != null) {
@@ -62,6 +61,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     function(response) {
                         console.log('Caricamento delle tappe a buon fine.');
                         $scope.legs = response.data;
+                        $scope.$broadcast('legsLoaded');
                     }, function() {
                         alert('Errore nel caricamento delle tappe.');
                     }
@@ -70,32 +70,32 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             $scope.currentPath = {
                 name: '',
                 description: '',
-                pedibusGameId: $stateParams.idGame.objectId,               
+                pedibusGameId: $stateParams.idGame,               
                 ownerId: $stateParams.idDomain,
                 classRooms: []
             }
             $scope.legs = [];
             $scope.saveData = DataService.saveData;
+            $scope.$broadcast('legsLoaded');
         }
     }
 
-    if ($stateParams.idPath) {
-        MainDataService.getDomains().then(function (response) {
-            MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
-                MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
-                    MainDataService.getGames($stateParams.idSchool).then(function (response) {
-                        MainDataService.getItineraries($stateParams.idGame).then(function (response) {
-                            $scope.paths = response.data;
-                            $scope.currentPath = angular.copy($scope.paths.find(function (e) {return e.objectId == $stateParams.idPath})); 
-                            $scope.initController();
-                        });
+    MainDataService.getDomains().then(function (response) {
+        MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
+            MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
+                MainDataService.getGames($stateParams.idSchool).then(function (response) {
+                    $scope.currentGame = response.data.find(function (e) {return e.objectId == $stateParams.idGame});
+                    MainDataService.getItineraries($stateParams.idGame).then(function (response) {
+                        $scope.paths = response.data;
+                        if ($stateParams.idPath) {
+                            $scope.currentPath = angular.copy($scope.paths.find(function (e) {return e.objectId == $stateParams.idPath}));  
+                        }
+                        $scope.initController();
                     });
                 });
             });
         });
-    } else { //new path
-        $scope.initController();
-    }
+    });
 
     // Reorder of the legs
     $scope.sortableOptions = {
@@ -111,25 +111,31 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     // Save the changes made to the path
     $scope.save = function () {
         if (checkFields()) {
-        	$rootScope.paths[$scope.currentPath].classRooms = [];
-          $scope.classes.forEach(function(entry) {
-          	if(entry.value) {
-          		$rootScope.paths[$scope.currentPath].classRooms.push(entry.name);
-          	}
-          });
+        	$scope.currentPath.classRooms = [];
+            $scope.classes.forEach(function(entry) {
+                if(entry.value) {
+                    $scope.currentPath.classRooms.push(entry.name);
+                }
+            });
         	
-            $scope.saveData('itinerary', $rootScope.paths[$scope.currentPath]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+            $scope.saveData('itinerary', $scope.currentPath).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                 function(response) {
                     console.log('Salvataggio del percorso a buon fine.');
-                    $rootScope.paths[$scope.currentPath] = response.data;
+                    if ($scope.currentPath.objectId) { //edited
+                        for (var i = 0; i < $scope.paths.length; i++) {
+                            if ($scope.paths[i].objectId == $scope.currentPath.objectId) $scope.paths[i] = $scope.currentPath;
+                        }
+                    } else {
+                        $scope.paths.push(response.data);
+                    }     
                   	for (i = 0; i < $scope.legs.length; i++) { 
                   		$scope.legs[i].position = i;
                   	}
-                    $rootScope.paths[$scope.currentPath].legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
-                    $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
-                        function() {
-                            console.log('Salvataggio dati a buon fine.');                            
-                            $location.path('paths-list');
+                    $scope.currentPath.legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
+                    $scope.saveData('legs', $scope.currentPath).then(
+                        function(response) {
+                            console.log('Salvataggio dati a buon fine.');
+                            $state.go('root.paths-list');
                         }, function() {
                             alert('Errore nel salvataggio delle tappe.');
                         }
@@ -152,7 +158,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     // Validation
     function checkFields() {
         var isValidate = true;
-        var path = $rootScope.paths[$scope.currentPath];
+        var path = $scope.currentPath;
 
         if (!path.name || !path.description || path.name === "" || path.description === "")
             isValidate = false;
@@ -165,52 +171,53 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$location.path('paths-list');} }
+            success: { label: 'Conferma', fn: function() {$state.go('root.paths-list');} }
         });
     };
-
-    $scope.legsTabSelected = function() {
-        if ($scope.isNewPath) { //New path, need to save before creating legs
-            $state.go('root.path.info');
-            createDialog('templates/modals/save-path-before-edit-leg.html',{
-                id : 'save-path-limit-dialog',
-                title: 'Salva le info',
-                noCancelBtn: true
-            });
-        }
-    }
 })
 
 .controller('InfoCtrl', function ($scope, $rootScope) {
     $scope.$parent.selectedTab = 'info';
 
+    $scope.$on('pathLoaded', function(e) {  
+        $scope.classToggled();            
+    });
 
     $scope.toggleSelectedClasses = function() {
-        $scope.$parent.classes.forEach(function(currentClass) {
+        $scope.classes.forEach(function(currentClass) {
             currentClass.value = $scope.classesAllSelected;
         });
     }
     $scope.classToggled = function(){
-        $scope.classesAllSelected = $scope.$parent.classes.every(function(cl){ return cl.value; })
+        $scope.classesAllSelected = $scope.classes.every(function(cl){ return cl.value; })
     }
 
     $scope.classToggled();
 })
 
-.controller('LegsListCtrl', function ($scope, $rootScope, createDialog, DataService) {
+.controller('LegsListCtrl', function ($scope, $state, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'legs';
-    $scope.$parent.legsTabSelected();
-    $scope.remove = function (idLeg) {
+
+    if (!$stateParams.idPath) { //New path, need to save before creating legs
+        $state.go('root.path.info');
+        createDialog('templates/modals/save-path-before-edit-leg.html',{
+            id : 'save-path-limit-dialog',
+            title: 'Salva le info',
+            noCancelBtn: true
+        });
+    }
+
+    $scope.remove = function (leg) {
         createDialog('templates/modals/delete-leg.html',{
             id : 'delete-leg-dialog',
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
-                $scope.legs.splice(idLeg, 1);
+                $scope.legs.splice($scope.legs.indexOf(leg), 1);
               	for (i = 0; i < $scope.legs.length; i++) { 
               		$scope.legs[i].position = i;
               	}
-                $rootScope.paths[$scope.currentPath].legs = $scope.legs;
-                DataService.editData('legs', $rootScope.paths[$scope.currentPath]).then(
+                $scope.currentPath.legs = $scope.legs;
+                DataService.editData('legs', $scope.currentPath).then(
                     function() {
                         console.log('Salvataggio dati a buon fine.');
                     }, function() {
@@ -222,8 +229,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     };
     $scope.saveOrder = function() {
         if ($scope.enableOrder) {            
-            $rootScope.paths[$scope.currentPath].legs = $scope.legs;
-            DataService.editData('legs', $rootScope.paths[$scope.currentPath]).then(
+            $scope.currentPath.legs = $scope.legs;
+            DataService.editData('legs', $scope.currentPath).then(
                 function() {
                     console.log('Salvataggio ordine tappe a buon fine.');    
                     $scope.enableOrder = false;
@@ -237,14 +244,14 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     };
 })
 
-.controller('MapCtrl', function ($scope, $rootScope, $timeout, $state, drawMap, createDialog) {
+.controller('MapCtrl', function ($scope, $state, $stateParams, $rootScope, $timeout, drawMap, createDialog) {
     $scope.$parent.selectedTab = 'map';
     $scope.toggle = true;
     $scope.initMap = function () {
         // Verifica che ci siano abbastanza tappe
-        if($scope.$parent.legs.length < 2)
+        if(!$scope.legs || $scope.legs.length < 2)
         {
-            if ($scope.$parent.isNewPath) { //new path, return to info
+            if (!$stateParams.idPath) { //new path, return to info
                 $state.go('root.path.info');
             } else {
                 $state.go('root.path.legs');
