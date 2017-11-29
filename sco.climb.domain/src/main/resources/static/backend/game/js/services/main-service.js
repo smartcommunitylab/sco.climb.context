@@ -25,7 +25,7 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
     mainDataService.getInstitutes = function (ownerID) {
         var deferred = $q.defer();
         
-        if (institutes == undefined || ownerID != currentDomain) { //TODO: fix this!!
+        if (institutes == undefined || ownerID != currentDomain) {
             DataService.getInstitutesList(ownerID).then(function (data) {
                 institutes = data;
                 currentDomain = ownerID;

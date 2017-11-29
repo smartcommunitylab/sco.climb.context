@@ -19,9 +19,10 @@ angular.module('consoleControllers.mainCtrl', [])
           $scope.selectedInstitute = '';
           $scope.selectedSchool = '';
           $scope.institutesList = [];
-          $scope.selectedGame = ''; 
-          //TODO: logout remove localStorage 
+          $scope.selectedGame = '';
           $scope.profile = null;
+          localStorage.clear();
+          sessionStorage.clear();
           var logoutUrl = DataService.getBaseUrl();
           logoutUrl = logoutUrl + '/logout?target=' + $location.path('/').absUrl();
           $window.location.href = logoutUrl;

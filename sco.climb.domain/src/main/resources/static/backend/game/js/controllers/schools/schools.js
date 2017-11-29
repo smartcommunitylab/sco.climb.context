@@ -215,21 +215,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             } }
         });
     };
-    $scope.saveOrder = function() {
-        if (!$scope.enableOrder) {
-            $scope.enableOrder = true;
-        } else {
-            //TODO: save lines... no API to batch save order?
-            DataService.saveData('route', $scope.currentSchool.lines).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                function() {
-                    console.log('Salvataggio dati a buon fine.');
-                    $scope.enableOrder = false;
-                }, function() {
-                    alert('Errore nella richiesta.');
-                }
-            );
-        }
-    }
 })
 
 .controller('ChildrenCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
