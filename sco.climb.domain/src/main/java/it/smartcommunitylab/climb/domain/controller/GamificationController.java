@@ -477,7 +477,7 @@ public class GamificationController extends AuthController {
 	}	
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs", method = RequestMethod.PUT)
-	public @ResponseBody void updatePedibusItineraryLegs(
+	public @ResponseBody List<PedibusItineraryLeg> updatePedibusItineraryLegs(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
 			@PathVariable String itineraryId,
@@ -513,6 +513,7 @@ public class GamificationController extends AuthController {
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
+		return legs;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
