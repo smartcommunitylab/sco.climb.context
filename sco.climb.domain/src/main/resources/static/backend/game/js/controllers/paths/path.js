@@ -234,6 +234,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 function() {
                     console.log('Salvataggio ordine tappe a buon fine.');    
                     $scope.enableOrder = false;
+                    createDialog('templates/modals/leg-order-saved.html',{
+                        id : 'leg-order-saved',
+                        title: 'Modifica percorsi sulla mappa',
+                        noCancelBtn: true
+                    });
                 }, function() {
                     alert('Errore nel salvataggio dell\'ordine tappe.');
                 }

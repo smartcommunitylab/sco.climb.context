@@ -43,7 +43,7 @@
     </div>
     <div class="col-lg-6 right">
         <a class="btn btn-info" ng-click="addStop()">Aggiungi fermata</a>
-        <a class="btn btn-info" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina fermate'}}</a>
+        <a class="btn btn-info" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina fermate'}}</a>
     </div>
 
     <div class="col-lg-12">

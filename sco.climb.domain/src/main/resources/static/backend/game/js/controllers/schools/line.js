@@ -90,7 +90,7 @@ angular.module('consoleControllers.line', [])
         if (checkFields()) {
         	$scope.line.from = $scope.startDate.getTime();
         	$scope.line.to = $scope.endDate.getTime();
-          $scope.saveData('route', $scope.line).then(
+          	$scope.saveData('route', $scope.line).then(
                 function(response) {
                     console.log('Linea salvata.');
                     $scope.line['objectId'] = response.data.objectId;
@@ -199,7 +199,30 @@ angular.module('consoleControllers.line', [])
             alert('Errore nel caricamento degli scolari.');
           }
       );
-    }; 
+	};
+	
+    $scope.saveOrder = function() {
+        if (!$scope.enableOrder) {
+            $scope.enableOrder = true;
+        } else {
+			for (i = 0; i < $scope.line.stops.length; i++) { 
+				$scope.line.stops[i].position = i;
+			}
+			var routeModel = {
+				"routeId": '',
+				"ownerId": '',
+				"stops": []
+			}
+			routeModel['ownerId'] = $scope.line.ownerId;
+			routeModel['routeId'] = $scope.line.objectId;
+			routeModel['stops'] = $scope.line.stops;
+			$scope.saveData('stops', routeModel).then(
+				function(response) {
+					$scope.enableOrder = false;
+				}
+			);
+        }
+    }
 })
 
 .controller('AssignPassegersModalController', function($scope, stop, children) {
