@@ -263,15 +263,18 @@ angular.module('MapsService', [])
             return google.maps.geometry.encoding.encodePath(polyPath.getPath());
     };
     this.getCustomWayPoint = function() {
-        var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
-        var customWayPoints = [];
-        for (var i = 0; i < tmp.length; i++) {
+      	var customWayPoints = [];
+    		var directions = directionsDisplay.getDirections();
+    		if(directions) {
+    			var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
+          for (var i = 0; i < tmp.length; i++) {
             var obj = {
                 latitude: tmp[i].location.lat(),
                 longitude: tmp[i].location.lng()
             };
             customWayPoints[i] = obj;
-        }
+          }
+    		}
         return customWayPoints;
     }
 

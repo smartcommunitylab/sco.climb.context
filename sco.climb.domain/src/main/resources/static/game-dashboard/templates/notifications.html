@@ -6,7 +6,7 @@
     <div class="loading" ng-if="notifications.length==0 && !loading" layout="row" layout-sm="column" layout-align="space-around">
       {{'notif_empty'|translate}}
     </div>
-    <md-content id="notifications-list" ng-if="notifications.length>0">
+    <md-content id="notifications-list" ng-if="notifications.length>0" drag-scroll="enabled" axis="y">
       <md-card md-theme="default" ng-repeat="notif in notifications" ng-class="{'unread': notif.timestamp > lastcheck}">
         <md-card-title>
           <md-card-title-text>

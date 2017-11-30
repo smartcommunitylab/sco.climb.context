@@ -36,6 +36,8 @@
   "cal_send_data_button": "INVIA DATI",
   "cal_edit_dev_data_button": "MODIFICA DATI",
   "cal_edit_save_dev_data_button": "SALVA DATI",
+  "cal_save_popup_title": "Invio dati",
+  "cal_save_popup_content": "Invia dati definitivi al sistema, completata l'operazione non sarà piu possibile modificarli.",
   "toast_uname_not_valid": "Nome utente o password non validi",
   "toast_api_error": "Errore nel caricamento dati",
   "cal_notifications": "Notifiche",

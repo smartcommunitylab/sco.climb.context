@@ -160,6 +160,17 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 
 		attributes.clear();
+		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_Attendance);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		auth = authorizationManager.getAuthorizationDTO(email, actions, 
+				resourceName, attributes);
+		authorizationDTO = authorizationManager.insertAuthorization(auth);
+		authIds.add(authorizationDTO.getId());
+		result.add(authorizationDTO);
+		
+		attributes.clear();
 		actions.add(Const.AUTH_ACTION_ADD);
 		attributes.put("pedibus-ownerId", ownerId);
 		attributes.put("pedibus-resource", Const.AUTH_RES_WsnEvent);
@@ -181,6 +192,7 @@ public class RoleController extends AuthController {
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
 		authIds.add(authorizationDTO.getId());
 		result.add(authorizationDTO);
+		
 		
 		storage.addUserRole(email, Const.ROLE_VOLUNTEER, getAuthKey(ownerId, Const.ROLE_VOLUNTEER), authIds);
 		return result;

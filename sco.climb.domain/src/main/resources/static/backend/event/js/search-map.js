@@ -113,7 +113,11 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $lo
  		 {
  			 'name' : 'END_ROUTE',
  			 'value' : 402
- 		 }
+ 		 },
+ 		 {
+ 			 'name' : 'TEST_STATE',
+ 			 'value' : 901
+ 		 } 		 
  		];
 	};
 	

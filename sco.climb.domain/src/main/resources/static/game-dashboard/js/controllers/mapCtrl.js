@@ -17,12 +17,12 @@ angular.module("climbGame.controllers.map", [])
           baselayers: {
             altro: {
               name: 'Watercolor',
-              url: 'http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+              url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
               type: 'xyz'
             },
             osm: {
               name: 'OpenStreetMap',
-              url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               type: 'xyz'
             }
 
@@ -137,7 +137,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(-offset, 0), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -156,7 +156,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(offset, 0), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -175,7 +175,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(0, -offset), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -194,7 +194,7 @@ angular.module("climbGame.controllers.map", [])
                 var offset = map.getSize().x * 0.14;
                 // Then move the map
                 map.panBy(new L.Point(0, offset), {
-                  animate: false
+                  animate: true
                 })
               }
               return container;
@@ -251,7 +251,8 @@ angular.module("climbGame.controllers.map", [])
                 //              map.setZoom(4);
                 //              map.panTo([37.973378, 23.730957]);
 
-                map.setView([configService.getDefaultMapCenterConstant()[0], configService.getDefaultMapCenterConstant()[1]], configService.getDefaultZoomMapConstant());
+                map.fitBounds($scope.myInitialBounds);
+                //map.setView([configService.getDefaultMapCenterConstant()[0], configService.getDefaultMapCenterConstant()[1]], configService.getDefaultZoomMapConstant());
                 // map.invalidateSize();
 
               }
@@ -281,6 +282,7 @@ angular.module("climbGame.controllers.map", [])
         $scope.status = data;
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
+        $scope.myInitialBounds = new L.latLngBounds();
         // get actual situation
         for (var i = 0; i < data.teams.length; i++) {
           if (data.teams[i].classRoom == $scope.globalTeam) {
@@ -338,10 +340,20 @@ angular.module("climbGame.controllers.map", [])
             $scope.pathMarkers.push(getMarker(data.legs[i], null, icon, i));
           }
 
+          if (data.legs[i].position - $scope.currentLeg.position <= 1 && data.legs[i].position - $scope.currentLeg.position >= -2) {       
+              $scope.myInitialBounds.extend(L.latLng(data.legs[i].geocoding[1], data.legs[i].geocoding[0]));
+          }
+
         }
+
         addPlayerPosition();
         //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
         setGallerySize();
+        leafletData.getMap('map').then(function (map) {
+          map.fitBounds($scope.myInitialBounds);         
+        }, function (err) {
+
+        });
       },
       function (err) {
         //error with status
@@ -548,34 +560,31 @@ angular.module("climbGame.controllers.map", [])
     $scope.scrollToPoint = function (i) {
       //get the bar
       var imagesBar = document.getElementById('gallery');
-      //      get the the width
-      var widthBar = imagesBar.width;
-      //get the dimension of 1
       var widhtImages = 100;
-      //go to i-th place
-      document.getElementById('gallery').scrollLeft = 0;
-      if (i >= 5) {
-        document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
-      }
-      $scope.selectedPosition = Number(i) - 1;
+      imagesBar.scrollLeft = widhtImages * (i+1) - imagesBar.offsetWidth / 2 + widhtImages / 2;
     }
     $scope.goToPoi = function (leg) {
       if (leg.position <= ($scope.currentLeg.position)) {
         leafletData.getMap('map').then(function (map) {
-          //center and zoom
-          var latlng = L.latLng(leg.geocoding[1], leg.geocoding[0]);
-          //map.panTo(latlng);
-          // map.setZoom(8);
-          setInterval($scope.pathMarkers[leg.position].focus = true, 2000);
-          map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
-          //open popup
+          if ($scope.selectedPosition !== undefined) {
+            $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          }
+          $scope.pathMarkers[leg.position].focus = true;
+          map.setView([leg.geocoding[1] + configService.DEFAULT_POI_POPUP_OFFSET, leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
           $scope.selectedPosition = leg.position;
-          // map.invalidateSize();
-          //          $scope.scrollToPoint($scope.selectedPosition);
-        }, function (err) {
-
-        });
-
+        }, function (err) {});
+        $scope.scrollToPoint(leg.position);
+        
+      }
+    }
+    $scope.mapGalleryDragging = function (mousedown, event, leg) { //used to prevent bug of dragging library that doesn't stop click propagation when dragging
+      if (mousedown) {
+        $scope.mapGalleryX = event.screenX;
+        $scope.mapGalleryY = event.screenY;
+      } else { //click filtered by initial and final position of mouse
+        if (Math.abs($scope.mapGalleryX - event.screenX) < 10 && Math.abs($scope.mapGalleryY - event.screenY) < 10) {
+          $scope.goToPoi(leg);
+        }
       }
     }
     $scope.getSelected = function (index) {
@@ -598,7 +607,7 @@ angular.module("climbGame.controllers.map", [])
         g = d.getElementsByTagName('body')[0],
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight || g.clientHeight;
-      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64) + "px");
+      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64 - 140) + "px");
       leafletData.getMap('map').then(function (map) {
         map.invalidateSize();
       });
@@ -625,12 +634,18 @@ angular.module("climbGame.controllers.map", [])
 
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
       // Args will contain the marker name and other relevant information
-      console.log(args);
+      //console.log(args);
       var markerName = args.leafletEvent.target.options.name; //has to be set above
       //marker is clickable and already reached
       if (args.model.message) {
-        $scope.scrollToPoint(Number(args.modelName) + 1)
-          //      console.log(markerName);
+        leafletData.getMap('map').then(function (map) {
+          map.setView([args.model.lat + configService.DEFAULT_POI_POPUP_OFFSET, args.model.lng], configService.getDefaultZoomPoiConstant());
+          if ($scope.selectedPosition !== undefined) {
+            $scope.pathMarkers[$scope.selectedPosition].focus = false;
+          }
+          $scope.selectedPosition = Number(args.modelName);
+          $scope.scrollToPoint($scope.selectedPosition);
+        }, function (err) {});        
       }
     });
   }]);

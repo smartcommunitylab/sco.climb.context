@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Component
 public class GEngineUtils {
@@ -32,7 +34,15 @@ public class GEngineUtils {
 	@Value("${gamification.password}")
 	private String gamificationPassword;
 	
-	private ObjectMapper mapper = new ObjectMapper();
+	private ObjectMapper mapper = null;
+	
+	public GEngineUtils() {
+		mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
+		mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+	}
 	
 	@SuppressWarnings("rawtypes")
 	public PointConcept getPointConcept(PlayerStateDTO state, String key) {
@@ -59,7 +69,7 @@ public class GEngineUtils {
 	public List<Notification> getNotification(String gameId, String playerId, long timestamp) 
 			throws Exception {
 		String address = gamificationURL + "/notification/game/" + gameId + "/team/" 
-			+ URLEncoder.encode(playerId, "UTF-8") + "?fromTs=" + timestamp;
+			+ URLEncoder.encode(playerId, "UTF-8") + "?fromTs=" + timestamp + "&size=1000000";
 		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
 		Notification[] notifications = mapper.readValue(json, Notification[].class);
 		List<Notification> result = Arrays.asList(notifications);

@@ -3,6 +3,7 @@ angular.module('climbGame.services.conf', [])
   .factory('configService', function () {
     var configService = {}
     configService.DEVELOPMENT = true
+    configService.ENABLE_PAST_DAYS_EDIT = true
     var URL = 'https://' + (configService.DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
     
     configService.FOOT_CONSTANT = 'foot'
@@ -17,6 +18,7 @@ angular.module('climbGame.services.conf', [])
     var DEFAULT_CENTER_MAP = [37.973378, 23.730957]
     var DEFAULT_ZOOM_MAP = 4
     var DEFAULT_ZOOM_POI = 9
+    configService.DEFAULT_POI_POPUP_OFFSET = 0.4
       // var APP_BUILD = ''
 
     configService.TRAVEL_ICONS_MAP = {
