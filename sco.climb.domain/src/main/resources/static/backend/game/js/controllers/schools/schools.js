@@ -104,17 +104,17 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	var formData = new FormData();
     	formData.append('file', file);
     	var element = {
-    			"ownerId": $scope.currentSchool.ownerId,
-    			"instituteId": $scope.$parent.selectedInstitute.objectId,
-    			"schoolId": $scope.currentSchool.objectId,
-    			"formdata": formData 	
+    			"ownerId": $stateParams.idDomain,
+    			"instituteId": $stateParams.idInstitute,
+    			"schoolId": $stateParams.idSchool,
+    			"formdata": formData
     	};
     	DataService.uploadFile(element).then(
           function(response) {
               console.log('Caricamento dati a buon fine.');
               $state.go('root.schools-list');
           }, function() {
-              alert('Errore nel caricamento delle linee.');
+              alert('Errore nell\'elaborazione del file di import.');
           }
       );
     }

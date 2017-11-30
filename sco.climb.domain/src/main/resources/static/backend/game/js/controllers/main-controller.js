@@ -2,13 +2,6 @@ angular.module('consoleControllers.mainCtrl', [])
 
 .controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService)
     {
-        $scope.institutesList = [];
-        $scope.selectedGame = ''//JSON.parse(localStorage.getItem("selectedGame")); // Per selezione itinerario
-
-        // Variabili per evitare continue chiamate inutili al server
-        $scope.pathsModified = false;
-        $scope.gamesModified = false;
-        $scope.schoolsModified = false;
 
         $scope.getLocation = function() {
             return $location.url()
