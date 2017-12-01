@@ -57,7 +57,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody void uploadAuthSchema(
 			@RequestBody String json,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		authorizationManager.loadAuthSchema(json);
@@ -67,7 +67,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody AuthorizationDTO addAuthorization(
 			@RequestBody AuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return authorizationManager.insertAuthorization(auth);
@@ -77,7 +77,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody void deleteAuthorization(
 			@PathVariable String authId,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		authorizationManager.deleteAuthorization(authId);
@@ -87,7 +87,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody String validateAuth(
 			@RequestBody RequestedAuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return Boolean.toString(authorizationManager.validateAuthorization(auth));
@@ -98,7 +98,7 @@ public class AdminController extends AuthController {
 			@RequestParam(name="update", required=false) Boolean update,
 			@RequestBody User user,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		User userDb = null;
@@ -122,7 +122,7 @@ public class AdminController extends AuthController {
 			@RequestParam("file") MultipartFile file,
 			@RequestParam(name="update", required=false) Boolean update,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(update == null) {
@@ -175,7 +175,7 @@ public class AdminController extends AuthController {
 			@PathVariable String schoolId,
 			@RequestParam("file") MultipartFile file,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
@@ -207,7 +207,7 @@ public class AdminController extends AuthController {
 			@PathVariable String schoolId,
 			@RequestParam("file") MultipartFile file,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(logger.isInfoEnabled()) {
@@ -248,7 +248,21 @@ public class AdminController extends AuthController {
 		storage.addChild(child);
 	}
 	
-	private boolean validateRole(String role, HttpServletRequest request) throws Exception {
+	private boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
+		boolean result = false;
+		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
+		if(accountByEmail == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		String email = accountByEmail.getAttributeValue();
+		User user = storage.getUserByEmail(email);
+		if(user != null) {
+			result = user.getRoles().contains(role) && user.getOwnerIds().contains(ownerId);
+		}
+		return result;
+	}
+
+	private boolean validateAdminRole(String role, HttpServletRequest request) throws Exception {
 		boolean result = false;
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
 		if(accountByEmail == null) {
@@ -261,7 +275,7 @@ public class AdminController extends AuthController {
 		}
 		return result;
 	}
-
+	
 	@ExceptionHandler({EntityNotFoundException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody
