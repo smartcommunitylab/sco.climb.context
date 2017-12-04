@@ -205,12 +205,25 @@ md-sidenav {
   font-size: 20px;
   line-height: 30px;
 }
+.map-balloon .controls {
+  width: 10%;
+  float: right;
+  bottom: 72px;
+  position: relative;
+}
+.map-balloon .controls .md-button md-icon {
+  color: white;
+  background-color: #F39C12;
+}
+
 
 .external-urls-viewer {
-  width: 100%;
-  overflow: auto;
+  width: 90%;
+  overflow-y: hidden;
   white-space: nowrap;
   text-align: center;
+  -webkit-overflow-scrolling: touch;
+  max-height: 270px;
 }
 .external-urls-viewer .url-view-col {
   display: inline-block;
@@ -225,15 +238,6 @@ md-sidenav {
 .external-urls-viewer .url-view-col-image div {
   white-space: nowrap;
   line-height: 30px;
-}
-
-.external-urls-viewer {
-  width: 100%;
-  overflow-y: auto;
-  white-space: nowrap;
-  text-align: center;
-  -webkit-overflow-scrolling: touch;
-  max-height: 270px;
 }
 .external-urls-viewer .url-view-col {
   float: left;
@@ -567,7 +571,7 @@ main.layout-row.flex {
 
 .baby-list {
   height: 400px;
-  overflow: auto;
+  overflow: overlay;
   margin-right: 5px;
 }
 

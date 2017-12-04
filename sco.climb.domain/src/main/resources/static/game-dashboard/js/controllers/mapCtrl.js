@@ -285,6 +285,9 @@ angular.module("climbGame.controllers.map", [])
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
         $scope.myInitialBounds = new L.latLngBounds();
+
+        if ($scope.$parent) $scope.$parent.gamePublicTitle = $scope.globalTeam + " - " + data.game.gameName; 
+
         // get actual situation
         for (var i = 0; i < data.teams.length; i++) {
           if (data.teams[i].classRoom == $scope.globalTeam) {
@@ -310,7 +313,7 @@ angular.module("climbGame.controllers.map", [])
               latlngs: mapService.decode(data.legs[i].polyline)
             }
             //create div of external url
-          var externalUrl = '<div class="external-urls-viewer">';
+          var externalUrl = '<div class="external-urls-viewer" id="external-urls-viewer">';
           for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
             switch (data.legs[i].externalUrls[k].type) {
               case 'image':
@@ -331,7 +334,17 @@ angular.module("climbGame.controllers.map", [])
                 break;
             }
           }
-          externalUrl += '</div>';
+          externalUrl += '</div>'
+          if (data.legs[i].externalUrls.length > 2) {
+            externalUrl += '<div class="controls">'
+              +'<md-button class="md-icon-button" ng-click="scroll(\'up\')">'
+              +'<md-icon class="icon-arrow_up"></md-icon>'
+              +'</md-button>'
+              +'<md-button class="md-icon-button" ng-click="scroll(\'down\')">'
+              +'<md-icon class="icon-arrow_down"></md-icon>'
+              +'</md-button>'
+              +'</div>';
+          }
           var icon = getMarkerIcon(data.legs[i]);
           if ((data.legs[i].position < $scope.currentLeg.position) || $scope.endReached) {
             $scope.pathMarkers.push(getMarker(data.legs[i], externalUrl, icon, i));
@@ -649,4 +662,14 @@ angular.module("climbGame.controllers.map", [])
         }, function (err) {});        
       }
     });
+
+    $scope.scroll = function (direction) {
+      var parent = $window.document.getElementById('external-urls-viewer'); 
+      if (direction === 'up') {
+        parent.scrollTop -= parent.firstElementChild.offsetHeight;
+      } else if (direction === 'down') {
+        parent.scrollTop += parent.firstElementChild.offsetHeight;
+      }
+    }
+
   }]);

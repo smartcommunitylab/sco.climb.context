@@ -10,9 +10,9 @@
           <i class="material-icons gallery-arrow">&#xE314;</i>
         </md-button>
         <div class="leg-image" ng-repeat="leg in  legs track by $index" ng-mousedown="mapGalleryDragging(true, $event)" ng-mouseup="mapGalleryDragging(false, $event, leg)" ng-init="scrollMap($index)">
-          <img class="map-gallery" src="{{leg.imageUrl}}" ng-if="(leg.position < currentLeg.position) || endReached" ng-class="{'selectedImageMarker':getSelected($index)}">
+          <img class="map-gallery" ng-src="{{leg.imageUrl}}" ng-if="(leg.position < currentLeg.position) || endReached" ng-class="{'selectedImageMarker':getSelected($index)}">
           <img class="map-gallery-question" ng-src="{{IMAGES_PREFIX_URL}}img/POI-not-reached.png" ng-if="leg.position >= currentLeg.position && !endReached">
-          <div class=" leg-name " ng-if="(leg.position < currentLeg.position) || endReached">{{$index+1}}. {{leg.name}}</div>
+          <div class="leg-name" ng-if="(leg.position < currentLeg.position) || endReached">{{$index+1}}. {{leg.name}}</div>
         </div>
         <md-button class="md-button gallery-right gallery-button " aria-label="Right " ng-mousedown="scrollRight() " ng-mouseup="resetTimerRight() ">
           <i class="material-icons gallery-arrow">&#xE315;</i>
