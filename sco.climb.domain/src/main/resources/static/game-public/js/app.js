@@ -60,7 +60,7 @@ angular.module('climbGame', [
         url: 'map',
         views: {
           'content@home': {
-            templateUrl: '../game-dashboard/templates/map.html',
+            templateUrl: 'templates/map.html',
             controller: 'mapCtrl'
           }
         }
