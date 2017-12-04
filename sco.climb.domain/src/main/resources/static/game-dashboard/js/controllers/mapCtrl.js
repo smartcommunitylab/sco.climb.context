@@ -321,14 +321,13 @@ angular.module("climbGame.controllers.map", [])
                 var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
                 var match = data.legs[i].externalUrls[k].link.match(regExp);
                 if (match && match[2].length == 11) {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="img/ic_play.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
-          
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="'+configService.IMAGES_PREFIX_URL+'img/ic_play.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 } else {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_video.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="'+configService.IMAGES_PREFIX_URL+'img/ic_video.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 }
                 break;
               case 'link':
-                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_link.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="'+configService.IMAGES_PREFIX_URL+'img/ic_link.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 break;
             }
           }

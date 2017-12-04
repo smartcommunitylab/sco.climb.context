@@ -16,8 +16,7 @@ angular.module('climbGame.services.data', [])
         + '/itinerary/' + $stateParams.idItinerary
         + '/status',
         headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ' + 'profileToken-asdasd'
+          'Accept': 'application/json'
         },
         timeout: configService.httpTimout()
       }).then(function (response) {
