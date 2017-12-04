@@ -136,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf()
 				.disable()
 			.authorizeRequests()
-				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**")
+				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**/*.html")
 					.authenticated()
 			.and()
 				.addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
