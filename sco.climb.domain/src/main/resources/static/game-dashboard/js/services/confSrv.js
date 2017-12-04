@@ -4,8 +4,9 @@ angular.module('climbGame.services.conf', [])
     var configService = {}
     configService.DEVELOPMENT = true
     configService.ENABLE_PAST_DAYS_EDIT = true
+    configService.IMAGES_PREFIX_URL = './'; //changed in game-public to load right images
     var URL = 'https://' + (configService.DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it/v2'
-    
+  
     configService.FOOT_CONSTANT = 'foot'
     configService.PLANE_CONSTANT = 'plane'
     configService.BOAT_CONSTANT = 'boat'
@@ -67,7 +68,7 @@ angular.module('climbGame.services.conf', [])
     configService.getIconImg = function (iconName, state) {
       var iconImg = configService.TRAVEL_ICONS_MAP[iconName];
       if (!iconImg) iconImg = configService.TRAVEL_ICONS_MAP[configService.FOOT_CONSTANT];
-      return iconImg + configService.TRAVEL_ICONS_STATE_MAP[state];
+      return configService.IMAGES_PREFIX_URL + iconImg + configService.TRAVEL_ICONS_STATE_MAP[state];
     }
 
     return configService

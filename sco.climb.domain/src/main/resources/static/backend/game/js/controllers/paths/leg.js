@@ -1,9 +1,8 @@
 angular.module('consoleControllers.leg', ['isteven-multi-select'])
 
 // Edit the leg for the selected path
-.controller('LegCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
+.controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
     $scope.$parent.selectedTab = 'legs';
-    var currentPath = $scope.$parent.currentPath;
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
         { icon: "<img src=img/POI_airplane_full.png />", name: "Aereo", value:"plane"},
@@ -14,13 +13,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
         { icon: "<img src=img/POI_sleigh_full.png />", name: "Slitta", value:"sled"}
     ]; 
 
-    InitLegPage();
+    $scope.initController = function() {
+        if ($stateParams.idLeg) { //edit path
 
-    // Create $scope.leg variable and init the map
-    function InitLegPage() {
-        if ($stateParams.idLeg)     // se sto modificando una tappa già esistente
-        {
-            $scope.leg = angular.copy($scope.$parent.legs[$stateParams.idLeg]);
+            $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
             
@@ -28,29 +24,37 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
                 element.ticked = (element.value == $scope.leg.icon); 
             }, this);
 
-        }
-        else 
-        {
+        } else {
             $scope.leg = {
-                "name": '',
-                "description": '',
-                "imageUrl": '',
-                "coordinates": {
+                name: '',
+                description: '',
+                imageUrl: '',
+                coordinates: {
                     lat: 45.8832637,
                     lng: 11.0014507
                 },
-                "score": '',
-                "polyline": '',         // NEW: stringa contenente il percorso compreso tra la tappa e la sua precedente (nel 1° LEG sarà vuota, ovviamente)
-                "transport": 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
-                "externalUrls": [],        // NEW: array di oggetti contenente gli elementi multimediali
-                "position": $scope.$parent.legs.length
+                score: '',
+                polyline: '',         // NEW: stringa contenente il percorso compreso tra la tappa e la sua precedente (nel 1° LEG sarà vuota, ovviamente)
+                transport: 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
+                externalUrls: [],        // NEW: array di oggetti contenente gli elementi multimediali
+                position: $scope.legs.length
             };
         }
+
         if($scope.leg.position === 0) {
             drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, null, $scope.leg.transport);
         } else {
-            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.$parent.legs[$scope.leg.position-1].geocoding[1], lng: $scope.$parent.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
+            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
         }
+    }
+
+
+    if ($scope.legs) {
+        $scope.initController();
+    } else {
+        $scope.$on('legsLoaded', function(e) {  
+            $scope.initController();        
+        });
     }
 
     $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
@@ -112,17 +116,32 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
         }
         if (checkFields()) {
             $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
-            if ($stateParams.idLeg) {
-             $scope.$parent.legs[$stateParams.idLeg] = $scope.leg;
+            var legBackup;
+            if ($stateParams.idLeg) { //edited, have to update array
+                for (var i = 0; i < $scope.legs.length; i++) {
+                    if ($scope.legs[i].objectId == $stateParams.idLeg) {
+                        legBackup = {
+                            value: $scope.legs[i],
+                            positon: i
+                        }
+                        $scope.legs[i] = $scope.leg;
+                        break;
+                    }
+                }
             } else {
-             $scope.$parent.legs.push($scope.leg);
+                $scope.legs.push($scope.leg);
             }
-            $rootScope.paths[$scope.currentPath].legs = $scope.$parent.legs;
-            $scope.saveData('legs', $rootScope.paths[$scope.currentPath]).then(
-                function() {
+            $scope.currentPath.legs = $scope.legs;
+            $scope.saveData('legs', $scope.currentPath).then(
+                function(response) {
                     console.log('Salvataggio dati a buon fine.');
-                    $window.history.back();
+                    $state.go('root.path.legs');
                 }, function() {
+                    if (legBackup) {
+                        $scope.legs[legBackup.position] = legBackup.value;
+                    } else {
+                        $scope.legs.splice($scope.legs.length-1, 1);
+                    }
                     alert('Errore nel salvataggio delle tappe.');
                 }
             );
@@ -187,4 +206,19 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
         $scope.leg.externalUrls[index].name = newTitle;
         $scope.leg.externalUrls[index].link = newUrl;
     }
+
+    $scope.saveOrder = function() {
+        if ($scope.enableOrder) {            
+            $scope.currentPath.legs = $scope.legs;
+            createDialog('templates/modals/leg-multimedia-order-save.html',{
+                id : 'multimedia-save-order',
+                title: 'Tappa da salvare!',
+                success: { label: 'OK', fn: function() {} },
+                noCancelBtn: true
+            });
+            $scope.enableOrder = false;
+        } else {
+            $scope.enableOrder = true;
+        }
+    };
 });

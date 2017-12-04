@@ -3,18 +3,16 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 // Schools controller
 .controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog) {
     $scope.$parent.mainView = 'school';
-    if($scope.$parent.selectedOwner && $scope.$parent.selectedInstitute && $scope.$parent.schoolsModified)
-        $scope.$parent.loadData($scope.$parent.mainView);
 
-    $scope.delete = function (schoolIndex) {
+    $scope.delete = function (school) {
         createDialog('templates/modals/delete-school.html',{
             id : 'delete-dialog',
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
-                DataService.removeData($scope.$parent.mainView, $rootScope.schools[schoolIndex]).then(
+                DataService.removeData('school', school).then(
                     function() {
                         console.log("Rimozione effettuata con successo.");
-                        $scope.$parent.loadData($scope.$parent.mainView);
+                        $scope.schools.splice($scope.schools.indexOf(school), 1);
                     }, function() {
                         alert("Errore nella richiesta.");
                     });
@@ -23,61 +21,64 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
 })
 
-.controller('SchoolCtrl', function ($scope, $stateParams, $rootScope, $location, $timeout, DataService, createDialog) {
-    $scope.$parent.mainView = 'school';
+.controller('SchoolCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
+    $scope.$parent.mainView = 'school'; 
 
-    if ($stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
-    {
-        $scope.currentSchool = Number($stateParams.idSchool);
-        $scope.saveData = DataService.editData;
-        DataService.getData('route', 
-        		$rootScope.schools[$scope.currentSchool].ownerId, 
-        		$scope.$parent.selectedInstitute.objectId, 
-        		$rootScope.schools[$scope.currentSchool].objectId).then(
-            function(response) {
-                console.log('Caricamento delle linee a buon fine.');
-                $rootScope.schools[$scope.currentSchool].lines = response.data;
-            }, function() {
-                alert('Errore nel caricamento delle linee.');
+    $scope.initController = function() {
+        if ($scope.currentSchool) { //edit school
+            $scope.saveData = DataService.editData;
+            DataService.getData('route', 
+                    $stateParams.idDomain, 
+                    $stateParams.idInstitute, 
+                    $stateParams.idSchool).then(
+                function(response) {
+                    console.log('Caricamento delle linee a buon fine.');
+                    $scope.currentSchool.lines = response.data;
+                    $scope.$broadcast('schoolLoaded');
+                }, function() {
+                    alert('Errore nel caricamento delle linee.');
+                }
+            );
+        } else {
+            $scope.currentSchool = {
+                name: '',
+                address: '',
+                instituteId: $stateParams.idInstitute,
+                ownerId: $stateParams.idDomain,
             }
-        );
-    }
-    else
-    {
-        $scope.currentSchool = $rootScope.schools.push({        // variabile che indica la posizione nell'array della scuola che sta venendo editata
-            name: '',
-            address: '',
-            instituteId: $scope.$parent.selectedInstitute.objectId,
-            ownerId: $scope.$parent.selectedOwner,
-        })-1;
-        $scope.saveData = DataService.saveData;
+            $scope.saveData = DataService.saveData;
+        }
     }
 
-    /*function makeid() {         // data e ora di creazione + codice random di 4 caratteri -- GENERATI DAL SERVER, possono tornare utili per testing in locale
-        var id = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var date = new Date();
-        date = $filter('date')(date,'ddMMyy-hhmmss','+0100');
-
-        for (var i = 0; i < 4; i++)
-            id += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return date + '_' + id;
-    }*/
+    if ($stateParams.idSchool) {
+        MainDataService.getDomains().then(function (response) {
+            MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
+                MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
+                    $scope.schools = response.data;
+                    for (var i = 0; i < $scope.schools.length && !$scope.currentSchool; i++) {
+                        if ($scope.schools[i].objectId == $stateParams.idSchool) $scope.currentSchool = angular.copy($scope.schools[i]);
+                    }
+                    $scope.initController();
+                });
+            });
+        });
+    } else { //new school
+        $scope.initController();
+    }
 
     $scope.newClass = '';
     $scope.addNewClass = function()
     {
-        $rootScope.schools[$scope.currentSchool].classes.push($scope.newClass);
+        $scope.currentSchool.classes.push($scope.newClass);
         $scope.newClass = '';
     };
     $scope.deleteClass = function(index)
     {
-        $rootScope.schools[$scope.currentSchool].classes.splice(index,1);
+        $scope.currentSchool.classes.splice(index,1);
     };
     $scope.sortClasses = function()
     {
-        $rootScope.schools[$scope.currentSchool].classes.sort();
+        $scope.currentSchool.classes.sort();
     };
     
     $scope.isNewSchool = function() {
@@ -85,8 +86,9 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
     
     $scope.getSchoolName = function() {
+        if (!$scope.currentSchool) return ''; 
     	if(!$scope.isNewSchool()) {
-    		return $rootScope.schools[$scope.currentSchool].name;
+    		return $scope.currentSchool.name;
     	} else {
     		return "";
     	} 
@@ -102,17 +104,17 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	var formData = new FormData();
     	formData.append('file', file);
     	var element = {
-    			"ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
-    			"instituteId": $scope.$parent.selectedInstitute.objectId,
-    			"schoolId": $rootScope.schools[$scope.currentSchool].objectId,
-    			"formdata": formData 	
+    			"ownerId": $stateParams.idDomain,
+    			"instituteId": $stateParams.idInstitute,
+    			"schoolId": $stateParams.idSchool,
+    			"formdata": formData
     	};
     	DataService.uploadFile(element).then(
           function(response) {
               console.log('Caricamento dati a buon fine.');
-              $location.path('schools-list');
+              $state.go('root.schools-list');
           }, function() {
-              alert('Errore nel caricamento delle linee.');
+              alert('Errore nell\'elaborazione del file di import.');
           }
       );
     }
@@ -121,10 +123,17 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     $scope.save = function () {
         if (checkFields())
         {
-            $scope.saveData($scope.$parent.mainView, $rootScope.schools[$scope.currentSchool]).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                function() {
+            $scope.saveData('school', $scope.currentSchool).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+                function(response) {
                     console.log('Salvataggio dati a buon fine.');
-                    $location.path('schools-list');
+                    if ($scope.currentSchool.objectId) { //edited
+                        for (var i = 0; i < $scope.schools.length; i++) {
+                            if ($scope.schools[i].objectId == $scope.currentSchool.objectId) $scope.schools[i] = $scope.currentSchool;
+                        }
+                    } else {
+                        if ($scope.schools) $scope.schools.push(response.data);
+                    }
+                    $state.go('root.schools-list');
                 }, function() {
                     alert('Errore nella richiesta.');
                 }
@@ -144,7 +153,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         var isValidate = true;
         var invalidFields = $('.ng-invalid');
 
-        if (invalidFields.length > 0 /*|| $rootScope.schools[$scope.currentSchool].classes.length === 0*/)      // da valutare implementazione classi
+        if (invalidFields.length > 0 /*|| $scope.currentSchool.classes.length === 0*/)      // da valutare implementazione classi
             isValidate = false;
 
         return isValidate;
@@ -155,7 +164,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$location.path('schools-list');} }
+            success: { label: 'Conferma', fn: function() {$state.go('root.schools-list');} }
         });
     };
 })
@@ -179,29 +188,30 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         });
     }
 
-    $scope.remove = function (idLine) {
+    $scope.remove = function (line) {
         createDialog('templates/modals/delete-line.html',{
             id : 'delete-line-dialog',
             title: 'Attenzione!',
             success: { label: 'Conferma', fn: function() {
-                DataService.removeData('route', $rootScope.schools[$scope.currentSchool].lines[idLine]).then(
+                DataService.removeData('route', line).then(
                     function() {
                         console.log('Cancellazione della tappa a buon fine.');
+                        DataService.getData('route',
+                                $scope.currentSchool.ownerId, 
+                                $scope.currentSchool.instituteId, 
+                                $scope.currentSchool.objectId).then(
+                            function(response) {
+                                console.log('Caricamento delle linee a buon fine.');
+                                $scope.currentSchool.lines = response.data;
+                            }, function() {
+                                alert('Errore nel caricamento delle linee.');
+                            }
+                        );
                     }, function() {
                         alert('Errore nella cancellazione della tappa.');
                     }
                 );
-                DataService.getData('route',
-                		$rootScope.schools[$scope.currentSchool].ownerId, 
-                		$scope.$parent.selectedInstitute.objectId, 
-                		$rootScope.schools[$scope.currentSchool].objectId).then(
-                    function(response) {
-                        console.log('Caricamento delle linee a buon fine.');
-                        $rootScope.schools[$scope.currentSchool].lines = response.data;
-                    }, function() {
-                        alert('Errore nel caricamento delle linee.');
-                    }
-                );
+                
             } }
         });
     };
@@ -209,8 +219,24 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('ChildrenCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
     $scope.$parent.selectedTab = 'children-list';
-    $scope.children = [];
-    if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+
+    $scope.initController = function() {
+        DataService.getData('children',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            response.data.sort(compareChild);
+            $scope.currentSchool.children = response.data;
+            console.log('Caricamento degli scolari a buon fine.');
+        }, function() {
+            alert('Errore nel caricamento degli scolari.');
+        }
+        );
+    }
+
+
+    if (!$stateParams.idSchool) //new school
     {
         createDialog('templates/modals/newschool-err.html',{
             id : 'newschoolerr-dialog',
@@ -220,35 +246,26 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             } },
             footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
         });
+    } else if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
     }
-    
-    $scope.init = function() {
-      DataService.getData('children',
-      		$rootScope.schools[$scope.currentSchool].ownerId, 
-      		$rootScope.schools[$scope.currentSchool].instituteId, 
-      		$rootScope.schools[$scope.currentSchool].objectId).then(
-          function(response) {
-          	$rootScope.schools[$scope.currentSchool].children = response.data;
-          	$rootScope.schools[$scope.currentSchool].children.sort(compareChild);
-          	$scope.children = $rootScope.schools[$scope.currentSchool].children; 
-            console.log('Caricamento degli scolari a buon fine.');
-          }, function() {
-            alert('Errore nel caricamento degli scolari.');
-          }
-      );    	
-    };
 
-    $scope.remove = function (idChild) {
+    
+    $scope.remove = function (child) {
         createDialog('templates/modals/delete-child.html',{
             id : 'delete-child-dialog',
             title: 'Attenzione!',
             success: { 
             	label: 'Conferma', 
             	fn: function() {
-                DataService.removeData('child', $scope.children[idChild]).then(
+                DataService.removeData('child', child).then(
                     function() {
                         console.log('Cancellazione dello scolaro a buon fine.');
-                        $scope.children.splice(idChild, 1);
+                        $scope.currentSchool.children.splice($scope.currentSchool.children.indexOf(child), 1);
                     }, function() {
                         alert('Errore nella cancellazione dello scolaro.');
                     }
@@ -257,7 +274,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             }
         });
     };
-    
+        
   	$scope.getChildName = function(child) {
   		return child.name + " " + child.surname;
   	}
@@ -271,41 +288,63 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	    return 1;
   	  return 0;
   	}
-  	
-  	$scope.init();
 })
 
-.controller('ChildCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
+.controller('ChildCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
 	$scope.$parent.selectedTab = 'children-list';
-	$scope.selectedChild = {};
-	initData();
-	
-	function initData() {
-		if ($stateParams.idChild) {
-			$scope.selectedChild = $rootScope.schools[$scope.currentSchool].children[$stateParams.idChild];
-			$scope.saveData = DataService.editData;
-		} else {
-			$scope.selectedChild = {
-          "name": '',
-          "surname": '',
-          "parentName": '',
-          "phone": '',
-          "classRoom": '',
-          "wsnId": '',
-          "ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
-          "instituteId": $rootScope.schools[$scope.currentSchool].instituteId,
-          "schoolId": $rootScope.schools[$scope.currentSchool].objectId
-      };
-      $scope.saveData = DataService.saveData;
-		}
-	}
+    
+    $scope.initController = function() {
+        DataService.getData('children',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            response.data.sort(compareChild);
+            $scope.currentSchool.children = response.data;
+            console.log('Caricamento degli scolari a buon fine.');
+            if ($stateParams.idChild) {
+                for (var i = 0; i < $scope.currentSchool.children.length && !$scope.selectedChild; i++) {
+                    if ($scope.currentSchool.children[i].objectId == $stateParams.idChild) {
+                        $scope.selectedChild = angular.copy($scope.currentSchool.children[i]);
+                    }
+                }	
+                $scope.saveData = DataService.editData;
+            } else {
+                $scope.selectedChild = {
+                    "name": '',
+                    "surname": '',
+                    "parentName": '',
+                    "phone": '',
+                    "classRoom": '',
+                    "wsnId": '',
+                    "ownerId": $scope.currentSchool.ownerId,
+                    "instituteId": $scope.currentSchool.instituteId,
+                    "schoolId": $scope.currentSchool.objectId
+                };
+                $scope.saveData = DataService.saveData;
+            }
+        }, function() {
+            alert('Errore nel caricamento degli scolari.');
+        }
+        );
+    }
+
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }    
 	
   $scope.isNewChild = function() {
   	return ($stateParams.idChild == null || $stateParams.idChild == '');
   }
   
 	$scope.getChildName = function(child) {
-		return child.name + " " + child.surname;
+        if (child) return child.name + " " + child.surname;
+        return '';
 	}
 	
   // Exit without saving changes
@@ -313,7 +352,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$window.history.back();} }
+          success: { label: 'Conferma', fn: function() {$state.go('root.school.children-list');} }
       });
   }
   
@@ -321,8 +360,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	if (checkFields()) {
   		$scope.saveData('child', $scope.selectedChild).then(
 				function(response) {
-					console.log('Scolaro salvato.');
-					$window.history.back();
+                    console.log('Scolaro salvato.');
+                    $state.go('root.school.children-list');
 				},
 				function() {
           alert('Errore nel salvataggio dello scolaro.');
@@ -344,12 +383,37 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     }
     return allCompiled;
   }
+
+    function compareChild(a,b) {
+        var aName = a.name + " " + a.surname;
+        var bName = b.name + " " + b.surname;
+        if (aName < bName)
+            return -1;
+        if (aName > bName)
+            return 1;
+        return 0;
+    }
 })
 
-.controller('VolunteerListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
+.controller('VolunteerListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService, $state) {
     $scope.$parent.selectedTab = 'volunteer-list';
-    $scope.children = [];
-    if (!$stateParams.idSchool)        // controlla se si sta modificando una scuola esistente
+
+    $scope.initController = function() {
+        DataService.getData('volunteers',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+            function(response) {
+                $scope.currentSchool.volunteers = response.data;
+                $scope.currentSchool.volunteers.sort(compareVolunteer);
+                console.log('Caricamento dei volontari a buon fine.');
+            }, function() {
+                alert('Errore nel caricamento dei volontari.');
+            }
+        );
+    }    
+
+    if (!$stateParams.idSchool)        //new school
     {
         createDialog('templates/modals/newschool-err.html',{
             id : 'newschoolerr-dialog',
@@ -359,35 +423,26 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             } },
             footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
         });
+    } else if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
     }
-    
-    $scope.init = function() {
-      DataService.getData('volunteers',
-      		$rootScope.schools[$scope.currentSchool].ownerId, 
-      		$rootScope.schools[$scope.currentSchool].instituteId, 
-      		$rootScope.schools[$scope.currentSchool].objectId).then(
-          function(response) {
-          	$rootScope.schools[$scope.currentSchool].volunteers = response.data;
-          	$rootScope.schools[$scope.currentSchool].volunteers.sort(compareVolunteer);
-          	$scope.volunteers = $rootScope.schools[$scope.currentSchool].volunteers; 
-            console.log('Caricamento dei volontari a buon fine.');
-          }, function() {
-            alert('Errore nel caricamento dei volontari.');
-          }
-      );    	
-    };
 
-    $scope.remove = function (idVolunteer) {
+    
+    $scope.remove = function (volunteer) {
         createDialog('templates/modals/delete-volunteer.html',{
             id : 'delete-volunteer-dialog',
             title: 'Attenzione!',
             success: { 
             	label: 'Conferma', 
             	fn: function() {
-                DataService.removeData('volunteer', $scope.volunteers[idVolunteer]).then(
+                DataService.removeData('volunteer', volunteer).then(
                     function() {
                         console.log('Cancellazione del volontario a buon fine.');
-                        $scope.volunteers.splice(idVolunteer, 1);
+                        $scope.currentSchool.volunteers.splice($scope.currentSchool.volunteers.indexOf(volunteer), 1);
                     }, function() {
                         alert('Errore nella cancellazione del volontario.');
                     }
@@ -406,34 +461,56 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   	    return 1;
   	  return 0;
   	}
-  	
-  	$scope.init();
+
 })
 
-.controller('VolunteerCtrl', function ($scope, $stateParams, $rootScope, $timeout, $window, createDialog, DataService) {
+.controller('VolunteerCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
 	$scope.$parent.selectedTab = 'volunteer-list';
-	$scope.selectedVolunteer = {};
-	initData();
-	
-	function initData() {
-		if ($stateParams.idVolunteer) {
-			$scope.selectedVolunteer = $rootScope.schools[$scope.currentSchool].volunteers[$stateParams.idVolunteer];
-			$scope.saveData = DataService.editData;
-		} else {
-			$scope.selectedVolunteer = {
-          "name": '',
-          "address": '',
-          "phone": '',
-          "wsnId": '',
-          "cf": '',
-          "ownerId": $rootScope.schools[$scope.currentSchool].ownerId,
-          "instituteId": $rootScope.schools[$scope.currentSchool].instituteId,
-          "schoolId": $rootScope.schools[$scope.currentSchool].objectId
-      };
-      $scope.saveData = DataService.saveData;
-		}
-	}
-	
+    
+    $scope.initController = function() {
+        DataService.getData('volunteers',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            response.data.sort(compareVolunteer);
+            $scope.currentSchool.volunteers = response.data;
+            console.log('Caricamento dei volontari a buon fine.');
+            if ($stateParams.idVolunteer) {
+                for (var i = 0; i < $scope.currentSchool.volunteers.length && !$scope.selectedVolunteer; i++) {
+                    if ($scope.currentSchool.volunteers[i].objectId == $stateParams.idVolunteer) {
+                        $scope.selectedVolunteer = angular.copy($scope.currentSchool.volunteers[i]);
+                    }
+                }	
+                $scope.saveData = DataService.editData;
+            } else {
+                $scope.selectedVolunteer = {
+                    "name": '',
+                    "address": '',
+                    "phone": '',
+                    "wsnId": '',
+                    "cf": '',
+                    "ownerId": $scope.currentSchool.ownerId,
+                    "instituteId": $scope.currentSchool.instituteId,
+                    "schoolId": $scope.currentSchool.objectId
+                };
+                $scope.saveData = DataService.saveData;
+            }
+        }, function() {
+            alert('Errore nel caricamento dei volontari.');
+        }
+        );
+    }
+
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }    
+    
   $scope.isNewVolunteer = function() {
   	return ($stateParams.idVolunteer == null || $stateParams.idVolunteer == '');
   }
@@ -443,7 +520,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$window.history.back();} }
+          success: { label: 'Conferma', fn: function() {$state.go('root.school.volunteer-list');} }
       });
   }
   
@@ -452,7 +529,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
   		$scope.saveData('volunteer', $scope.selectedVolunteer).then(
 				function(response) {
 					console.log('Volontario salvato.');
-					$window.history.back();
+                    $state.go('root.school.volunteer-list');
 				},
 				function() {
           alert('Errore nel salvataggio del volontario.');
@@ -474,6 +551,16 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     }
     return allCompiled;
   }
+
+    function compareVolunteer(a,b) {
+        var aName = a.name;
+        var bName = b.name;
+        if (aName < bName)
+            return -1;
+        if (aName > bName)
+            return 1;
+        return 0;
+    }
 });
 
 

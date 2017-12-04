@@ -1,7 +1,7 @@
 angular.module('consoleControllers.line', [])
 
 // Edit the line for the selected school
-.controller('LineCtrl', function ($scope, $stateParams, $rootScope, $window, $timeout, DataService, 
+.controller('LineCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService,
 		uploadImageOnImgur, drawMapLine, createDialog) {
     $scope.$parent.selectedTab = 'lines-list';
     var currentSchool = $scope.$parent.currentSchool;
@@ -12,42 +12,37 @@ angular.module('consoleControllers.line', [])
     $scope.endDate = new Date();
     $scope.isCalendarOpen = [false, false];
     $scope.minDate = new Date(1970, 1, 1);
-    
-    InitLinePage();
-    
-    $scope.isNewLine = function() {
-    	return ($stateParams.idLine == null || $stateParams.idLine == '');
-    };
-
-    // Create $scope.line variable and init the map
-    function InitLinePage() {
-      if ($stateParams.idLine)     // se sto modificando una linea già esistente
+		
+		$scope.initController = function() {
+			if ($stateParams.idLine)     // se sto modificando una linea già esistente
       {
-         	$scope.line = angular.copy($rootScope.schools[currentSchool].lines[$stateParams.idLine]);
-          $scope.startDate.setTime($scope.line.from);
-          $scope.endDate.setTime($scope.line.to);
-          $scope.saveData = DataService.editData;
-          DataService.getData('stops',
-          		$rootScope.schools[$scope.currentSchool].ownerId, 
-          		$rootScope.schools[$scope.currentSchool].instituteId, 
-          		$rootScope.schools[$scope.currentSchool].objectId,
-          		$scope.line.objectId).then(
-              function(response) {
-              	$scope.line['stops'] = response.data; 
-                console.log('Caricamento delle linee a buon fine.');
-                drawMapLine.createMap('map-line', $scope.line.stops);
-              }, function() {
-                alert('Errore nel caricamento delle linee.');
-              }
-          );
+				for (var i = 0; i < $scope.currentSchool.lines.length && !$scope.line; i++) {
+						if ($scope.currentSchool.lines[i].objectId == $stateParams.idLine) $scope.line = angular.copy($scope.currentSchool.lines[i]);
+				}					
+				$scope.startDate.setTime($scope.line.from);
+				$scope.endDate.setTime($scope.line.to);
+				$scope.saveData = DataService.editData;
+				DataService.getData('stops',
+										$stateParams.idDomain, 
+										$stateParams.idInstitute, 
+										$stateParams.idSchool,
+										$scope.line.objectId).then(
+						function(response) {
+							$scope.line['stops'] = response.data; 
+							console.log('Caricamento delle linee a buon fine.');
+							drawMapLine.createMap('map-line', $scope.line.stops);
+						}, function() {
+							alert('Errore nel caricamento delle linee.');
+						}
+				);
       }
       else
       {
         $scope.line = {
             "name": '',
-            "instituteId": $scope.$parent.selectedInstitute.objectId,
-            "ownerId": $scope.$parent.selectedOwner,
-            "schoolId": $rootScope.schools[currentSchool].objectId,
+            "instituteId": $stateParams.idInstitute,
+            "ownerId": $stateParams.idDomain,
+            "schoolId": $stateParams.idSchool,
             "from": '',             
             "to": '',
             "distance": '',         
@@ -56,7 +51,21 @@ angular.module('consoleControllers.line', [])
         $scope.saveData = DataService.saveData;
         drawMapLine.createMap('map-line', $scope.line.stops);
       }
-    }
+		}
+
+
+		if ($scope.currentSchool) {
+				$scope.initController();
+		} else {
+				$scope.$on('schoolLoaded', function(e) {  
+						$scope.initController();        
+				});
+		}
+    
+    $scope.isNewLine = function() {
+    	return ($stateParams.idLine == null || $stateParams.idLine == '');
+    };
+
 
     $scope.sortableOptions = {
         handle: ' .handle',
@@ -81,7 +90,7 @@ angular.module('consoleControllers.line', [])
         if (checkFields()) {
         	$scope.line.from = $scope.startDate.getTime();
         	$scope.line.to = $scope.endDate.getTime();
-          $scope.saveData('route', $scope.line).then(
+          	$scope.saveData('route', $scope.line).then(
                 function(response) {
                     console.log('Linea salvata.');
                     $scope.line['objectId'] = response.data.objectId;
@@ -101,13 +110,13 @@ angular.module('consoleControllers.line', [])
                   		function(response) {
                         // riaggiorno la lista delle linee
                         DataService.getData('route', 
-                        	$rootScope.schools[$scope.currentSchool].ownerId, 
-                        	$rootScope.schools[$scope.currentSchool].instituteId, 
-                        	$rootScope.schools[$scope.currentSchool].objectId).then(       
+                        	$scope.currentSchool.ownerId, 
+                        	$scope.currentSchool.instituteId, 
+                        	$scope.currentSchool.objectId).then(       
                             function(response) {
+                                $scope.currentSchool.lines = response.data;
                                 console.log('Caricamento delle linee a buon fine.');
-                                $rootScope.schools[$scope.currentSchool].lines = response.data;
-                                $window.history.back();
+                                $state.go('root.school.lines-list');
                             }, function() {
                                 alert('Errore nel caricamento delle linee.');
                             }
@@ -169,9 +178,9 @@ angular.module('consoleControllers.line', [])
     
     $scope.assignPassengers = function(index) {
       DataService.getData('children',
-      		$rootScope.schools[$scope.currentSchool].ownerId, 
-      		$rootScope.schools[$scope.currentSchool].instituteId, 
-      		$rootScope.schools[$scope.currentSchool].objectId).then(
+      		$scope.currentSchool.ownerId, 
+      		$scope.currentSchool.instituteId, 
+      		$scope.currentSchool.objectId).then(
           function(response) {
           	$scope.children = response.data; 
             console.log('Caricamento degli scolari a buon fine.');
@@ -190,7 +199,30 @@ angular.module('consoleControllers.line', [])
             alert('Errore nel caricamento degli scolari.');
           }
       );
-    }; 
+	};
+	
+    $scope.saveOrder = function() {
+        if (!$scope.enableOrder) {
+            $scope.enableOrder = true;
+        } else {
+			for (i = 0; i < $scope.line.stops.length; i++) { 
+				$scope.line.stops[i].position = i;
+			}
+			var routeModel = {
+				"routeId": '',
+				"ownerId": '',
+				"stops": []
+			}
+			routeModel['ownerId'] = $scope.line.ownerId;
+			routeModel['routeId'] = $scope.line.objectId;
+			routeModel['stops'] = $scope.line.stops;
+			$scope.saveData('stops', routeModel).then(
+				function(response) {
+					$scope.enableOrder = false;
+				}
+			);
+        }
+    }
 })
 
 .controller('AssignPassegersModalController', function($scope, stop, children) {

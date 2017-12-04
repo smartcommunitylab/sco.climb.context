@@ -263,7 +263,7 @@ public class ExcelConverter {
 				String classe = fmt.formatCellValue(row.getCell(4));
 				String fermata = row.getCell(5).getStringCellValue();
 				String cf = row.getCell(6).getStringCellValue().toUpperCase();
-				String nodo = fmt.formatCellValue(row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+				String nodo = row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue();
 				
 				Stop stop = stopsMap.get(fermata);
 				if(stop == null) {

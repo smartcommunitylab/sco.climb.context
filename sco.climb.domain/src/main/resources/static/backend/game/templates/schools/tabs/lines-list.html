@@ -1,23 +1,21 @@
 <div class="row" style="min-height:300px">
     <div class="col-lg-12 center field">
         <a class="btn btn-info btn-margin" ui-sref="root.school.line({idLine: ''})">Crea nuova</a>
-        <a class="btn btn-info" ng-click="enableOrder = !enableOrder">{{enableOrder ? 'Conferma ordine' : 'Riordina linee'}}</a>
     </div>
     <div class="col-lg-12">
-        <ul ui-sortable="sortableOptions" ng-model="schools[currentSchool].lines" class="list-group list-categories">
-            <li class="list-group-item" ng-repeat="line in schools[currentSchool].lines">
+        <ul ng-model="currentSchool.lines" class="list-group list-categories">
+            <li class="list-group-item" ng-repeat="line in currentSchool.lines">
                 <div class="row v-center">
                     <div class="col-md-2">
                         <img class="path-img" alt="Placeholder">
                     </div>
                     <div class="col-md-8">
                         <h5>{{$index + 1}}. {{line.name}}</h5>
-                        <h5>Fermate: {{line.stops.length}}</h5>     <!-- TODO: da cambiare -->
+                        <h5>Inizio: {{line.from | date : 'dd/MM/yyyy'}} - Fine: {{line.to | date : 'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-md-2 right">
-                        <a ng-hide="enableOrder" ui-sref="root.school.line({idLine: $index})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-hide="enableOrder" ng-click="remove($index)" class="btn btn-icon btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                        <a ng-show="enableOrder" class="handle btn-icon btn-reorder"><i class="glyphicon glyphicon-align-justify"></i></a>
+                        <a ui-sref="root.school.line({idLine: line.objectId})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a ng-click="remove(line)" class="btn btn-icon btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </li>

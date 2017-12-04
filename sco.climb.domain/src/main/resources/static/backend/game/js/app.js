@@ -8,6 +8,7 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'consoleControllers.schools',
 'consoleControllers.line',
 'DataService',
+'MainDataService',
 'MapsService',
 'ImgurService',
 'ngUpload',
@@ -48,7 +49,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'PathsCtrl'
         })
         .state('root.path', {
-            url: '/path/:idPath',
+            url: '/path/:idDomain/:idInstitute/:idSchool/:idGame/:idPath',
             templateUrl: 'templates/paths/path.html',
             controller: 'PathCtrl'
         })
@@ -78,7 +79,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'GamesListCtrl'
         })
         .state('root.game', {
-            url: '/game/:idGame',
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame',
             templateUrl: 'templates/games/game.html',
             controller: 'GameCtrl'
         })
@@ -93,7 +94,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'SchoolsListCtrl'
         })
         .state('root.school', {
-            url: '/school/:idSchool',
+            url: '/school/:idDomain/:idInstitute/:idSchool',
             templateUrl: 'templates/schools/school.html',
             controller: 'SchoolCtrl'
         })
@@ -116,22 +117,22 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
           url: '/children-list',
           templateUrl: 'templates/schools/tabs/children-list.html',
           controller: 'ChildrenCtrl'
-      })
-      .state('root.school.child', {
-        url: '/child/:idChild',
-        templateUrl: 'templates/schools/child.html',
-        controller: 'ChildCtrl'
-    })
-    .state('root.school.volunteer-list', {
-      url: '/volunteer-list',
-      templateUrl: 'templates/schools/tabs/volunteer-list.html',
-      controller: 'VolunteerListCtrl'
-    })
-    .state('root.school.volunteer', {
-      url: '/volunteer/:idVolunteer',
-      templateUrl: 'templates/schools/volunteer.html',
-      controller: 'VolunteerCtrl'
-    })
+        })
+        .state('root.school.child', {
+            url: '/child/:idChild',
+            templateUrl: 'templates/schools/child.html',
+            controller: 'ChildCtrl'
+        })
+        .state('root.school.volunteer-list', {
+            url: '/volunteer-list',
+            templateUrl: 'templates/schools/tabs/volunteer-list.html',
+            controller: 'VolunteerListCtrl'
+        })
+        .state('root.school.volunteer', {
+            url: '/volunteer/:idVolunteer',
+            templateUrl: 'templates/schools/volunteer.html',
+            controller: 'VolunteerCtrl'
+        })
 });
 
 consoleApp.run(['$rootScope', '$q', '$location', 'DataService',

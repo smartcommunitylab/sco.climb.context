@@ -1,5 +1,7 @@
 angular.module("climbGame.controllers.map", [])
   .controller("mapCtrl", ["$scope", "$window", "$timeout", "leafletData", "mapService", "configService", function ($scope, $window, $timeout, leafletData, mapService, configService) {
+    $scope.IMAGES_PREFIX_URL = configService.IMAGES_PREFIX_URL;
+    
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -32,7 +34,7 @@ angular.module("climbGame.controllers.map", [])
       var controlsStyle = {
         leftarrow: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/arrow_left.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/arrow_left.png")',
           color: 'white',
           backgroundSize: "30px 30px",
           width: '30px',
@@ -45,7 +47,7 @@ angular.module("climbGame.controllers.map", [])
         },
         rightarrow: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/arrow_right.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/arrow_right.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
@@ -56,7 +58,7 @@ angular.module("climbGame.controllers.map", [])
         },
         uparrow: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/arrow_up.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/arrow_up.png")',
 
           backgroundSize: "30px 30px",
           width: '30px',
@@ -68,7 +70,7 @@ angular.module("climbGame.controllers.map", [])
         },
         downarrow: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/arrow_down.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/arrow_down.png")',
 
           backgroundSize: "30px 30px",
           width: '30px',
@@ -80,7 +82,7 @@ angular.module("climbGame.controllers.map", [])
         },
         zoomin: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/zoom-in.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/zoom-in.png")',
 
           backgroundSize: "30px 30px",
           width: '30px',
@@ -92,7 +94,7 @@ angular.module("climbGame.controllers.map", [])
         },
         zoomout: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/zoom-out.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/zoom-out.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
@@ -103,7 +105,7 @@ angular.module("climbGame.controllers.map", [])
         },
         home: {
           backgroundColor: '#f39c12',
-          backgroundImage: 'url("./img/home.png")',
+          backgroundImage: 'url("'+configService.IMAGES_PREFIX_URL+'img/home.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
@@ -319,14 +321,13 @@ angular.module("climbGame.controllers.map", [])
                 var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
                 var match = data.legs[i].externalUrls[k].link.match(regExp);
                 if (match && match[2].length == 11) {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="img/ic_play.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
-          
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="'+configService.IMAGES_PREFIX_URL+'img/ic_play.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 } else {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_video.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="'+configService.IMAGES_PREFIX_URL+'img/ic_video.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 }
                 break;
               case 'link':
-                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="img/ic_link.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
+                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img src="'+configService.IMAGES_PREFIX_URL+'img/ic_link.png"/><div>' + data.legs[i].externalUrls[k].name + '</div></a></div>';
                 break;
             }
           }
@@ -426,7 +427,7 @@ angular.module("climbGame.controllers.map", [])
           '<h4 class="text-pop-up"> Voi siete qui</h4>' +
           '</div>',
         icon: {
-          iconUrl: './img/POI_here.png',
+          iconUrl: ''+configService.IMAGES_PREFIX_URL+'img/POI_here.png',
           iconSize: [50, 50],
           iconAnchor: [25, 50],
           popupAnchor: [0, -50]
@@ -437,10 +438,10 @@ angular.module("climbGame.controllers.map", [])
     function getMarkerIcon(leg) {
       //check leg and give me icon based on my status and type of mean
       if (leg.position == 0) {
-        return './img/POI_start.png'
+        return configService.IMAGES_PREFIX_URL+'img/POI_start.png'
       }
       if (leg.position == $scope.legs.length - 1) {
-        return './img/POI_destination.png'
+        return configService.IMAGES_PREFIX_URL+'img/POI_destination.png'
       }
       return configService.getIconImg(leg.icon, leg.position < $scope.currentLeg.position); 
     }
