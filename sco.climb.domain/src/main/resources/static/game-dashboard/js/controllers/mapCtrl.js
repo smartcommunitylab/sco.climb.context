@@ -142,6 +142,7 @@ angular.module("climbGame.controllers.map", [])
                   animate: true
                 })
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -161,6 +162,7 @@ angular.module("climbGame.controllers.map", [])
                   animate: true
                 })
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -180,6 +182,7 @@ angular.module("climbGame.controllers.map", [])
                   animate: true
                 })
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -199,6 +202,7 @@ angular.module("climbGame.controllers.map", [])
                   animate: true
                 })
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -217,6 +221,7 @@ angular.module("climbGame.controllers.map", [])
                 // Then move the map
                 map.zoomIn();
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -234,6 +239,7 @@ angular.module("climbGame.controllers.map", [])
                 // Then move the map
                 map.zoomOut();
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
@@ -258,6 +264,7 @@ angular.module("climbGame.controllers.map", [])
                 // map.invalidateSize();
 
               }
+              L.DomEvent.disableClickPropagation(container);
               return container;
             }
           });
