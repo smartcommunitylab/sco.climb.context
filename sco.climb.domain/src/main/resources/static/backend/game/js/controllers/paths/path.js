@@ -39,7 +39,6 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 };
                 $scope.classes.push(classEntry);
             });
-            $scope.$broadcast('pathLoaded');
         }
 
         if ($scope.currentPath) { //edit path
@@ -51,6 +50,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     }
                 }
             });
+            $scope.$broadcast('pathLoaded');
             DataService.getData('legs', 
                     $stateParams.idDomain, 
                     $stateParams.idInstitute, 
@@ -74,6 +74,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 ownerId: $stateParams.idDomain,
                 classRooms: []
             }
+            $scope.$broadcast('pathLoaded');
             $scope.legs = [];
             $scope.saveData = DataService.saveData;
             $scope.$broadcast('legsLoaded');
