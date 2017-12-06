@@ -1,7 +1,7 @@
 angular.module('MainDataService', []).factory('MainDataService', function ($http, $q, DataService) {
     var mainDataService = {};
 
-    var domains, institutes, schools, games, itineraries;
+    var domains, institutes, schools, games, itineraries, gamesConfigs;
     var currentDomain, currentInstitute, currentSchool, currentGame;
 
 
@@ -45,6 +45,7 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
             DataService.getData('school', currentDomain, instituteID).then(function (data) {
                 schools = data;
                 currentInstitute = instituteID;
+                gamesConfigs = undefined;
                 deferred.resolve(schools);
             });
         } else {
@@ -81,6 +82,21 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
             });
         } else {
             deferred.resolve(itineraries);
+        }
+
+        return deferred.promise;
+    }
+
+    mainDataService.getGamesConfigs = function (schoolID) {
+        var deferred = $q.defer();
+        
+        if (gamesConfigs == undefined || schoolID != currentSchool) {
+            DataService.getData('gameconfiglist', currentDomain, currentInstitute, schoolID).then(function (data) {
+                gamesConfigs = data;
+                deferred.resolve(gamesConfigs);
+            });
+        } else {
+            deferred.resolve(itinerariesConfigs);
         }
 
         return deferred.promise;

@@ -1,9 +1,11 @@
-angular.module('consoleControllers.creategame', ['ngSanitize'])
+angular.module('consoleControllers.gameconfig', ['ngSanitize'])
 
-.controller('CreateGameCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, createDialog) {
+.controller('GameConfigCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, createDialog) {
     
     $scope.initController = function() {
-        DataService.getData('gameconfigs', 
+        $scope.isNewGameConf = true;
+        if ($stateParams.idGameConfig) $scope.isNewGameConf = false;
+        DataService.getData('gameconfigdetail', 
             $stateParams.idDomain, 
             $stateParams.idInstitute, 
             $stateParams.idSchool,
@@ -15,7 +17,13 @@ angular.module('consoleControllers.creategame', ['ngSanitize'])
                     $scope.configs.forEach(config => {
                         config.params.groups.forEach(group => {
                             group.fields.forEach(field => {
-                                if (!field.value) field.value = field.defaultValue; //TODO: trattare type diversi
+                                if (!field.value) {
+                                    if (field.type == "number") {
+                                        field.value = parseInt(field.defaultValue);
+                                    } else {
+                                        field.value = field.defaultValue;
+                                    }                                    
+                                }
                             });
                         });
                     });
@@ -25,6 +33,8 @@ angular.module('consoleControllers.creategame', ['ngSanitize'])
                     alert('Errore nel caricamento delle tappe.');
                 }
             );
+        
+        $scope.saveData = DataService.editData;
     }
 
 
@@ -33,9 +43,8 @@ angular.module('consoleControllers.creategame', ['ngSanitize'])
 
     $scope.save = function () {        
         if (checkFields()) {
-            console.log($scope.selectedConfig)
-            return;
-            $scope.saveData('legs', $scope.selectedConfig).then(
+            console.log($scope.selectedConfig);
+            $scope.saveData('creategame', $scope.selectedConfig).then(
                 function(response) {
                     console.log('Salvataggio dati a buon fine.');
                     $state.go('root.path.legs');

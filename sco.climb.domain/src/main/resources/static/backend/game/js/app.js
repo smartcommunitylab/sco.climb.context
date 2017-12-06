@@ -3,7 +3,7 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'ui.sortable',
 'consoleControllers.mainCtrl',
 'consoleControllers.paths',
-'consoleControllers.creategame',
+'consoleControllers.gameconfig',
 'consoleControllers.leg',
 'consoleControllers.games',
 'consoleControllers.schools',
@@ -74,11 +74,6 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/paths/leg.html',
             controller: 'LegCtrl'
         })
-        .state('root.creategame', {
-            url: '/path/:idDomain/:idInstitute/:idSchool/:idGame/:idPath/creategame',
-            templateUrl: 'templates/paths/creategame.html',
-            controller: 'CreateGameCtrl'
-        })
         .state('root.games-list', {
             url: '/games-list',
             templateUrl: 'templates/games/games-list.html',
@@ -88,6 +83,11 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/game/:idDomain/:idInstitute/:idSchool/:idGame',
             templateUrl: 'templates/games/game.html',
             controller: 'GameCtrl'
+        })
+        .state('root.gameconfig', {
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/:idGameConfig/gameconfig',
+            templateUrl: 'templates/games/gameconfig.html',
+            controller: 'GameConfigCtrl'
         })
         .state('root.game.info', {
             url: '/info',

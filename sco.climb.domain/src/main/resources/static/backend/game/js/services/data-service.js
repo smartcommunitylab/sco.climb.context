@@ -46,8 +46,12 @@ function ($q, $http, $rootScope, $timeout) {
                 fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
               } else if(type === 'legs') {
                 fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
-              } else if (type === 'gameconfigs') {
+              } else if (type === 'gameconfigdetail') {
                 fetchUrl = "data/testConfigDetails.json";
+              } else if (type === 'gameconfig') {
+                fetchUrl = "data/testConfigInstance.json";
+              } else if (type === 'gameconfiglist') {
+                fetchUrl = "data/testConfigsInstance.json";
               } else if(type === 'children') {
               	fetchUrl = baseUrl + "/api/child/" + ownerId + "/" + instituteId + "/" + schoolId;
               } else if(type === 'classes') {

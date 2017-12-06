@@ -54,20 +54,26 @@ angular.module('consoleControllers.mainCtrl', [])
             });  
         };
         $scope.loadGames = function(school) {
-            if (!school) return;          
+            if (!school) return;
+            $scope.gamesConfigs = [];
             MainDataService.getGames(school.objectId).then(function (response) {
                 $scope.games = response.data;
                 if ($scope.games.length == 1) {
                     $scope.selectedGame = $scope.games[0];
                     $scope.loadItineraries($scope.games[0]);
                 }
-            });  
+            });
+            MainDataService.getGamesConfigs(school.objectId).then(function (response) {                
+                response.data.forEach(config => {
+                    $scope.gamesConfigs[config.pedibusGameId] = config;
+                }); 
+            });
         };
         $scope.loadItineraries = function(game) {
             if (!game) return;          
             MainDataService.getItineraries(game.objectId).then(function (response) {
                 $scope.paths = response.data;
-            });  
+            });
         };
 
         $scope.uploadComplete = function (content) {
