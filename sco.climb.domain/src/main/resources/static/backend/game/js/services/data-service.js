@@ -43,16 +43,18 @@ function ($q, $http, $rootScope, $timeout) {
               } else if(type == 'stops') {
               	fetchUrl = baseUrl + "/api/stop/" + ownerId + "/" + routeId;
               } else if(type === 'itinerary') {
-                  fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
+                fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
               } else if(type === 'legs') {
-                  fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
+                fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
+              } else if (type === 'gameconfigs') {
+                fetchUrl = "data/testConfigDetails.json";
               } else if(type === 'children') {
               	fetchUrl = baseUrl + "/api/child/" + ownerId + "/" + instituteId + "/" + schoolId;
               } else if(type === 'classes') {
               	fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/classes";
               } else if(type === 'volunteers') {
               	fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
-              }
+              } 
               return $http.get(fetchUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
 
               // PER IL TESTING IN LOCALE CON IL LOCAL STORAGE

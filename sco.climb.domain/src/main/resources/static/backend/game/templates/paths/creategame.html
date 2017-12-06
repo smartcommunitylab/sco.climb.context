@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-8 header-path-category">
+        <h4>CREA NUOVO GIOCO</h4>
+        <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-12 right">
+        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva info</a>
+        <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+    </div>
+    <div class="col-lg-12">        
+        <label>Seleziona configurazione:
+            <select ng-options="config.name for config in configs track by config.id" ng-model="selectedConfig"></select>
+        </label>
+    </div>
+
+    <div class="conf-section" ng-repeat="groupSection in selectedConfig.params.groups">
+        <h4>{{groupSection.groupname}}</h4>
+        <label ng-repeat="field in groupSection.fields" class="col-lg-12">
+            <span class="required-sign">*</span> {{field.label}}:
+            <input name="{{field.name}}" type="{{field.type}}" ng-model="field.value"/>
+        </label>
+    </div>
+</div>
