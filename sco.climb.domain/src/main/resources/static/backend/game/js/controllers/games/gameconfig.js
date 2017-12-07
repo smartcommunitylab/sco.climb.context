@@ -29,7 +29,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                                 }
                                 $scope.selectedConfig = $scope.configs[i];
                                 formatIntFields($scope.selectedConfig);
-                                console.log($scope.configs);
                             }, function() {
                                 alert('Errore nel caricamento della config specifica.');
                             }
@@ -37,7 +36,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                     } else {
                         $scope.selectedConfig = response.data[0];
                     }
-                    console.log($scope.configs);
                 }, function() {
                     alert('Errore nel caricamento della config.');
                 }
@@ -61,7 +59,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
             } else {
                 $scope.selectedConfig.objectId = $stateParams.idGameConfig;
             }
-            console.log($scope.selectedConfig);
             $scope.saveData('gameconfigdetail', $scope.selectedConfig).then(
                 function(response) {
                     console.log('Salvataggio dati a buon fine.');

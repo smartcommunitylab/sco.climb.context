@@ -27,7 +27,6 @@ angular.module('consoleControllers.mainCtrl', [])
             if ($scope.profile.ownerIds.length == 1) {
                 MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
                 $scope.selectedOwner = $scope.profile.ownerIds[0];
-                console.log($scope.selectedOwner.objectId);
                 $scope.loadInstitutesList($scope.profile.ownerIds[0]);
             }
         });
@@ -76,7 +75,6 @@ angular.module('consoleControllers.mainCtrl', [])
                 response.data.forEach(config => {
                     $scope.gamesConfigs[config.pedibusGameId] = config;
                 });
-                console.log($scope.gamesConfigs);
             });
         }
 
