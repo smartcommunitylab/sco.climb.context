@@ -24,6 +24,9 @@ import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfSummary;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
 import java.util.ArrayList;
@@ -1111,5 +1114,68 @@ public class RepositoryManager {
 		update.set("authorizations", userDb.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
+	}
+
+	public List<PedibusGameConfTemplate> getPedibusGameConfTemplates() {
+		List<PedibusGameConfTemplate> result = mongoTemplate.findAll(PedibusGameConfTemplate.class);
+		return result;
+	}
+	
+	public PedibusGameConfTemplate getPedibusGameConfTemplate(String objectId) {
+		Query query = new Query(new Criteria("objectId").is(objectId));
+		PedibusGameConfTemplate result = mongoTemplate.findOne(query, PedibusGameConfTemplate.class);
+		return result;
+	}
+
+	public List<PedibusGameConfSummary> getPedibusGameConfSummary(String ownerId, 
+			String instituteId, String schoolId) {
+		List<PedibusGameConfSummary> result = new ArrayList<PedibusGameConfSummary>();
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId));
+		List<PedibusGameConf> confs = mongoTemplate.find(query, PedibusGameConf.class);
+		for(PedibusGameConf conf : confs) {
+			PedibusGameConfSummary summary = new PedibusGameConfSummary();
+			summary.setOwnerId(ownerId);
+			summary.setInstituteId(instituteId);
+			summary.setSchoolId(schoolId);
+			summary.setPedibusGameId(conf.getPedibusGameId());
+			summary.setPedibusGameConfId(conf.getObjectId());
+			summary.setActive(conf.isActive());
+			if(Utils.isNotEmpty(conf.getConfTemplateId())) {
+				PedibusGameConfTemplate confTemplate = getPedibusGameConfTemplate(conf.getConfTemplateId());
+				summary.setTemplateName(confTemplate.getName());
+				summary.setTemplateVersion(confTemplate.getVersion());
+			}
+			result.add(summary);
+		}
+		return result;
+	}
+
+	public PedibusGameConf getPedibusGameConf(String ownerId, String confId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("objectId").is(confId));
+		PedibusGameConf result = mongoTemplate.findOne(query, PedibusGameConf.class);
+		return result;
+	}
+
+	public void savePedibusGameConf(PedibusGameConf gameConf) {
+		Query query = new Query(new Criteria("ownerId").is(gameConf.getOwnerId())
+				.and("objectId").is(gameConf.getObjectId()));
+		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
+		Date now = new Date();
+		if(gameCongDB == null) {
+			gameConf.setCreationDate(now);
+			gameConf.setLastUpdate(now);
+			gameConf.setObjectId(Utils.getUUID());
+			mongoTemplate.save(gameConf);
+		} else {
+			Update update = new Update();
+			update.set("lastUpdate", now);
+			update.set("active", gameConf.isActive());
+			update.set("confTemplateId", gameConf.getConfTemplateId());
+			update.set("params", gameConf.getParams());
+			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
+		}
 	}
 }
