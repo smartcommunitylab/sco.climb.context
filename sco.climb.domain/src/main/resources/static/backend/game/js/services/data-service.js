@@ -46,12 +46,6 @@ function ($q, $http, $rootScope, $timeout) {
                 fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary";
               } else if(type === 'legs') {
                 fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + gameId + "/itinerary/" + itineraryId + "/legs";
-              } else if (type === 'gameconfigdetail') {
-                fetchUrl = "data/testConfigDetails.json";
-              } else if (type === 'gameconfig') {
-                fetchUrl = "data/testConfigInstance.json";
-              } else if (type === 'gameconfiglist') {
-                fetchUrl = "data/testConfigsInstance.json";
               } else if(type === 'children') {
               	fetchUrl = baseUrl + "/api/child/" + ownerId + "/" + instituteId + "/" + schoolId;
               } else if(type === 'classes') {
@@ -69,6 +63,17 @@ function ($q, $http, $rootScope, $timeout) {
 							 * JSON.parse(localStorage.getItem(localStorage.key(i)));
 							 * index++; } } return data;
 							 */
+          },
+          getGameConfData: function(type, data) {
+            var fetchUrl;
+            if (type === 'gameconfigtemplate') {
+                fetchUrl = baseUrl + "/api/game/conf/template";
+            } else if (type === 'gameconfigbyid') {
+                fetchUrl = baseUrl + "/api/game/conf/" + data.ownerId + "/" + data.confId;
+            } else if (type === 'gameconfigsummary') {
+                fetchUrl = baseUrl + "/api/game/conf/" + data.ownerId + "/" + data.instituteId + "/" + data.schoolId;
+            }
+            return $http.get(fetchUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
           },
           editData: function(type, element)
           {
@@ -91,6 +96,8 @@ function ($q, $http, $rootScope, $timeout) {
               	sendUrl = baseUrl + "/api/child/" + element.ownerId + "/" + element.objectId;
               } else if(type == 'volunteer') {
               	sendUrl = baseUrl + "/api/volunteer/" + element.ownerId + "/" + element.objectId;
+              } else if (type == 'gameconfigdetail') {
+                sendUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
               }
               return $http.put(sendUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
           },
@@ -120,6 +127,8 @@ function ($q, $http, $rootScope, $timeout) {
               	postUrl = baseUrl + "/api/child/" + element.ownerId;
               } else if(type == 'volunteer') {
               	postUrl = baseUrl + "/api/volunteer/" + element.ownerId;
+              } else if (type == 'gameconfigdetail') {
+                postUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
               }
               return $http.post(postUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
 

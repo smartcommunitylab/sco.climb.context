@@ -465,3 +465,7 @@ p.fixed-width
     vertical-align: middle;
     padding-left: 8px; 
 }
+
+.gameconfig-sections .conf-section {
+    margin-top: 20px;
+}

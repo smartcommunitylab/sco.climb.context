@@ -87,16 +87,16 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
         return deferred.promise;
     }
 
-    mainDataService.getGamesConfigs = function (schoolID) {
+    mainDataService.getGamesConfigs = function (schoolID, invalidate) {
         var deferred = $q.defer();
         
-        if (gamesConfigs == undefined || schoolID != currentSchool) {
-            DataService.getData('gameconfiglist', currentDomain, currentInstitute, schoolID).then(function (data) {
+        if (invalidate || gamesConfigs == undefined || schoolID != currentSchool) {
+            DataService.getGameConfData('gameconfigsummary', {"ownerId": currentDomain, "instituteId": currentInstitute, "schoolId": schoolID}).then(function (data) {
                 gamesConfigs = data;
                 deferred.resolve(gamesConfigs);
             });
         } else {
-            deferred.resolve(itinerariesConfigs);
+            deferred.resolve(gamesConfigs);
         }
 
         return deferred.promise;

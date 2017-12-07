@@ -12,15 +12,17 @@
     </div>
     <div class="col-lg-12">        
         <label>Seleziona configurazione:
-            <select ng-options="config.name for config in configs track by config.id" ng-model="selectedConfig"></select>
+            <select ng-options="config.name for config in configs track by config.objectId" ng-model="selectedConfig"></select>
         </label>
+        <p>{{selectedConfig.description}}</p>
     </div>
-
-    <div class="conf-section" ng-repeat="groupSection in selectedConfig.params.groups">
-        <h4>{{groupSection.groupname}}</h4>
-        <label ng-repeat="field in groupSection.fields" class="col-lg-12">
-            <span class="required-sign">*</span> {{field.label}}:
-            <input name="{{field.name}}" type="{{field.type}}" ng-model="field.value"/>
-        </label>
+    <div class="gameconfig-sections">
+        <div class="conf-section col-lg-12" ng-repeat="groupSection in selectedConfig.params.groups">
+            <h4>{{groupSection.groupName}}</h4>
+            <label ng-repeat="field in groupSection.fields" class="col-lg-12">
+                <span class="required-sign">*</span> {{field.label}}:
+                <input name="{{field.name}}" type="{{field.type}}" ng-model="field.value"/>
+            </label>
+        </div>
     </div>
 </div>
