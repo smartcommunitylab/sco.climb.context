@@ -557,6 +557,18 @@ public class RepositoryManager {
 		return result;
 	}
 	
+	public List<User> getUsersByOwnerId(String ownerId) {
+		Query query = new Query(new Criteria("ownerIds").is(ownerId));
+		List<User> result = mongoTemplate.find(query, User.class);
+		return result;
+	}
+	
+	public List<User> getUsersByRole(String ownerId, String role) {
+		Query query = new Query(new Criteria("ownerIds").is(ownerId).and("roles").is(role));
+		List<User> result = mongoTemplate.find(query, User.class);
+		return result;
+	}
+	
 	public DataSetInfo getDataSetInfoBySubject(String subject) {
 		Query query = new Query(new Criteria("subject").is(subject));
 		DataSetInfo dataSetInfo = mongoTemplate.findOne(query, DataSetInfo.class);

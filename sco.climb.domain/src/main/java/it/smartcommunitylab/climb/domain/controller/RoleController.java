@@ -40,7 +40,7 @@ public class RoleController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 
-	@RequestMapping(value = "/role/{ownerId}/owner", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/owner", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addOwner(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -65,11 +65,15 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 		List<String> authIds = new ArrayList<String>();
 		authIds.add(authorizationDTO.getId());
+		
 		storage.addUserRole(email, Const.ROLE_OWNER, getAuthKey(ownerId, Const.ROLE_OWNER), authIds);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addOwner: %s - %s - %s - %s", ownerId, email));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/volunteer", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/volunteer", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addVolunteer(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -193,12 +197,15 @@ public class RoleController extends AuthController {
 		authIds.add(authorizationDTO.getId());
 		result.add(authorizationDTO);
 		
-		
 		storage.addUserRole(email, Const.ROLE_VOLUNTEER, getAuthKey(ownerId, Const.ROLE_VOLUNTEER), authIds);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addVolunteer: %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/teacher", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/teacher", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addTeacher(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -303,10 +310,14 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 		
 		storage.addUserRole(email, Const.ROLE_TEACHER, getAuthKey(ownerId, Const.ROLE_TEACHER), authIds);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId, gameId));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/parent", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/parent", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addParent(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -329,12 +340,16 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 		List<String> authIds = new ArrayList<String>();
 		authIds.add(authorizationDTO.getId());
+		
 		storage.addUserRole(email, Const.ROLE_PARENT, getAuthKey(ownerId, Const.ROLE_PARENT), authIds);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addParent: %s - %s - %s", ownerId, email, gameId));
+		}
 		return result;
 	}
 	
 	
-	@RequestMapping(value = "/role/{ownerId}/{role}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/role/{ownerId}/{role}", method = RequestMethod.DELETE)
 	public @ResponseBody void removeRole(
 			@PathVariable String ownerId,
 			@PathVariable String role,
@@ -354,7 +369,39 @@ public class RoleController extends AuthController {
 				authorizationManager.deleteAuthorization(authId);
 			}
 		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("removeRole: %s - %s - %s", ownerId, role, email));
+		}
 		storage.removeUserRole(email, role, authKey);
+	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}/{role}", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUsersByRole(
+			@PathVariable String ownerId,
+			@PathVariable String role,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<User> result = storage.getUsersByRole(ownerId, role);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUsersByRole: %s - %s", ownerId, role));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUsersByDataset(
+			@PathVariable String ownerId,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<User> result = storage.getUsersByOwnerId(ownerId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUsersByDataset: %s", ownerId));
+		}
+		return result;
 	}
 	
 	private boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
