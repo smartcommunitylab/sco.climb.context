@@ -17,7 +17,7 @@ public class User {
 	private String surname;
 	private String email;
 	private String cf;
-	private Map<String, List<String>> authorizations = new HashMap<String, List<String>>();
+	private Map<String, List<Object>> authorizations = new HashMap<String, List<Object>>();
 	
 	public String getObjectId() {
 		return objectId;
@@ -79,10 +79,10 @@ public class User {
 	public void setCf(String cf) {
 		this.cf = cf;
 	}
-	public Map<String, List<String>> getAuthorizations() {
+	public Map<String, List<Object>> getAuthorizations() {
 		return authorizations;
 	}
-	public void setAuthorizations(Map<String, List<String>> authorizations) {
+	public void setAuthorizations(Map<String, List<Object>> authorizations) {
 		this.authorizations = authorizations;
 	}
 	

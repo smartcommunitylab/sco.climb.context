@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.storage;
 
+import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
@@ -1076,32 +1077,34 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("name", user.getName());
 		update.set("surname", user.getSurname());
-		update.set("email", user.getEmail());
+		//update.set("email", user.getEmail());
 		update.set("cf", user.getCf());
-		update.set("subject", user.getSubject());
-		update.set("ownerIds", user.getOwnerIds());
-		update.set("roles", user.getRoles());
-		update.set("authorizations", user.getAuthorizations());
+		//update.set("subject", user.getSubject());
+		//update.set("ownerIds", user.getOwnerIds());
+		//update.set("roles", user.getRoles());
+		//update.set("authorizations", user.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
 
 	public void addUserRole(String email, String role, String authKey, 
-			List<String> authIds) throws EntityNotFoundException {
+			List<AuthorizationDTO> auths) throws EntityNotFoundException {
 		Query query = new Query(new Criteria("email").is(email));
 		User userDb = mongoTemplate.findOne(query, User.class);
 		if(userDb == null) {
 			throw new EntityNotFoundException(String.format("User %s not found", email));
 		}
 		//add role
-		userDb.getRoles().add(role);
+		if(!userDb.getRoles().contains(role)) {
+			userDb.getRoles().add(role);
+		}
 		//add auths
-		List<String> list = userDb.getAuthorizations().get(authKey);
+		List<Object> list = userDb.getAuthorizations().get(authKey);
 		if(list == null) {
-			list = new ArrayList<String>();
+			list = new ArrayList<Object>();
 			userDb.getAuthorizations().put(authKey, list);
 		}
-		list.addAll(authIds);
+		list.addAll(auths);
 		//update user
 		Date actualDate = new Date();
 		Update update = new Update();
@@ -1126,6 +1129,15 @@ public class RepositoryManager {
 		update.set("authorizations", userDb.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
+	}
+	
+	public void removeUser(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerIds").is(ownerId).and("objectId").is(objectId));
+		User entityDB = mongoTemplate.findOne(query, User.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("user with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, User.class);
 	}
 
 	public List<PedibusGameConfTemplate> getPedibusGameConfTemplates() {

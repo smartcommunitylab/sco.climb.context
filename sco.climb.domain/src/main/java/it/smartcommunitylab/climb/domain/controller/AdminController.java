@@ -93,30 +93,6 @@ public class AdminController extends AuthController {
 		return Boolean.toString(authorizationManager.validateAuthorization(auth));
 	}
 	
-	@RequestMapping(value = "/admin/user", method = RequestMethod.POST)
-	public @ResponseBody User addUser(
-			@RequestParam(name="update", required=false) Boolean update,
-			@RequestBody User user,
-			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		User userDb = null;
-		if(Utils.isNotEmpty(user.getCf())) {
-			userDb = storage.getUserByCf(user.getCf());
-		} else if(Utils.isNotEmpty(user.getEmail())) {
-			userDb = storage.getUserByEmail(user.getEmail());
-		} 
-    if(userDb == null) {
-    	user.setObjectId(Utils.getUUID());
-    	storage.addUser(user);
-    } else if(update) {
-    	user.setObjectId(userDb.getObjectId());
-    	storage.updateUser(user);
-    }
-		return user;
-	}
-	
 	@RequestMapping(value = "/admin/user/csv", method = RequestMethod.POST)
 	public @ResponseBody void uploadUserCsv(
 			@RequestParam("file") MultipartFile file,
