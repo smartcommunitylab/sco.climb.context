@@ -379,10 +379,10 @@ public class RoleController extends AuthController {
 		}
 	}
 	
-	@RequestMapping(value = "/api/role/{ownerId}/{role}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/role/{ownerId}/users", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersByRole(
 			@PathVariable String ownerId,
-			@PathVariable String role,
+			@RequestParam(required=false) String role,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
@@ -394,7 +394,7 @@ public class RoleController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/role/{ownerId}", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersByDataset(
 			@PathVariable String ownerId,
 			HttpServletRequest request) throws Exception {
@@ -406,6 +406,28 @@ public class RoleController extends AuthController {
 			logger.info(String.format("getUsersByDataset: %s", ownerId));
 		}
 		return result;
+	}*/
+	
+	@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.GET)
+	public @ResponseBody User getUserByEmail(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User result = storage.getUserByEmail(email);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUserByEmail: %s - %s", ownerId, email));
+		}
+		if(result != null) {
+			if(result.getOwnerIds().contains(ownerId)) {
+				return result;
+			} else {
+				throw new UnauthorizedException("Unauthorized Exception: ownerId not allowed");
+			}
+		}
+		return null;
 	}
 	
 	@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.POST)

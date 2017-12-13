@@ -565,7 +565,11 @@ public class RepositoryManager {
 	}
 	
 	public List<User> getUsersByRole(String ownerId, String role) {
-		Query query = new Query(new Criteria("ownerIds").is(ownerId).and("roles").is(role));
+		Criteria criteria = new Criteria("ownerIds").is(ownerId);
+		if(Utils.isNotEmpty(role)) {
+			criteria = criteria.and("roles").is(role);
+		}
+		Query query = new Query(criteria);
 		List<User> result = mongoTemplate.find(query, User.class);
 		return result;
 	}
