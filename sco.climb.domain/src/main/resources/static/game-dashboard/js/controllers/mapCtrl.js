@@ -293,7 +293,7 @@ angular.module("climbGame.controllers.map", [])
         $scope.globalTeam = data.game.globalTeam;
         $scope.myInitialBounds = new L.latLngBounds();
 
-        if ($scope.$parent) $scope.$parent.gamePublicTitle = $scope.globalTeam + " - " + data.game.gameName; 
+        if ($scope.$parent) $scope.$parent.gamePublicTitle = $scope.globalTeam + " - " + data.itinerary.name; 
 
         // get actual situation
         for (var i = 0; i < data.teams.length; i++) {
