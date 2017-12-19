@@ -16,20 +16,21 @@
             <md-icon>save</md-icon>
         </md-button>
     </div>
+    <div class="vertical-divider"></div>
     <md-select ng-model="selectedDomain" class="md-no-underline" md-position-mode="target-right target">
         <md-option ng-repeat="domain in myProfile.ownerIds" value="{{domain}}" ng-click="changeDomain(domain)">{{domain}}</md-option>
     </md-select>
-    <md-menu md-position-mode="target-right target" >
+    <md-menu md-position-mode="target-right target">
         <md-button aria-label="Profile" class="md-icon-button" ng-click="$mdMenu.open($event)">
             <md-icon>account_circle</md-icon>
         </md-button>
-        <md-menu-content width="4" >
+        <md-menu-content width="4" layout-padding>
             <span class="md-headline">{{myProfile.name}} {{myProfile.surname}}</span>
             <span class="md-subhead">{{myProfile.email}}</span>
             <md-menu-item>
                 <md-button ng-click="ctrl.announceClick($index)">
                     <div layout="row" flex>
-                        <md-icon>lock</md-icon>
+                        <md-icon md-menu-align-target>lock</md-icon>
                         <p flex>Logout</p>
                     </div>
                 </md-button>
@@ -39,7 +40,7 @@
   </div>
 </md-toolbar>  
 <main flex layout="column" layout-align="center">
-    <div layout="row" layout-align="center" ng-hide="selectedDomain">
+    <div layout="row" layout-align="center" ng-show="selectedDomain == 'selectDomain'">
         <md-card md-theme-watch flex="40">
             <md-card-title>
                 <md-card-title-text>

@@ -183,3 +183,12 @@ md-sidenav {
   top: 6px;
   height: 50px;
 }
+
+.vertical-divider {
+  border-top-width: 0;
+  border-right-width: 1px;
+  border-right-style: solid;
+  height: 80%;
+  margin: 16px;
+  opacity: 0.6;
+}

@@ -9,13 +9,16 @@ angular.module('climbGameUser.controllers.home', [])
         dataService.getProfile().then(
           function (data) {
             $scope.myProfile = data;
-            if ($scope.myProfile.ownerIds.length == 1)  {
-              
+            if ($scope.myProfile.ownerIds.length == 1)  { //if single domain available, select it 
+              $scope.changeDomain($scope.myProfile.ownerIds[0]);
+            } else { //check if domain inserted in the URL is present
+              if ($stateParams.currentDomain != 'selectDomain' && !$scope.myProfile.ownerIds.includes($stateParams.currentDomain)) {
+                $state.go('home', {currentDomain: 'selectDomain'});
+              }
             }
           }
         );
         if ($stateParams.currentDomain == 'selectDomain') {
-          $stateParams.currentDomain = '';
           $scope.title = 'Select domain';
         }
         $scope.selectedDomain = $stateParams.currentDomain;
