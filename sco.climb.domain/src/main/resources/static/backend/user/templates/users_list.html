@@ -1,0 +1,21 @@
+<md-list class="users-list">
+    <md-list-item class="md-3-line" ng-repeat="user in users" ng-click="openUser($event, user)">
+      <div class="md-list-item-text" layout="column">
+        <h3>{{user.surname}} {{user.name}}</h3>
+        <p>{{user.email}}</p>
+        <p>Roles: {{user.roles}}</p>
+      </div>
+      <md-button class="md-icon-button md-primary" ui-sref="home.user-role-edit({userEmail:user.email})">
+        <md-icon>perm_identity</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-primary" ui-sref="home.user-edit({userEmail:user.email})">
+        <md-icon>mode_edit</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-primary" ng-click="deleteUser($event, user)">
+        <md-icon>delete</md-icon>
+      </md-button>
+    </md-list-item>
+</md-list>
+<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div>

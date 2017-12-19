@@ -1,0 +1,20 @@
+<md-dialog>
+    <form ng-cloak>
+        <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Eliminare {{currentUser.surname}} {{currentUser.name}}?</h2>
+        </div>
+        </md-toolbar>    
+        <md-dialog-content>
+            Sei sicuro di voler eliminare questo utente?
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button ng-click="cancel()">
+                No
+            </md-button>
+            <md-button class="md-warn" ng-click="delete()">
+                Elimina utente
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
