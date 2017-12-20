@@ -109,6 +109,10 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
         currentGame = game;
     }
 
+    mainDataService.getSelectedDomain = function() {
+        return currentDomain;
+    }
+
 
     return mainDataService;
 });

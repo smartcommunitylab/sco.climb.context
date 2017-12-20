@@ -51,8 +51,8 @@ function ($q, $http, $rootScope, $timeout) {
               } else if(type === 'classes') {
               	fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/classes";
               } else if(type === 'volunteers') {
-              	fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
-              } 
+                fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
+              }
               return $http.get(fetchUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
 
               // PER IL TESTING IN LOCALE CON IL LOCAL STORAGE
@@ -161,6 +161,11 @@ function ($q, $http, $rootScope, $timeout) {
           				},
           				transformRequest: angular.identity
           			});
+          },
+          initGameCall: function (ownerId, pedibusGameId) {
+            return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/init", 
+                {headers: {'Authorization': 'Bearer ' + profileToken}}
+            );              
           },
           logout: logout,
           setProfileToken: function(token) {

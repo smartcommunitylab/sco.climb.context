@@ -1,7 +1,7 @@
 angular.module('consoleControllers.games', ['ngSanitize'])
 
 // Games controller
-.controller('GamesListCtrl', function ($scope, $rootScope, DataService, createDialog) {
+.controller('GamesListCtrl', function ($scope, $rootScope, DataService, MainDataService, createDialog) {
     $scope.$parent.mainView = 'game';
 
     $scope.delete = function (game) {
@@ -19,6 +19,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             } }
         });
     };
+    $scope.initGameOnServer = function(game) {
+        DataService.initGameCall(MainDataService.getSelectedDomain(), game.objectId).then(
+            function(response) {
+                alert("Init game riuscito!");
+            }, function() {
+                alert('Errore in init game!');
+            }
+        );
+    }
 })
 
 .controller('GameCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, DataService, MainDataService, createDialog, $filter) {
