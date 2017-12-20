@@ -5,9 +5,10 @@
         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info">Crea nuovo</a>
     </div>
 
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-10 col-md-offset-1 search-container">
+        <label class="search-label">Cerca: <input ng-model="searchText"></label>
         <ul class="list-group list-categories">
-            <li class="list-group-item" ng-repeat="game in games">
+            <li class="list-group-item" ng-repeat="game in games | filter:searchText">
                 <div class="row v-center">
                     <div class="col-md-2">
                         <img class="path-img" alt="Placeholder">

@@ -465,3 +465,13 @@ p.fixed-width
     vertical-align: middle;
     padding-left: 8px; 
 }
+
+.search-container {
+    text-align: right;
+}
+.search-label {
+    margin: 8px;
+}
+.search-container .list-categories {
+    text-align: left;
+}
