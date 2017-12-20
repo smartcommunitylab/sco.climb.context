@@ -192,3 +192,6 @@ md-sidenav {
   margin: 16px;
   opacity: 0.6;
 }
+.title-no-margin {
+  margin-bottom: 0px;
+}

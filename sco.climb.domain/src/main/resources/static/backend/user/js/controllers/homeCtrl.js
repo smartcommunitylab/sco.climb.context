@@ -2,10 +2,8 @@
 angular.module('climbGameUser.controllers.home', [])
   .controller('HomeCtrl', function ($rootScope, $scope, $log, $state, $stateParams, $mdToast, $filter, $mdSidenav, 
   		$timeout, $location, $window, dataService, loginService) {
-        $scope.goBack = function() {
-          $state.go($scope.backStateToGo);
-        }
         $scope.$state = $state;
+        
         dataService.getProfile().then(
           function (data) {
             $scope.myProfile = data;
@@ -23,10 +21,21 @@ angular.module('climbGameUser.controllers.home', [])
         }
         $scope.selectedDomain = $stateParams.currentDomain;
         dataService.setCurrentDomain($stateParams.currentDomain);
+
         $scope.changeDomain = function(domain) {
           $scope.selectedDomain = domain;
           dataService.setCurrentDomain(domain);
           $state.go('home.users-lists.list', {currentDomain: domain});
+        }
+
+        $scope.goBack = function() {
+          $state.go($scope.backStateToGo);
+        }
+
+        $scope.logout = function () {
+          var logoutUrl = loginService.logout();
+          logoutUrl += '?target=' + $location.path('/').absUrl();
+          $window.location.href = logoutUrl;
         }
     }
   )

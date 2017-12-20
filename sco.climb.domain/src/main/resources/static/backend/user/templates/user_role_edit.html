@@ -1,9 +1,9 @@
 <md-content layout-padding>
-    <h3>{{user.name}} {{user.surname}}</h3>
-    <h4>{{user.email}}</h4>
+    <h4 class="title-no-margin">{{user.name}} {{user.surname}}</h4>
+    <span class="sub-title">{{user.email}}</span>
     <form name="role_edit" ng-disabled="saving">
         <md-input-container class="md-block">
-            Roles:
+            Role:
             <md-radio-group ng-model="user.roles" layout="row">            
                 <md-radio-button value='owner'>Owner</md-radio-button>
                 <md-radio-button value='parent'>Parent</md-radio-button>

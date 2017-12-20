@@ -44,7 +44,7 @@ angular.module('climbGameUser', [
     //  $urlRouterProvider.otherwise('/')
     $urlRouterProvider.otherwise(function ($injector, $location) {
       var $state = $injector.get('$state')
-      $state.go('home', {currentDomain: 'selectDomain'})
+      $state.go('login')
       return $location.path()
     })
 
