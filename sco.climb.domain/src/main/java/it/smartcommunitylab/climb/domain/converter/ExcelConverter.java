@@ -261,14 +261,9 @@ public class ExcelConverter {
 				String genitore = fmt.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 				String telefono = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 				String classe = fmt.formatCellValue(row.getCell(4));
-				String fermata = row.getCell(5).getStringCellValue();
-				String cf = row.getCell(6).getStringCellValue().toUpperCase();
+				String fermata = fmt.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+				String cf = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue().toUpperCase();
 				String nodo = row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue();
-				
-				Stop stop = stopsMap.get(fermata);
-				if(stop == null) {
-					throw new InvalidParametersException(String.format("Stop '%s' not found", fermata));
-				}
 				
 				Child child = new Child();
 				child.setOwnerId(ownerId);
@@ -283,7 +278,13 @@ public class ExcelConverter {
 				child.setClassRoom(classe);
 				child.setWsnId(nodo);
 				
-				stop.getPassengerList().add(child.getObjectId());
+				if(Utils.isNotEmpty(fermata)) {
+					Stop stop = stopsMap.get(fermata);
+					if(stop == null) {
+						logger.warn(String.format("Stop '%s' not found", fermata));
+					}
+					stop.getPassengerList().add(child.getObjectId());
+				}
 				
 				result.put(child.getObjectId(), child);
 			}

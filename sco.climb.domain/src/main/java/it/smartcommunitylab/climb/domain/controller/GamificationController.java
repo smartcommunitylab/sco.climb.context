@@ -630,6 +630,7 @@ public class GamificationController extends AuthController {
 
 			Map<String, Object> result = Maps.newTreeMap();
 			result.put("game", game);
+			result.put("itinerary", itinerary);
 			result.put("legs", legs);
 			//result.put("players", players);
 			result.put("teams", teams);
