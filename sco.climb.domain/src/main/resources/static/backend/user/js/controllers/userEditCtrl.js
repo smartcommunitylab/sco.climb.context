@@ -21,7 +21,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
       if ($scope['user_edit'].$invalid) {
         $mdToast.show(
           $mdToast.simple()
-            .textContent('Compila i campi richiesti!')
+            .textContent($translate.instant('validation_error_msg'))
             .position("bottom")
             .hideDelay(3000)
         );
@@ -37,7 +37,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
           $scope.saving = false;
           $mdToast.show(
             $mdToast.simple()
-              .textContent('Errore nel salvataggio!')
+              .textContent($translate.instant('user_creation_saving_error_msg'))
               .position("bottom")
               .hideDelay(3000)
           );
@@ -47,9 +47,9 @@ angular.module('climbGameUser.controllers.users.edit', [])
 
     function initParentNavigation() {
       if ($stateParams.userId) {
-        $rootScope.title = "User edit";
+        $rootScope.title = "title_user_edit";
       } else {
-        $rootScope.title = "User creation";
+        $rootScope.title = "title_user_creation";
       }
       $rootScope.backStateToGo = "home.users-lists.list";
     }

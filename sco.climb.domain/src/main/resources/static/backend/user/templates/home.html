@@ -1,18 +1,18 @@
 <md-toolbar layout="row" class="desktop bar-colors">
   <div class="md-toolbar-tools bar-colors">
-    <md-button class="md-icon-button" aria-label="Back" ng-show="$state.current.name != 'home.users-lists.list' && $state.current.name != 'home'" ng-click="goBack()">
+    <md-button class="md-icon-button" aria-label="{{'action_back' | translate}}" ng-show="$state.current.name != 'home.users-lists.list' && $state.current.name != 'home'" ng-click="goBack()">
       <md-icon>arrow_back</md-icon>
     </md-button>
-    <h2 flex md-truncate><span>Users Console - {{title}}</span>
+    <h2 flex md-truncate><span>Users Console - {{title | translate}}</span>
     </h2>
     
     <div ng-show="$state.current.name == 'home.user-edit'">
-        <md-button class="md-icon-button" aria-label="Save" ng-click="saveUser()">
+        <md-button class="md-icon-button" aria-label="{{'action_save' | translate}}" ng-click="saveUser()">
             <md-icon>save</md-icon>
         </md-button>
     </div>
     <div ng-show="$state.current.name == 'home.user-role-edit'">
-        <md-button class="md-icon-button" aria-label="Save" ng-click="saveUserRole()">
+        <md-button class="md-icon-button" aria-label="{{'action_save' | translate}}" ng-click="saveUserRole()">
             <md-icon>save</md-icon>
         </md-button>
     </div>
@@ -31,7 +31,7 @@
                 <md-button ng-click="logout()">
                     <div layout="row" flex>
                         <md-icon md-menu-align-target>lock</md-icon>
-                        <p flex>Logout</p>
+                        <p flex>{{'menu_logout' | translate}}</p>
                     </div>
                 </md-button>
             </md-menu-item>
@@ -44,7 +44,7 @@
         <md-card md-theme-watch flex="40">
             <md-card-title>
                 <md-card-title-text>
-                    <span class="md-headline">Seleziona dominio</span>
+                    <span class="md-headline">{{'domain_select' | translate}}</span>
                 </md-card-title-text>
             </md-card-title>
             <md-card-content>

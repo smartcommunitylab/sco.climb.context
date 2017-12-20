@@ -78,7 +78,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
               function (reason) {
                 $mdToast.show(
                   $mdToast.simple()
-                    .textContent('Errore nella rimozione!')
+                    .textContent($translate.instant('user_delete_error_msg'))
                     .position("bottom")
                     .hideDelay(3000)
                 );

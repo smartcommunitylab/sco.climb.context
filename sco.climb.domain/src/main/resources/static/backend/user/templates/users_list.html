@@ -3,7 +3,7 @@
       <div class="md-list-item-text" layout="column">
         <h3>{{user.surname}} {{user.name}}</h3>
         <p>{{user.email}}</p>
-        <p>Roles: {{user.roles}}</p>
+        <p>{{'roles' | translate}}: {{user.roles}}</p>
       </div>
       <md-button class="md-icon-button md-primary" ui-sref="home.user-role-edit({userEmail:user.email})">
         <md-icon>perm_identity</md-icon>

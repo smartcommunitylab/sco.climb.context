@@ -3,30 +3,30 @@
     <span class="sub-title">{{user.email}}</span>
     <form name="role_edit" ng-disabled="saving">
         <md-input-container class="md-block">
-            Role:
+            {{'role' | translate}}:
             <md-radio-group ng-model="user.roles" layout="row">            
-                <md-radio-button value='owner'>Owner</md-radio-button>
-                <md-radio-button value='parent'>Parent</md-radio-button>
-                <md-radio-button value='teacher'>Teacher</md-radio-button>
-                <md-radio-button value='volunteer'>Volunteer</md-radio-button>            
+                <md-radio-button value='owner'>{{'user_list_owner' | translate}}</md-radio-button>
+                <md-radio-button value='parent'>{{'user_list_parent' | translate}}</md-radio-button>
+                <md-radio-button value='teacher'>{{'user_list_teacher' | translate}}</md-radio-button>
+                <md-radio-button value='volunteer'>{{'user_list_volunteer' | translate}}</md-radio-button>            
             </md-radio-group>
         </md-input-container>
     
         <md-input-container class="md-block" ng-show="user.roles == 'teacher' || user.roles == 'volunteer'">
-            <label>Institute Id</label>
+            <label>{{'role_editor_institute_id' | translate}}</label>
             <md-icon>domain</md-icon>
             <input ng-model="user.instituteId" type="text" ng-required="user.roles == 'teacher' || user.roles == 'volunteer'">
         </md-input-container>
     
         <md-input-container class="md-block" ng-show="user.roles == 'teacher' || user.roles == 'volunteer'">
-            <label>School Id</label>
+            <label>{{'role_editor_school_id' | translate}}</label>
             <md-icon>school</md-icon>
             <input ng-model="user.schoolId" type="text" ng-required="user.roles == 'teacher' || user.roles == 'volunteer'">
         </md-input-container>
     
     
         <md-input-container class="md-block" ng-show="user.roles == 'parent' || user.roles == 'teacher'">
-            <label>Game Id</label>
+            <label>{{'role_editor_game_id' | translate}}</label>
             <md-icon>videogame_asset</md-icon>
             <input ng-model="user.gameId" type="text" ng-required="user.roles == 'parent' || user.roles == 'teacher'">
         </md-input-container>

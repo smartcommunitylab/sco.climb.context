@@ -43,7 +43,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       if ($scope['role_edit'].$invalid) {
         $mdToast.show(
           $mdToast.simple()
-            .textContent('Compila i campi richiesti!')
+            .textContent($translate.instant('validation_error_msg'))
             .position("bottom")
             .hideDelay(3000)
         );
@@ -61,7 +61,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
             $scope.saving = false;
             $mdToast.show(
               $mdToast.simple()
-                .textContent('Errore nell\'aggiunta del ruolo!')
+                .textContent($translate.instant('role_add_error_msg'))
                 .position("bottom")
                 .hideDelay(3000)
             );
@@ -76,7 +76,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
             $scope.saving = false;
             $mdToast.show(
               $mdToast.simple()
-                .textContent('Errore nella rimozione del ruolo!')
+                .textContent($translate.instant('role_remove_error_msg'))
                 .position("bottom")
                 .hideDelay(3000)
             );
@@ -88,7 +88,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
     }
 
     function initParentNavigation() {
-      $rootScope.title = "User role edit";
+      $rootScope.title = "title_user_role_edit";
       $rootScope.backStateToGo = "home.users-lists.list";
     }
 
