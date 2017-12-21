@@ -195,3 +195,8 @@ md-sidenav {
 .title-no-margin {
   margin-bottom: 0px;
 }
+.search-container {
+  margin-left: 16px;
+  margin-bottom: 0px;
+  max-width: 400px;
+}
