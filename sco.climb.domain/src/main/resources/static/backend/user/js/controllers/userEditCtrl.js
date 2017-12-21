@@ -22,7 +22,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
       if ($scope['user_edit'].$invalid) {
         $mdToast.show(
           $mdToast.simple()
-            .textContent($translate.instant('validation_error_msg'))
+            .textContent($filter('translate')('validation_error_msg'))
             .position("bottom")
             .hideDelay(3000)
         );
@@ -38,7 +38,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
           $scope.saving = false;
           $mdToast.show(
             $mdToast.simple()
-              .textContent($translate.instant('user_creation_saving_error_msg'))
+              .textContent($filter('translate')('user_creation_saving_error_msg'))
               .position("bottom")
               .hideDelay(3000)
           );

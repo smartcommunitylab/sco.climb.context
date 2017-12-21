@@ -32,7 +32,17 @@ angular.module('climbGameUser.controllers.users.editRole', [])
         resolveAuthorizationField(authorizationText, 'instituteId');
         resolveAuthorizationField(authorizationText, 'schoolId');
         resolveAuthorizationField(authorizationText, 'gameId');
-        $scope.loadInstitutesList();
+        if ($scope.initialRoles == 'parent' && $scope.user.gameId) { //only gameId present, have to load others
+          dataService.getGame($scope.user.gameId).then(
+            function (data) {
+              $scope.user.instituteId = data.instituteId;
+              $scope.user.schoolId = data.schoolId;
+              $scope.loadInstitutesList(true);
+            }
+          );
+        } else {
+          $scope.loadInstitutesList(true);
+        }
         //TODO: initialRole priority
         //TODO: have to initialize user.instituteId, gameId, ... from first authorization
       }
@@ -43,7 +53,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       if ($scope['role_edit'].$invalid) {
         $mdToast.show(
           $mdToast.simple()
-            .textContent($translate.instant('validation_error_msg'))
+            .textContent($filter('translate')('validation_error_msg'))
             .position("bottom")
             .hideDelay(3000)
         );
@@ -61,7 +71,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
             $scope.saving = false;
             $mdToast.show(
               $mdToast.simple()
-                .textContent($translate.instant('role_add_error_msg'))
+                .textContent($filter('translate')('role_add_error_msg'))
                 .position("bottom")
                 .hideDelay(3000)
             );
@@ -76,7 +86,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
             $scope.saving = false;
             $mdToast.show(
               $mdToast.simple()
-                .textContent($translate.instant('role_remove_error_msg'))
+                .textContent($filter('translate')('role_remove_error_msg'))
                 .position("bottom")
                 .hideDelay(3000)
             );
@@ -87,27 +97,33 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       }
     }
 
-    $scope.loadInstitutesList = function() {
+    $scope.loadInstitutesList = function(recoverOtherStates) {
       dataService.getInstitutesList().then(
         function (data) {
           $scope.institutesList = data;
+          if (recoverOtherStates) $scope.loadSchoolsList(true);
         }
       );
     }
-    $scope.loadSchoolsList = function() {
-      $scope.user.schoolId = undefined;
-      $scope.user.gameId = undefined;
-      $scope.schoolsList = undefined;
-      $scope.gamesList = undefined;
+    $scope.loadSchoolsList = function(recoverOtherStates) {
+      if (!recoverOtherStates) {
+        $scope.user.schoolId = undefined;
+        $scope.user.gameId = undefined;
+        $scope.schoolsList = undefined;
+        $scope.gamesList = undefined;
+      }
       dataService.getSchoolsList($scope.user.instituteId).then(
         function (data) {
           $scope.schoolsList = data;
+          if (recoverOtherStates) $scope.loadGamesList(true);
         }
       );
     }
-    $scope.loadGamesList = function() {
-      $scope.user.gameId = undefined;
-      $scope.gamesList = undefined;
+    $scope.loadGamesList = function(recoverOtherStates) {
+      if (!recoverOtherStates) {
+        $scope.user.gameId = undefined;
+        $scope.gamesList = undefined;
+      }
       dataService.getGamesList($scope.user.instituteId, $scope.user.schoolId).then(
         function (data) {
           $scope.gamesList = data;
