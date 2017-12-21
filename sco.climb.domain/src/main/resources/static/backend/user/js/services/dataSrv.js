@@ -172,6 +172,64 @@ angular.module('climbGameUser.services.data', [])
       })
       return deferred.promise
     }
+
+
+    dataService.getInstitutesList = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/institute/' + currentDomain, 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
+    dataService.getSchoolsList = function (instituteId) {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/school/' + currentDomain + '/' + instituteId, 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+
+    dataService.getGamesList = function (instituteId, schoolId) {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/' + currentDomain + '/' + instituteId + '/' + schoolId, 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
     
     return dataService
   })

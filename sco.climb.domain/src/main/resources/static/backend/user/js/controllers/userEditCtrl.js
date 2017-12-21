@@ -12,6 +12,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
         }
       );
     } else {
+      $scope.newUser = true;
       $scope.user = {};
     }
     $scope.saving = false;
@@ -46,7 +47,7 @@ angular.module('climbGameUser.controllers.users.edit', [])
     }
 
     function initParentNavigation() {
-      if ($stateParams.userId) {
+      if ($stateParams.userEmail) {
         $rootScope.title = "title_user_edit";
       } else {
         $rootScope.title = "title_user_creation";

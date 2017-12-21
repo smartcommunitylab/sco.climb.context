@@ -18,9 +18,9 @@
         </md-input-container>
     
         <md-input-container class="md-block">
-            <label>{{'user_creation_assign_role_description' | translate}}</label>
+            <label>{{'user_creation_email' | translate}}</label>
             <md-icon>email</md-icon>
-            <input ng-model="user.email" type="email" disabled>
+            <input ng-model="user.email" type="email" ng-disabled="!newUser">
         </md-input-container>
     </form>
     <md-card md-theme-watch flex-gt-xs="30" ng-show="user.roles.length == 0">

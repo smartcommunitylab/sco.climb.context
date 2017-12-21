@@ -12,7 +12,6 @@ angular.module('climbGameUser.controllers.users.editRole', [])
     dataService.getUserByEmail($stateParams.userEmail).then(
       function (data) {
         $scope.user = data;
-        console.log(JSON.stringify($scope.user));
         $scope.initialRoles = angular.copy($scope.user.roles);
         //the UI can assign only a single role, so have to filter roles to the first non admin role
         $scope.initialSingleRole = ''
@@ -33,6 +32,7 @@ angular.module('climbGameUser.controllers.users.editRole', [])
         resolveAuthorizationField(authorizationText, 'instituteId');
         resolveAuthorizationField(authorizationText, 'schoolId');
         resolveAuthorizationField(authorizationText, 'gameId');
+        $scope.loadInstitutesList();
         //TODO: initialRole priority
         //TODO: have to initialize user.instituteId, gameId, ... from first authorization
       }
@@ -85,6 +85,34 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       } else {
         removeRoleSuccess();
       }
+    }
+
+    $scope.loadInstitutesList = function() {
+      dataService.getInstitutesList().then(
+        function (data) {
+          $scope.institutesList = data;
+        }
+      );
+    }
+    $scope.loadSchoolsList = function() {
+      $scope.user.schoolId = undefined;
+      $scope.user.gameId = undefined;
+      $scope.schoolsList = undefined;
+      $scope.gamesList = undefined;
+      dataService.getSchoolsList($scope.user.instituteId).then(
+        function (data) {
+          $scope.schoolsList = data;
+        }
+      );
+    }
+    $scope.loadGamesList = function() {
+      $scope.user.gameId = undefined;
+      $scope.gamesList = undefined;
+      dataService.getGamesList($scope.user.instituteId, $scope.user.schoolId).then(
+        function (data) {
+          $scope.gamesList = data;
+        }
+      );
     }
 
     function initParentNavigation() {

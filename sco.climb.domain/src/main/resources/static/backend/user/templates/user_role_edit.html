@@ -12,23 +12,28 @@
             </md-radio-group>
         </md-input-container>
     
-        <md-input-container class="md-block" ng-show="user.roles == 'teacher' || user.roles == 'volunteer'">
+        <md-input-container class="md-block" ng-show="user.roles == 'parent' || user.roles == 'teacher' || user.roles == 'volunteer'">
             <label>{{'role_editor_institute_id' | translate}}</label>
             <md-icon>domain</md-icon>
-            <input ng-model="user.instituteId" type="text" ng-required="user.roles == 'teacher' || user.roles == 'volunteer'">
+            <md-select placeholder="{{'role_editor_institute_id' | translate}}" ng-model="user.instituteId" ng-change="loadSchoolsList()" ng-required="user.roles == 'parent' || user.roles == 'teacher' || user.roles == 'volunteer'">
+                <md-option ng-value="institute.objectId" ng-repeat="institute in institutesList">{{institute.name}}</md-option>
+            </md-select>
         </md-input-container>
     
-        <md-input-container class="md-block" ng-show="user.roles == 'teacher' || user.roles == 'volunteer'">
+        <md-input-container class="md-block" ng-show="user.roles == 'parent' || user.roles == 'teacher' || user.roles == 'volunteer'">
             <label>{{'role_editor_school_id' | translate}}</label>
             <md-icon>school</md-icon>
-            <input ng-model="user.schoolId" type="text" ng-required="user.roles == 'teacher' || user.roles == 'volunteer'">
-        </md-input-container>
-    
+            <md-select placeholder="{{'role_editor_school_id' | translate}}" ng-model="user.schoolId" ng-change="loadGamesList()" ng-disabled="!user.instituteId" ng-required="user.roles == 'parent' || user.roles == 'teacher' || user.roles == 'volunteer'">
+                <md-option ng-value="school.objectId" ng-repeat="school in schoolsList">{{school.name}}</md-option>
+            </md-select>
+        </md-input-container>    
     
         <md-input-container class="md-block" ng-show="user.roles == 'parent' || user.roles == 'teacher'">
             <label>{{'role_editor_game_id' | translate}}</label>
             <md-icon>videogame_asset</md-icon>
-            <input ng-model="user.gameId" type="text" ng-required="user.roles == 'parent' || user.roles == 'teacher'">
+            <md-select placeholder="{{'role_editor_game_id' | translate}}" ng-model="user.gameId" ng-disabled="!user.schoolId" ng-required="user.roles == 'parent' || user.roles == 'teacher'">
+                <md-option ng-value="game.objectId" ng-repeat="game in gamesList">{{game.gameName}}</md-option>
+            </md-select>
         </md-input-container>
     </form>
     <div layout="row" layout-sm="column" layout-align="space-around" ng-show="saving">
