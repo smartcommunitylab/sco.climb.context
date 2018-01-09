@@ -7,10 +7,7 @@
         <ul class="list-group list-categories">
             <li class="list-group-item" data-ng-repeat="child in currentSchool.children | filter:searchText">
                 <div class="row v-center">
-                    <div class="col-md-2">
-                        <img class="path-img" alt="Placeholder">
-                    </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <h5>{{$index + 1}}. {{getChildName(child)}}</h5>
                         <h5>{{child.classRoom}}</h5>     
                     </div>

@@ -11,10 +11,7 @@
         <ul class="list-group list-categories">
             <li class="list-group-item" ng-repeat="path in paths | filter:searchText">
                 <div class="row v-center">
-                    <div class="col-md-2">
-                        <img class="path-img" alt="Placeholder">
-                    </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <h5>{{path.name}}</h5>
                         <h5>{{$parent.$parent.legs.length}}</h5>        <!-- TODO: valutare se mantenere o meno questa possibilità -->
                     </div>
