@@ -221,4 +221,17 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
             $scope.enableOrder = true;
         }
     };
+
+    $scope.searchMultimediaOnSearchEngines = function() {
+
+        createDialog('templates/modals/multimedia-on-search-engines.html',
+            {
+                id : 'search-on-search-engines-dialog',
+                title: 'Cerca elemento multimediale',
+                controller: 'SearchOnSearchEnginesDialogCtrl',
+                scope: $scope
+            }
+        );
+    }
+
 });

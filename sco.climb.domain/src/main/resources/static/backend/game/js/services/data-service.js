@@ -171,7 +171,16 @@ function ($q, $http, $rootScope, $timeout) {
           setProfileToken: function(token) {
             profileToken = token;
             sessionStorage.setItem("profileToken", profileToken);
-          }
+          },
+            searchOnWikipedia: function (query) {
+                var deferred = $q.defer();
+                $http.get('https://it.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=' + query).success(function (data) {       
+                    deferred.resolve(data);
+                }).error(function (e) {
+                    deferred.reject(e);
+                });
+                return deferred.promise;
+            }
       };
   }
 ]);
