@@ -224,12 +224,29 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
 
     $scope.searchMultimediaOnSearchEngines = function() {
 
+        var addElements = function(name, link, type) {
+            $scope.leg.externalUrls.push({
+                name: name,
+                link: link,
+                type: type
+            });
+        };
         createDialog('templates/modals/multimedia-on-search-engines.html',
             {
                 id : 'search-on-search-engines-dialog',
                 title: 'Cerca elemento multimediale',
                 controller: 'SearchOnSearchEnginesDialogCtrl',
-                scope: $scope
+                success: {
+                    label: "Aggiungi 0 elementi",
+                    fn: null
+                },
+                cancel: {
+                    label: "Chiudi",
+                    fn: null
+                } 
+            },
+            {
+                addElementsFunction: addElements
             }
         );
     }

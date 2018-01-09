@@ -366,6 +366,13 @@ input.default-height + .input-group-btn {
     display: inline-block
 }
 
+.add-media-left-col {
+    border-right: 1px #999 solid;
+}
+.add-media-right-col {
+    text-align: center;
+}
+
 .tabs-menu a.active-tab, .tabs-menu a:hover {
     color: #118575;
     border-bottom: 4px solid #118575

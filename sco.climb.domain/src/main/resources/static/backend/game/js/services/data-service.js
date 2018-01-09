@@ -2,6 +2,8 @@ angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootS
 function ($q, $http, $rootScope, $timeout) {
 		var getUrl = window.location;
         var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+
+    var googleApiKey = 'AIzaSyCgNyKWM_SBXNe7dKw1QdywllZpbQ0Jioo';
         
     var profileToken;
     var tmp = sessionStorage.getItem("profileToken");
@@ -174,11 +176,32 @@ function ($q, $http, $rootScope, $timeout) {
           },
             searchOnWikipedia: function (query) {
                 var deferred = $q.defer();
-                $http.get('https://it.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=' + query).success(function (data) {       
+                var config = {
+                    params: {
+                        format: "json",
+                        action: "query",
+                        prop: "extracts",
+                        exchars: "140",
+                        exlimit: "10",
+                        exintro: "",
+                        explaintext: "",
+                        rawcontinue: "",
+                        generator: "search",
+                        gsrlimit: "10",
+                        callback: "JSON_CALLBACK"
+                    }
+                };
+                config.params.gsrsearch = query;
+                $http.jsonp('https://it.wikipedia.org/w/api.php',config).then(function(data){
                     deferred.resolve(data);
-                }).error(function (e) {
-                    deferred.reject(e);
-                });
+                })
+                return deferred.promise;
+            },
+            searchOnYoutube: function (query) {
+                var deferred = $q.defer();
+                $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + '&q=' + query).then(function(data){
+                    deferred.resolve(data);
+                })
                 return deferred.promise;
             }
       };
