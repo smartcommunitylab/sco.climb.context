@@ -28,6 +28,7 @@ import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfSummary;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
 import java.util.ArrayList;
@@ -39,9 +40,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
@@ -875,7 +882,7 @@ public class RepositoryManager {
 		mongoTemplate.findAndRemove(query, PedibusItinerary.class);
 		removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, objectId);
 	}
-	
+		
 	public void updatePedibusGameLastDaySeen(String ownerId, String gameId, String lastDaySeen) {
 		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
@@ -1205,5 +1212,62 @@ public class RepositoryManager {
 			update.set("params", gameConf.getParams());
 			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
 		}
+	}
+
+	public void removeMultimediaContentByItineraryId(String ownerId, String instituteId,
+			String schoolId, String itineraryId) {
+		Query query = new Query(new Criteria("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId).and("itineraryId").is(itineraryId)
+				.and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, MultimediaContent.class);
+	}
+	
+	public void saveMultimediaContent(MultimediaContent content) {
+		Query query = new Query(new Criteria("ownerId").is(content.getOwnerId())
+				.and("instituteId").is(content.getInstituteId())
+				.and("schoolId").is(content.getSchoolId())
+				.and("itineraryId").is(content.getItineraryId())
+				.and("link").is(content.getLink()));
+		MultimediaContent contentDB = mongoTemplate.findOne(query, MultimediaContent.class);
+		Date now = new Date();
+		if(contentDB == null) {
+			content.setCreationDate(now);
+			content.setLastUpdate(now);
+			content.setObjectId(Utils.getUUID());
+			mongoTemplate.save(content);
+		} else {
+			Update update = new Update();
+			update.set("lastUpdate", now);
+			update.set("name", content.getName());
+			update.set("type", content.getType());
+			update.set("geocoding", content.getGeocoding());
+			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
+		}
+		
+	}
+
+	public List<MultimediaContent> searchMultimediaContent(String text, Double lat, Double lng,
+			String schoolId, String type) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if(Utils.isNotEmpty(text)) {
+			TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matching(text);
+			query = TextQuery.queryText(textCriteria).sortByScore();			
+		} 
+		if((lat != null) && (lng != null)) {
+			Point center = new Point(lng, lat);
+			Distance distance = new Distance(25, Metrics.KILOMETERS);
+			Circle circle = new Circle(center, distance);
+			criteria = criteria.and("geocoding").within(circle);
+		}
+		if(Utils.isNotEmpty(schoolId)) {
+			criteria = criteria.and("schoolId").is(schoolId);
+		}
+		if(Utils.isNotEmpty(type)) {
+			criteria = criteria.and("type").is(type);
+		}
+		query.addCriteria(criteria);
+		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
+		return result;
 	}
 }
