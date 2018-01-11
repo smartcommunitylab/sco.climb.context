@@ -9,17 +9,8 @@ angular.module('consoleControllers.leg')
     $scope.searchOnEngine = function() {
         if (!$scope.searchtext) return;
         $scope.resetResults();
-        if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {
-            DataService.searchOnWikipedia($scope.searchtext).then(
-                    function(response) {
-                        $scope.wikiResults = response.data.query.pages;
-                        for(var page in $scope.wikiResults){
-                            $scope.wikiResults[page].link = 'https://en.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
-                        }
-                        console.log(response);
-                    }, function() {
-                    }
-            );
+        if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {            
+            $scope.changePage(undefined);
         } else if ($scope.searchtype == 'video' && !$scope.ytResults) {
             $scope.changePage(undefined);
         } else if ($scope.searchtype == 'image' && !$scope.imageResults) {            
@@ -28,12 +19,28 @@ angular.module('consoleControllers.leg')
     }
 
     $scope.changePage = function(pageToken) {
-        if ($scope.searchtype == 'video') {
+        if ($scope.searchtype == 'wikipedia') {
+            //in this case pageToken is an offset of search results
+            DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
+                function(response) {
+                    $scope.wikiResults = response.data.query.pages;
+                    for(var page in $scope.wikiResults){
+                        $scope.wikiResults[page].link = 'https://en.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
+                    }
+                    $scope.prevPageToken = response.data['query-continue'].search.gsroffset - 20;
+                    if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
+                    $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
+                    console.log(response);
+                }, function() {
+                }
+            );
+        } else if ($scope.searchtype == 'video') {
             DataService.searchOnYoutube($scope.searchtext, pageToken).then(
                 function(response) {
                     $scope.resetResults();
                     $scope.ytResults = response.data.items;
                     $scope.prevPageToken = response.data.prevPageToken;
+                    if (!$scope.prevPageToken) $scope.prevPageToken = -1; //used to generalize pagination controls
                     $scope.nextPageToken = response.data.nextPageToken;
                     console.log(response);
                 }, function() {
@@ -47,6 +54,8 @@ angular.module('consoleControllers.leg')
                     $scope.imageResults = response.data.items;
                     if (response.data.queries.previousPage) {
                         $scope.prevPageToken = response.data.queries.previousPage[0].startIndex;
+                    } else {
+                        $scope.prevPageToken = -1; //used to generalize pagination controls
                     }
                     if (response.data.queries.nextPage) {
                         $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;

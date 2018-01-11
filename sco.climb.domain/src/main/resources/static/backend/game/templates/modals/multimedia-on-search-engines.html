@@ -46,8 +46,8 @@
                 </li>                
             </ul>
         </div>
-        <div style="width:100%;text-align:center;" ng-show="$parent.searchtype != 'wikipedia'">
-            <div class="btn btn-primary" ng-click="changePage(prevPageToken)" ng-disabled="!prevPageToken">Pagina precedente</div>
+        <div style="width:100%;text-align:center;">
+            <div class="btn btn-primary" ng-click="changePage(prevPageToken)" ng-disabled="prevPageToken < 0">Pagina precedente</div>
             <div class="btn btn-primary" ng-click="changePage(nextPageToken)" ng-disabled="!nextPageToken">Pagina successiva</div>
         </div>
 	</div>

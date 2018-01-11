@@ -175,7 +175,7 @@ function ($q, $http, $rootScope, $timeout) {
             profileToken = token;
             sessionStorage.setItem("profileToken", profileToken);
           },
-            searchOnWikipedia: function (query) {
+            searchOnWikipedia: function (query, start) {
                 var deferred = $q.defer();
                 var config = {
                     params: {
@@ -191,6 +191,7 @@ function ($q, $http, $rootScope, $timeout) {
                     }
                 };
                 config.params.gsrsearch = query;
+                config.params.gsroffset = start;
                 $http.jsonp('https://it.wikipedia.org/w/api.php',config).then(function(data){
                     deferred.resolve(data);
                 })

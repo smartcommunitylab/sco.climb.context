@@ -157,7 +157,7 @@
     </div>
     <div class="col-lg-12">
         <ul ui-sortable="sortableOptions" ng-model="leg.externalUrls" class="list-group list-categories">
-            <li class="list-group-item" ng-repeat="element in leg.externalUrls">
+            <li class="list-group-item leg-multimedia-element" ng-repeat="element in leg.externalUrls">
                 <div class="row v-center" ng-init="editMode = false">
                     <div class="col-md-2">
                         <img class="path-img" ng-if="element.type == 'image'" ng-src="{{element.link}}" alt="{{element.name}}">

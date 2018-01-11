@@ -470,6 +470,12 @@ input.default-height + .input-group-btn {
     background-position: center; 
 }
 
+.leg-multimedia-element h5 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .map-shape-area {
     height: 200px !important
 }
