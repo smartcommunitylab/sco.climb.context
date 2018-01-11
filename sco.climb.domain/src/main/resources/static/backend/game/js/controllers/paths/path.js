@@ -1,8 +1,9 @@
 angular.module('consoleControllers.paths', ['ngSanitize'])
 
 // Paths controller
-.controller('PathsCtrl', function ($scope, $rootScope, DataService, createDialog) {
+.controller('PathsCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
     $scope.$parent.mainView = 'itinerary';
+    $scope.PermissionsService = PermissionsService;
 
     $scope.delete = function (path) {
         createDialog('templates/modals/delete-path.html',{

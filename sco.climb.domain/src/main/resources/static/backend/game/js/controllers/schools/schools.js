@@ -1,8 +1,9 @@
 angular.module('consoleControllers.schools', ['ngSanitize'])
 
 // Schools controller
-.controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog) {
+.controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
     $scope.$parent.mainView = 'school';
+    $scope.PermissionsService = PermissionsService;
 
     $scope.delete = function (school) {
         createDialog('templates/modals/delete-school.html',{

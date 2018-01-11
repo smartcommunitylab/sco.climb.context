@@ -8,8 +8,8 @@
         <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
-
-
+</div>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b></p>
         <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-model="leg.name" />
@@ -60,8 +60,8 @@
             helper-elements=""
             style="display:inline-block;"/>
     </div>
-</div>
-<div class="row">
+</fieldset>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
     <div class="col-md-5">
         <div class="row">            
             <div class="col-lg-12 field">
@@ -101,9 +101,9 @@
         </div>        
         <div id="map-leg"></div>
     </div>
-</div>
+</fieldset>
 
-<div class="row leg-media">
+<fieldset class="row leg-media" ng-disabled="!PermissionsService.permissionEnabledEditLegsMultimedia()">
     <div class="col-md-6 add-media-left-col">
         <p><b>Aggiungi un nuovo elemento multimediale</b></p>
         <div class="add-media field">
@@ -173,4 +173,4 @@
         </ul>
     </div>
 
-</div>
+</fieldset>

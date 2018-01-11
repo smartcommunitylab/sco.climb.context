@@ -2,7 +2,7 @@
 
 <div ng-if="$parent.selectedOwner && $parent.selectedInstitute && $parent.selectedSchool">
     <div class="col-lg-12 buttons-tab">
-        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info">Crea nuovo</a>
+        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditGame()">Crea nuovo</a>
     </div>
 
     <div class="col-md-10 col-md-offset-1">
@@ -17,10 +17,10 @@
                         <h5>Inizio: {{game.from | date : 'dd/MM/yyyy'}} - Fine: {{game.to | date : 'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-md-4 right">
-                        <a class="btn btn-info" ng-click="initGameOnServer(game)">INIT</a>
+                        <a class="btn btn-info" ng-click="initGameOnServer(game)" ng-disabled="!PermissionsService.permissionEnabledEditGame()">INIT</a>
                         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/{{gamesConfigs[game.objectId].pedibusGameConfId}}/gameconfig"  class="btn btn-icon" ng-class="gamesConfigs[game.objectId] == null || gamesConfigs[game.objectId].pedibusGameConfId == null ? 'btn-primary' : 'btn-success'" role="button" ng-disabled="gamesConfigs[game.objectId].active"><i class="fa fa-gamepad" aria-hidden="true"></i></a>
                         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.gamesModified = true"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-click="delete(game)" class="btn btn-icon btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a ng-click="delete(game)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledEditGame()"><i class="fa fa-trash" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </li>

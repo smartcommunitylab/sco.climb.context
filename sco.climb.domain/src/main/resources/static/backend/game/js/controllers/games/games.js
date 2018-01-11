@@ -1,8 +1,9 @@
 angular.module('consoleControllers.games', ['ngSanitize'])
 
 // Games controller
-.controller('GamesListCtrl', function ($scope, $rootScope, DataService, MainDataService, createDialog) {
+.controller('GamesListCtrl', function ($scope, $rootScope, DataService, MainDataService, createDialog, PermissionsService) {
     $scope.$parent.mainView = 'game';
+    $scope.PermissionsService = PermissionsService;
 
     $scope.delete = function (game) {
         createDialog('templates/modals/delete-game.html',{

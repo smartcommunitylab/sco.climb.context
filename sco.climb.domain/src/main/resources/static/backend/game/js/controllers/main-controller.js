@@ -1,7 +1,9 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService)
+.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService, PermissionsService)
     {
+
+        $scope.PermissionsService = PermissionsService;
 
         $scope.getLocation = function() {
             return $location.url()
@@ -23,6 +25,7 @@ angular.module('consoleControllers.mainCtrl', [])
 
         MainDataService.getDomains().then(function (p) {
             $scope.profile = p;
+            PermissionsService.setProfilePermissions($scope.profile.roles);
 
             if ($scope.profile.ownerIds.length == 1) {
                 MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);

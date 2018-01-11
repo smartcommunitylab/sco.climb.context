@@ -4,8 +4,7 @@
         <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
     </div>
 </div>
-<div class="row">
-
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
     <div class="col-md-12 right">
         <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva info</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
@@ -25,4 +24,4 @@
             </label>
         </div>
     </div>
-</div>
+</fieldset>
