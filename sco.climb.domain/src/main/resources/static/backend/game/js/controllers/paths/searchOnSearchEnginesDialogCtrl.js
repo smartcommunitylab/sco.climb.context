@@ -8,8 +8,8 @@ angular.module('consoleControllers.leg')
 
     $scope.searchOnEngine = function() {
         if (!$scope.searchtext) return;
+        $scope.resetResults();
         if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {
-            //https://it.wikipedia.org/w/api.php?action=opensearch&search=Castello%20buonconsiglio&limit=1&namespace=0&format=jsonfm
             DataService.searchOnWikipedia($scope.searchtext).then(
                     function(response) {
                         $scope.wikiResults = response.data.query.pages;
@@ -21,17 +21,43 @@ angular.module('consoleControllers.leg')
                     }
             );
         } else if ($scope.searchtype == 'video' && !$scope.ytResults) {
-            DataService.searchOnYoutube($scope.searchtext).then(
+            $scope.changePage(undefined);
+        } else if ($scope.searchtype == 'image' && !$scope.imageResults) {            
+            $scope.changePage(undefined);
+        }
+    }
+
+    $scope.changePage = function(pageToken) {
+        if ($scope.searchtype == 'video') {
+            DataService.searchOnYoutube($scope.searchtext, pageToken).then(
                 function(response) {
+                    $scope.resetResults();
                     $scope.ytResults = response.data.items;
+                    $scope.prevPageToken = response.data.prevPageToken;
+                    $scope.nextPageToken = response.data.nextPageToken;
                     console.log(response);
                 }, function() {
                 }
             );
-        } else if ($scope.searchtype == 'image' && !$scope.imageResults) {
-            
+        } else if ($scope.searchtype == 'image') {
+            //in this case pageToken is an offset of search results
+            DataService.searchOnImages($scope.searchtext, pageToken).then(
+                function(response) {
+                    $scope.resetResults();
+                    $scope.imageResults = response.data.items;
+                    if (response.data.queries.previousPage) {
+                        $scope.prevPageToken = response.data.queries.previousPage[0].startIndex;
+                    }
+                    if (response.data.queries.nextPage) {
+                        $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
+                    }
+                    console.log(response);
+                }, function() {
+                }
+            );
         }
     }
+
     $scope.$modalSuccess = function() {
         if ($scope.searchtype == 'wikipedia') {
             for(key in $scope.wikiResults){
@@ -46,8 +72,12 @@ angular.module('consoleControllers.leg')
                     addElementsFunction(element.snippet.title, 'https://www.youtube.com/watch?v=' + element.id.videoId, 'video');
                 }
             });
-        } else if ($scope.searchtype == 'image') {
-            
+        } else if ($scope.searchtype == 'image') {            
+            $scope.imageResults.forEach(element => {
+                if (element.selectedToAdd) {
+                    addElementsFunction($scope.searchtext, element.link, 'image');
+                }
+            });
         }
         $scope.$modalClose();
     }
@@ -65,5 +95,9 @@ angular.module('consoleControllers.leg')
             $scope.totalCounter--;
         }
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
+    }
+    $scope.checkImage = function(image) {
+        image.selectedToAdd = !image.selectedToAdd;
+        $scope.updateTotalCounter(image.selectedToAdd);
     }
 });

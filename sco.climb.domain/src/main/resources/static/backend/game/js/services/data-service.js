@@ -4,6 +4,7 @@ function ($q, $http, $rootScope, $timeout) {
         var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 
     var googleApiKey = 'AIzaSyCgNyKWM_SBXNe7dKw1QdywllZpbQ0Jioo';
+    var googleImagesApiKey = '006150621137928308267:ye0t8zulymg';
         
     var profileToken;
     var tmp = sessionStorage.getItem("profileToken");
@@ -182,12 +183,10 @@ function ($q, $http, $rootScope, $timeout) {
                         action: "query",
                         prop: "extracts",
                         exchars: "140",
-                        exlimit: "10",
                         exintro: "",
                         explaintext: "",
                         rawcontinue: "",
                         generator: "search",
-                        gsrlimit: "10",
                         callback: "JSON_CALLBACK"
                     }
                 };
@@ -197,9 +196,23 @@ function ($q, $http, $rootScope, $timeout) {
                 })
                 return deferred.promise;
             },
-            searchOnYoutube: function (query) {
+            searchOnYoutube: function (query, pageToken) {
                 var deferred = $q.defer();
-                $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + '&q=' + query).then(function(data){
+                $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
+                    deferred.resolve(data);
+                })
+                return deferred.promise;
+            },
+            searchOnImages: function (query, start) {
+                var deferred = $q.defer();
+                $http.get('https://www.googleapis.com/customsearch/v1?key=' + googleApiKey + '&cx=' + googleImagesApiKey + (start ? ("&start="+start) : '') + '&num=9&searchType=image&alt=json&q=' + query).then(function(data){
+                    deferred.resolve(data);
+                })
+                return deferred.promise;
+            },
+            searchOnContentRepository: function (query, position, schoolId, type) {
+                var deferred = $q.defer();
+                $http.get('data/testExternalLinksSearch.json').then(function(data){
                     deferred.resolve(data);
                 })
                 return deferred.promise;

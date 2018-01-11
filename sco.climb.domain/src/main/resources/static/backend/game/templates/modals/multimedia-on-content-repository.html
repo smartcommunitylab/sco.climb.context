@@ -1,0 +1,41 @@
+<div>
+	<div class="modal-body">
+		<div class="row">
+            <form novalidate style="text-align:center;margin-bottom:8px;">    
+                <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
+                <select ng-model="$parent.searchtype" ng-change="searchOnContentRepository()">
+                    <option value="all">Tutti</option>
+                    <option value="image">Immagini</option>
+                    <option value="video">Video</option>
+                    <option value="wikipedia">Link</option>
+                </select>
+                <label><input type="checkbox" ng-model="$parent.searchlocalschool"/> Solo da questa scuola</label>
+                <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
+            </form>
+        </div>
+        <div class="row"style="overflow: auto;height: 350px;">
+            <ul class="list-group">
+                <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
+                    <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1" ng-change="updateTotalCounter(content.selectedToAdd)">
+                    <div class="col-md-11">
+                        <a href="{{content.link}}" target="_blank" style="float:left;margin-right: 8px;margin-bottom: 8px;">
+                            <img class="search-multimedia-image" ng-src="{{content.referenceImg}}">
+                        </a>
+                        <div>
+                            <a href="{{content.link}}" target="_blank">
+                                <h4>{{content.info[0].name}}</h4>
+                            </a>
+                        </div>
+                    </div>
+                </li>                
+            </ul>
+            <div style="width:100%;text-align:center;">
+                <dir-pagination-controls
+                    max-size="5"
+                    direction-links="true"
+                    boundary-links="true" >
+                </dir-pagination-controls>
+            </div>
+        </div>
+	</div>
+</div>

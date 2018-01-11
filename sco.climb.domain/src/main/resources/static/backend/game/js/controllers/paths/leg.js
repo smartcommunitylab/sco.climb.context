@@ -1,4 +1,4 @@
-angular.module('consoleControllers.leg', ['isteven-multi-select'])
+angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.directives.dirPagination'])
 
 // Edit the leg for the selected path
 .controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
@@ -222,15 +222,15 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
         }
     };
 
-    $scope.searchMultimediaOnSearchEngines = function() {
+    var addMultimediaElement = function(name, link, type) {
+        $scope.leg.externalUrls.push({
+            name: name,
+            link: link,
+            type: type
+        });
+    };
 
-        var addElements = function(name, link, type) {
-            $scope.leg.externalUrls.push({
-                name: name,
-                link: link,
-                type: type
-            });
-        };
+    $scope.searchMultimediaOnSearchEngines = function() {
         createDialog('templates/modals/multimedia-on-search-engines.html',
             {
                 id : 'search-on-search-engines-dialog',
@@ -246,7 +246,28 @@ angular.module('consoleControllers.leg', ['isteven-multi-select'])
                 } 
             },
             {
-                addElementsFunction: addElements
+                addElementsFunction: addMultimediaElement
+            }
+        );
+    }
+    $scope.searchMultimediaOnRepository = function() {
+        createDialog('templates/modals/multimedia-on-content-repository.html',
+            {
+                id : 'search-on-search-engines-dialog',
+                title: 'Cerca elementi multimediali già utilizzati',
+                controller: 'SearchOnContentRepositoryDialogCtrl',
+                success: {
+                    label: "Aggiungi 0 elementi",
+                    fn: null
+                },
+                cancel: {
+                    label: "Chiudi",
+                    fn: null
+                }
+            },
+            {
+                addElementsFunction: addMultimediaElement,
+                position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng]
             }
         );
     }
