@@ -15,6 +15,12 @@
             <label ng-repeat="image in imageResults" class="search-multimedia-image-engines" ng-click="checkImage(image)">
                 <div ng-show="image.selectedToAdd" class="image-checkbox"></div>
                 <img ng-src="{{image.image.thumbnailLink}}">
+                <div class="search-image-bottom">
+                    <div>{{image.image.width}}x{{image.image.height}}</div>
+                    <a ng-href="{{image.link}}" target="_blank">
+                        <span class="glyphicon glyphicon-new-window"></span>
+                    </a>
+                </div>
             </label>
         </div>
         <div class="row" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;">

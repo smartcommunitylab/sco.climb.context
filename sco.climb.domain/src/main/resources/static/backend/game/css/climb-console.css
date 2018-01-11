@@ -469,6 +469,13 @@ input.default-height + .input-group-btn {
     background-repeat: no-repeat;
     background-position: center; 
 }
+.search-multimedia-image-engines .search-image-bottom {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
 
 .leg-multimedia-element h5 {
     text-overflow: ellipsis;
