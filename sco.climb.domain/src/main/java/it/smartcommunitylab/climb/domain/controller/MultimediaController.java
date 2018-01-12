@@ -17,11 +17,13 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.model.multimedia.ContentInfo;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaResult;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,12 +61,45 @@ public class MultimediaController extends AuthController {
 			HttpServletResponse response) throws Exception {
 		List<MultimediaResult> result = new ArrayList<MultimediaResult>();
 		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, schoolId, type);
+		Map<String, List<ContentInfo>> linkMap = new HashMap<String, List<ContentInfo>>();
+		for(MultimediaContent content : list) {
+			String link = content.getLink();
+			List<ContentInfo> contentList = linkMap.get(link);
+			if(contentList == null) {
+				contentList = new ArrayList<ContentInfo>();
+				linkMap.put(link, contentList);
+			}
+			ContentInfo info = new ContentInfo();
+			info.setName(content.getName());
+			info.setGeocoding(content.getGeocoding());
+			contentList.add(info);
+		}
+		for(MultimediaContent content : list) {
+			if(!containsContent(result, content)) {
+				MultimediaResult mediaResult = new MultimediaResult();
+				mediaResult.setLink(content.getLink());
+				mediaResult.setType(content.getType());
+				mediaResult.setInfo(linkMap.get(content.getLink()));
+				result.add(mediaResult);
+			}
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchContent:%s", result.size()));
 		}
 		return result;
 	}
 	
+	private boolean containsContent(List<MultimediaResult> list, MultimediaContent content) {
+		boolean found = false;
+		for(MultimediaResult result : list) {
+			if(result.getLink().equalsIgnoreCase(content.getLink())) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
