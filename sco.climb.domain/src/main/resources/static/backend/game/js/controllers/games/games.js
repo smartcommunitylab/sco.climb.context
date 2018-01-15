@@ -21,13 +21,20 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         });
     };
     $scope.initGameOnServer = function(game) {
-        DataService.initGameCall(MainDataService.getSelectedDomain(), game.objectId).then(
-            function(response) {
-                alert("Init game riuscito!");
-            }, function() {
-                alert('Errore in init game!');
-            }
-        );
+        createDialog('templates/modals/init-game-confirmation.html',{
+            id : 'init-game-confirmation-dialog',
+            title: 'Inizializzare gioco?',
+            success: { label: 'Conferma', fn: function() {
+                DataService.initGameCall(MainDataService.getSelectedDomain(), game.objectId).then(
+                    function(response) {
+                        alert("Init game riuscito!");
+                    }, function() {
+                        alert('Errore in init game!');
+                    }
+                );
+            } }
+        });
+        
     }
 })
 
