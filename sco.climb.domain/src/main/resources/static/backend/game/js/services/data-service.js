@@ -213,9 +213,27 @@ function ($q, $http, $rootScope, $timeout) {
             },
             searchOnContentRepository: function (query, position, schoolId, type) {
                 var deferred = $q.defer();
-                $http.get('data/testExternalLinksSearch.json').then(function(data){
+                var config = {
+                    params: {
+                        text: query
+                    }
+                }
+                if (position) {
+                    config.params.lat = position[0];
+                    config.params.lng = position[1];
+                }
+                if (schoolId) {
+                    config.params.schoolId = schoolId;
+                }
+                if (type) {
+                    config.params.type = type;
+                }
+                $http.get(baseUrl + '/api/multimedia', config).then(function(data){
                     deferred.resolve(data);
                 })
+                /*$http.get('data/testExternalLinksSearch.json').then(function(data){
+                    deferred.resolve(data);
+                })*/
                 return deferred.promise;
             }
       };

@@ -8,7 +8,7 @@ angular.module('consoleControllers.leg')
     $scope.searchOnContentRepository = function() {
         if (!$scope.searchtext) return;
         $scope.resetResults();
-        DataService.searchOnContentRepository($scope.searchtext, position, $scope.searchlocalschool ? $state.idSchool : '', $scope.searchtype != 'all' ? $scope.searchtype : '').then(
+        DataService.searchOnContentRepository($scope.searchtext, $scope.searchbyposition ? position: undefined, $scope.searchlocalschool ? $state.idSchool : '', $scope.searchtype != 'all' ? $scope.searchtype : '').then(
                 function(response) {
                     response.data.forEach(element => {
                         switch (element.type) {
@@ -31,7 +31,9 @@ angular.module('consoleControllers.leg')
                                 break;
                         }
                     });          
-                    $scope.contentResults = response.data;      
+                    $scope.contentResults = response.data;
+                    $scope.noResults = response.data.length == 0
+                    console.log(response); 
                 }, function() {
                 }
         );
@@ -46,6 +48,7 @@ angular.module('consoleControllers.leg')
     }
     $scope.resetResults = function() {
         $scope.contentResults = undefined;
+        $scope.noResults = false;
         $scope.totalCounter = 0;
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
     }
