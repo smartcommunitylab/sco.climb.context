@@ -11,6 +11,7 @@ import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
+import it.smartcommunitylab.climb.domain.converter.ExcelError;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -22,7 +23,9 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -145,7 +148,7 @@ public class AdminController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.POST)
-	public @ResponseBody void uploadData(
+	public @ResponseBody List<ExcelError> uploadData(
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
@@ -154,26 +157,33 @@ public class AdminController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		List<ExcelError> errors = new ArrayList<ExcelError>();
 		Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
-				ownerId, instituteId, schoolId);
+				ownerId, instituteId, schoolId, errors);
 		Map<String, Stop> stopsMap = ExcelConverter.readStops(file.getInputStream(), 
-				ownerId, instituteId, schoolId, routesMap);
+				ownerId, instituteId, schoolId, routesMap, errors);
 		Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
-				ownerId, instituteId, schoolId, stopsMap);
+				ownerId, instituteId, schoolId, stopsMap, errors);
 		Map<String, Volunteer> volunteersMap = ExcelConverter.readVolunteers(file.getInputStream(), 
-				ownerId, instituteId, schoolId);
-		for(Route route : routesMap.values()) {
-			storage.addRoute(route);
+				ownerId, instituteId, schoolId, errors);
+		if(errors.size() == 0) {
+			for(Route route : routesMap.values()) {
+				storage.addRoute(route);
+			}
+			for(Stop stop : stopsMap.values()) {
+				storage.addStop(stop);
+			}
+			for(Child child : childrenMap.values()) {
+				storeChild(child);
+			}
+			for(Volunteer volunteer : volunteersMap.values()) {
+				storage.addVolunteer(volunteer);
+			}			
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("uploadData: %s %s %s", ownerId, instituteId, schoolId));
+			}
 		}
-		for(Stop stop : stopsMap.values()) {
-			storage.addStop(stop);
-		}
-		for(Child child : childrenMap.values()) {
-			storeChild(child);
-		}
-		for(Volunteer volunteer : volunteersMap.values()) {
-			storage.addVolunteer(volunteer);
-		}
+		return errors;
 	}
 	
 	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}/child", method = RequestMethod.POST)
@@ -186,13 +196,16 @@ public class AdminController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addChildren: %s %s %s", ownerId, instituteId, schoolId));
-		}
+		List<ExcelError> errors = new ArrayList<ExcelError>();		
 		Map<String, Child> childrenMap = ExcelConverter.readSimpleChildren(file.getInputStream(), 
-				ownerId, instituteId, schoolId);
-		for(Child child : childrenMap.values()) {
-			storeChild(child);
+				ownerId, instituteId, schoolId, errors);
+		if(errors.size() == 0) {
+			for(Child child : childrenMap.values()) {
+				storeChild(child);
+			}
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("addChildren: %s %s %s", ownerId, instituteId, schoolId));
+			}
 		}
 	}
 	
