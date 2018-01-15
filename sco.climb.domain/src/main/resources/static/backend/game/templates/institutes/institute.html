@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8 header-path-category">
             <h4 ng-if="isNewIstitute()">CREA NUOVO ISTITUTO</h4>
-            <h4 ng-if="!isNewIstitute()">MODIFICA ISTITUTO: {{currentInstitute.name}}</h4>
+            <h4 ng-if="!isNewIstitute()">MODIFICA ISTITUTO: {{getInstituteName()}}</h4>
             <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
         </div>
     </div>

@@ -78,4 +78,13 @@ institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $stat
             success: { label: 'Conferma', fn: function() {$state.go('root.institutes-list');} }
         });
     };
+
+    $scope.$parent.getInstituteName = function() {
+        if (!$scope.currentInstitute) return ''; 
+    	if(!$scope.isNewInstitute()) {
+            return $scope.currentInstitute.name;
+    	} else {
+    		return "";
+    	} 
+    }
 })
