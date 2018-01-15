@@ -6,6 +6,7 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'consoleControllers.gameconfig',
 'consoleControllers.leg',
 'consoleControllers.games',
+'consoleControllers.institutes',
 'consoleControllers.schools',
 'consoleControllers.line',
 'DataService',
@@ -94,6 +95,21 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/info',
             templateUrl: 'templates/games/info.html',
             controller: 'GameInfoCtrl'
+        })
+        .state('root.institutes-list', {
+            url: '/institutes-list',
+            templateUrl: 'templates/institutes/institutes-list.html',
+            controller: 'InstitutesListCtrl'
+        })
+        .state('root.institute', {
+            url: '/institute/:idDomain/:idInstitute',
+            templateUrl: 'templates/institutes/institute.html',
+            abstract: true
+        })
+        .state('root.institute.info', {
+            url: '/info',
+            templateUrl: 'templates/institutes/tabs/info.html',
+            controller: 'InstituteCtrl'
         })
         .state('root.schools-list', {
             url: '/schools-list',

@@ -1,6 +1,7 @@
 angular.module('PermissionsService', []).factory('PermissionsService', function () {
     var permissionsService = {};
 
+    var showInstitutes, editInstitute;
     var showSchools, editSchool;
     var showGames, editGame;
     var showPaths, editPath;
@@ -10,6 +11,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
         //roles = ['teacher']; //uncomment to debug UI as a teacher!
         roles.forEach(role => {
             if (role == 'owner' || role == 'admin') {
+                showInstitutes = true;
+                editInstitute = true;
                 showSchools = true;
                 editSchool = true;
                 showGames = true;
@@ -27,6 +30,12 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
         });        
     }
 
+    permissionsService.permissionEnabledShowInstitutes = function() {
+        return showInstitutes;
+    }
+    permissionsService.permissionEnabledEditInstitute = function() {
+        return editInstitute;
+    }
     permissionsService.permissionEnabledShowSchools = function() {
         return showSchools;
     }
