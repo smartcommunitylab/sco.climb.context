@@ -521,3 +521,11 @@ p.fixed-width
 .gameconfig-sections .conf-section {
     margin-top: 20px;
 }
+
+.import-errors-list ul {
+    max-height: 90px;
+    overflow: auto;
+}
+.import-errors-list {
+    margin-bottom: 40px;
+}

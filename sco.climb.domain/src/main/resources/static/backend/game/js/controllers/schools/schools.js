@@ -96,6 +96,9 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
     
     $scope.uploadFile = function() {
+        if (!$stateParams.idSchool) { //new school, have to create the school before import data
+            alert('Salva la scuola prima di importare i dati.');
+        }
     	var fileInput = document.getElementById('upload-file');
     	if(fileInput.files.length == 0) {
     		alert('Scegliere un file da caricare');
@@ -111,11 +114,17 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     			"formdata": formData
     	};
     	DataService.uploadFile(element).then(
-          function(response) {
-              console.log('Caricamento dati a buon fine.');
-              $state.go('root.schools-list');
-          }, function() {
-              alert('Errore nell\'elaborazione del file di import.');
+            function(response) {
+                if (response.data.length == 0) {
+                    console.log('Importazione andata a buon fine.');
+                    console.log(response);
+                    fileInput.value = '';
+                    $scope.importErrors = [];
+                    alert('Importazione andata a buon fine.');
+                    $scope.initController();
+                } else {
+                    $scope.importErrors = response.data;
+                }
           }
       );
     }
