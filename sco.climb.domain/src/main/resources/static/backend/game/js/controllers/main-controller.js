@@ -8,6 +8,17 @@ angular.module('consoleControllers.mainCtrl', [])
         $scope.getLocation = function() {
             return $location.url()
         };
+
+        $scope.isDropdownAvailable = function(location, dropdownType) {
+            if (dropdownType == 'institute') {
+                return location != '/institutes-list';
+            } else if (dropdownType == 'school') {
+                return location != '/institutes-list' && location != '/schools-list';
+            } else if (dropdownType == 'game') {
+                return location != '/institutes-list' && location != '/schools-list' && location != '/games-list';
+            }
+            return false;
+        }
         
         $scope.logout = function() {
           $scope.selectedOwner = '';
