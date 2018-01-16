@@ -1,6 +1,6 @@
 angular.module('consoleControllers.leg')
 
-.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, addElementsFunction, position) {
+.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, addElementsFunction, position, getYoutubeImageFromLink) {
     
     $scope.totalCounter = 0;
     $scope.searchtype = 'all';
@@ -16,15 +16,13 @@ angular.module('consoleControllers.leg')
                                 element.referenceImg = element.link;
                                 break;
                             case 'video':
-                                //try to find thumbnail from youtube
-                                var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                                var match = element.link.match(regExp);
-                                if (match && match[2].length == 11) {
-                                    element.referenceImg = "https://img.youtube.com/vi/" + match[2] + "/0.jpg";
+                                var youtubeThumbnail = getYoutubeImageFromLink(element.link);
+                                if (youtubeThumbnail) {
+                                    element.referenceImg = youtubeThumbnail;
                                     element.isYoutubeVideo = true;
                                 } else {
                                     element.referenceImg = "img/video.png";
-                                }
+                                }                                
                                 break;
                             case 'link':
                                 element.referenceImg = "img/link.png";

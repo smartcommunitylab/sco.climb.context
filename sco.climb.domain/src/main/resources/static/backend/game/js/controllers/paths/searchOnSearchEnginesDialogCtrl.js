@@ -84,7 +84,7 @@ angular.module('consoleControllers.leg')
         } else if ($scope.searchtype == 'image') {            
             $scope.imageResults.forEach(element => {
                 if (element.selectedToAdd) {
-                    addElementsFunction($scope.searchtext, element.link, 'image');
+                    addElementsFunction(element.title, element.link, 'image');
                 }
             });
         }

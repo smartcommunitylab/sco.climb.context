@@ -10,6 +10,7 @@
     </div>
 </div>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
+    <legend>Generale</legend>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b></p>
         <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-model="leg.name" />
@@ -62,6 +63,7 @@
     </div>
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
+    <legend>Geolocalizzazione</legend>
     <div class="col-md-5">
         <div class="row">            
             <div class="col-lg-12 field">
@@ -102,71 +104,32 @@
         <div id="map-leg"></div>
     </div>
 </fieldset>
-
 <fieldset class="row leg-media" ng-disabled="!PermissionsService.permissionEnabledEditLegsMultimedia()">
-    <div class="col-md-6 add-media-left-col">
-        <p><b>Aggiungi un nuovo elemento multimediale</b></p>
-        <div class="add-media field">
-            <p><b>Tipologia:</b></p>
-            <select class="form-control" ng-model="newMedia.type">
-                <option value="image">Immagine</option>
-                <option value="video">Video</option>
-                <option value="link">Collegamento a pagina web</option>
-            </select>
-        </div>
-        <div class="add-media field">
-            <p><b>Titolo:</b></p>
-            <input class="form-control" type="text" ng-model="newMedia.name" />
-        </div>
-        <div class="add-media field">
-            <p><b>URL:</b> <span class="required-sign">*</span></p>
-            <input type="url" class="form-control" ng-model="newMedia.link" required/>
-        </div>
-
-        <!-- Upload pic on imgur -->
-        <div ng-show="newMedia.type == 'image'">
-            <div class="field add-media">
-                <p>oppure <b>Carica immagine su <a href="http://www.imgur.com" target="_blank">imgur</a>:</b> {{file.filename ? file.filename : 'Nessun file selezionato'}}</p>
-                <span class="btn btn-info btn-file btn-margin">
-                Scegli file <input type="file" base-sixty-four-input ng-model="file" accept="image/*" />
-                </span>
-                <a ng-disabled="!file" ng-click="!file || uploadPic(file)" class="btn btn-info">Carica</a>
-            </div>
-        </div>
-        <div style="width:100%;text-align:center">
-            <a ng-click="addMedia()" class="btn btn-primary" role="button">Aggiungi elemento</a>
-        </div>
-    </div>
-    <div class="col-md-6 add-media-right-col">
-        <a class="btn btn-info" ng-click="searchMultimediaOnSearchEngines()"><span class="glyphicon glyphicon-search"></span> Cerca elementi multimediali su motori di ricerca</a>
-        <a class="btn btn-info" ng-click="searchMultimediaOnRepository()" style="margin-top:8px;"><span class="glyphicon glyphicon-search"></span> Cerca elementi multimediali già utilizzati</a>
-    </div>
-
-    <!-- Divider -->
-    <div class="col-lg-12 field add-media">
-        <hr />
+    <legend>Contenuti multimediali</legend>
+    <div class="col-md-12">
+        <a class="btn btn-info" ng-click="createNewMultimediaElement()"><span class="glyphicon glyphicon-plus"></span> Crea nuovo</a>
+        <a class="btn btn-info" ng-click="searchMultimediaOnSearchEngines()"><span class="glyphicon glyphicon-search"></span> Cerca su motori di ricerca</a>
+        <a class="btn btn-info" ng-click="searchMultimediaOnRepository()"><span class="glyphicon glyphicon-search"></span> Cerca già utilizzati</a>
     </div>
 
     <!-- List of available media -->
-    <div class="col-lg-12 right">
-        <a class="btn" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
+    <div class="col-md-12 media-type-title">
+        <div class="col-md-10">MULTIMEDIA ({{leg.externalUrls.length}})</div>
+        <a class="btn col-md-2" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
     </div>
-
-    <div class="col-lg-12 media-type-title">
-        <p>MULTIMEDIA ({{leg.externalUrls.length}})</p>
-    </div>
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <ul ui-sortable="sortableOptions" ng-model="leg.externalUrls" class="list-group list-categories">
             <li class="list-group-item leg-multimedia-element" ng-repeat="element in leg.externalUrls">
                 <div class="row v-center" ng-init="editMode = false">
-                    <div class="col-md-2">
+                    <a class="col-md-2" ng-class='element.type == "video" && element.youtubeThumbnail ? "multimedia-yt-video" : ""' ng-href="{{element.link}}" target="_blank">
                         <img class="path-img" ng-if="element.type == 'image'" ng-src="{{element.link}}" alt="{{element.name}}">
-                        <img class="path-img" ng-if="element.type == 'video'" src="img/video.png" alt="Video">
+                        <img class="path-img" ng-if="element.type == 'video' && element.youtubeThumbnail" ng-src="{{element.youtubeThumbnail}}" alt="Video">
+                        <img class="path-img" ng-if="element.type == 'video' && !element.youtubeThumbnail" src="img/video.png" alt="Video">
                         <img class="path-img" ng-if="element.type == 'link'" src="img/link.png" alt="Link">
+                    </a>
+                    <div class="col-md-10" ng-if="!editMode" ng-include="'templates/paths/media/show.html'">
                     </div>
-                    <div class="col-md-10" ng-if="editMode == false" ng-include="'templates/paths/media/show.html'">
-                    </div>
-                    <div class="col-md-10" ng-if="editMode == true" ng-include="'templates/paths/media/edit.html'">
+                    <div class="col-md-10" ng-if="editMode" ng-include="'templates/paths/media/edit.html'">
                     </div>
                 </div>
             </li>

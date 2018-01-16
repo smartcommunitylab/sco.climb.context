@@ -17,9 +17,9 @@
         <div class="row"style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
-                    <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1" ng-change="updateTotalCounter(content.selectedToAdd)">
+                    <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
                     <div class="col-md-11">
-                        <a href="{{content.link}}" target="_blank" style="float:left;margin-right: 8px;margin-bottom: 8px;">
+                        <a href="{{content.link}}" target="_blank" ng-class='content.type == "video" && content.isYoutubeVideo ? "multimedia-yt-video" : ""' style="float:left;margin-right: 8px;margin-bottom: 8px;">
                             <img class="search-multimedia-image" ng-src="{{content.referenceImg}}">
                         </a>
                         <div>

@@ -20,6 +20,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
             
+            $scope.leg.externalUrls.forEach(element => {
+                if (element.type == 'video') {
+                    element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+                }
+            });
+
             $scope.viewIconsModels.forEach(function(element) {
                 element.ticked = (element.value == $scope.leg.icon); 
             }, this);
@@ -86,24 +92,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         drawMapLeg.calculateMarkerPosFromDistance(Number(distance)*1000);
     };
 
-    $scope.newMedia = {type: 'image'};      // Necessario a evitare che il campo "Tipologia" rimanga vuoto
-
-    // Add new media item to the leg
-    $scope.addMedia = function ()
-    {
-        if(!this.newMedia.link)      // controlla che sia stato inserito un URL
-            alert("Non è stato inserito un indirizzo valido.");
-        else
-        {
-            if ($scope.newMedia.type)
-                $scope.leg.externalUrls.push($scope.newMedia);
-            else
-                alert("Errore: il tipo dell'oggetto non è un tipo valido (solo immagine o video).");
-
-            // Reset the newMedia object
-            $scope.newMedia = {type: 'image'};
-        }
-    };
+    
 
     $scope.save = function () {
         $scope.leg.icon = undefined;
@@ -176,15 +165,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
     };
 
-    // Upload image on imgur
-    $scope.uploadPic = function (file) {
-        uploadImageOnImgur(file).success(function (response) {
-            // Update the link of the new media with the imgur link
-            $scope.newMedia.link = response.data.link;
-            // Reset the input field
-            $scope.file = null;
-        });
-    };
+    
 
     $scope.uploadFeaturedPic = function (file) {
         uploadImageOnImgur(file).success(function (response) {
@@ -223,13 +204,48 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     };
 
     var addMultimediaElement = function(name, link, type) {
-        $scope.leg.externalUrls.push({
+        var element = {
             name: name,
             link: link,
-            type: type
-        });
+            type: type            
+        };
+        if (type == 'video') {
+            element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+        }
+        $scope.leg.externalUrls.push(element);
     };
 
+    $scope.getYoutubeImageFromLink = function(ytLink) {
+        //try to find thumbnail from youtube
+        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = ytLink.match(regExp);
+        if (match && match[2].length == 11) {
+            return "https://img.youtube.com/vi/" + match[2] + "/0.jpg";
+        }
+        return false;
+    }
+
+
+    $scope.createNewMultimediaElement = function() {
+        createDialog('templates/modals/multimedia-create-new.html',
+            {
+                id : 'create-new-multimedia-dialog',
+                title: 'Crea nuovo elemento multimediale',
+                controller: 'CreateNewMultimediaElementDialogCtrl',
+                success: {
+                    label: "Aggiungi elemento",
+                    fn: null
+                },
+                cancel: {
+                    label: "Chiudi",
+                    fn: null
+                } 
+            },
+            {
+                addElementsFunction: addMultimediaElement
+            }
+        );
+    }
     $scope.searchMultimediaOnSearchEngines = function() {
         createDialog('templates/modals/multimedia-on-search-engines.html',
             {
@@ -267,7 +283,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             },
             {
                 addElementsFunction: addMultimediaElement,
-                position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng]
+                position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng],
+                getYoutubeImageFromLink: $scope.getYoutubeImageFromLink
             }
         );
     }

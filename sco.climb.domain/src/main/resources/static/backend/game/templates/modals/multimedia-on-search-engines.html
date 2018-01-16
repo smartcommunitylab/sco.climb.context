@@ -12,23 +12,28 @@
             </form>
         </div>
         <div class="row" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;">
-            <label ng-repeat="image in imageResults" class="search-multimedia-image-engines" ng-click="checkImage(image)">
-                <div ng-show="image.selectedToAdd" class="image-checkbox"></div>
-                <img ng-src="{{image.image.thumbnailLink}}">
-                <div class="search-image-bottom">
-                    <div>{{image.image.width}}x{{image.image.height}}</div>
-                    <a ng-href="{{image.link}}" target="_blank">
-                        <span class="glyphicon glyphicon-new-window"></span>
+            <ul class="list-group">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
+                    <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
+                    <a ng-href="{{image.link}}" target="_blank" class="col-md-4">
+                        <img ng-src="{{image.image.thumbnailLink}}">
+                        <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div>
                     </a>
-                </div>
-            </label>
+                    <div class="col-md-7">
+                        <a ng-href="{{image.link}}" target="_blank">
+                            <h4>{{image.title}}</h4>
+                        </a>
+                        <p>Sito di riferimento: <a ng-href="{{image.image.contextLink}}">{{image.image.contextLink}}</a><p>
+                    </div>
+                </li>                
+            </ul>
         </div>
         <div class="row" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
-                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1" ng-change="updateTotalCounter(video.selectedToAdd)">
+                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
                     <div class="col-md-11">
-                        <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" style="float:left;margin-right: 8px;margin-bottom: 8px;">
+                        <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" class="multimedia-yt-video" style="float:left;margin-right: 8px;margin-bottom: 8px;">
                             <img ng-src="{{video.snippet.thumbnails.default.url}}">
                         </a>
                         <div>
@@ -44,7 +49,7 @@
         <div class="row" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
-                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1" ng-change="updateTotalCounter(result.selectedToAdd)">
+                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
                     <div class="col-md-11">
                         <h3><a href="{{result.link}}" target="_blank">{{result.title}}</a></h3>
                         <p>{{result.extract}}<p>
@@ -52,7 +57,7 @@
                 </li>                
             </ul>
         </div>
-        <div style="width:100%;text-align:center;">
+        <div class="multimedia-pagination-navigation">
             <div class="btn btn-primary" ng-click="changePage(prevPageToken)" ng-disabled="prevPageToken < 0">Pagina precedente</div>
             <div class="btn btn-primary" ng-click="changePage(nextPageToken)" ng-disabled="!nextPageToken">Pagina successiva</div>
         </div>
