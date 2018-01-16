@@ -1,4 +1,4 @@
-angular.module('PermissionsService', []).factory('PermissionsService', function () {
+angular.module('PermissionsService', []).factory('PermissionsService', function ($location, $state) {
     var permissionsService = {};
 
     var showInstitutes, editInstitute;
@@ -27,7 +27,29 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegs = true;
                 editLegsMultimedia = true;
             }
-        });        
+        });
+        
+        permissionsService.redirectForPermissions();
+        
+    }
+
+    permissionsService.redirectForPermissions = function() {
+        //redirect to specific page in case permissions are not sufficient for default page
+        //usefull when first logging! 
+        var stateToRedirect = $state.current.name;
+        if (stateToRedirect == 'root.institutes-list' && !showInstitutes) {
+            stateToRedirect = 'root.schools-list';
+        }
+        if (stateToRedirect == 'root.schools-list' && !showSchools) {
+            stateToRedirect = 'root.games-list';
+        }
+        if (stateToRedirect == 'root.games-list' && !showGames) {
+            stateToRedirect = 'root.paths-list';
+        }
+
+        if (stateToRedirect != $state.current.name) {
+            $state.go(stateToRedirect);
+        }
     }
 
     permissionsService.permissionEnabledShowInstitutes = function() {
