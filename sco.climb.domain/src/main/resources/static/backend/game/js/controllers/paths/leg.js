@@ -13,6 +13,16 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         { icon: "<img src=img/POI_sleigh_full.png />", name: "Slitta", value:"sled"}
     ]; 
 
+    $scope.getYoutubeImageFromLink = function(ytLink) {
+        //try to find thumbnail from youtube
+        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = ytLink.match(regExp);
+        if (match && match[2].length == 11) {
+            return "https://img.youtube.com/vi/" + match[2] + "/0.jpg";
+        }
+        return false;
+    }
+
     $scope.initController = function() {
         if ($stateParams.idLeg) { //edit path
 
@@ -215,15 +225,6 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.leg.externalUrls.push(element);
     };
 
-    $scope.getYoutubeImageFromLink = function(ytLink) {
-        //try to find thumbnail from youtube
-        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        var match = ytLink.match(regExp);
-        if (match && match[2].length == 11) {
-            return "https://img.youtube.com/vi/" + match[2] + "/0.jpg";
-        }
-        return false;
-    }
 
 
     $scope.createNewMultimediaElement = function() {

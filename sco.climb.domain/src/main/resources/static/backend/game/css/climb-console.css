@@ -562,7 +562,16 @@ p.fixed-width
 fieldset {
     margin-bottom: 20px;
 }
-
 legend {
     margin-left: 12px; 
+}
+
+.search-container {
+    text-align: right;
+}
+.search-label {
+    margin: 8px;
+}
+.search-container .list-categories {
+    text-align: left;
 }
