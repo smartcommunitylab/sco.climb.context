@@ -1,5 +1,5 @@
 
-<div class="row">
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditSchool()">
     <div class="col-md-12 right">
         <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva info</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
@@ -14,4 +14,4 @@
         <p><span class="required-sign">*</span> <b>Indirizzo:</b></p>
         <input class="form-control" type="text" ng-model="currentSchool.address" ng-required="true"/>
     </div>
-</div>
+</fieldset>

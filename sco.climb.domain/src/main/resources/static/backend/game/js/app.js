@@ -3,14 +3,17 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'ui.sortable',
 'consoleControllers.mainCtrl',
 'consoleControllers.paths',
+'consoleControllers.gameconfig',
 'consoleControllers.leg',
 'consoleControllers.games',
+'consoleControllers.institutes',
 'consoleControllers.schools',
 'consoleControllers.line',
 'DataService',
 'MainDataService',
 'MapsService',
 'ImgurService',
+'PermissionsService',
 'ngUpload',
 'checklist-model',
 'textAngular',
@@ -35,7 +38,7 @@ consoleApp.config(['$provide', function ($provide) {
 
 
 consoleApp.config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/schools-list');
+    $urlRouterProvider.otherwise('/institutes-list');
     $stateProvider
         .state('root', {
             url: '',
@@ -83,10 +86,30 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/games/game.html',
             controller: 'GameCtrl'
         })
+        .state('root.gameconfig', {
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/:idGameConfig/gameconfig',
+            templateUrl: 'templates/games/gameconfig.html',
+            controller: 'GameConfigCtrl'
+        })
         .state('root.game.info', {
             url: '/info',
             templateUrl: 'templates/games/info.html',
             controller: 'GameInfoCtrl'
+        })
+        .state('root.institutes-list', {
+            url: '/institutes-list',
+            templateUrl: 'templates/institutes/institutes-list.html',
+            controller: 'InstitutesListCtrl'
+        })
+        .state('root.institute', {
+            url: '/institute/:idDomain/:idInstitute',
+            templateUrl: 'templates/institutes/institute.html',
+            abstract: true
+        })
+        .state('root.institute.info', {
+            url: '/info',
+            templateUrl: 'templates/institutes/tabs/info.html',
+            controller: 'InstituteCtrl'
         })
         .state('root.schools-list', {
             url: '/schools-list',

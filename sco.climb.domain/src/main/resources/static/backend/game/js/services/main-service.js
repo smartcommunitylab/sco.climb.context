@@ -1,7 +1,7 @@
 angular.module('MainDataService', []).factory('MainDataService', function ($http, $q, DataService) {
     var mainDataService = {};
 
-    var domains, institutes, schools, games, itineraries;
+    var domains, institutes, schools, games, itineraries, gamesConfigs;
     var currentDomain, currentInstitute, currentSchool, currentGame;
 
 
@@ -45,6 +45,7 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
             DataService.getData('school', currentDomain, instituteID).then(function (data) {
                 schools = data;
                 currentInstitute = instituteID;
+                gamesConfigs = undefined;
                 deferred.resolve(schools);
             });
         } else {
@@ -86,11 +87,30 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
         return deferred.promise;
     }
 
+    mainDataService.getGamesConfigs = function (schoolID, invalidate) {
+        var deferred = $q.defer();
+        
+        if (invalidate || gamesConfigs == undefined || schoolID != currentSchool) {
+            DataService.getGameConfData('gameconfigsummary', {"ownerId": currentDomain, "instituteId": currentInstitute, "schoolId": schoolID}).then(function (data) {
+                gamesConfigs = data;
+                deferred.resolve(gamesConfigs);
+            });
+        } else {
+            deferred.resolve(gamesConfigs);
+        }
+
+        return deferred.promise;
+    }
+
     mainDataService.setSelectedDomain = function(domain) {
         currentDomain = domain;
     }
     mainDataService.setSelectedGame = function(game) {
         currentGame = game;
+    }
+
+    mainDataService.getSelectedDomain = function() {
+        return currentDomain;
     }
 
 

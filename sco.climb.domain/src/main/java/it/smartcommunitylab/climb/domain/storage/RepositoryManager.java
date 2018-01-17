@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.storage;
 
+import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
@@ -24,6 +25,10 @@ import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfSummary;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
 import java.util.ArrayList;
@@ -35,9 +40,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
@@ -554,6 +565,22 @@ public class RepositoryManager {
 		return result;
 	}
 	
+	public List<User> getUsersByOwnerId(String ownerId) {
+		Query query = new Query(new Criteria("ownerIds").is(ownerId));
+		List<User> result = mongoTemplate.find(query, User.class);
+		return result;
+	}
+	
+	public List<User> getUsersByRole(String ownerId, String role) {
+		Criteria criteria = new Criteria("ownerIds").is(ownerId);
+		if(Utils.isNotEmpty(role)) {
+			criteria = criteria.and("roles").is(role);
+		}
+		Query query = new Query(criteria);
+		List<User> result = mongoTemplate.find(query, User.class);
+		return result;
+	}
+	
 	public DataSetInfo getDataSetInfoBySubject(String subject) {
 		Query query = new Query(new Criteria("subject").is(subject));
 		DataSetInfo dataSetInfo = mongoTemplate.findOne(query, DataSetInfo.class);
@@ -855,7 +882,7 @@ public class RepositoryManager {
 		mongoTemplate.findAndRemove(query, PedibusItinerary.class);
 		removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, objectId);
 	}
-	
+		
 	public void updatePedibusGameLastDaySeen(String ownerId, String gameId, String lastDaySeen) {
 		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
@@ -1061,32 +1088,34 @@ public class RepositoryManager {
 		Update update = new Update();
 		update.set("name", user.getName());
 		update.set("surname", user.getSurname());
-		update.set("email", user.getEmail());
+		//update.set("email", user.getEmail());
 		update.set("cf", user.getCf());
-		update.set("subject", user.getSubject());
-		update.set("ownerIds", user.getOwnerIds());
-		update.set("roles", user.getRoles());
-		update.set("authorizations", user.getAuthorizations());
+		//update.set("subject", user.getSubject());
+		//update.set("ownerIds", user.getOwnerIds());
+		//update.set("roles", user.getRoles());
+		//update.set("authorizations", user.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
 
 	public void addUserRole(String email, String role, String authKey, 
-			List<String> authIds) throws EntityNotFoundException {
+			List<AuthorizationDTO> auths) throws EntityNotFoundException {
 		Query query = new Query(new Criteria("email").is(email));
 		User userDb = mongoTemplate.findOne(query, User.class);
 		if(userDb == null) {
 			throw new EntityNotFoundException(String.format("User %s not found", email));
 		}
 		//add role
-		userDb.getRoles().add(role);
+		if(!userDb.getRoles().contains(role)) {
+			userDb.getRoles().add(role);
+		}
 		//add auths
-		List<String> list = userDb.getAuthorizations().get(authKey);
+		List<Object> list = userDb.getAuthorizations().get(authKey);
 		if(list == null) {
-			list = new ArrayList<String>();
+			list = new ArrayList<Object>();
 			userDb.getAuthorizations().put(authKey, list);
 		}
-		list.addAll(authIds);
+		list.addAll(auths);
 		//update user
 		Date actualDate = new Date();
 		Update update = new Update();
@@ -1111,5 +1140,134 @@ public class RepositoryManager {
 		update.set("authorizations", userDb.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
+	}
+	
+	public void removeUser(String ownerId, String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerIds").is(ownerId).and("objectId").is(objectId));
+		User entityDB = mongoTemplate.findOne(query, User.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("user with id %s not found", objectId));
+		}
+		mongoTemplate.findAndRemove(query, User.class);
+	}
+
+	public List<PedibusGameConfTemplate> getPedibusGameConfTemplates() {
+		List<PedibusGameConfTemplate> result = mongoTemplate.findAll(PedibusGameConfTemplate.class);
+		return result;
+	}
+	
+	public PedibusGameConfTemplate getPedibusGameConfTemplate(String objectId) {
+		Query query = new Query(new Criteria("objectId").is(objectId));
+		PedibusGameConfTemplate result = mongoTemplate.findOne(query, PedibusGameConfTemplate.class);
+		return result;
+	}
+
+	public List<PedibusGameConfSummary> getPedibusGameConfSummary(String ownerId, 
+			String instituteId, String schoolId) {
+		List<PedibusGameConfSummary> result = new ArrayList<PedibusGameConfSummary>();
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId));
+		List<PedibusGameConf> confs = mongoTemplate.find(query, PedibusGameConf.class);
+		for(PedibusGameConf conf : confs) {
+			PedibusGameConfSummary summary = new PedibusGameConfSummary();
+			summary.setOwnerId(ownerId);
+			summary.setInstituteId(instituteId);
+			summary.setSchoolId(schoolId);
+			summary.setPedibusGameId(conf.getPedibusGameId());
+			summary.setPedibusGameConfId(conf.getObjectId());
+			summary.setActive(conf.isActive());
+			if(Utils.isNotEmpty(conf.getConfTemplateId())) {
+				PedibusGameConfTemplate confTemplate = getPedibusGameConfTemplate(conf.getConfTemplateId());
+				summary.setTemplateName(confTemplate.getName());
+				summary.setTemplateVersion(confTemplate.getVersion());
+			}
+			result.add(summary);
+		}
+		return result;
+	}
+
+	public PedibusGameConf getPedibusGameConf(String ownerId, String confId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("objectId").is(confId));
+		PedibusGameConf result = mongoTemplate.findOne(query, PedibusGameConf.class);
+		return result;
+	}
+
+	public void savePedibusGameConf(PedibusGameConf gameConf) {
+		Query query = new Query(new Criteria("ownerId").is(gameConf.getOwnerId())
+				.and("objectId").is(gameConf.getObjectId()));
+		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
+		Date now = new Date();
+		if(gameCongDB == null) {
+			gameConf.setCreationDate(now);
+			gameConf.setLastUpdate(now);
+			gameConf.setObjectId(Utils.getUUID());
+			mongoTemplate.save(gameConf);
+		} else {
+			Update update = new Update();
+			update.set("lastUpdate", now);
+			update.set("active", gameConf.isActive());
+			update.set("confTemplateId", gameConf.getConfTemplateId());
+			update.set("params", gameConf.getParams());
+			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
+		}
+	}
+
+	public void removeMultimediaContentByItineraryId(String ownerId, String instituteId,
+			String schoolId, String itineraryId) {
+		Query query = new Query(new Criteria("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId).and("itineraryId").is(itineraryId)
+				.and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, MultimediaContent.class);
+	}
+	
+	public void saveMultimediaContent(MultimediaContent content) {
+		Query query = new Query(new Criteria("ownerId").is(content.getOwnerId())
+				.and("instituteId").is(content.getInstituteId())
+				.and("schoolId").is(content.getSchoolId())
+				.and("itineraryId").is(content.getItineraryId())
+				.and("link").is(content.getLink()));
+		MultimediaContent contentDB = mongoTemplate.findOne(query, MultimediaContent.class);
+		Date now = new Date();
+		if(contentDB == null) {
+			content.setCreationDate(now);
+			content.setLastUpdate(now);
+			content.setObjectId(Utils.getUUID());
+			mongoTemplate.save(content);
+		} else {
+			Update update = new Update();
+			update.set("lastUpdate", now);
+			update.set("name", content.getName());
+			update.set("type", content.getType());
+			update.set("geocoding", content.getGeocoding());
+			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
+		}
+		
+	}
+
+	public List<MultimediaContent> searchMultimediaContent(String text, Double lat, Double lng,
+			String schoolId, String type) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if(Utils.isNotEmpty(text)) {
+			TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matching(text);
+			query = TextQuery.queryText(textCriteria).sortByScore();			
+		} 
+		if((lat != null) && (lng != null)) {
+			Point center = new Point(lng, lat);
+			Distance distance = new Distance(25, Metrics.KILOMETERS);
+			Circle circle = new Circle(center, distance);
+			criteria = criteria.and("geocoding").within(circle);
+		}
+		if(Utils.isNotEmpty(schoolId)) {
+			criteria = criteria.and("schoolId").is(schoolId);
+		}
+		if(Utils.isNotEmpty(type)) {
+			criteria = criteria.and("type").is(type);
+		}
+		query.addCriteria(criteria);
+		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
+		return result;
 	}
 }

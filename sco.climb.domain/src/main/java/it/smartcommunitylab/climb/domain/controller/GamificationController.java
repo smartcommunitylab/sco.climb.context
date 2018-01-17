@@ -7,6 +7,7 @@ import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
+import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
@@ -17,6 +18,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -497,6 +499,8 @@ public class GamificationController extends AuthController {
 		int sumValue = 0;
 		try {
 			storage.removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, itineraryId);
+//			storage.removeMultimediaContentByItineraryId(ownerId, game.getInstituteId(), 
+//					game.getSchoolId(), itineraryId);
 			for (PedibusItineraryLeg leg: legs) {
 				leg.setPedibusGameId(pedibusGameId);
 				leg.setItineraryId(itineraryId);
@@ -506,6 +510,18 @@ public class GamificationController extends AuthController {
 					leg.setScore(sumValue);
 				}
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
+				for (Link link : leg.getExternalUrls()) {
+					MultimediaContent content = new MultimediaContent();
+					content.setOwnerId(ownerId);
+					content.setInstituteId(game.getInstituteId());
+					content.setSchoolId(game.getSchoolId());
+					content.setItineraryId(itineraryId);
+					content.setName(leg.getName() + " " + link.getName());
+					content.setType(link.getType());
+					content.setLink(link.getLink());
+					content.setGeocoding(leg.getGeocoding());
+					storage.saveMultimediaContent(content);
+				}
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));

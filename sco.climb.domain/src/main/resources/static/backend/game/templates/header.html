@@ -3,9 +3,10 @@
         <span>Climb Console</span>
     </div>
     <ul class="nav navbar-nav">
-        <li role="presentation" ng-class="{'active':mainView == 'school'}"><a ui-sref="root.schools-list">Scuole</a></li>
-        <li role="presentation" ng-class="{'active':mainView == 'game'}"><a ui-sref="root.games-list">Giochi</a></li>
-        <li role="presentation" ng-class="{'active':mainView == 'itinerary'}"><a ui-sref="root.paths-list">Percorsi</a></li>
+        <li role="presentation" ng-class="{'active':mainView == 'institute'}" ng-show="PermissionsService.permissionEnabledShowInstitutes()"><a ui-sref="root.institutes-list">Istituti</a></li>
+        <li role="presentation" ng-class="{'active':mainView == 'school'}" ng-show="PermissionsService.permissionEnabledShowSchools()"><a ui-sref="root.schools-list">Scuole</a></li>
+        <li role="presentation" ng-class="{'active':mainView == 'game'}" ng-show="PermissionsService.permissionEnabledShowGames()"><a ui-sref="root.games-list">Giochi</a></li>
+        <li role="presentation" ng-class="{'active':mainView == 'itinerary'}" ng-show="PermissionsService.permissionEnabledShowPaths()"><a ui-sref="root.paths-list">Percorsi</a></li>
     </ul>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">

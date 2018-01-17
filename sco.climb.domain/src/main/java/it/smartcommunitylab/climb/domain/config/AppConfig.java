@@ -16,6 +16,8 @@
 
 package it.smartcommunitylab.climb.domain.config;
 
+import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -27,7 +29,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.GeospatialIndex;
+import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.TextIndexDefinition;
+import org.springframework.data.mongodb.core.index.TextIndexDefinition.TextIndexDefinitionBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -92,7 +99,14 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
-		return new RepositoryManager(getMongo(), defaultLang);
+		MongoTemplate mongoTemplate = getMongo();
+		mongoTemplate.indexOps(WsnEvent.class).ensureIndex(new Index().on("eventType", Direction.ASC));
+		mongoTemplate.indexOps(WsnEvent.class).ensureIndex(new Index().on("timestamp", Direction.ASC));
+		TextIndexDefinition textIndex = new TextIndexDefinitionBuilder().withDefaultLanguage("it")
+				.onField("name").build();
+		mongoTemplate.indexOps(MultimediaContent.class).ensureIndex(textIndex);
+		mongoTemplate.indexOps(MultimediaContent.class).ensureIndex(new GeospatialIndex("geocode"));
+		return new RepositoryManager(mongoTemplate, defaultLang);
 	}
 	
 	@Bean

@@ -1,4 +1,4 @@
-<div class="row">
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditPath()">
 
     <div class="col-md-12 right">
         <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva info</a>
@@ -24,4 +24,4 @@
             <label style="font-weight: normal"><input type="checkbox" value="{{classe.value}}" ng-model="classe.value" ng-change="classToggled()">{{classe.name}}&ensp;</label>
         </div>
     </div>
-</div>
+</fieldset>

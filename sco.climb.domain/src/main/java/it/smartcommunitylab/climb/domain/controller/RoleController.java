@@ -11,6 +11,7 @@ import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +42,7 @@ public class RoleController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 
-	@RequestMapping(value = "/role/{ownerId}/owner", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/owner", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addOwner(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -63,13 +65,17 @@ public class RoleController extends AuthController {
 				resourceName, attributes);
 		AuthorizationDTO authorizationDTO = authorizationManager.insertAuthorization(auth);
 		result.add(authorizationDTO);
-		List<String> authIds = new ArrayList<String>();
-		authIds.add(authorizationDTO.getId());
-		storage.addUserRole(email, Const.ROLE_OWNER, getAuthKey(ownerId, Const.ROLE_OWNER), authIds);
+		List<AuthorizationDTO> auths = new ArrayList<AuthorizationDTO>();
+		auths.add(authorizationDTO);
+		
+		storage.addUserRole(email, Const.ROLE_OWNER, getAuthKey(ownerId, Const.ROLE_OWNER), auths);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addOwner: %s - %s - %s - %s", ownerId, email));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/volunteer", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/volunteer", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addVolunteer(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -82,7 +88,7 @@ public class RoleController extends AuthController {
 		List<AuthorizationDTO> result = new ArrayList<AuthorizationDTO>();
 		List<String> actions = new ArrayList<String>();
 		Map<String, String> attributes = new HashMap<String, String>();
-		List<String> authIds = new ArrayList<String>();
+		List<AuthorizationDTO> auths = new ArrayList<AuthorizationDTO>();
 		AuthorizationDTO authorizationDTO;
 		
 		actions.add(Const.AUTH_ACTION_READ);
@@ -92,7 +98,7 @@ public class RoleController extends AuthController {
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -101,7 +107,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -112,7 +118,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -123,7 +129,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -134,7 +140,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -145,7 +151,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -156,7 +162,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -167,7 +173,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -179,7 +185,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -190,15 +196,18 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
-		
-		storage.addUserRole(email, Const.ROLE_VOLUNTEER, getAuthKey(ownerId, Const.ROLE_VOLUNTEER), authIds);
+		storage.addUserRole(email, Const.ROLE_VOLUNTEER, getAuthKey(ownerId, Const.ROLE_VOLUNTEER), auths);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addVolunteer: %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/teacher", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/teacher", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addTeacher(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -212,7 +221,7 @@ public class RoleController extends AuthController {
 		List<AuthorizationDTO> result = new ArrayList<AuthorizationDTO>();
 		List<String> actions = new ArrayList<String>();
 		Map<String, String> attributes = new HashMap<String, String>();
-		List<String> authIds = new ArrayList<String>();
+		List<AuthorizationDTO> auths = new ArrayList<AuthorizationDTO>();
 		AuthorizationDTO authorizationDTO;
 		
 		actions.add(Const.AUTH_ACTION_READ);
@@ -222,7 +231,7 @@ public class RoleController extends AuthController {
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -231,7 +240,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -242,7 +251,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -253,7 +262,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
 		attributes.clear();
@@ -264,7 +273,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -275,7 +284,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -286,7 +295,7 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
 		attributes.clear();
@@ -299,14 +308,18 @@ public class RoleController extends AuthController {
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
-		authIds.add(authorizationDTO.getId());
+		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
-		storage.addUserRole(email, Const.ROLE_TEACHER, getAuthKey(ownerId, Const.ROLE_TEACHER), authIds);
+		storage.addUserRole(email, Const.ROLE_TEACHER, getAuthKey(ownerId, Const.ROLE_TEACHER), auths);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId, gameId));
+		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/role/{ownerId}/parent", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{ownerId}/parent", method = RequestMethod.POST)
 	public @ResponseBody List<AuthorizationDTO> addParent(
 			@PathVariable String ownerId,
 			@RequestParam String email,
@@ -327,14 +340,16 @@ public class RoleController extends AuthController {
 				resourceName, attributes);
 		AuthorizationDTO authorizationDTO = authorizationManager.insertAuthorization(auth);
 		result.add(authorizationDTO);
-		List<String> authIds = new ArrayList<String>();
-		authIds.add(authorizationDTO.getId());
-		storage.addUserRole(email, Const.ROLE_PARENT, getAuthKey(ownerId, Const.ROLE_PARENT), authIds);
+		
+		storage.addUserRole(email, Const.ROLE_PARENT, getAuthKey(ownerId, Const.ROLE_PARENT), result);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addParent: %s - %s - %s", ownerId, email, gameId));
+		}
 		return result;
 	}
 	
 	
-	@RequestMapping(value = "/role/{ownerId}/{role}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/role/{ownerId}/{role}", method = RequestMethod.DELETE)
 	public @ResponseBody void removeRole(
 			@PathVariable String ownerId,
 			@PathVariable String role,
@@ -348,15 +363,155 @@ public class RoleController extends AuthController {
 			throw new EntityNotFoundException(String.format("user %s not found", email));
 		}
 		String authKey = getAuthKey(ownerId, role);
-		List<String> list = user.getAuthorizations().get(authKey);
+		List<Object> list = user.getAuthorizations().get(authKey);
 		if(list != null) {
-			for(String authId : list) {
-				authorizationManager.deleteAuthorization(authId);
+			for(Object obj : list) {
+				if(obj instanceof AuthorizationDTO) {
+					AuthorizationDTO auth = (AuthorizationDTO) obj;
+					String authId = auth.getId();
+					authorizationManager.deleteAuthorization(authId);
+				}
 			}
 		}
 		storage.removeUserRole(email, role, authKey);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("removeRole: %s - %s - %s", ownerId, role, email));
+		}
 	}
 	
+	@RequestMapping(value = "/api/role/{ownerId}/users", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUsersByRole(
+			@PathVariable String ownerId,
+			@RequestParam(required=false) String role,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<User> result = storage.getUsersByRole(ownerId, role);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUsersByRole: %s - %s", ownerId, role));
+		}
+		return result;
+	}
+	
+	/*@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUsersByDataset(
+			@PathVariable String ownerId,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<User> result = storage.getUsersByOwnerId(ownerId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUsersByDataset: %s", ownerId));
+		}
+		return result;
+	}*/
+	
+	@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.GET)
+	public @ResponseBody User getUserByEmail(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User result = storage.getUserByEmail(email);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUserByEmail: %s - %s", ownerId, email));
+		}
+		if(result != null) {
+			if(result.getOwnerIds().contains(ownerId)) {
+				return result;
+			} else {
+				throw new UnauthorizedException("Unauthorized Exception: ownerId not allowed");
+			}
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.POST)
+	public @ResponseBody User saveUser(
+			@PathVariable String ownerId,
+			@RequestBody User user,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User userDb = null;
+		if(Utils.isNotEmpty(user.getEmail())) {
+			userDb = storage.getUserByEmail(user.getEmail());
+		} else {
+			throw new EntityNotFoundException("email must be present");
+		}
+		if(userDb == null) {
+			User newUser = new User();
+			newUser.setObjectId(Utils.getUUID());
+			newUser.setName(user.getName());
+			newUser.setSurname(user.getSurname());
+			newUser.setEmail(user.getEmail());
+			newUser.setCf(user.getCf());
+			newUser.setOwnerIds(Arrays.asList(new String[] {ownerId}));
+    	storage.addUser(newUser);
+  		if(logger.isInfoEnabled()) {
+  			logger.info(String.format("saveUser[new]: %s - %s", ownerId, user.getEmail()));
+  		}
+    	return newUser;
+    } else {
+    	if(!userDb.getOwnerIds().contains(ownerId)) {
+    		throw new UnauthorizedException("Unauthorized Exception: ownerId not allowed");
+    	}
+    	user.setObjectId(userDb.getObjectId());
+    	storage.updateUser(user);
+  		if(logger.isInfoEnabled()) {
+  			logger.info(String.format("saveUser[update]: %s - %s", ownerId, user.getEmail()));
+  		}
+    	return user;
+    }
+	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}/user", method = RequestMethod.DELETE)
+	public @ResponseBody void removeUser(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User user = storage.getUserByEmail(email);
+		if(user == null) {
+			throw new EntityNotFoundException(String.format("user %s not found", email));
+		}
+  	if(!user.getOwnerIds().contains(ownerId)) {
+  		throw new UnauthorizedException("Unauthorized Exception: dataset not allowed");
+  	}
+  	if(user.getRoles().contains(Const.ROLE_ADMIN)) {
+  		throw new UnauthorizedException("Unauthorized Exception: unable to delete admin user");
+  	}
+  	if((user.getOwnerIds().size() > 1) || (user.getRoles().size() > 1)) {
+  		throw new UnauthorizedException("Unauthorized Exception: user has other roles and datset");
+  	}
+  	if(user.getRoles().size() == 1) {
+    	String role = user.getRoles().get(0);
+  		String authKey = getAuthKey(ownerId, role);
+  		List<Object> list = user.getAuthorizations().get(authKey);
+  		if(list != null) {
+  			for(Object obj : list) {
+  				if(obj instanceof AuthorizationDTO) {
+  					AuthorizationDTO auth = (AuthorizationDTO) obj;
+  					String authId = auth.getId();
+  					authorizationManager.deleteAuthorization(authId);
+  				}
+  			}
+  		}
+  		storage.removeUserRole(email, role, authKey);
+  	}
+		storage.removeUser(ownerId, user.getObjectId());
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("removeUser: %s - %s", ownerId, email));
+		}
+	}
+
 	private boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
 		boolean result = false;
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));

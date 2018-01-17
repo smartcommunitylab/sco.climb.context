@@ -1,11 +1,24 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService)
+.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService, PermissionsService)
     {
+
+        $scope.PermissionsService = PermissionsService;
 
         $scope.getLocation = function() {
             return $location.url()
         };
+
+        $scope.isDropdownAvailable = function(location, dropdownType) {
+            if (dropdownType == 'institute') {
+                return location != '/institutes-list';
+            } else if (dropdownType == 'school') {
+                return location != '/institutes-list' && location != '/schools-list';
+            } else if (dropdownType == 'game') {
+                return location != '/institutes-list' && location != '/schools-list' && location != '/games-list';
+            }
+            return false;
+        }
         
         $scope.logout = function() {
           $scope.selectedOwner = '';
@@ -23,11 +36,11 @@ angular.module('consoleControllers.mainCtrl', [])
 
         MainDataService.getDomains().then(function (p) {
             $scope.profile = p;
+            PermissionsService.setProfilePermissions($scope.profile.roles);
 
             if ($scope.profile.ownerIds.length == 1) {
                 MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
                 $scope.selectedOwner = $scope.profile.ownerIds[0];
-                console.log($scope.selectedOwner.objectId);
                 $scope.loadInstitutesList($scope.profile.ownerIds[0]);
             }
         });
@@ -54,21 +67,30 @@ angular.module('consoleControllers.mainCtrl', [])
             });  
         };
         $scope.loadGames = function(school) {
-            if (!school) return;          
+            if (!school) return;
+            $scope.gamesConfigs = [];
             MainDataService.getGames(school.objectId).then(function (response) {
                 $scope.games = response.data;
                 if ($scope.games.length == 1) {
                     $scope.selectedGame = $scope.games[0];
                     $scope.loadItineraries($scope.games[0]);
                 }
-            });  
+            });
+            $scope.reloadGamesConfig(school.objectId);
         };
         $scope.loadItineraries = function(game) {
             if (!game) return;          
             MainDataService.getItineraries(game.objectId).then(function (response) {
                 $scope.paths = response.data;
-            });  
+            });
         };
+        $scope.reloadGamesConfig = function(schoolId, invalidate) {
+            MainDataService.getGamesConfigs(schoolId, invalidate).then(function (response) {                
+                response.data.forEach(config => {
+                    $scope.gamesConfigs[config.pedibusGameId] = config;
+                });
+            });
+        }
 
         $scope.uploadComplete = function (content) {
             if (content.id) {

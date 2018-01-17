@@ -7,13 +7,21 @@
         </div>
     </div>
     
-    <div class= "row">
-    	<div class="col-md-8 header-path-category">
-    		<p>Caricamento dati</p>
-    		<input type="file" id="upload-file" name="file" />
-    		<input type="button" ng-click="uploadFile()" value="Upload" />
-    	</div>
-    </div>
+    <fieldset class= "row" ng-disabled="!PermissionsService.permissionEnabledEditSchool()">
+    	<div class="col-md-12">
+    		<div>Importazione dati scuola</div>
+    		<input type="file" id="upload-file" name="file" style="display:inline-block;"/>
+    		<input type="button" ng-click="uploadFile()" value="Importa" />
+        </div>
+        <div class="import-errors-list col-md-12">
+            Errori importazione: 
+            <ul> 
+                <li ng-repeat="error in importErrors">
+                    {{error.sheet}} riga {{error.row}}: {{error.error}} 
+                </li>
+            </ul>
+        </div>        
+    </fieldset>
 
     <div class="row">
         <!-- Menu tab -->
