@@ -1,0 +1,79 @@
+<md-content layout-padding>
+    <div class="md-padding" layout-xs="column" layout="row">
+        <div flex-xs flex-gt-xs="30" layout="column">
+            <md-card md-theme-watch>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline"><md-icon>info_outline</md-icon> {{game.gameName}}</span>
+                        <span class="md-subhead"><div ng-bind-html="game.gameDescription"></div></span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'from' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.from | date:'dd/MM/yyyy'}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'to' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.to | date:'dd/MM/yyyy'}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'from_hour' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.fromHour}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'to_hour' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.toHour}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'classes' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.classRooms}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'game_id' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.gameId}}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="game-detail-item-title">{{'global_team' | translate}}:</div>
+                        <div class="game-detail-item-value">{{game.globalTeam}}</div>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+        <div flex-xs flex-gt-xs="70" layout="column">
+            <md-card md-theme-watch>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline"><md-icon>show_chart</md-icon> Statistiche</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <div layout="row" layout-align="center" layout-margin>                        
+                        {{gameStats.progressPercentage}}%
+                    </div>
+                    <div layout="row" layout-align="start" layout-margin>                        
+                        <div>{{gameStats.gameScore}}</div>
+                        <md-progress-linear class="stats-progress-bar" md-mode="determinate" ng-value="gameStats.progressPercentage"></md-progress-linear>
+                        <div>{{gameStats.maxGameScore}}</div>
+                    </div>
+                    <div layout="row" layout-align="start" layout-margin>
+                        <div class="stats-pie-chart">
+                            <canvas class="chart chart-pie" chart-data="travelTypePiechartData" chart-labels="travelTypePiechartLabel" chart-options="options">
+                            </canvas> 
+                        </div>
+                        <!-- <div flex-gt-xs="70">                            
+                            <div class="game-detail-item" ng-repeat="data in gameStats.travelTypePiechartData">
+                                <div class="game-detail-item-title">Asd:</div>
+                                <div class="game-detail-item-value">{{data}}</div>
+                            </div>
+                        </div>   -->                      
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+    </div>    
+    
+    <div layout="row" layout-sm="column" layout-align="space-around" ng-show="saving">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</md-content>
