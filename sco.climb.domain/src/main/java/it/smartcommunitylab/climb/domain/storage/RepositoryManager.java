@@ -18,6 +18,7 @@ import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.NodeState;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -1269,5 +1270,18 @@ public class RepositoryManager {
 		query.addCriteria(criteria);
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
+	}
+	
+	public void updatePedibusItineraryLegLink(String ownerId, String legId, List<Link> links) 
+			throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(legId));
+		PedibusItineraryLeg entityDB = mongoTemplate.findOne(query, PedibusItineraryLeg.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("PedibusItineraryLeg with id %s not found", legId));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("externalUrls", links);
+		mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 	}
 }

@@ -304,11 +304,19 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 
 		attributes.clear();
-		actions.add(Const.AUTH_ACTION_ADD);
-		actions.add(Const.AUTH_ACTION_UPDATE);
-		actions.add(Const.AUTH_ACTION_DELETE);
 		attributes.put("pedibus-ownerId", ownerId);
 		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
+		attributes.put("pedibus-gameId", gameId);
+		auth = authorizationManager.getAuthorizationDTO(email, actions, 
+				resourceName, attributes);
+		authorizationDTO = authorizationManager.insertAuthorization(auth);
+		auths.add(authorizationDTO);
+		result.add(authorizationDTO);
+		
+		attributes.clear();
+		actions.add(Const.AUTH_ACTION_UPDATE);
+		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Link);
 		attributes.put("pedibus-gameId", gameId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
