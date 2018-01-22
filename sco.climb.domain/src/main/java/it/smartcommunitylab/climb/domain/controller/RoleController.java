@@ -60,6 +60,11 @@ public class RoleController extends AuthController {
 		String resourceName = "pedibus";
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", "*");
+		attributes.put("pedibus-schoolId", "*");
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", "*");
 		
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
@@ -70,7 +75,7 @@ public class RoleController extends AuthController {
 		
 		storage.addUserRole(email, Const.ROLE_OWNER, getAuthKey(ownerId, Const.ROLE_OWNER), auths);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addOwner: %s - %s - %s - %s", ownerId, email));
+			logger.info(String.format("addOwner: %s - %s", ownerId, email));
 		}
 		return result;
 	}
@@ -299,11 +304,19 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 
 		attributes.clear();
-		actions.add(Const.AUTH_ACTION_ADD);
-		actions.add(Const.AUTH_ACTION_UPDATE);
-		actions.add(Const.AUTH_ACTION_DELETE);
 		attributes.put("pedibus-ownerId", ownerId);
 		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
+		attributes.put("pedibus-gameId", gameId);
+		auth = authorizationManager.getAuthorizationDTO(email, actions, 
+				resourceName, attributes);
+		authorizationDTO = authorizationManager.insertAuthorization(auth);
+		auths.add(authorizationDTO);
+		result.add(authorizationDTO);
+		
+		attributes.clear();
+		actions.add(Const.AUTH_ACTION_UPDATE);
+		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Link);
 		attributes.put("pedibus-gameId", gameId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
