@@ -21,7 +21,10 @@
   "to": "A",
   "from_hour": "Dalle",
   "to_hour": "Alle",
+  "days_ago": "giorni fa",
   "game_id": "GameId",
   "global_team": "Nome Team globale",
-  "change_school": "Cambia scuola"
+  "change_school": "Cambia scuola",
+  "game_stats": "Statistiche gioco",
+  "paths": "Percorsi"
 }

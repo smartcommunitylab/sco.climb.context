@@ -228,3 +228,37 @@ md-progress-linear.stats-progress-bar .md-container, md-progress-linear.stats-pr
   max-height: 250px;
   max-width: 650px;
 }
+
+.stats-plays-chart .chart {
+  max-height: 200px;
+  max-width: 400px;
+}
+.static-chips .md-chips {
+  outline: none;
+  box-shadow: none;
+}
+.stats-path-plays {
+  text-align: center;
+}
+.stats-path-plays-title {
+  font-size: 1.2em;
+}
+.stats-path-plays-number {
+  font-size: 1.5em;
+  margin: 16px;
+}
+.stats-path-plays-last {
+  font-size: 1.5em;
+}
+.stats-path-plays-last.medium-warning {
+  color: #FB8C00;
+}
+.stats-path-plays-last.high-warning {
+  color: #F44336;
+}
+.stats-path-plays-last.no-warning md-icon {
+  display: none;
+}
+.stats-path-plays-last md-icon {
+  color: inherit;
+}

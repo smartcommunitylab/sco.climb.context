@@ -40,6 +40,17 @@ angular.module('climbGameUser.controllers.game.stat', [])
             "A piedi o in bici accompagnati da un adulto",
           ]
 
+          $scope.numberOfPlaysByType = [
+            $scope.gameStats.plays.calendar.number,
+            $scope.gameStats.plays.trip.number,
+            $scope.gameStats.plays.pedibus.number
+          ];
+          $scope.numberOfPlaysByTypeLabels = [
+            "Calendario",
+            "Viaggio",
+            "Pedibus"
+          ];
+
           console.log("GameStat");
           console.log(data);
         }
@@ -100,6 +111,21 @@ angular.module('climbGameUser.controllers.game.stat', [])
       $scope.$parent.$parent.title = "game_stat_title";
       $scope.$parent.$parent.backStateToGo = "home.games-list";
       $scope.$parent.$parent.hideBack = false;
+    }
+
+    $scope.daysAgo = function(timestamp) {
+      var today = new Date();
+      return Math.floor(Math.abs((today.getTime() - timestamp)/86400000));
+    }
+    $scope.pathPlayInWarning = function(timestamp) {
+      var today = new Date();
+      if ($scope.daysAgo(timestamp) >= 7) {
+        return 'high-warning';
+      } else if ($scope.daysAgo(timestamp) >= 3) {
+        return 'medium-warning';
+      } else {
+        return 'no-warning';
+      }
     }
 
   }
