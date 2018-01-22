@@ -79,6 +79,9 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if(type === 'legs') {
                     sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
                     return $http.put(sendUrl, element.legs, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                } else if (type == 'leg_content') {
+                    postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/links";
+                    return $http.put(postUrl, element.externalUrls, {headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type === 'institute') {
                     sendUrl = baseUrl + "/api/institute/" + element.ownerId + "/" + element.objectId;
                 } else if(type == 'school') {
