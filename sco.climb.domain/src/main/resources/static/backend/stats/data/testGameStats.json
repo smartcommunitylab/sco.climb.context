@@ -15,6 +15,25 @@
             "objectId": "asddd",
             "name": "Da sopramonte a Misk",
             "reachedLegs": [
+                "Sopramonte",
+                "Napoli 1",
+                "Napoli 2",
+                "Roma",
+                "La Maddalena"
+            ],
+            "legs": [
+                "Sopramonte",
+                "Napoli 1",
+                "Napoli 2",
+                "Roma",
+                "La Maddalena",
+                "Francia"
+            ]
+        },
+        {
+            "objectId": "asddd2",
+            "name": "Altro percorso",
+            "reachedLegs": [
                 "Leg1",
                 "Leg2",
                 "Leg3"
@@ -41,5 +60,32 @@
             "number": 56,
             "lastPlay": 1515884400000
         }
-    }
+    },
+    "badges": [
+        {
+            "name": "Badge 1",
+            "from": "1513983600000",
+            "to": "1519340400000",
+            "status": "active",
+            "player": "dd",
+            "virtualPrize": "Traghetto da X a Y"
+        },
+        {
+            "name": "Badge 2",
+            "from": "1513683600000",
+            "to": "1515366000000",
+            "status": "completed",
+            "player": "dd",
+            "virtualPrize": "Elicottero da X a Y"
+        },
+        {
+            "name": "Badge scad",
+            "from": "1513683600000",
+            "to": "1515366000000",
+            "status": "finished",
+            "player": "dd",
+            "virtualPrize": "Elicottero scaduto da X a Y"
+        }
+    ]
+    
 }

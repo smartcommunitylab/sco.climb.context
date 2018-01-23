@@ -237,6 +237,9 @@ md-progress-linear.stats-progress-bar .md-container, md-progress-linear.stats-pr
   outline: none;
   box-shadow: none;
 }
+.static-chips.red-chips .md-chips md-chip {
+  background-color: #FF8A80;
+}
 .stats-path-plays {
   text-align: center;
 }
@@ -262,3 +265,22 @@ md-progress-linear.stats-progress-bar .md-container, md-progress-linear.stats-pr
 .stats-path-plays-last md-icon {
   color: inherit;
 }
+
+.badge-card {
+  position: relative;
+}
+.badge-card .badge-icon {
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  font-size: 32px;
+}
+.badge-card .badge-icon.status-finished {
+  color: #F44336;
+} 
+.badge-card .badge-icon.status-active {
+  color: #4FC3F7;
+} 
+.badge-card .badge-icon.status-completed {
+  color: #66BB6A;
+} 

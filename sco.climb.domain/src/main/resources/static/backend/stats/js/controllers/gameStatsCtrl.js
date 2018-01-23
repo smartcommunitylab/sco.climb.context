@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGameUser.controllers.game.stat', [])
-.controller('gameStatsCtrl', ['$scope', '$rootScope', '$filter', '$window', '$interval', '$sce', '$mdDialog', '$mdToast', '$state', '$stateParams', 'dataService', 'configService',
-  function ($scope, $rootScope, $filter, $window, $interval, $sce, $mdDialog, $mdToast, $state, $stateParams, dataService, configService) {
+.controller('gameStatsCtrl', ['$scope', '$rootScope', '$translate', '$filter', '$window', '$interval', '$sce', '$mdDialog', '$mdToast', '$state', '$stateParams', 'dataService', 'configService',
+  function ($scope, $rootScope, $translate, $filter, $window, $interval, $sce, $mdDialog, $mdToast, $state, $stateParams, dataService, configService) {
     console.log("StatsCtrl");
     console.log("Game id to show stats: " + $stateParams.gameId);
     initParentNavigation();
@@ -22,34 +22,14 @@ angular.module('climbGameUser.controllers.game.stat', [])
           $scope.gameStats.maxGameScore = Math.floor($scope.gameStats.maxGameScore / 1000); 
           $scope.gameStats.progressPercentage = data.gameScore / data.maxGameScore * 100.0;
           if ($scope.gameStats.progressPercentage > 100) $scope.gameStats.progressPercentage = 100;
-          
-          $scope.travelTypePiechartData = [
-            $scope.gameStats.scoreModeMap.bonus,
-            $scope.gameStats.scoreModeMap.bus,
-            $scope.gameStats.scoreModeMap.car,
-            //$scope.gameStats.scoreModeMap.pandr,
-            $scope.gameStats.scoreModeMap.zeroImpact_solo,
-            $scope.gameStats.scoreModeMap.zeroImpact_wAdult
-          ];
-          $scope.travelTypePiechartLabel = [
-            "Bonus",
-            "Con scuolabus o autobus",
-            "In auto fino alla piazzola di sosta",
-            //"Pandr",
-            "A piedi o in bici da soli o con gli amici",
-            "A piedi o in bici accompagnati da un adulto",
-          ]
 
-          $scope.numberOfPlaysByType = [
-            $scope.gameStats.plays.calendar.number,
-            $scope.gameStats.plays.trip.number,
-            $scope.gameStats.plays.pedibus.number
-          ];
-          $scope.numberOfPlaysByTypeLabels = [
-            "Calendario",
-            "Viaggio",
-            "Pedibus"
-          ];
+          $scope.gameStats.itineraries.forEach(itinerary => {
+            itinerary.notReachedLegs = itinerary.legs.filter(x => !itinerary.reachedLegs.includes(x));
+          });
+          
+          setTravelTypePiechart();
+          setNumberOfPlaysChart();
+          setBadgesChart();         
 
           console.log("GameStat");
           console.log(data);
@@ -58,54 +38,6 @@ angular.module('climbGameUser.controllers.game.stat', [])
     } else {
       $state.go("home.games-list");
     }
-
-    $scope.options = {
-      tooltips: {
-        enabled: false
-      },
-      hover: {mode: null},
-      legend: {
-        display: true,
-        position: 'right',
-        labels: {
-          generateLabels: function(chart) {
-              var data = chart.data;
-              if (data.labels.length && data.datasets.length) {
-                
-                  return data.labels.map(function(label, i) {
-                      var meta = chart.getDatasetMeta(0);
-                      var ds = data.datasets[0];
-                      var arc = meta.data[i];
-                      var custom = arc && arc.custom || {};
-                      var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
-                      var arcOpts = chart.options.elements.arc;
-                      var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
-                      var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
-                      var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
-
-                      // We get the value of the current label
-                      var total = chart.config.data.datasets[arc._datasetIndex].data.reduce(function(a, b) { return a + b; }, 0);
-                      var value = chart.config.data.datasets[arc._datasetIndex].data[arc._index];
-
-                      return {
-                          text: Math.round(value / total * 1000) / 10 + "% " + label + " : " + value / 1000 + " KM",
-                          fillStyle: fill,
-                          strokeStyle: stroke,
-                          lineWidth: bw,
-                          hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
-                          index: i
-                      };
-                  });
-              } else {
-                  return [];
-              }
-          },
-          fontSize: 15
-        }
-      },
-      responsive: true,
-      maintainAspectRatio: false,
-    };
 
     function initParentNavigation() {
       $scope.$parent.$parent.title = "game_stat_title";
@@ -125,6 +57,162 @@ angular.module('climbGameUser.controllers.game.stat', [])
         return 'medium-warning';
       } else {
         return 'no-warning';
+      }
+    }
+    $scope.badgeStatus = function(status) {
+      if (status == 'active') {
+        return 'status-active';
+      } else if (status == 'finished') {
+        return 'status-finished';
+      } else if (status == 'completed') {
+        return 'status-completed';
+      }
+    }
+
+
+    /*Game travel type pie chart*/
+    var setTravelTypePiechart = function() {
+      $scope.chartTravelTypeData = [
+        $scope.gameStats.scoreModeMap.bonus,
+        $scope.gameStats.scoreModeMap.bus,
+        $scope.gameStats.scoreModeMap.car,
+        //$scope.gameStats.scoreModeMap.pandr,
+        $scope.gameStats.scoreModeMap.zeroImpact_solo,
+        $scope.gameStats.scoreModeMap.zeroImpact_wAdult
+      ];
+      $scope.chartTravelTypeLabel = [
+        $translate.instant("traveltype_bonus"),
+        $translate.instant("traveltype_bus"),
+        $translate.instant("traveltype_car"),
+        //"Pandr",
+        $translate.instant("traveltype_zeroimpact_solo"),
+        $translate.instant("traveltype_zeroimpact_wAdult")
+      ]
+      $scope.chartTravelTypeOptions = {
+        tooltips: {
+          enabled: false
+        },
+        hover: {mode: null},
+        legend: {
+          display: true,
+          position: 'right',
+          labels: {
+            generateLabels: function(chart) {
+                var data = chart.data;
+                if (data.labels.length && data.datasets.length) {
+                  
+                    return data.labels.map(function(label, i) {
+                        var meta = chart.getDatasetMeta(0);
+                        var ds = data.datasets[0];
+                        var arc = meta.data[i];
+                        var custom = arc && arc.custom || {};
+                        var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+                        var arcOpts = chart.options.elements.arc;
+                        var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+                        var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+                        var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+
+                        // We get the value of the current label
+                        var total = chart.config.data.datasets[arc._datasetIndex].data.reduce(function(a, b) { return a + b; }, 0);
+                        var value = chart.config.data.datasets[arc._datasetIndex].data[arc._index];
+
+                        return {
+                            text: Math.round(value / total * 1000) / 10 + "% " + label + " : " + value / 1000 + " KM",
+                            fillStyle: fill,
+                            strokeStyle: stroke,
+                            lineWidth: bw,
+                            hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+                            index: i
+                        };
+                    });
+                } else {
+                    return [];
+                }
+            },
+            fontSize: 15
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+      };
+
+    }      
+    /*Game number of plays chart*/
+    var setNumberOfPlaysChart = function() {
+      $scope.chartNumberOfPlaysByTypeData = [
+        $scope.gameStats.plays.calendar.number,
+        $scope.gameStats.plays.trip.number,
+        $scope.gameStats.plays.pedibus.number
+      ];
+      $scope.chartNumberOfPlaysByTypeLabels = [
+        $translate.instant("mode_calendar"),
+        $translate.instant("mode_trip"),
+        $translate.instant("mode_pedibus")
+      ];
+    }
+    /* Number of badges in each status chart */
+    var setBadgesChart = function() {
+      var badgeCounters = {
+        'completed': 0,
+        'active': 0,
+        'finished': 0
+      };
+      $scope.gameStats.badges.forEach(element => {
+        badgeCounters[element.status]++;
+      });
+      $scope.chartBadgesData = [
+        badgeCounters.completed,
+        badgeCounters.active,
+        badgeCounters.finished
+      ];
+      $scope.chartBadgesLabels = [
+        $translate.instant("completed"),
+        $translate.instant("active"),
+        $translate.instant("finished")
+      ]
+      $scope.chartBadgesColors = [
+        '#66BB6A',
+        '#4FC3F7',
+        '#F44336'
+      ]
+      $scope.chartBadgesOptions = {
+        legend: {
+          display: true,
+          position: 'right',
+          labels: {
+            generateLabels: function(chart) {
+                var data = chart.data;
+                if (data.labels.length && data.datasets.length) {                      
+                    return data.labels.map(function(label, i) {
+                        var meta = chart.getDatasetMeta(0);
+                        var ds = data.datasets[0];
+                        var arc = meta.data[i];
+                        var custom = arc && arc.custom || {};
+                        var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+                        var arcOpts = chart.options.elements.arc;
+                        var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+                        var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+                        var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+  
+                        var value = chart.config.data.datasets[arc._datasetIndex].data[arc._index];
+  
+                        return {
+                            text: label + " : " + value,
+                            fillStyle: fill,
+                            strokeStyle: stroke,
+                            lineWidth: bw,
+                            hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+                            index: i
+                        };
+                    });
+                } else {
+                    return [];
+                }
+            },
+            fontSize: 18
+          }
+        },
+        maintainAspectRatio: false
       }
     }
 

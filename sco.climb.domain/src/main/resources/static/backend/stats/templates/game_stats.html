@@ -58,18 +58,63 @@
                     </div>
                     <div layout="row" layout-align="start" layout-margin>
                         <div class="stats-pie-chart">
-                            <canvas class="chart chart-pie" chart-data="travelTypePiechartData" chart-labels="travelTypePiechartLabel" chart-options="options">
+                            <canvas class="chart chart-pie" chart-data="chartTravelTypeData" chart-labels="chartTravelTypeLabel" chart-options="chartTravelTypeOptions">
                             </canvas> 
+                        </div>                   
+                    </div>
+                    <h3>{{'plays' | translate}}:</h3>
+                    <div layout="row">
+                        <div class="stats-plays-chart" flex="20">
+                            <canvas class="chart chart-bar" chart-data="chartNumberOfPlaysByTypeData" chart-labels="chartNumberOfPlaysByTypeLabels">
+                            </canvas>
                         </div>
-                        <!-- <div flex-gt-xs="70">                            
-                            <div class="game-detail-item" ng-repeat="data in gameStats.travelTypePiechartData">
-                                <div class="game-detail-item-title">Asd:</div>
-                                <div class="game-detail-item-value">{{data}}</div>
+                        <div flex="80" layout="row">
+                            <div flex flex="30" class="stats-path-plays">
+                                <div class="stats-path-plays-title"><md-icon>today</md-icon> {{'mode_calendar' | translate}}</div>
+                                <div class="stats-path-plays-number">{{gameStats.plays.calendar.number}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.calendar.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.calendar.lastPlay)}} {{'days_ago' | translate}}</div>
                             </div>
-                        </div>   -->                      
+                            <div flex flex="30" class="stats-path-plays">
+                                <div class="stats-path-plays-title"><md-icon>card_travel</md-icon> {{'mode_trip' | translate}}</div>
+                                <div class="stats-path-plays-number">{{gameStats.plays.trip.number}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.trip.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.trip.lastPlay)}} {{'days_ago' | translate}}</div>
+                            </div>
+                            <div flex flex="30" class="stats-path-plays">
+                                <div class="stats-path-plays-title"><md-icon>directions_walk</md-icon> {{'mode_pedibus' | translate}}</div>
+                                <div class="stats-path-plays-number">{{gameStats.plays.pedibus.number}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.pedibus.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.pedibus.lastPlay)}} {{'days_ago' | translate}}</div>
+                            </div>
+                        </div>
                     </div>
                 </md-card-content>
             </md-card>
+        </div>
+    </div>
+    <h2 class="md-padding md-margin">{{'badges' | translate}}:</h2>
+    <div class="md-padding" layout="row">
+        <div layout="column" flex="30">
+            <div>
+                <canvas style="max-height:200px;max-width:400px;" class="chart chart-pie" chart-data="chartBadgesData" chart-labels="chartBadgesLabels" chart-options="chartBadgesOptions" chart-colors="chartBadgesColors">
+                </canvas> 
+            </div> 
+        </div>
+        <div layout="row" flex="70" layout-wrap>
+            <div flex="25" ng-repeat="badge in gameStats.badges">
+                <md-card class="badge-card">
+                    <md-icon class="badge-icon" ng-class="badgeStatus(badge.status)">beenhere</md-icon>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">{{badge.name}}</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>                
+                        <div>{{badge.from | date:'dd/MM/yyyy'}} - {{badge.to | date:'dd/MM/yyyy'}}</div>
+                        <div>{{'status' | translate}}: {{badge.status}}</div>
+                        <div>{{'player' | translate}}: {{badge.player}}</div>
+                        <div>{{'virtualprize' | translate}}: {{badge.virtualPrize}}</div>
+                    </md-card-content>
+                </md-card>
+            </div>
         </div>
     </div>
     <h2 class="md-padding md-margin">{{'paths' | translate}}:</h2>
@@ -81,33 +126,12 @@
                 </md-card-title-text>
             </md-card-title>
             <md-card-content>                
+                {{'reached_legs' | translate}}:
                 <md-chips class="static-chips" ng-model="path.reachedLegs" readonly="true">
-                </md-chips>
-                <h3>Giocate:</h3>
-                <div layout="row">
-                    <div class="stats-plays-chart" flex="20">
-                        <canvas class="chart chart-bar" chart-data="numberOfPlaysByType" chart-labels="numberOfPlaysByTypeLabels">
-                        </canvas>
-                    </div>
-                    <div flex="80" layout="row">
-                        <div flex flex="30" class="stats-path-plays">
-                            <div class="stats-path-plays-title"><md-icon>today</md-icon> Calendario</div>
-                            <div class="stats-path-plays-number">{{gameStats.plays.calendar.number}}</div>
-                            <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.calendar.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.calendar.lastPlay)}} {{'days_ago' | translate}}</div>
-                        </div>
-                        <div flex flex="30" class="stats-path-plays">
-                            <div class="stats-path-plays-title"><md-icon>card_travel</md-icon> Viaggio</div>
-                            <div class="stats-path-plays-number">{{gameStats.plays.trip.number}}</div>
-                            <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.trip.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.trip.lastPlay)}} {{'days_ago' | translate}}</div>
-                        </div>
-                        <div flex flex="30" class="stats-path-plays">
-                            <div class="stats-path-plays-title"><md-icon>directions_walk</md-icon> Pedibus</div>
-                            <div class="stats-path-plays-number">{{gameStats.plays.pedibus.number}}</div>
-                            <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.pedibus.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.pedibus.lastPlay)}} {{'days_ago' | translate}}</div>
-                        </div>
-                    </div>
-                </div>
-                
+                </md-chips>                   
+                {{'not_reached_legs' | translate}}:         
+                <md-chips class="static-chips red-chips" ng-model="path.notReachedLegs" readonly="true">
+                </md-chips>                
             </md-card-content>
         </md-card>
     </div>
