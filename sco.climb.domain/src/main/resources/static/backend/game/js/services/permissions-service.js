@@ -22,10 +22,15 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegs = true;
                 editLegs = true;
                 editLegsMultimedia = true;
-            } else if (role = 'teacher') {
+            } else if (role == 'teacher') {
                 showPaths = true;
                 showLegs = true;
                 editLegsMultimedia = true;
+            } else if (role == 'childrenedit') {
+                showInstitutes = true;
+                editInstitute = true;
+                showSchools = true;
+                editSchool = true;
             }
         });
         
