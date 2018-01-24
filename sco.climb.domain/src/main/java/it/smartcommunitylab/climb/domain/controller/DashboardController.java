@@ -14,16 +14,22 @@ import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.Stats;
 import it.smartcommunitylab.climb.domain.model.gamification.Challenge;
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.Notification;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringChallenge;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringItinerary;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringStats;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -463,6 +469,162 @@ public class DashboardController extends AuthController {
 			logger.info(String.format("getStats[%s]: %s", ownerId, pedibusGameId));
 		}
 		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/monitoring/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
+	public @ResponseBody MonitoringStats getMonitoringStats(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,  
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		MonitoringStats result = new MonitoringStats();
+
+		//stats from global team
+		PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), game.getGlobalTeam());
+		PointConcept pointConcept = gengineUtils.getPointConcept(playerStatus, env.getProperty("score.name"));
+		if(pointConcept != null) {
+			result.setGameScore(pointConcept.getScore());
+		}
+		result.setMaxGameScore(getMaxGameScore(ownerId, pedibusGameId));
+		
+		String key = env.getProperty("stat." + Const.MODE_PIEDI_SOLO);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_PIEDI_SOLO, pointConcept.getScore());
+		}
+		
+		key = env.getProperty("stat." + Const.MODE_PIEDI_ADULTO);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, pointConcept.getScore());
+		}
+		key = env.getProperty("stat." + Const.MODE_PEDIBUS);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			Double score = result.getScoreModeMap().get(Const.MODE_PIEDI_ADULTO);
+			if(score != null) {
+				score = score + pointConcept.getScore();
+			} else {
+				score = pointConcept.getScore();
+			}
+			result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, score);
+		}
+		
+		key = env.getProperty("stat." + Const.MODE_SCUOLABUS);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_SCUOLABUS, pointConcept.getScore());
+		}
+		
+		key = env.getProperty("stat." + Const.MODE_PARK_RIDE);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_PARK_RIDE, pointConcept.getScore());
+		}
+		
+		key = env.getProperty("stat." + Const.MODE_AUTO);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_AUTO, pointConcept.getScore());
+		}
+		
+		key = env.getProperty("stat." + Const.MODE_BONUS);
+		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+		if(pointConcept != null) {
+			result.getScoreModeMap().put(Const.MODE_BONUS, pointConcept.getScore());
+		}
+		
+		List<ChallengeConcept> challengeConcept = gengineUtils.getChallengeConcept(playerStatus);
+		for(ChallengeConcept challenge : challengeConcept) {
+			MonitoringChallenge monitoringChallenge = new MonitoringChallenge();
+			monitoringChallenge.setPlayer(game.getGlobalTeam());
+			monitoringChallenge.setName(challenge.getModelName());
+			monitoringChallenge.setFrom(getLongDate(challenge.getStart()));
+			monitoringChallenge.setTo(getLongDate(challenge.getEnd()));
+			monitoringChallenge.setStatus(getChallangeState(challenge));
+			monitoringChallenge.setVirtualPrize(getChallangeVirtualPrice(challenge));
+			result.getChallenges().add(monitoringChallenge);
+		}
+		
+		//stats from classrooms
+		Map<String, PlayerStateDTO> classroomMap = new HashMap<String, PlayerStateDTO>();
+		for(String classRoom : game.getClassRooms()) {
+			playerStatus = gengineUtils.getPlayerStatus(game.getGameId(), classRoom);
+			classroomMap.put(classRoom, playerStatus);
+			challengeConcept = gengineUtils.getChallengeConcept(playerStatus);
+			for(ChallengeConcept challenge : challengeConcept) {
+				MonitoringChallenge monitoringChallenge = new MonitoringChallenge();
+				monitoringChallenge.setPlayer(classRoom);
+				monitoringChallenge.setName(challenge.getModelName());
+				monitoringChallenge.setFrom(getLongDate(challenge.getStart()));
+				monitoringChallenge.setTo(getLongDate(challenge.getEnd()));
+				monitoringChallenge.setStatus(getChallangeState(challenge));
+				monitoringChallenge.setVirtualPrize(getChallangeVirtualPrice(challenge));
+				result.getChallenges().add(monitoringChallenge);
+			}
+		}
+		
+		//stats from itineraies
+		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+		for(PedibusItinerary itinerary : itineraryList) {
+			MonitoringItinerary monitoringItinerary = new MonitoringItinerary();
+			monitoringItinerary.setObjectId(itinerary.getObjectId());
+			monitoringItinerary.setName(itinerary.getName());
+			List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
+					pedibusGameId, itinerary.getObjectId());
+			for(PedibusItineraryLeg leg : legs) {
+				if(leg.getScore() <= result.getGameScore()) {
+					monitoringItinerary.getReachedLegs().add(leg.getName());
+				}
+				monitoringItinerary.getLegs().add(leg.getName());
+			}
+			result.getItineraries().add(monitoringItinerary);
+		}
+		
+		Map<String, MonitoringPlay> monitoringPlay = storage.getMonitoringPlayByGameId(ownerId, pedibusGameId);
+		result.getPlays().putAll(monitoringPlay);
+		
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getMonitoringStats[%s]: %s", ownerId, pedibusGameId));
+		}
+		return result;
+	}
+	
+	
+	
+	private String getChallangeVirtualPrice(ChallengeConcept challenge) {
+		String virtualPrize = (String) challenge.getFields().get("virtualPrize");
+		if(Utils.isNotEmpty(virtualPrize)) {
+			return virtualPrize;
+		}
+		return null;
+	}
+
+	private String getChallangeState(ChallengeConcept challenge) {
+		if(challenge.isCompleted()) {
+			return Const.CHALLANGE_COMPLETED;
+		} else {
+			if(challenge.isActive(new Date())) {
+				return Const.CHALLANGE_ACTIVE;
+			}
+		}
+		return Const.CHALLANGE_FAILD;
+	}
+
+	private long getLongDate(Date date) {
+		if(date != null) {
+			return date.getTime();
+		} else {
+			return -1;
+		}
 	}
 	
 	private Double getMaxGameScore(String ownerId, String pedibusGameId) {

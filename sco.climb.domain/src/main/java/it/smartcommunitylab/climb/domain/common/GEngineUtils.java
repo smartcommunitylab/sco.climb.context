@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.common;
 
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.Notification;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
@@ -7,6 +8,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +58,20 @@ public class GEngineUtils {
 					result = pc;
 					break;
 				}
+			}
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public List<ChallengeConcept> getChallengeConcept(PlayerStateDTO state) {
+		List<ChallengeConcept> result = new ArrayList<ChallengeConcept>();
+		Set<?> challengeConcept = (Set) state.getState().get("ChallengeConcept");
+		if(challengeConcept != null) {
+			Iterator<?> it = challengeConcept.iterator();
+			while(it.hasNext()) {
+				ChallengeConcept challange = mapper.convertValue(it.next(), ChallengeConcept.class);
+				result.add(challange);
 			}
 		}
 		return result;

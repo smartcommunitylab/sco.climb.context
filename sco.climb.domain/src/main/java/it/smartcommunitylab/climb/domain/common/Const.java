@@ -72,5 +72,9 @@ public class Const {
 	
 	public static final String MERGED = "MERGED";
 	public static final String CLOSED = "CLOSED";
+	
+	public static final String CHALLANGE_ACTIVE = "ACTIVE";
+	public static final String CHALLANGE_FAILD = "FAILD";
+	public static final String CHALLANGE_COMPLETED = "COMPLETED";
 
 }
