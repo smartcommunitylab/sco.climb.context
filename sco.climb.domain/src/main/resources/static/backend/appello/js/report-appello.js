@@ -1,6 +1,6 @@
-var searchTableApp = angular.module('report-appello', ['DataService', 'ngclipboard']);
+var searchTableApp = angular.module('report-appello', ['DataService', 'ngclipboard', 'ngFileSaver']);
 
-var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $http, $location, $window, DataService) {
+var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $http, $location, $window, DataService, FileSaver, Blob) {
 	$scope.selectedMenu = "report";
 	$scope.selectedTab = "menu-report-appello";
 	$scope.language = "it";
@@ -175,7 +175,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 
 	$scope.downloadReport = function() {
 		if($scope.incomplete) {
-			return "";
+			return;
 		}
 		var dateFrom = $scope.fDateFrom;
 		if($scope.fHourFrom) {
@@ -185,14 +185,25 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 		if($scope.fHourTo) {
 			dateTo = dateTo + "T" + $scope.fHourTo;
 		}
-		
-		var urlDownload = baseUrl + "/api/report/attendance/" + $scope.selectedOwner
-		+ "/" + $scope.selectedInstitute.objectId
-		+ "/" + $scope.selectedSchool.objectId
-		+ "/" + $scope.selectedRoute.objectId
-		+ "?dateFrom=" + dateFrom + "&dateTo=" + dateTo;
-		
-		return urlDownload;
+
+		DataService.getDownload($scope.selectedOwner, $scope.selectedInstitute.objectId, $scope.selectedSchool.objectId, $scope.selectedRoute.objectId, dateFrom, dateTo).then(
+			function(response) {
+       			var blob = new Blob([response.data], { type: response.headers('Content-Type') });
+				var contentDispositionHeader = response.headers('Content-Disposition');
+				var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+				var matches = filenameRegex.exec(contentDispositionHeader);
+				if (matches != null && matches[1]) { 
+					filename = matches[1].replace(/['"]/g, '');
+				}
+
+				FileSaver.saveAs(blob, filename);				
+			},
+			function(e) {
+				console.log(e);
+				$scope.error = true;
+				$scope.errorMsg = e.errorMsg;
+			}
+		);		
 	};
 	
 	$scope.getRouteName = function(item) {
