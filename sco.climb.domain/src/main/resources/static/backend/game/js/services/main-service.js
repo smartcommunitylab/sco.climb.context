@@ -1,4 +1,4 @@
-angular.module('MainDataService', []).factory('MainDataService', function ($http, $q, DataService) {
+angular.module('MainDataService', []).factory('MainDataService', function ($rootScope, $http, $q, DataService) {
     var mainDataService = {};
 
     var domains, institutes, schools, games, itineraries, gamesConfigs;
@@ -14,6 +14,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
                 domains = profile;
                 DataService.setProfileToken(profile.token);
                 deferred.resolve(domains);
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento domini!");
             });
         } else {
             deferred.resolve(domains);
@@ -30,6 +32,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
                 institutes = data;
                 currentDomain = ownerID;
                 deferred.resolve(institutes);                
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento istituti!");
             });
         } else {
             deferred.resolve(institutes);
@@ -47,6 +51,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
                 currentInstitute = instituteID;
                 gamesConfigs = undefined;
                 deferred.resolve(schools);
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento scuole!");
             });
         } else {
             deferred.resolve(schools);
@@ -63,6 +69,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
                 games = data;
                 currentSchool = schoolID;
                 deferred.resolve(games);
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento giochi!");
             });
         } else {
             deferred.resolve(games);
@@ -79,6 +87,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
                 itineraries = data;
                 currentGame = gameID;
                 deferred.resolve(itineraries);
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento itinerari!");
             });
         } else {
             deferred.resolve(itineraries);
@@ -94,6 +104,8 @@ angular.module('MainDataService', []).factory('MainDataService', function ($http
             DataService.getGameConfData('gameconfigsummary', {"ownerId": currentDomain, "instituteId": currentInstitute, "schoolId": schoolID}).then(function (data) {
                 gamesConfigs = data;
                 deferred.resolve(gamesConfigs);
+            }, function() {
+                $rootScope.networkProblemDetected("Errore caricamento configurazione giochi!");
             });
         } else {
             deferred.resolve(gamesConfigs);

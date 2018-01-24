@@ -6,6 +6,14 @@ angular.module('consoleControllers.mainCtrl', [])
             status: false,
             msg: ''
         }
+        $rootScope.networkProblemDetected = function(msg) {
+            $rootScope.networkProblem.status = true;
+            $rootScope.networkProblem.msg = msg;
+            
+            $timeout(function() {
+                $rootScope.networkProblem.status = false;
+            }, 10 * 1000);
+        }
 
         $scope.PermissionsService = PermissionsService;
 
@@ -118,13 +126,5 @@ angular.module('consoleControllers.mainCtrl', [])
             window.open('console/exportexcel', '_blank');
         };
 
-        $rootScope.networkProblemDetected = function(msg) {
-            $rootScope.networkProblem.status = true;
-            $rootScope.networkProblem.msg = msg;
-            
-            $timeout(function() {
-                $rootScope.networkProblem.status = false;
-            }, 10 * 1000);
-        }
     }
 );
