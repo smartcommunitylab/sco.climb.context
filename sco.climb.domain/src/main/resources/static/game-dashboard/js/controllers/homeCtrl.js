@@ -18,8 +18,9 @@ angular.module('climbGame.controllers.home', [])
         CacheSrv.resetLastCheck('calendar')
         CacheSrv.resetLastCheck('notifications')
         var logoutUrl = loginService.logout()
-        logoutUrl = logoutUrl + '?target=' + $location.path('/').absUrl()
-        $window.location.href = logoutUrl
+        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+        logoutUrl += '?target=' + baseAppUrl;
+        $window.location.href = logoutUrl;
       }
 
       $scope.changeClass = function (path) {

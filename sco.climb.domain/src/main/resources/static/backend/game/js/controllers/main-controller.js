@@ -42,7 +42,8 @@ angular.module('consoleControllers.mainCtrl', [])
           localStorage.clear();
           sessionStorage.clear();
           var logoutUrl = DataService.getBaseUrl();
-          logoutUrl = logoutUrl + '/logout?target=' + $location.path('/').absUrl();
+          var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+          logoutUrl += '/logout?target=' + baseAppUrl;
           $window.location.href = logoutUrl;
         }
 

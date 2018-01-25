@@ -34,7 +34,8 @@ angular.module('climbGameUser.controllers.home', [])
 
         $scope.logout = function () {
           var logoutUrl = loginService.logout();
-          logoutUrl += '?target=' + $location.path('/').absUrl();
+          var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+          logoutUrl += '?target=' + baseAppUrl;
           $window.location.href = logoutUrl;
         }
     }

@@ -42,7 +42,8 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $ht
 	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 
   $scope.logout = function() {
-    var logoutUrl = baseUrl + '/logout?target=' + $location.path('/').absUrl();
+	var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+	var logoutUrl = baseUrl + '/logout?target=' + baseAppUrl;
     $window.location.href = logoutUrl;
   }
   

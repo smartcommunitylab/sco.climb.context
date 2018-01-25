@@ -158,7 +158,7 @@ angular.module('climbGameUser.controllers.game.stat', [])
         'finished': 0
       };
       $scope.gameStats.challenges.forEach(element => {
-        badgeCounters[element.status]++;
+        badgeCounters[element.status.toLowerCase()]++;
       });
       $scope.chartBadgesData = [
         badgeCounters.completed,
