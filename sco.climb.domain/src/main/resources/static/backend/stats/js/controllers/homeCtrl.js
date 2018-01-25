@@ -76,8 +76,9 @@ angular.module('climbGameUser.controllers.home', [])
         $scope.changeSchool = function(school) {
           $scope.selectedSchool = school.objectId;
           dataService.setCurrentSchool(school.objectId);
-          $state.go('home.games-list', {currentDomain: $scope.selectedDomain, currentInstitute: $scope.selectedInstitute, currentSchool: $scope.selectedSchool})
-          //$state.go('home.games-list');
+          if ($state.current.name == 'home' || $state.current.name == 'home.games-list') { //this filters wrong redirect if home.games-list.game-stat page is reloaded
+            $state.go('home.games-list', {currentDomain: $scope.selectedDomain, currentInstitute: $scope.selectedInstitute, currentSchool: $scope.selectedSchool})
+          }
         }
         
 
