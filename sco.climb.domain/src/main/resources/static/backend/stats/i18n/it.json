@@ -21,6 +21,7 @@
   "to": "A",
   "from_hour": "Dalle",
   "to_hour": "Alle",
+  "never": "Mai",
   "days_ago": "giorni fa",
   "game_id": "GameId",
   "global_team": "Nome Team globale",

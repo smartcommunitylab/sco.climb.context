@@ -52,7 +52,7 @@
             "number": 20,
             "lastPlay": 1516575600000
         },
-        "trip": {
+        "excursion": {
             "number": 5,
             "lastPlay": 1516143600000
         },
@@ -61,7 +61,7 @@
             "lastPlay": 1515884400000
         }
     },
-    "badges": [
+    "challenges": [
         {
             "name": "Badge 1",
             "from": "1513983600000",

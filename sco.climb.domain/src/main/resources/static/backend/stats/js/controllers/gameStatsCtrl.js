@@ -141,7 +141,7 @@ angular.module('climbGameUser.controllers.game.stat', [])
     var setNumberOfPlaysChart = function() {
       $scope.chartNumberOfPlaysByTypeData = [
         $scope.gameStats.plays.calendar.number,
-        $scope.gameStats.plays.trip.number,
+        $scope.gameStats.plays.excursion.number,
         $scope.gameStats.plays.pedibus.number
       ];
       $scope.chartNumberOfPlaysByTypeLabels = [
@@ -157,7 +157,7 @@ angular.module('climbGameUser.controllers.game.stat', [])
         'active': 0,
         'finished': 0
       };
-      $scope.gameStats.badges.forEach(element => {
+      $scope.gameStats.challenges.forEach(element => {
         badgeCounters[element.status]++;
       });
       $scope.chartBadgesData = [

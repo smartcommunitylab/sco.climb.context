@@ -72,17 +72,41 @@
                             <div flex flex="30" class="stats-path-plays">
                                 <div class="stats-path-plays-title"><md-icon>today</md-icon> {{'mode_calendar' | translate}}</div>
                                 <div class="stats-path-plays-number">{{gameStats.plays.calendar.number}}</div>
-                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.calendar.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.calendar.lastPlay)}} {{'days_ago' | translate}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.calendar.lastPlay)">
+                                    <md-icon class="stats-path-plays-warning">warning</md-icon>
+                                    <div ng-if="gameStats.plays.calendar.number > 0">
+                                        {{daysAgo(gameStats.plays.calendar.lastPlay)}} {{'days_ago' | translate}}
+                                    </div>
+                                    <div ng-if="gameStats.plays.calendar.number == 0">
+                                        {{'never' | translate}}
+                                    </div>
+                                </div>
                             </div>
                             <div flex flex="30" class="stats-path-plays">
                                 <div class="stats-path-plays-title"><md-icon>card_travel</md-icon> {{'mode_trip' | translate}}</div>
-                                <div class="stats-path-plays-number">{{gameStats.plays.trip.number}}</div>
-                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.trip.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.trip.lastPlay)}} {{'days_ago' | translate}}</div>
+                                <div class="stats-path-plays-number">{{gameStats.plays.excursion.number}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.excursion.lastPlay)">
+                                    <md-icon class="stats-path-plays-warning">warning</md-icon>
+                                    <div ng-if="gameStats.plays.excursion.number > 0">
+                                        {{daysAgo(gameStats.plays.excursion.lastPlay)}} {{'days_ago' | translate}}
+                                    </div>
+                                    <div ng-if="gameStats.plays.excursion.number == 0">
+                                        {{'never' | translate}}
+                                    </div>
+                                </div>
                             </div>
                             <div flex flex="30" class="stats-path-plays">
                                 <div class="stats-path-plays-title"><md-icon>directions_walk</md-icon> {{'mode_pedibus' | translate}}</div>
                                 <div class="stats-path-plays-number">{{gameStats.plays.pedibus.number}}</div>
-                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.pedibus.lastPlay)"><md-icon class="stats-path-plays-warning">warning</md-icon>{{daysAgo(gameStats.plays.pedibus.lastPlay)}} {{'days_ago' | translate}}</div>
+                                <div class="stats-path-plays-last" ng-class="pathPlayInWarning(gameStats.plays.pedibus.lastPlay)">
+                                    <md-icon class="stats-path-plays-warning">warning</md-icon>
+                                    <div ng-if="gameStats.plays.pedibus.number > 0">
+                                        {{daysAgo(gameStats.plays.pedibus.lastPlay)}} {{'days_ago' | translate}}
+                                    </div>
+                                    <div ng-if="gameStats.plays.pedibus.number == 0">
+                                        {{'never' | translate}}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,7 +123,7 @@
             </div> 
         </div>
         <div layout="row" flex="70" layout-wrap>
-            <div flex="25" ng-repeat="badge in gameStats.badges">
+            <div flex="25" ng-repeat="badge in gameStats.challenges">
                 <md-card class="badge-card">
                     <md-icon class="badge-icon" ng-class="badgeStatus(badge.status)">beenhere</md-icon>
                     <md-card-title>

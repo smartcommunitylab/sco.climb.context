@@ -127,8 +127,8 @@ angular.module('climbGameUser.services.data', [])
       var deferred = $q.defer()
       $http({
         method: 'GET',
-        //url: configService.getURL() + '/api/game/stat/' + currentDomain + '/' + gameId,
-        url: 'data/testGameStats.json',
+        url: configService.getURL() + '/api/game/monitoring/' + currentDomain + '/' + gameId,
+        //url: 'data/testGameStats.json',
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()

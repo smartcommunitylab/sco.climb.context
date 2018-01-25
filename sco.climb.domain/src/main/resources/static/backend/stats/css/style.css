@@ -265,6 +265,9 @@ md-progress-linear.stats-progress-bar .md-container, md-progress-linear.stats-pr
 .stats-path-plays-last md-icon {
   color: inherit;
 }
+.stats-path-plays-last > div {
+  display: inline-block;
+}
 
 .badge-card {
   position: relative;
