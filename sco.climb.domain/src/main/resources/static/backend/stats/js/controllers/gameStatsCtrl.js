@@ -20,7 +20,7 @@ angular.module('climbGameUser.controllers.game.stat', [])
           $scope.gameStats = data;
           $scope.gameStats.gameScore = Math.floor($scope.gameStats.gameScore / 1000); 
           $scope.gameStats.maxGameScore = Math.floor($scope.gameStats.maxGameScore / 1000); 
-          $scope.gameStats.progressPercentage = data.gameScore / data.maxGameScore * 100.0;
+          $scope.gameStats.progressPercentage = Math.floor(data.gameScore / data.maxGameScore * 100.0);          
           if ($scope.gameStats.progressPercentage > 100) $scope.gameStats.progressPercentage = 100;
 
           $scope.gameStats.itineraries.forEach(itinerary => {
@@ -60,11 +60,11 @@ angular.module('climbGameUser.controllers.game.stat', [])
       }
     }
     $scope.badgeStatus = function(status) {
-      if (status == 'active') {
+      if (status.toUpperCase() == 'ACTIVE') {
         return 'status-active';
-      } else if (status == 'finished') {
+      } else if (status.toUpperCase() == 'FINISHED') {
         return 'status-finished';
-      } else if (status == 'completed') {
+      } else if (status.toUpperCase() == 'COMPLETED') {
         return 'status-completed';
       }
     }
