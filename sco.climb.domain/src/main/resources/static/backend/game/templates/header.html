@@ -40,6 +40,14 @@
         </div>
     </div>
 </div>
+<div>
+
+    <!-- Network problem alert. Used when some call to the server fail -->
+    <div class="alert alert-danger" ng-show="networkProblem.status">
+        <a class="close" aria-label="close" ng-click="networkProblem.status = false;">&times;</a>
+        <strong>Errore di rete!</strong> I dati mostrati possono essere incompleti. Prova a ricaricare la pagina.<br/>
+        <b>{{networkProblem.msg}}</b>
+    </div>
     <!-- Main section -->
     <div ui-view></div>
 </div>

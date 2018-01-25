@@ -1,7 +1,7 @@
 angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.directives.dirPagination'])
 
 // Edit the leg for the selected path
-.controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, uploadImageOnImgur, drawMapLeg, createDialog) {
+.controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, createDialog) {
     $scope.$parent.selectedTab = 'legs';
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
@@ -114,9 +114,15 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
         if (checkFields()) {
-            $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
-            var legBackup;
-            if ($stateParams.idLeg) { //edited, have to update array
+            if (!PermissionsService.permissionEnabledEditLegs() && PermissionsService.permissionEnabledEditLegsMultimedia()) {
+                var toSend = {
+                    ownerId: $stateParams.idDomain,
+                    pedibusGameId: $stateParams.idGame,
+                    itineraryId: $stateParams.idPath,
+                    legId: $stateParams.idLeg,
+                    externalUrls: $scope.leg.externalUrls
+                };
+                var legBackup;
                 for (var i = 0; i < $scope.legs.length; i++) {
                     if ($scope.legs[i].objectId == $stateParams.idLeg) {
                         legBackup = {
@@ -127,23 +133,51 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                         break;
                     }
                 }
-            } else {
-                $scope.legs.push($scope.leg);
-            }
-            $scope.currentPath.legs = $scope.legs;
-            $scope.saveData('legs', $scope.currentPath).then(
-                function(response) {
-                    console.log('Salvataggio dati a buon fine.');
-                    $state.go('root.path.legs');
-                }, function() {
-                    if (legBackup) {
-                        $scope.legs[legBackup.position] = legBackup.value;
-                    } else {
-                        $scope.legs.splice($scope.legs.length-1, 1);
+                $scope.saveData('leg_content', toSend).then(
+                    function(response) {
+                        console.log('Salvataggio dati a buon fine.');
+                        $state.go('root.path.legs');
+                    }, function() {
+                        if (legBackup) {
+                            $scope.legs[legBackup.position] = legBackup.value;
+                        } else {
+                            $scope.legs.splice($scope.legs.length-1, 1);
+                        }
+                        alert('Errore nel salvataggio delle tappe.');
                     }
-                    alert('Errore nel salvataggio delle tappe.');
+                );
+            } else {
+                $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
+                var legBackup;
+                if ($stateParams.idLeg) { //edited, have to update array
+                    for (var i = 0; i < $scope.legs.length; i++) {
+                        if ($scope.legs[i].objectId == $stateParams.idLeg) {
+                            legBackup = {
+                                value: $scope.legs[i],
+                                positon: i
+                            }
+                            $scope.legs[i] = $scope.leg;
+                            break;
+                        }
+                    }
+                } else {
+                    $scope.legs.push($scope.leg);
                 }
-            );
+                $scope.currentPath.legs = $scope.legs;
+                $scope.saveData('legs', $scope.currentPath).then(
+                    function(response) {
+                        console.log('Salvataggio dati a buon fine.');
+                        $state.go('root.path.legs');
+                    }, function() {
+                        if (legBackup) {
+                            $scope.legs[legBackup.position] = legBackup.value;
+                        } else {
+                            $scope.legs.splice($scope.legs.length-1, 1);
+                        }
+                        alert('Errore nel salvataggio delle tappe.');
+                    }
+                );
+            }            
         } else {
           $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco, di avere inserito almeno una foto e un punto di interesse prima di salvare.";
           $timeout(function () {

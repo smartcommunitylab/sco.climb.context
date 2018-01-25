@@ -1,7 +1,8 @@
 angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootScope', '$timeout', 
 function ($q, $http, $rootScope, $timeout) {
-		var getUrl = window.location;
-        var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    var getUrl = window.location;
+    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    var timeout = 10000;
 
     var googleApiKey = 'AIzaSyCgNyKWM_SBXNe7dKw1QdywllZpbQ0Jioo';
     var googleImagesApiKey = '006150621137928308267:ye0t8zulymg';
@@ -27,7 +28,7 @@ function ($q, $http, $rootScope, $timeout) {
       		},
             getProfile: function () {
                 var deferred = $q.defer();
-                $http.get(baseUrl + "/console/data").success(function (data) {       
+                $http.get(baseUrl + "/console/data",{timeout: timeout}).success(function (data) {       
                     deferred.resolve(data);
                 }).error(function (e) {
                     deferred.reject(e);
@@ -56,7 +57,7 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if(type === 'volunteers') {
                     fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
                 }
-                return $http.get(fetchUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             getGameConfData: function(type, data) {
                 var fetchUrl;
@@ -67,7 +68,7 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if (type === 'gameconfigsummary') {
                     fetchUrl = baseUrl + "/api/game/conf/" + data.ownerId + "/" + data.instituteId + "/" + data.schoolId;
                 }
-                return $http.get(fetchUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             editData: function(type, element)
             {
@@ -79,6 +80,9 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if(type === 'legs') {
                     sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
                     return $http.put(sendUrl, element.legs, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                } else if (type == 'leg_content') {
+                    postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/links";
+                    return $http.put(postUrl, element.externalUrls, {headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type === 'institute') {
                     sendUrl = baseUrl + "/api/institute/" + element.ownerId + "/" + element.objectId;
                 } else if(type == 'school') {
@@ -95,12 +99,12 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if (type == 'gameconfigdetail') {
                     sendUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
                 }
-                return $http.put(sendUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.put(sendUrl, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             getInstitutesList: function(owner)
             {
                 var urlInstituteList = baseUrl + "/api/institute/" + owner;
-                return $http.get(urlInstituteList, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.get(urlInstituteList, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             saveData: function(type, element)           
             {
@@ -115,10 +119,10 @@ function ($q, $http, $rootScope, $timeout) {
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary";
                 } else if(type === 'legs') {
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
-                    return $http.post(postUrl, element.legs, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                    return $http.post(postUrl, element.legs, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type == 'stops') {
                     postUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.routeId;              	
-                    return $http.post(postUrl, element.stops, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                    return $http.post(postUrl, element.stops, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type == 'route') {
                     postUrl = baseUrl + "/api/route/" + element.ownerId;
                 } else if(type == 'child') {
@@ -128,7 +132,7 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if (type == 'gameconfigdetail') {
                     postUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
                 }
-                return $http.post(postUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.post(postUrl, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             removeData: function(type, element)
             {
@@ -144,13 +148,14 @@ function ($q, $http, $rootScope, $timeout) {
                 } else {
               	    deleteUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
                 }
-                return $http.delete(deleteUrl, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
             uploadFile: function(element) 
             {
                 var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId;
           	    return $http.post(postUrl, element.formdata, 
           			{
+                        timeout: timeout,
           				headers: {
           					'Authorization': 'Bearer ' + profileToken,
           					'Content-Type': undefined 
@@ -160,7 +165,7 @@ function ($q, $http, $rootScope, $timeout) {
             },
             initGameCall: function (ownerId, pedibusGameId) {
                 return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/init", 
-                    {headers: {'Authorization': 'Bearer ' + profileToken}}
+                    {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
                 );              
             },
             logout: logout,
@@ -209,7 +214,8 @@ function ($q, $http, $rootScope, $timeout) {
                 var config = {
                     params: {
                         text: query
-                    }
+                    },
+                    timeout: timeout
                 }
                 if (position) {
                     config.params.lat = position[0];

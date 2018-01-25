@@ -1,7 +1,19 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $location, DataService, $window, MainDataService, PermissionsService)
+.controller('MainCtrl', function ($scope, $rootScope, $timeout, $location, DataService, $window, MainDataService, PermissionsService)
     {
+        $rootScope.networkProblem = {
+            status: false,
+            msg: ''
+        }
+        $rootScope.networkProblemDetected = function(msg) {
+            $rootScope.networkProblem.status = true;
+            $rootScope.networkProblem.msg = msg;
+            
+            $timeout(function() {
+                $rootScope.networkProblem.status = false;
+            }, 10 * 1000);
+        }
 
         $scope.PermissionsService = PermissionsService;
 
@@ -113,5 +125,6 @@ angular.module('consoleControllers.mainCtrl', [])
         $scope.exportPaths = function () {
             window.open('console/exportexcel', '_blank');
         };
+
     }
 );

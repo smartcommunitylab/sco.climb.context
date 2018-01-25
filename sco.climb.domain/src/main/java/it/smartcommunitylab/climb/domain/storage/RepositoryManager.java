@@ -18,6 +18,7 @@ import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.NodeState;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -28,6 +29,7 @@ import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfSummary;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
@@ -40,6 +42,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
@@ -1071,6 +1074,13 @@ public class RepositoryManager {
 		return mongoTemplate.find(query, Child.class);
 	}
 	
+	public List<Route> getRouteBySchool(String ownerId, String instituteId, String schoolId) {
+		Query query = new Query(Criteria.where("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.find(query, Route.class);		
+	}
+	
 	public void addUser(User user) {
 		Date actualDate = new Date();
 		user.setCreationDate(actualDate);
@@ -1268,6 +1278,72 @@ public class RepositoryManager {
 		}
 		query.addCriteria(criteria);
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
+		return result;
+	}
+	
+	public void updatePedibusItineraryLegLink(String ownerId, String legId, List<Link> links) 
+			throws EntityNotFoundException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(legId));
+		PedibusItineraryLeg entityDB = mongoTemplate.findOne(query, PedibusItineraryLeg.class);
+		if(entityDB == null) {
+			throw new EntityNotFoundException(String.format("PedibusItineraryLeg with id %s not found", legId));
+		}
+		Update update = new Update();
+		update.set("lastUpdate", new Date());
+		update.set("externalUrls", links);
+		mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
+	}
+	
+	public Map<String, MonitoringPlay> getMonitoringPlayByGameId(String ownerId, String pedibusGameId) {
+		Map<String, MonitoringPlay> result = new HashMap<String, MonitoringPlay>();
+		//calendar stats
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("pedibusGameId").is(pedibusGameId));
+		query.with(new Sort(Direction.DESC, "day"));
+		query.limit(1);
+		long number = mongoTemplate.count(query, CalendarDay.class);
+		CalendarDay findOne = mongoTemplate.findOne(query, CalendarDay.class);
+		MonitoringPlay playCalendar = new MonitoringPlay();
+		playCalendar.setNumber(number);
+		if(findOne != null) {
+			playCalendar.setLastPlay(findOne.getDay().getTime());
+		}
+		result.put("calendar", playCalendar);
+		
+		//pedibus stats
+		PedibusGame game = getPedibusGame(ownerId, pedibusGameId);
+		List<Route> routeList = getRouteBySchool(ownerId, game.getInstituteId(), game.getSchoolId());
+		List<String> routeIds = new ArrayList<String>();
+		for(Route route : routeList) {
+			routeIds.add(route.getObjectId());
+		}
+		query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("routeId").in(routeIds));
+		query.with(new Sort(Direction.DESC, "timestamp"));
+		query.limit(1);
+		number = mongoTemplate.count(query, WsnEvent.class);
+		WsnEvent event = mongoTemplate.findOne(query, WsnEvent.class);
+		MonitoringPlay playPedibus = new MonitoringPlay();
+		playPedibus.setNumber(number);
+		if(event != null) {
+			playPedibus.setLastPlay(event.getTimestamp().getTime());
+		}
+		result.put("pedibus", playPedibus);
+		
+		//excursion stats
+		query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("pedibusGameId").is(pedibusGameId));
+		query.with(new Sort(Direction.DESC, "day"));
+		query.limit(1);
+		number = mongoTemplate.count(query, Excursion.class);
+		Excursion excursion = mongoTemplate.findOne(query, Excursion.class);
+		MonitoringPlay playExcursion = new MonitoringPlay();
+		playExcursion.setNumber(number);
+		if(excursion != null) {
+			playExcursion.setLastPlay(excursion.getDay().getTime());
+		}
+		result.put("excursion", playExcursion);
+		
 		return result;
 	}
 }

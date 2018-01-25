@@ -43,6 +43,7 @@ public class Const {
 	public static final String AUTH_RES_Institute = "Institute";
 	public static final String AUTH_RES_Attendance = "Attendance";
 	public static final String AUTH_RES_PedibusGame = "PedibusGame";
+	public static final String AUTH_RES_PedibusGame_Link = "PedibusGame-Link";
 	
 	public static final String AUTH_ACCOUNT_NAME = "climb";
 	public static final String AUTH_ATTRIBUTE_NAME = "email";
@@ -71,5 +72,9 @@ public class Const {
 	
 	public static final String MERGED = "MERGED";
 	public static final String CLOSED = "CLOSED";
+	
+	public static final String CHALLANGE_ACTIVE = "ACTIVE";
+	public static final String CHALLANGE_FAILD = "FAILD";
+	public static final String CHALLANGE_COMPLETED = "COMPLETED";
 
 }

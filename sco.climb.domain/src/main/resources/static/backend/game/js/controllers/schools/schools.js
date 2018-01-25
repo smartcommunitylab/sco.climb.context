@@ -15,7 +15,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                         console.log("Rimozione effettuata con successo.");
                         $scope.schools.splice($scope.schools.indexOf(school), 1);
                     }, function() {
-                        alert("Errore nella richiesta.");
+                        $rootScope.networkProblemDetected('Errore nella rimozione della scuola!');
+                        console.log("Errore nella rimozione della scuola.");
                     });
             } }
         });
@@ -37,7 +38,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     $scope.currentSchool.lines = response.data;
                     $scope.$broadcast('schoolLoaded');
                 }, function() {
-                    alert('Errore nel caricamento delle linee.');
+                    $rootScope.networkProblemDetected('Errore nel caricamento delle linee!');
+                    console.log("Errore nel caricamento delle linee.");
                 }
             );
         } else {
@@ -145,7 +147,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     }
                     $state.go('root.schools-list');
                 }, function() {
-                    alert('Errore nella richiesta.');
+                    $rootScope.networkProblemDetected('Errore nel salvataggio della scuola!');
+                    console.log("Errore nel salvataggio della scuola.");
                 }
             );
         }
@@ -214,11 +217,13 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                                 console.log('Caricamento delle linee a buon fine.');
                                 $scope.currentSchool.lines = response.data;
                             }, function() {
-                                alert('Errore nel caricamento delle linee.');
+                                $rootScope.networkProblemDetected('Errore nel caricamento delle linee!');
+                                console.log("Errore nel caricamento delle linee.");
                             }
                         );
                     }, function() {
-                        alert('Errore nella cancellazione della tappa.');
+                        $rootScope.networkProblemDetected('Errore nella cancellazione della tappa!');
+                        console.log("Errore nella cancellazione della tappa.");
                     }
                 );
                 
@@ -240,7 +245,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             $scope.currentSchool.children = response.data;
             console.log('Caricamento degli scolari a buon fine.');
         }, function() {
-            alert('Errore nel caricamento degli scolari.');
+            $rootScope.networkProblemDetected('Errore nel caricamento degli scolari!');
+            console.log("Errore nel caricamento degli scolari.");
         }
         );
     }
@@ -277,7 +283,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                         console.log('Cancellazione dello scolaro a buon fine.');
                         $scope.currentSchool.children.splice($scope.currentSchool.children.indexOf(child), 1);
                     }, function() {
-                        alert('Errore nella cancellazione dello scolaro.');
+                        $rootScope.networkProblemDetected('Errore nella cancellazione dello scolaro!');
+                        console.log("Errore nella cancellazione dello scolaro.");
                     }
                 );
             	} 
@@ -334,7 +341,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 $scope.saveData = DataService.saveData;
             }
         }, function() {
-            alert('Errore nel caricamento degli scolari.');
+            $rootScope.networkProblemDetected('Errore nel caricamento degli scolari!');
+            console.log("Errore nel caricamento degli scolari.");
         }
         );
     }
@@ -374,7 +382,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     $state.go('root.school.children-list');
 				},
 				function() {
-          alert('Errore nel salvataggio dello scolaro.');
+                    $rootScope.networkProblemDetected('Errore nel salvataggio dello scolaro!');
+                    console.log("Errore nel salvataggio dello scolaro.");
 				}
   		);
   	}
@@ -418,7 +427,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 $scope.currentSchool.volunteers.sort(compareVolunteer);
                 console.log('Caricamento dei volontari a buon fine.');
             }, function() {
-                alert('Errore nel caricamento dei volontari.');
+                $rootScope.networkProblemDetected('Errore nel caricamento dei volontari');
+                console.log('Errore nel caricamento dei volontari.');
             }
         );
     }    
@@ -454,7 +464,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                         console.log('Cancellazione del volontario a buon fine.');
                         $scope.currentSchool.volunteers.splice($scope.currentSchool.volunteers.indexOf(volunteer), 1);
                     }, function() {
-                        alert('Errore nella cancellazione del volontario.');
+                        $rootScope.networkProblemDetected('Errore nella cancellazione del volontario!');
+                        console.log("Errore nella cancellazione del volontario.");
                     }
                 );
             	} 
@@ -507,7 +518,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 $scope.saveData = DataService.saveData;
             }
         }, function() {
-            alert('Errore nel caricamento dei volontari.');
+            $rootScope.networkProblemDetected('Errore nel caricamento dei volontari!');
+            console.log("Errore nel caricamento dei volontari.");
         }
         );
     }
@@ -542,7 +554,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     $state.go('root.school.volunteer-list');
 				},
 				function() {
-          alert('Errore nel salvataggio del volontario.');
+                    $rootScope.networkProblemDetected('Errore nel salvataggio del volontario!');
+                    console.log("Errore nel salvataggio del volontario.");
 				}
   		);
   	}
