@@ -276,7 +276,8 @@ public class ExcelConverter {
 					String telefono = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
 					String classe = fmt.formatCellValue(row.getCell(4));
 					String fermata = fmt.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
-					String cf = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue().toUpperCase();
+					String cf = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue()
+							.trim().toUpperCase();
 					String nodo = row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getStringCellValue();
 					
 					Child child = new Child();
@@ -294,55 +295,14 @@ public class ExcelConverter {
 					
 					if(Utils.isNotEmpty(fermata)) {
 						Stop stop = stopsMap.get(fermata);
-						if(stop == null) {
+						if(stop != null) {
+							stop.getPassengerList().add(child.getObjectId());
+						} else {
 							logger.warn(String.format("Stop '%s' not found", fermata));
 						}
-						stop.getPassengerList().add(child.getObjectId());
 					}
 					
 					result.put(child.getObjectId(), child);
-				} catch (Exception e) {
-					ExcelError error = new ExcelError(sheet.getSheetName(), i, e.toString());
-					errors.add(error);
-				}
-			}
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			wb.close();
-		}
-		return result;
-	}
-	
-	public static Map<String, Child> readSimpleChildren(InputStream excel, String ownerId, 
-			String instituteId, String schoolId, List<ExcelError> errors) throws Exception {
-		Map<String, Child> result = new HashMap<String, Child>();
-		XSSFWorkbook wb = new XSSFWorkbook(excel);
-		try {
-			XSSFSheet sheet = wb.getSheet("Bambini");
-			if(sheet == null) {
-				throw new InvalidParametersException("Bambini sheet not found");
-			}
-			DataFormatter fmt = new DataFormatter();
-			for(int i=1; i <= sheet.getLastRowNum(); i++) {
-				try {
-					Row row = sheet.getRow(i);
-					String cognome = row.getCell(0).getStringCellValue();
-					String nome = row.getCell(1).getStringCellValue();
-					String classe = fmt.formatCellValue(row.getCell(2));
-					String cf = row.getCell(3).getStringCellValue().toUpperCase();
-					
-					Child child = new Child();
-					child.setOwnerId(ownerId);
-					child.setInstituteId(instituteId);
-					child.setSchoolId(schoolId);
-					child.setObjectId(Utils.getUUID());
-					child.setName(nome);
-					child.setSurname(cognome);
-					child.setClassRoom(classe);
-					child.setCf(cf);
-					
-					result.put(child.getObjectId(), child);					
 				} catch (Exception e) {
 					ExcelError error = new ExcelError(sheet.getSheetName(), i, e.toString());
 					errors.add(error);

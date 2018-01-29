@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -152,61 +153,53 @@ public class AdminController extends AuthController {
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
+			@RequestParam(name="onlychilds", required=false) Boolean onlyChild,
 			@RequestParam("file") MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		List<ExcelError> errors = new ArrayList<ExcelError>();
-		Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
-				ownerId, instituteId, schoolId, errors);
-		Map<String, Stop> stopsMap = ExcelConverter.readStops(file.getInputStream(), 
-				ownerId, instituteId, schoolId, routesMap, errors);
-		Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
-				ownerId, instituteId, schoolId, stopsMap, errors);
-		Map<String, Volunteer> volunteersMap = ExcelConverter.readVolunteers(file.getInputStream(), 
-				ownerId, instituteId, schoolId, errors);
-		if(errors.size() == 0) {
-			for(Route route : routesMap.values()) {
-				storage.addRoute(route);
+		if(onlyChild) {
+			Map<String, Stop> stopsMap = new HashMap<String, Stop>();
+			Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
+					ownerId, instituteId, schoolId, stopsMap, errors);
+			if(errors.size() == 0) {
+				for(Child child : childrenMap.values()) {
+					storeChild(child);
+				}
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
+				}
 			}
-			for(Stop stop : stopsMap.values()) {
-				storage.addStop(stop);
-			}
-			for(Child child : childrenMap.values()) {
-				storeChild(child);
-			}
-			for(Volunteer volunteer : volunteersMap.values()) {
-				storage.addVolunteer(volunteer);
-			}			
-			if(logger.isInfoEnabled()) {
-				logger.info(String.format("uploadData: %s %s %s", ownerId, instituteId, schoolId));
+		} else {
+			Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
+					ownerId, instituteId, schoolId, errors);
+			Map<String, Stop> stopsMap = ExcelConverter.readStops(file.getInputStream(), 
+					ownerId, instituteId, schoolId, routesMap, errors);
+			Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
+					ownerId, instituteId, schoolId, stopsMap, errors);
+			Map<String, Volunteer> volunteersMap = ExcelConverter.readVolunteers(file.getInputStream(), 
+					ownerId, instituteId, schoolId, errors);
+			if(errors.size() == 0) {
+				for(Route route : routesMap.values()) {
+					storage.addRoute(route);
+				}
+				for(Stop stop : stopsMap.values()) {
+					storage.addStop(stop);
+				}
+				for(Child child : childrenMap.values()) {
+					storeChild(child);
+				}
+				for(Volunteer volunteer : volunteersMap.values()) {
+					storage.addVolunteer(volunteer);
+				}			
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
+				}
 			}
 		}
 		return errors;
-	}
-	
-	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}/child", method = RequestMethod.POST)
-	public @ResponseBody void addChildren(
-			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
-			@RequestParam("file") MultipartFile file,
-			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		List<ExcelError> errors = new ArrayList<ExcelError>();		
-		Map<String, Child> childrenMap = ExcelConverter.readSimpleChildren(file.getInputStream(), 
-				ownerId, instituteId, schoolId, errors);
-		if(errors.size() == 0) {
-			for(Child child : childrenMap.values()) {
-				storeChild(child);
-			}
-			if(logger.isInfoEnabled()) {
-				logger.info(String.format("addChildren: %s %s %s", ownerId, instituteId, schoolId));
-			}
-		}
 	}
 	
 	private void storeChild(Child child) throws ClassNotFoundException {
