@@ -97,7 +97,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     	} 
     };
     
-    $scope.uploadFile = function() {
+    $scope.uploadFile = function(uploadFileOnlyChilds) {
         if (!$stateParams.idSchool) { //new school, have to create the school before import data
             alert('Salva la scuola prima di importare i dati.');
         }
@@ -113,7 +113,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     			"ownerId": $stateParams.idDomain,
     			"instituteId": $stateParams.idInstitute,
     			"schoolId": $stateParams.idSchool,
-    			"formdata": formData
+                "formdata": formData,
+                "onlychilds": uploadFileOnlyChilds
     	};
     	DataService.uploadFile(element).then(
             function(response) {

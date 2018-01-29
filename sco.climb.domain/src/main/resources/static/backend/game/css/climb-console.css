@@ -551,12 +551,47 @@ p.fixed-width
     margin-top: 20px;
 }
 
-.import-errors-list ul {
-    max-height: 90px;
-    overflow: auto;
+.import-panel label {
+    font-weight: initial;
 }
+.import-panel label > input {
+    margin-right: 8px;
+}
+
 .import-errors-list {
     margin-bottom: 40px;
+}
+
+.header-fixed {
+    width: 100% 
+}
+
+.header-fixed > thead,
+.header-fixed > tbody,
+.header-fixed > thead > tr,
+.header-fixed > tbody > tr,
+.header-fixed > thead > tr > th,
+.header-fixed > tbody > tr > td {
+    display: block;
+}
+
+.header-fixed > tbody > tr:after,
+.header-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.header-fixed > tbody {
+    overflow-y: auto;
+    height: 250px;
+}
+
+.header-fixed > tbody > tr > td,
+.header-fixed > thead > tr > th {
+    width: 32%;
+    float: left;
 }
 
 fieldset {

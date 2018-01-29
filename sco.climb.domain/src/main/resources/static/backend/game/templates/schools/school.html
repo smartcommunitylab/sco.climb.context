@@ -8,18 +8,31 @@
     </div>
     
     <fieldset class= "row" ng-disabled="!PermissionsService.permissionEnabledEditSchool()">
-    	<div class="col-md-12">
+    	<div class="col-md-12 import-panel">
     		<div>Importazione dati scuola</div>
-    		<input type="file" id="upload-file" name="file" style="display:inline-block;"/>
-    		<input type="button" ng-click="uploadFile()" value="Importa" />
+            <input type="file" id="upload-file" name="file" style="display:inline-block;"/>
+            <label><input type="checkbox" ng-model="uploadFileOnlyChilds"/>Importa solo i bambini</label>
+    		
+    		<input type="button" ng-click="uploadFile(uploadFileOnlyChilds)" value="Importa" />
         </div>
-        <div class="import-errors-list col-md-12">
-            Errori importazione: 
-            <ul> 
-                <li ng-repeat="error in importErrors">
-                    {{error.sheet}} riga {{error.row}}: {{error.error}} 
-                </li>
-            </ul>
+        <div class="import-errors-list col-md-12" ng-show="importErrors">
+            Errori importazione:
+            <table class="table table-striped header-fixed">
+                <thead>
+                    <tr>
+                        <th>Foglio</th>
+                        <th>Riga</th>
+                        <th>Errore</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="error in importErrors">
+                        <td>{{error.sheet}}</td>
+                        <td>{{error.row}}</td>
+                        <td>{{error.error}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>        
     </fieldset>
 

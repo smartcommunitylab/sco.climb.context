@@ -152,7 +152,7 @@ function ($q, $http, $rootScope, $timeout) {
             },
             uploadFile: function(element) 
             {
-                var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId;
+                var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId + '?onlychilds=' + element.onlychilds;
           	    return $http.post(postUrl, element.formdata, 
           			{
                         timeout: timeout,
