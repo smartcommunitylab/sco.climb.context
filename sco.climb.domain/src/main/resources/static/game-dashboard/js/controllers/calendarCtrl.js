@@ -500,7 +500,7 @@ angular.module('climbGame.controllers.calendar', [])
           $scope.openChallenge = false;
           var challengesNotCompleted = [];
           var d = new Date();
-          vat now = d.getTime();
+          var now = d.getTime();
           //first get all the not completed
           for (var i = 0; i < arrayOfChallenges.length; i++) {
             if (!arrayOfChallenges[i].completed && !arrayOfChallenges[i].fields.prizeWon && (arrayOfChallenges[i].end > now))
