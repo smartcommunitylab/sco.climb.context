@@ -504,6 +504,9 @@ angular.module('climbGame.controllers.calendar', [])
           //first get all the not completed
           for (var i = 0; i < arrayOfChallenges.length; i++) {
             if (!arrayOfChallenges[i].completed && !arrayOfChallenges[i].fields.prizeWon) {
+            	if(arrayOfChallenges[i].start > now) {
+            		continue;
+            	}
             	if(arrayOfChallenges[i].hasOwnProperty('end')) {
             		if(arrayOfChallenges[i].end > now) {
             			challengesNotCompleted.push(arrayOfChallenges[i]);
@@ -511,13 +514,11 @@ angular.module('climbGame.controllers.calendar', [])
             	} else {
             		challengesNotCompleted.push(arrayOfChallenges[i]);
             	}
-            }
-              
+            }  
           }
           if (challengesNotCompleted[0]) {
             $scope.lastChallenge.state = [challengesNotCompleted[0]];
             $scope.openChallenge = true;
-
           }
           for (var j = 1; j < challengesNotCompleted.length; j++) {
             if (challengesNotCompleted[j] && challengesNotCompleted[j].start > $scope.lastChallenge.state[0].start) {
@@ -528,24 +529,27 @@ angular.module('climbGame.controllers.calendar', [])
         var getChallenges = function () {
           dataService.getChallenges().then(
             function (data) {
+            	 $scope.lastChallenge = {state:[]}
               if (data && data.length) {
                 console.log('[Calendar] Challenges: ' + data.length)
                 for (var i = 0; i < data.length; i++) {
                   if (data[i].state) {
-                    var tempStates = [];
-                    var nowTime = (new Date()).getTime();
+                    //var tempStates = [];
+                    //var nowTime = (new Date()).getTime();
                     angular.forEach(data[i].state, function (state) {
                       if (state.start < nowTime) {
                         state.fields = $scope.convertFields(state.fields)
-                        tempStates = [state];
+                        $scope.lastChallenge.state.push(state)
+                        //tempStates = [state];
                       }
                     })
-                    data[i].state = tempStates;
-                    $scope.lastChallenge = data[i]
-                    i = data.length
-                    cleanStatesChallenges($scope.lastChallenge.state)
+                    //data[i].state = tempStates;
+                    //$scope.lastChallenge = data[i]
+                    //i = data.length
+                    //cleanStatesChallenges($scope.lastChallenge.state)
                   }
                 }
+                cleanStatesChallenges($scope.lastChallenge.state)
               }
             },
             function (reason) {
