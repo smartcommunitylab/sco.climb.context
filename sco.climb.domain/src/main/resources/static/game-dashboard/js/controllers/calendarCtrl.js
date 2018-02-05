@@ -534,21 +534,10 @@ angular.module('climbGame.controllers.calendar', [])
                 console.log('[Calendar] Challenges: ' + data.length)
                 for (var i = 0; i < data.length; i++) {
                   if (data[i].state) {
-                    //var tempStates = [];
-                    //var nowTime = (new Date()).getTime();
                     angular.forEach(data[i].state, function (state) {
                     	state.fields = $scope.convertFields(state.fields)
                       $scope.lastChallenge.state.push(state)
-                      //if (state.start < nowTime) {
-                        //state.fields = $scope.convertFields(state.fields)
-                        //$scope.lastChallenge.state.push(state)
-                        //tempStates = [state];
-                      //}
                     })
-                    //data[i].state = tempStates;
-                    //$scope.lastChallenge = data[i]
-                    //i = data.length
-                    //cleanStatesChallenges($scope.lastChallenge.state)
                   }
                 }
                 cleanStatesChallenges($scope.lastChallenge.state)
