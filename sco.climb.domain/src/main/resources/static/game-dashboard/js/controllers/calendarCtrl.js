@@ -537,11 +537,13 @@ angular.module('climbGame.controllers.calendar', [])
                     //var tempStates = [];
                     //var nowTime = (new Date()).getTime();
                     angular.forEach(data[i].state, function (state) {
-                      if (state.start < nowTime) {
-                        state.fields = $scope.convertFields(state.fields)
-                        $scope.lastChallenge.state.push(state)
+                    	state.fields = $scope.convertFields(state.fields)
+                      $scope.lastChallenge.state.push(state)
+                      //if (state.start < nowTime) {
+                        //state.fields = $scope.convertFields(state.fields)
+                        //$scope.lastChallenge.state.push(state)
                         //tempStates = [state];
-                      }
+                      //}
                     })
                     //data[i].state = tempStates;
                     //$scope.lastChallenge = data[i]
