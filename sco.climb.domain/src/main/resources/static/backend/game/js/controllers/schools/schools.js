@@ -24,7 +24,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 })
 
 .controller('SchoolCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
-    $scope.$parent.mainView = 'school'; 
+    $scope.$parent.mainView = 'school';
+    $scope.uploadFileOnlyChilds = false;
 
     $scope.initController = function() {
         if ($scope.currentSchool) { //edit school
