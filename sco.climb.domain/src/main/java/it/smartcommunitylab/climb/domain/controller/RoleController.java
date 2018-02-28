@@ -73,7 +73,7 @@ public class RoleController extends AuthController {
 		List<AuthorizationDTO> auths = new ArrayList<AuthorizationDTO>();
 		auths.add(authorizationDTO);
 		
-		storage.addUserRole(email, Const.ROLE_OWNER, getAuthKey(ownerId, Const.ROLE_OWNER), auths);
+		storage.addUserRole(email, Const.ROLE_OWNER, Utils.getAuthKey(ownerId, Const.ROLE_OWNER), auths);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addOwner: %s - %s", ownerId, email));
 		}
@@ -204,7 +204,8 @@ public class RoleController extends AuthController {
 		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
-		storage.addUserRole(email, Const.ROLE_VOLUNTEER, getAuthKey(ownerId, Const.ROLE_VOLUNTEER), auths);
+		storage.addUserRole(email, Const.ROLE_VOLUNTEER, 
+				Utils.getAuthKey(ownerId, Const.ROLE_VOLUNTEER, instituteId, schoolId), auths);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addVolunteer: %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId));
@@ -304,6 +305,7 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 
 		attributes.clear();
+		actions.add(Const.AUTH_ACTION_UPDATE);
 		attributes.put("pedibus-ownerId", ownerId);
 		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
 		attributes.put("pedibus-gameId", gameId);
@@ -314,7 +316,6 @@ public class RoleController extends AuthController {
 		result.add(authorizationDTO);
 		
 		attributes.clear();
-		actions.add(Const.AUTH_ACTION_UPDATE);
 		attributes.put("pedibus-ownerId", ownerId);
 		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Link);
 		attributes.put("pedibus-gameId", gameId);
@@ -324,7 +325,8 @@ public class RoleController extends AuthController {
 		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 		
-		storage.addUserRole(email, Const.ROLE_TEACHER, getAuthKey(ownerId, Const.ROLE_TEACHER), auths);
+		storage.addUserRole(email, Const.ROLE_TEACHER, 
+				Utils.getAuthKey(ownerId, Const.ROLE_TEACHER, instituteId, schoolId, gameId), auths);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId, gameId));
@@ -354,7 +356,8 @@ public class RoleController extends AuthController {
 		AuthorizationDTO authorizationDTO = authorizationManager.insertAuthorization(auth);
 		result.add(authorizationDTO);
 		
-		storage.addUserRole(email, Const.ROLE_PARENT, getAuthKey(ownerId, Const.ROLE_PARENT), result);
+		storage.addUserRole(email, Const.ROLE_PARENT, 
+				Utils.getAuthKey(ownerId, Const.ROLE_PARENT, gameId), result);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addParent: %s - %s - %s", ownerId, email, gameId));
 		}
@@ -375,7 +378,49 @@ public class RoleController extends AuthController {
 		if(user == null) {
 			throw new EntityNotFoundException(String.format("user %s not found", email));
 		}
-		String authKey = getAuthKey(ownerId, role);
+  	if(!user.getOwnerIds().contains(ownerId)) {
+  		throw new UnauthorizedException("Unauthorized Exception: dataset not allowed");
+  	}
+  	if((user.getOwnerIds().size() > 1) || (user.getRoles().size() > 1)) {
+  		throw new UnauthorizedException("Unauthorized Exception: user has other roles and dataset");
+  	}
+		String authKey = Utils.getAuthKey(ownerId, role);
+		for(String key : user.getAuthorizations().keySet()) {
+			if(key.startsWith(authKey)) {
+				List<Object> list = user.getAuthorizations().get(authKey);
+				if(list != null) {
+					for(Object obj : list) {
+						if(obj instanceof AuthorizationDTO) {
+							AuthorizationDTO auth = (AuthorizationDTO) obj;
+							String authId = auth.getId();
+							authorizationManager.deleteAuthorization(authId);
+						}
+					}
+				}				
+			}
+		}
+		storage.removeUserRole(email, role, authKey);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("removeRole: %s - %s - %s", ownerId, role, email));
+		}
+	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}/auth/{authKey}", method = RequestMethod.DELETE)
+	public @ResponseBody void removeAuthKey(
+			@PathVariable String ownerId,
+			@PathVariable String authKey,
+			@RequestParam String email,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User user = storage.getUserByEmail(email);
+		if(user == null) {
+			throw new EntityNotFoundException(String.format("user %s not found", email));
+		}
+  	if(!user.getOwnerIds().contains(ownerId)) {
+  		throw new UnauthorizedException("Unauthorized Exception: dataset not allowed");
+  	}
 		List<Object> list = user.getAuthorizations().get(authKey);
 		if(list != null) {
 			for(Object obj : list) {
@@ -386,9 +431,9 @@ public class RoleController extends AuthController {
 				}
 			}
 		}
-		storage.removeUserRole(email, role, authKey);
+		storage.removeUserAuthKey(email, authKey);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("removeRole: %s - %s - %s", ownerId, role, email));
+			logger.info(String.format("removeAuthKey: %s - %s - %s", ownerId, email, authKey));
 		}
 	}
 	
@@ -502,12 +547,10 @@ public class RoleController extends AuthController {
   		throw new UnauthorizedException("Unauthorized Exception: unable to delete admin user");
   	}
   	if((user.getOwnerIds().size() > 1) || (user.getRoles().size() > 1)) {
-  		throw new UnauthorizedException("Unauthorized Exception: user has other roles and datset");
+  		throw new UnauthorizedException("Unauthorized Exception: user has other roles and dataset");
   	}
-  	if(user.getRoles().size() == 1) {
-    	String role = user.getRoles().get(0);
-  		String authKey = getAuthKey(ownerId, role);
-  		List<Object> list = user.getAuthorizations().get(authKey);
+  	for(String key : user.getAuthorizations().keySet()) {
+  		List<Object> list = user.getAuthorizations().get(key);
   		if(list != null) {
   			for(Object obj : list) {
   				if(obj instanceof AuthorizationDTO) {
@@ -516,8 +559,7 @@ public class RoleController extends AuthController {
   					authorizationManager.deleteAuthorization(authId);
   				}
   			}
-  		}
-  		storage.removeUserRole(email, role, authKey);
+  		}  		
   	}
 		storage.removeUser(ownerId, user.getObjectId());
 		if(logger.isInfoEnabled()) {
@@ -539,10 +581,6 @@ public class RoleController extends AuthController {
 		return result;
 	}
 	
-	private String getAuthKey(String ownerId, String role) {
-		return ownerId + "-" + role;
-	}
-
 	@ExceptionHandler({EntityNotFoundException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody

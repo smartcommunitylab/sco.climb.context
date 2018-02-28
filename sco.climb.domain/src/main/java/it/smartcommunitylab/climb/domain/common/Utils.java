@@ -92,4 +92,41 @@ public class Utils {
 		return errorMap;
 	}
 	
+	public static String getAuthKey(String ownerId, String role) {
+		return ownerId + "__" + role;
+	}
+
+	public static String getAuthKey(String ownerId, String role, String... attributes) {
+		String result = ownerId + "__" + role;
+		for(String attribute : attributes) {
+			result = result + "__" + attribute; 
+		}
+		return result;
+	}
+	
+	public static String getOwnerIdFromAuthKey(String authKey) {
+		String[] strings = authKey.split("__");
+		if(strings.length >= 1) {
+			return strings[0];
+		}
+		return null;
+	}
+	
+	public static String getRoleFromAuthKey(String authKey) {
+		String[] strings = authKey.split("__");
+		if(strings.length >= 2) {
+			return strings[1];
+		}
+		return null;
+	}
+	
+	public static String getBaseFromAuthKey(String authKey) {
+		String[] strings = authKey.split("__");
+		if(strings.length >= 2) {
+			return strings[0] + "__" + strings[1];
+		}
+		return null;
+	}
+	
+
 }

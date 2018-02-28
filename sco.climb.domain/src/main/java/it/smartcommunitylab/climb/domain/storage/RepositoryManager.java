@@ -1143,7 +1143,41 @@ public class RepositoryManager {
 			throw new EntityNotFoundException(String.format("User %s not found", email));
 		}
 		userDb.getRoles().remove(role);
+		for(String key : userDb.getAuthorizations().keySet()) {
+			if(key.startsWith(authKey)) {
+				userDb.getAuthorizations().remove(key);
+			}
+		}
+		Date actualDate = new Date();
+		Update update = new Update();
+		update.set("roles", userDb.getRoles());
+		update.set("authorizations", userDb.getAuthorizations());
+		update.set("lastUpdate", actualDate);
+		mongoTemplate.updateFirst(query, update, User.class);
+	}
+	
+	public void removeUserAuthKey(String email, String authKey) 
+			throws EntityNotFoundException {
+		Query query = new Query(new Criteria("email").is(email));
+		User userDb = mongoTemplate.findOne(query, User.class);
+		if(userDb == null) {
+			throw new EntityNotFoundException(String.format("User %s not found", email));
+		}
 		userDb.getAuthorizations().remove(authKey);
+		String baseAuthKey = Utils.getBaseFromAuthKey(authKey);
+		if(Utils.isNotEmpty(baseAuthKey)) {
+			String role = Utils.getRoleFromAuthKey(authKey);
+			boolean otherRoles = false;
+			for(String key : userDb.getAuthorizations().keySet()) {
+				if(key.contains(role)) {
+					otherRoles = true;
+					break;
+				}
+			}
+			if(!otherRoles) {
+				userDb.getRoles().remove(role);
+			}
+		}
 		Date actualDate = new Date();
 		Update update = new Update();
 		update.set("roles", userDb.getRoles());

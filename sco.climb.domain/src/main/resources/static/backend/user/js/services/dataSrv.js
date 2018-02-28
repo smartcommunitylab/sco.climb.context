@@ -100,6 +100,28 @@ angular.module('climbGameUser.services.data', [])
       return deferred.promise
     }
 
+    dataService.removeAuth = function (authKey, user) {
+      var deferred = $q.defer()
+      $http({
+        method: 'DELETE',
+        url: configService.getURL() + '/api/role/' + currentDomain + '/auth/' + authKey, 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout(),
+        params: {
+          email: user.email
+        }
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
     dataService.addRole = function (role, user) {
       var deferred = $q.defer()
       $http({
@@ -248,6 +270,62 @@ angular.module('climbGameUser.services.data', [])
         deferred.reject(reason)
       })
       return deferred.promise
+    }
+    
+    dataService.getAuthText = function (authKey) {
+    	var deferred = $q.defer();
+    	var authText = "";
+    	var tokens = authKey.split("__");
+    	var ownerId = tokens[0];
+    	var role = tokens[1];
+    	var instituteId = null;
+    	var schoolId = null;
+    	var gameId = null;
+    	if(role == "parent") {
+    		gameId = tokens[2];
+    	} else if(role == "teacher") {
+    		instituteId = tokens[2];
+    		schoolId = tokens[3];
+    		gameId = tokens[4];
+    	} else if(role == "volunteer") {
+    		instituteId = tokens[2];
+    		schoolId = tokens[3];
+    	}
+    	authText = ownerId + " - " + role;
+    	if(instituteId) {
+    		dataService.getInstitutesList().then(function (data) {
+					var institutesList = data;
+					institutesList.forEach(function(institute) {
+						if(institute.objectId == instituteId) {
+							authText = authText + " - " + institute.name;
+						}
+					});
+					dataService.getSchoolsList(instituteId).then(function (data) {
+						var schoolsList = data;
+						schoolsList.forEach(function(school) {
+							if(school.objectId == schoolId) {
+								authText = authText + " - " + school.name;
+							}
+						});
+						if(gameId) {
+							dataService.getGame(gameId).then(function (data) {
+								authText = authText + " - " + data.gameName;
+								deferred.resolve(authText);
+							});
+						} else {
+							deferred.resolve(authText);
+						}
+					});
+    		});
+    	} else if(gameId) {
+				dataService.getGame(gameId).then(function (data) {
+					authText = authText + " - " + game.name;
+					deferred.resolve(authText);
+				});
+    	} else {
+    		deferred.resolve(authText);
+    	}
+    	return deferred.promise
     }
     
     return dataService
