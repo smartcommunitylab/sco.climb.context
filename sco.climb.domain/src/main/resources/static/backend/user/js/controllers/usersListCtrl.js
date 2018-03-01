@@ -96,6 +96,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
               function (data) {
               	delete user.authorizations[authKey];
                 $scope.loading = false;
+                $state.go("home.users-lists.list", {'role':'all'});
               },
               function (reason) {
                 $mdToast.show(
@@ -142,6 +143,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
               function (data) {
               	$scope.users.splice($scope.users.indexOf(user), 1);
                 $scope.loading = false;
+                $state.go("home.users-lists.list", {'role':'all'});
               },
               function (reason) {
                 $mdToast.show(
