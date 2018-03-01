@@ -99,6 +99,10 @@ public class RoleController extends AuthController {
 		actions.add(Const.AUTH_ACTION_READ);
 		String resourceName = "pedibus";
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", "*");
+		attributes.put("pedibus-schoolId", "*");
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Institute);
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
@@ -108,6 +112,10 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", "*");
+		attributes.put("pedibus-schoolId", "*");
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_School);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
@@ -117,9 +125,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Child);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -128,9 +138,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Image);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -139,9 +151,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Volunteer);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -150,9 +164,11 @@ public class RoleController extends AuthController {
 
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Stop);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -161,9 +177,11 @@ public class RoleController extends AuthController {
 
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Route);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -172,9 +190,11 @@ public class RoleController extends AuthController {
 
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_Attendance);
 		attributes.put("pedibus-instituteId", instituteId);
 		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", Const.AUTH_RES_Attendance);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -184,9 +204,11 @@ public class RoleController extends AuthController {
 		attributes.clear();
 		actions.add(Const.AUTH_ACTION_ADD);
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_WsnEvent);
 		attributes.put("pedibus-instituteId", instituteId);
 		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", Const.AUTH_RES_WsnEvent);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -195,9 +217,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_EventLogFile);
 		attributes.put("pedibus-instituteId", instituteId);
 		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", Const.AUTH_RES_EventLogFile);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -233,6 +257,10 @@ public class RoleController extends AuthController {
 		actions.add(Const.AUTH_ACTION_READ);
 		String resourceName = "pedibus";
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", "*");
+		attributes.put("pedibus-schoolId", "*");
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Institute);
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
@@ -242,6 +270,10 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", "*");
+		attributes.put("pedibus-schoolId", "*");
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_School);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
@@ -251,9 +283,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Child);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -262,9 +296,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Image);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -273,9 +309,11 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Volunteer);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -284,9 +322,11 @@ public class RoleController extends AuthController {
 
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
 		attributes.put("pedibus-resource", Const.AUTH_RES_Stop);
-		attributes.put("pedibus-instituteId", instituteId);
-		attributes.put("pedibus-schoolId", schoolId);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -295,20 +335,38 @@ public class RoleController extends AuthController {
 
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_Route);
 		attributes.put("pedibus-instituteId", instituteId);
 		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", Const.AUTH_RES_Route);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
 		auths.add(authorizationDTO);
 		result.add(authorizationDTO);
 
+		attributes.clear();
+		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", "*");
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
+		auth = authorizationManager.getAuthorizationDTO(email, actions, 
+				resourceName, attributes);
+		authorizationDTO = authorizationManager.insertAuthorization(auth);
+		auths.add(authorizationDTO);
+		result.add(authorizationDTO);
+		
 		attributes.clear();
 		actions.add(Const.AUTH_ACTION_UPDATE);
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
 		attributes.put("pedibus-gameId", gameId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Calendar);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -317,8 +375,24 @@ public class RoleController extends AuthController {
 		
 		attributes.clear();
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Link);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
 		attributes.put("pedibus-gameId", gameId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Excursion);
+		auth = authorizationManager.getAuthorizationDTO(email, actions, 
+				resourceName, attributes);
+		authorizationDTO = authorizationManager.insertAuthorization(auth);
+		auths.add(authorizationDTO);
+		result.add(authorizationDTO);
+		
+		attributes.clear();
+		attributes.put("pedibus-ownerId", ownerId);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
+		attributes.put("pedibus-gameId", gameId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame_Link);
 		auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		authorizationDTO = authorizationManager.insertAuthorization(auth);
@@ -338,6 +412,8 @@ public class RoleController extends AuthController {
 	public @ResponseBody List<AuthorizationDTO> addParent(
 			@PathVariable String ownerId,
 			@RequestParam String email,
+			@RequestParam String instituteId,
+			@RequestParam String schoolId,
 			@RequestParam String gameId,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
@@ -349,8 +425,11 @@ public class RoleController extends AuthController {
 		Map<String, String> attributes = new HashMap<String, String>();
 		actions.add(Const.AUTH_ACTION_READ);
 		attributes.put("pedibus-ownerId", ownerId);
-		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
+		attributes.put("pedibus-instituteId", instituteId);
+		attributes.put("pedibus-schoolId", schoolId);
+		attributes.put("pedibus-routeId", "*");
 		attributes.put("pedibus-gameId", gameId);
+		attributes.put("pedibus-resource", Const.AUTH_RES_PedibusGame);
 		AuthorizationDTO auth = authorizationManager.getAuthorizationDTO(email, actions, 
 				resourceName, attributes);
 		AuthorizationDTO authorizationDTO = authorizationManager.insertAuthorization(auth);
