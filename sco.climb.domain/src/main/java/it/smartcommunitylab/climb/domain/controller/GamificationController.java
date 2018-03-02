@@ -566,6 +566,9 @@ public class GamificationController extends AuthController {
 			content.setGeocoding(leg.getGeocoding());
 			storage.saveMultimediaContent(content);
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusItineraryLegLinks[%s]: %s", ownerId, itineraryId));
+		}
 		return links;
 	}
 	
