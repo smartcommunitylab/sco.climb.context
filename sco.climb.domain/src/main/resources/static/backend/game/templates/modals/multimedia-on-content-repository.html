@@ -3,14 +3,16 @@
 		<div class="row">
             <form novalidate style="text-align:center;margin-bottom:8px;">    
                 <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
-                <select ng-model="$parent.searchtype" ng-change="searchOnContentRepository()">
+                <select ng-model="$parent.searchtype">
                     <option value="all">Tutti</option>
                     <option value="image">Immagini</option>
                     <option value="video">Video</option>
-                    <option value="wikipedia">Link</option>
+                    <option value=link>Link</option>
                 </select>
                 <label><input type="checkbox" ng-model="$parent.searchlocalschool"/> Solo da questa scuola</label>
-                <label><input type="checkbox" ng-model="$parent.searchbyposition"/> Ricerca nel raggio di 25 km dalla tappa</label>
+                <label><input type="checkbox" ng-model="$parent.searchbyposition"/> Ricerca nel raggio di </label>
+                <input type="number" min="0" placeholder="inserisci i Km" ng-model="$parent.searchdistance" />
+                <label> dalla tappa</label>                
                 <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
             </form>
         </div>

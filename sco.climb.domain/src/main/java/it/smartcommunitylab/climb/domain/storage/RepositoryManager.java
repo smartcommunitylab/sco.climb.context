@@ -1291,7 +1291,7 @@ public class RepositoryManager {
 	}
 
 	public List<MultimediaContent> searchMultimediaContent(String text, Double lat, Double lng,
-			String schoolId, String type) {
+			Double distance, String schoolId, String type) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if(Utils.isNotEmpty(text)) {
@@ -1300,9 +1300,12 @@ public class RepositoryManager {
 		} 
 		if((lat != null) && (lng != null)) {
 			Point center = new Point(lng, lat);
-			Distance distance = new Distance(25, Metrics.KILOMETERS);
-			Circle circle = new Circle(center, distance);
-			criteria = criteria.and("geocoding").within(circle);
+			if(distance == null) {
+				distance = 0.1;
+			}
+			Distance geoDistance = new Distance(distance, Metrics.KILOMETERS);
+			Circle circle = new Circle(center, geoDistance);
+			criteria = criteria.and("geocoding").withinSphere(circle);
 		}
 		if(Utils.isNotEmpty(schoolId)) {
 			criteria = criteria.and("schoolId").is(schoolId);

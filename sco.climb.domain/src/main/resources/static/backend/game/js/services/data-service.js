@@ -209,7 +209,7 @@ function ($q, $http, $rootScope, $timeout) {
                 })
                 return deferred.promise;
             },
-            searchOnContentRepository: function (query, position, schoolId, type) {
+            searchOnContentRepository: function (query, position, distance, schoolId, type) {
                 var deferred = $q.defer();
                 var config = {
                     params: {
@@ -220,6 +220,9 @@ function ($q, $http, $rootScope, $timeout) {
                 if (position) {
                     config.params.lat = position[0];
                     config.params.lng = position[1];
+                }
+                if (distance) {
+                	config.params.distance = distance;
                 }
                 if (schoolId) {
                     config.params.schoolId = schoolId;

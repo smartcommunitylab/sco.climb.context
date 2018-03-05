@@ -55,12 +55,13 @@ public class MultimediaController extends AuthController {
 			@RequestParam (required=false) String text,
 			@RequestParam (required=false) Double lat,
 			@RequestParam (required=false) Double lng,
+			@RequestParam (required=false) Double distance,
 			@RequestParam (required=false) String schoolId,
 			@RequestParam (required=false) String type,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		List<MultimediaResult> result = new ArrayList<MultimediaResult>();
-		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, schoolId, type);
+		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, distance, schoolId, type);
 		Map<String, List<ContentInfo>> linkMap = new HashMap<String, List<ContentInfo>>();
 		for(MultimediaContent content : list) {
 			String link = content.getLink();

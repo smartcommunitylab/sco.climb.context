@@ -4,11 +4,15 @@ angular.module('consoleControllers.leg')
     
     $scope.totalCounter = 0;
     $scope.searchtype = 'all';
+    $scope.searchdistance = null;
 
     $scope.searchOnContentRepository = function() {
-        if (!$scope.searchtext) return;
+        //if (!$scope.searchtext) return;
         $scope.resetResults();
-        DataService.searchOnContentRepository($scope.searchtext, $scope.searchbyposition ? position: undefined, $scope.searchlocalschool ? $state.idSchool : '', $scope.searchtype != 'all' ? $scope.searchtype : '').then(
+        DataService.searchOnContentRepository($scope.searchtext, $scope.searchbyposition ? position : undefined, 
+        		$scope.searchbyposition ?  $scope.searchdistance : undefined,
+        		$scope.searchlocalschool ? $state.idSchool : '', 
+        		$scope.searchtype != 'all' ? $scope.searchtype : '').then(
                 function(response) {
                     response.data.forEach(element => {
                         switch (element.type) {
