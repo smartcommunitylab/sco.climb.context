@@ -172,16 +172,12 @@ angular.module('MapsService', [])
     this.setTravelType = function(newTravelType)
     {
         travelType = newTravelType;
-        if(travelType !== 'foot')
-        {
-            directionsDisplay.setMap(null);         // nasconde l'itinerario calcolato dal DirectionService e
-            prevPoiMarker.setMap(map);              // mostra il marker del LEG precedente (feature meramente estetica)
-        }
-        else if(directionsDisplay.map === null)
-        {
-            directionsDisplay.setMap(map);          // mostra nuovamente l'itinerario calcolato dal DirectionService,
-            polyPath.setPath([]);                   // azzera la polyline della tratta in linea d'aria
-            prevPoiMarker.setMap(null);             // nasconde il marker del LEG precedente
+        if((travelType === 'foot') || (travelType === 'car'))
+        {	
+        	polyPath.setPath([]);  						// azzera la polyline della tratta in linea d'aria
+        	directionsDisplay.setMap(map); 		// visualizza l'itinerario calcolato dal DirectionService
+        } else {
+        	directionsDisplay.setMap(null);		// cancella itinerario del DirectionService 
         }
         drawPolyline();
     };
@@ -190,8 +186,9 @@ angular.module('MapsService', [])
     {
         if(prevPoiCoordinates !== null)     // se si tratta del 1° LEG ovviamente la polyline non viene disegnata
         {
-            if(travelType === 'foot')       // calcola l'itinerario seguendo le strade
+            if((travelType === 'foot') || (travelType === 'car'))       // calcola l'itinerario seguendo le strade
             {
+            		var mapTravelMode = (travelType === 'foot') ? 'WALKING' : 'DRIVING';
                 var getFormattedWaypoints = function() {
                     var toRtn = [];
                     if (customWaypoints) {                        
@@ -207,7 +204,7 @@ angular.module('MapsService', [])
                 var request = {
                     origin: prevPoiCoordinates,
                     destination: thisPoiMarker.getPosition(),
-                    travelMode: 'WALKING',
+                    travelMode: mapTravelMode,
                     waypoints: getFormattedWaypoints()
                 };
                 directionsService.route(request, function(result, status) {
