@@ -7,6 +7,7 @@ public class MultimediaContent extends BaseObject {
 	private String schoolId;
 	private String itineraryId;
 	private String name;
+	private String legName;
 	private String link;
 	private String type;
 	private double[] geocoding; // lon/lat (for mongodb)
@@ -52,6 +53,12 @@ public class MultimediaContent extends BaseObject {
 	}
 	public void setGeocoding(double[] geocoding) {
 		this.geocoding = geocoding;
+	}
+	public String getLegName() {
+		return legName;
+	}
+	public void setLegName(String legName) {
+		this.legName = legName;
 	}
 	
 }

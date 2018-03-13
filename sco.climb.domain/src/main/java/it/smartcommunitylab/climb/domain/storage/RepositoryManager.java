@@ -1283,6 +1283,7 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("lastUpdate", now);
 			update.set("name", content.getName());
+			update.set("legName", content.getLegName());
 			update.set("type", content.getType());
 			update.set("geocoding", content.getGeocoding());
 			mongoTemplate.updateFirst(query, update, MultimediaContent.class);

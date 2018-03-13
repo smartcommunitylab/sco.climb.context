@@ -516,7 +516,8 @@ public class GamificationController extends AuthController {
 					content.setInstituteId(game.getInstituteId());
 					content.setSchoolId(game.getSchoolId());
 					content.setItineraryId(itineraryId);
-					content.setName(leg.getName() + " " + link.getName());
+					content.setName(link.getName());
+					content.setLegName(leg.getName());
 					content.setType(link.getType());
 					content.setLink(link.getLink());
 					content.setGeocoding(leg.getGeocoding());
@@ -560,7 +561,8 @@ public class GamificationController extends AuthController {
 			content.setInstituteId(game.getInstituteId());
 			content.setSchoolId(game.getSchoolId());
 			content.setItineraryId(itineraryId);
-			content.setName(leg.getName() + " " + link.getName());
+			content.setName(link.getName());
+			content.setLegName(leg.getName());
 			content.setType(link.getType());
 			content.setLink(link.getLink());
 			content.setGeocoding(leg.getGeocoding());

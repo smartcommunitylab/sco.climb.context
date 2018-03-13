@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ContentInfo {
 	private String name;
+	private String legName;
 	private double[] geocoding; // lon/lat (for mongodb)
 	private List<String> tags;
 	
@@ -24,6 +25,12 @@ public class ContentInfo {
 	}
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+	public String getLegName() {
+		return legName;
+	}
+	public void setLegName(String legName) {
+		this.legName = legName;
 	}
 
 }

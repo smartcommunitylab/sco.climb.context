@@ -72,6 +72,7 @@ public class MultimediaController extends AuthController {
 			}
 			ContentInfo info = new ContentInfo();
 			info.setName(content.getName());
+			info.setLegName(content.getLegName());
 			info.setGeocoding(content.getGeocoding());
 			contentList.add(info);
 		}
