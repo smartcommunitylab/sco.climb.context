@@ -63,5 +63,9 @@ angular.module('consoleControllers.leg')
         }
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
     }
+    $scope.changePage = function(newPageNumber, oldPageNumber) {
+    	var el = document.getElementById('contentList');
+    	el.scrollTop = 0;
+    }
 
 });

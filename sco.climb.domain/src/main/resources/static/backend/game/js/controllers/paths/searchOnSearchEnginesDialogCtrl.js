@@ -31,6 +31,8 @@ angular.module('consoleControllers.leg')
                     if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
                     $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
                     console.log(response);
+                		var el = document.getElementById('wikiContentList');
+                		el.scrollTop = 0;
                 }, function() {
                 }
             );
@@ -43,6 +45,8 @@ angular.module('consoleControllers.leg')
                     if (!$scope.prevPageToken) $scope.prevPageToken = -1; //used to generalize pagination controls
                     $scope.nextPageToken = response.data.nextPageToken;
                     console.log(response);
+              			var el = document.getElementById('videoContentList');
+              			el.scrollTop = 0;
                 }, function() {
                 }
             );
@@ -61,6 +65,8 @@ angular.module('consoleControllers.leg')
                         $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
                     }
                     console.log(response);
+                		var el = document.getElementById('imageContentList');
+                		el.scrollTop = 0;
                 }, function() {
                 }
             );
