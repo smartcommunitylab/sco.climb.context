@@ -3,7 +3,8 @@
 
 <div ng-if="$parent.selectedOwner && $parent.selectedInstitute && $parent.selectedSchool && $parent.selectedGame">
     <div class="col-lg-12 buttons-tab">
-        <a href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}//info" class="btn btn-info">Crea nuovo</a>
+        <a href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}//info" 
+        class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditLegs()">Crea nuovo</a>
     </div>
 
     <div class="col-md-10 col-md-offset-1 search-container">
