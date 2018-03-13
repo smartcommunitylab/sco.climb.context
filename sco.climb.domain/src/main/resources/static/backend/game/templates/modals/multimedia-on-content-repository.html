@@ -16,7 +16,7 @@
                 <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
             </form>
         </div>
-        <div class="row"style="overflow: auto;height: 350px;">
+        <div class="row"style="overflow: auto;height: 350px;" id="contentList">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
                     <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
@@ -28,6 +28,7 @@
                             <a href="{{content.link}}" target="_blank">
                                 <h4>{{content.info[0].name}}</h4>
                             </a>
+                            <p>{{content.info[0].legName}}</p>
                         </div>
                     </div>
                 </li>                
@@ -39,7 +40,8 @@
                 <dir-pagination-controls
                     max-size="5"
                     direction-links="true"
-                    boundary-links="true" >
+                    boundary-links="true"
+                    on-page-change="changePage(newPageNumber, oldPageNumber)" >
                 </dir-pagination-controls>
             </div>
         </div>

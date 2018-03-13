@@ -11,7 +11,7 @@
                 <input type="submit" ng-click="searchOnEngine()" value="Cerca" class="btn btn-primary btn-sm" />
             </form>
         </div>
-        <div class="row" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;">
+        <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
                     <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
@@ -28,7 +28,7 @@
                 </li>                
             </ul>
         </div>
-        <div class="row" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;">
+        <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
                     <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
@@ -46,7 +46,7 @@
                 </li>                
             </ul>
         </div>
-        <div class="row" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;">
+        <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
                     <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
