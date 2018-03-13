@@ -1,17 +1,18 @@
 angular.module('consoleControllers.leg')
 
-.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, addElementsFunction, position, getYoutubeImageFromLink) {
+.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, schoolId, addElementsFunction, position, getYoutubeImageFromLink) {
     
     $scope.totalCounter = 0;
     $scope.searchtype = 'all';
     $scope.searchdistance = null;
+    $scope.searchlocalschool = false;
 
     $scope.searchOnContentRepository = function() {
         //if (!$scope.searchtext) return;
         $scope.resetResults();
         DataService.searchOnContentRepository($scope.searchtext, $scope.searchbyposition ? position : undefined, 
         		$scope.searchbyposition ?  $scope.searchdistance : undefined,
-        		$scope.searchlocalschool ? $state.idSchool : '', 
+        		$scope.searchlocalschool ? schoolId : undefined, 
         		$scope.searchtype != 'all' ? $scope.searchtype : '').then(
                 function(response) {
                     response.data.forEach(element => {

@@ -317,7 +317,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             },
             {
-                addElementsFunction: addMultimediaElement,
+            		schoolId: $scope.$parent.currentGame.schoolId,
+            		addElementsFunction: addMultimediaElement,
                 position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng],
                 getYoutubeImageFromLink: $scope.getYoutubeImageFromLink
             }
