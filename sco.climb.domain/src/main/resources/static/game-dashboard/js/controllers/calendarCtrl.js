@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.calendar', [])
-  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService',
-    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService) {
+  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService', 'loginService', 'profileService',
+    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService, loginService, profileService) {
       $scope.week = []
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
@@ -35,29 +35,37 @@ angular.module('climbGame.controllers.calendar', [])
         }
       )
 
-      calendarService.getClassPlayers().then(
-        function (players) {
-          $scope.class = players
-          for (var i = 0; i < players.length; i++) {
-            $scope.todayData.babies.push({
-              name: players[i].name,
-              surname: players[i].surname,
-              childId: players[i].childId,
-              color: ''
-            })
-            $scope.classMap[players[i].childId] = players[i]
-          }
-
-          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-            function (calendar) {
-              createWeekData(calendar)
-              updateTodayData(calendar)
-            },
-            function () {}
-          )
-        },
-        function () {}
-      )
+      profileService.getProfile().then(function(profile) {
+	    	loginService.setUserToken(profile.token)
+	    	loginService.setAllOwners(profile.ownerIds)
+	      calendarService.getClassPlayers().then(
+	        function (players) {
+	          $scope.class = players
+	          for (var i = 0; i < players.length; i++) {
+	            $scope.todayData.babies.push({
+	              name: players[i].name,
+	              surname: players[i].surname,
+	              childId: players[i].childId,
+	              color: ''
+	            })
+	            $scope.classMap[players[i].childId] = players[i]
+	          }
+	
+	          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+	            function (calendar) {
+	              createWeekData(calendar)
+	              updateTodayData(calendar)
+	            },
+	            function () {}
+	          )
+	        },
+	        function () {}
+	      )	    	
+	    }, function (err) {
+	      console.log(err)
+	      // Toast the Problem
+	      $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+	    });
 
       $scope.returnColorByType = function (type) {
         var color = ''

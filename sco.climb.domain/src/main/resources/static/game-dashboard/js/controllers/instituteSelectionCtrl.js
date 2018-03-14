@@ -20,6 +20,9 @@ angular.module('climbGame.controllers.instituteSelection', [])
           		console.log(err)
           		//Toast the Problem
           		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
+          		setTimeout(function() {
+          			$state.go('login')
+          		}, 3000)
           	}
         );	
       }
