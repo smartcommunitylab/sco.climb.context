@@ -226,10 +226,14 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
     };
 
-    $scope.updateElementData = function(index, newTitle, newUrl)
+    $scope.updateElementData = function(index, newTitle, newUrl, newType)
     {
         $scope.leg.externalUrls[index].name = newTitle;
         $scope.leg.externalUrls[index].link = newUrl;
+        $scope.leg.externalUrls[index].type = newType;
+        if (newType == 'video') {
+        	$scope.leg.externalUrls[index].youtubeThumbnail = $scope.getYoutubeImageFromLink(newUrl);
+        }
     }
 
     $scope.saveOrder = function() {
