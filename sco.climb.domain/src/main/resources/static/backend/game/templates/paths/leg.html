@@ -4,7 +4,7 @@
         <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
     </div>
 
-    <div class="col-md-4 right">
+    <div class="col-md-4 right" ng-if="PermissionsService.permissionEnabledEditLegs()">
         <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
@@ -107,10 +107,14 @@
 </fieldset>
 <fieldset class="row leg-media" ng-disabled="!PermissionsService.permissionEnabledEditLegsMultimedia()">
     <legend>Contenuti multimediali</legend>
-    <div class="col-md-12">
+    <div class="col-md-8">
         <a class="btn btn-info" ng-click="createNewMultimediaElement()"><span class="glyphicon glyphicon-plus"></span> Crea nuovo</a>
         <a class="btn btn-info" ng-click="searchMultimediaOnSearchEngines()"><span class="glyphicon glyphicon-search"></span> Cerca su motori di ricerca</a>
         <a class="btn btn-info" ng-click="searchMultimediaOnRepository()"><span class="glyphicon glyphicon-search"></span> Cerca già utilizzati</a>
+    </div>
+    <div class="col-md-4 right" ng-if="!PermissionsService.permissionEnabledEditLegs()">
+        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
+        <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
 
     <!-- List of available media -->
