@@ -28,7 +28,7 @@
         <md-input-container class="md-block">
           <!--md-no-float-->
           <label>{{'excursion_form_children_placeholder' | translate}}</label>
-          <input name="children" type="number" max="1000" name="children" ng-model="newExcursion.children" required />
+          <input name="children" type="number" min="1" max="100" name="children" ng-model="newExcursion.children" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
             <div ng-message="required">{{'excursion_form_children_error_required' | translate}}</div>
@@ -39,7 +39,7 @@
         <md-input-container class="md-block">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder' | translate}}</label>
-          <input name="distance" type="number" name="children" ng-model="newExcursion.distance" required />
+          <input name="distance" type="number" min="1" max="20" name="children" ng-model="newExcursion.distance" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.distance.$error" ng-if="!showHints && excursionForm.distance.$touched">
             <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
