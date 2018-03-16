@@ -1315,6 +1315,7 @@ public class RepositoryManager {
 			criteria = criteria.and("type").is(type);
 		}
 		query.addCriteria(criteria);
+		query.limit(200);
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
 	}
