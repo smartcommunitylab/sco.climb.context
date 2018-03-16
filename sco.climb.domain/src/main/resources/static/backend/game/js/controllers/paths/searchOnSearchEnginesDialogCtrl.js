@@ -3,7 +3,7 @@ angular.module('consoleControllers.leg')
 .controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, addElementsFunction) {
     
 
-    $scope.searchtype = 'wikipedia';
+    $scope.searchtype = 'image';
     $scope.totalCounter = 0;
 
     $scope.searchOnEngine = function() {
@@ -25,7 +25,7 @@ angular.module('consoleControllers.leg')
                 function(response) {
                     $scope.wikiResults = response.data.query.pages;
                     for(var page in $scope.wikiResults){
-                        $scope.wikiResults[page].link = 'https://en.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
+                        $scope.wikiResults[page].link = 'https://it.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
                     }
                     $scope.prevPageToken = response.data['query-continue'].search.gsroffset - 20;
                     if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;

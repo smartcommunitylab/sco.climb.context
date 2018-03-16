@@ -185,11 +185,11 @@ function ($q, $http, $rootScope, $timeout) {
                         explaintext: "",
                         rawcontinue: "",
                         generator: "search",
-                        callback: "JSON_CALLBACK"
+                        callback: "JSON_CALLBACK",
+                        gsrsearch: query,
+                        gsroffset: start
                     }
                 };
-                config.params.gsrsearch = query;
-                config.params.gsroffset = start;
                 $http.jsonp('https://it.wikipedia.org/w/api.php',config).then(function(data){
                     deferred.resolve(data);
                 })
