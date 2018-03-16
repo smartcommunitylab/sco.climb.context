@@ -23,6 +23,7 @@ angular.module('consoleControllers.leg')
             //in this case pageToken is an offset of search results
             DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
                 function(response) {
+                		$scope.resetResults();
                     $scope.wikiResults = response.data.query.pages;
                     for(var page in $scope.wikiResults){
                         $scope.wikiResults[page].link = 'https://it.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
