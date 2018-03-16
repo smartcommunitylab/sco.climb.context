@@ -9,7 +9,7 @@
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
 </div>
-<fieldset class="row" ng-if="PermissionsService.permissionEnabledEditLegs()">
+<fieldset class="row" ng-hide="!PermissionsService.permissionEnabledEditLegs()">
     <legend>Generale</legend>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b></p>
@@ -63,7 +63,7 @@
             style="display:inline-block;"/>
     </div>
 </fieldset>
-<fieldset class="row" ng-if="PermissionsService.permissionEnabledEditLegs()">
+<fieldset class="row" ng-hide="!PermissionsService.permissionEnabledEditLegs()">
     <legend>Geolocalizzazione</legend>
     <div class="col-md-5">
         <div class="row">            
