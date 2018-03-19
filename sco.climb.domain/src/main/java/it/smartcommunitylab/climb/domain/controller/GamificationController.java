@@ -415,7 +415,7 @@ public class GamificationController extends AuthController {
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusItineraryLeg(
+	public @ResponseBody PedibusItineraryLeg createPedibusItineraryLeg(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
 			@PathVariable String itineraryId,
@@ -434,9 +434,67 @@ public class GamificationController extends AuthController {
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
 		storage.savePedibusItineraryLeg(leg, ownerId, false);
-		if (logger.isInfoEnabled()) {
-			logger.info("add pedibusItineraryLeg");
+		for (Link link : leg.getExternalUrls()) {
+			MultimediaContent content = new MultimediaContent();
+			content.setOwnerId(ownerId);
+			content.setInstituteId(game.getInstituteId());
+			content.setSchoolId(game.getSchoolId());
+			content.setItineraryId(itineraryId);
+			content.setName(link.getName());
+			content.setLegName(leg.getName());
+			content.setType(link.getType());
+			content.setLink(link.getLink());
+			content.setGeocoding(leg.getGeocoding());
+			storage.saveMultimediaContent(content);
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createPedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
+		}
+		return leg;
+	}
+
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.PUT)
+	public @ResponseBody PedibusItineraryLeg updatePedibusItineraryLeg(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			@RequestBody PedibusItineraryLeg leg, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		PedibusItineraryLeg legDb = storage.getPedibusItineraryLeg(ownerId, legId);
+		if(legDb == null) {
+			throw new EntityNotFoundException("pedibus itinerary leg not found");
+		}		
+		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		leg.setPedibusGameId(pedibusGameId);
+		leg.setItineraryId(itineraryId);
+		leg.setOwnerId(ownerId);
+		storage.savePedibusItineraryLeg(leg, ownerId, true);
+		for (Link link : leg.getExternalUrls()) {
+			MultimediaContent content = new MultimediaContent();
+			content.setOwnerId(ownerId);
+			content.setInstituteId(game.getInstituteId());
+			content.setSchoolId(game.getSchoolId());
+			content.setItineraryId(itineraryId);
+			content.setName(link.getName());
+			content.setLegName(leg.getName());
+			content.setType(link.getType());
+			content.setLink(link.getLink());
+			content.setGeocoding(leg.getGeocoding());
+			storage.saveMultimediaContent(content);
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
+		}
+		return leg;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs", method = RequestMethod.POST)
@@ -532,7 +590,7 @@ public class GamificationController extends AuthController {
 		}
 		return legs;
 	}
-	
+
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/links", method = RequestMethod.PUT)
 	public @ResponseBody List<Link> updatePedibusItineraryLegLinks(
 			@PathVariable String ownerId, 
