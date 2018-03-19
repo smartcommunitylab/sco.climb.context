@@ -254,7 +254,7 @@ angular.module('MapsService', [])
 
     this.getPathPolyline = function()       // restituisce la polyline del percorso selezionato
     {
-        if(travelType === 'foot')
+        if((travelType === 'foot') || (travelType === 'car'))
             return directionsDisplay.getDirections().routes[0].overview_polyline;
         else
             return google.maps.geometry.encoding.encodePath(polyPath.getPath());

@@ -1,6 +1,6 @@
 angular.module('consoleControllers.leg')
 
-.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, schoolId, addElementsFunction, position, getYoutubeImageFromLink) {
+.controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, schoolId, addElementsFunction, saveFunction, position, getYoutubeImageFromLink) {
     
     $scope.totalCounter = 0;
     $scope.searchtype = 'all';
@@ -48,6 +48,7 @@ angular.module('consoleControllers.leg')
             }
         });
         $scope.$modalClose();
+        saveFunction();
     }
     $scope.resetResults = function() {
         $scope.contentResults = undefined;

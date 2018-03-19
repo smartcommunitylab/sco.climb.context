@@ -1,6 +1,6 @@
 angular.module('consoleControllers.leg')
 
-.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, uploadImageOnImgur, addElementsFunction) {
+.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, uploadImageOnImgur, addElementsFunction, saveFunction) {
     
     $scope.newMedia = {type: 'image'};
 
@@ -12,6 +12,7 @@ angular.module('consoleControllers.leg')
             if ($scope.newMedia.type) {
                 addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type);
                 $scope.$modalClose();
+                saveFunction();
             }
             else {
                 alert("Errore: il tipo dell'oggetto non è un tipo valido.");

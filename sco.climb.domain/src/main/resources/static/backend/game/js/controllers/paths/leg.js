@@ -11,7 +11,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         { icon: "<img src=img/POI_zeppelin_full.png />", name: "Dirigibile", value:"zeppelin"},
         { icon: "<img src=img/POI_train_full.png />", name: "Treno", value:"train"},
         { icon: "<img src=img/POI_sleigh_full.png />", name: "Slitta", value:"sled"}
-    ]; 
+    ];
+    $scope.editMode = false;
 
     $scope.getYoutubeImageFromLink = function(ytLink) {
         //try to find thumbnail from youtube
@@ -25,7 +26,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 
     $scope.initController = function() {
         if ($stateParams.idLeg) { //edit path
-
+        		$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
@@ -41,7 +42,11 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }, this);
 
         } else {
+        		$scope.newLeg = true;
             $scope.leg = {
+                ownerId: $stateParams.idDomain,
+                pedibusGameId: $stateParams.idGame,
+                itineraryId: $stateParams.idPath,
                 name: '',
                 description: '',
                 imageUrl: '',
@@ -55,6 +60,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 externalUrls: [],        // NEW: array di oggetti contenente gli elementi multimediali
                 position: $scope.legs.length
             };
+            $scope.saveData = DataService.saveData;
         }
 
         if($scope.leg.position === 0) {
@@ -102,9 +108,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         drawMapLeg.calculateMarkerPosFromDistance(Number(distance)*1000);
     };
 
-    
-
-    $scope.save = function () {
+    $scope.saveLeg = function () {
         $scope.leg.icon = undefined;
         for (var i = 0; i < $scope.viewIconsModels.length && !$scope.leg.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
             if ($scope.viewIconsModels[i].ticked) $scope.leg.icon = $scope.viewIconsModels[i].value;
@@ -114,39 +118,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
         if (checkFields()) {
-            if (!PermissionsService.permissionEnabledEditLegs() && PermissionsService.permissionEnabledEditLegsMultimedia()) {
-                var toSend = {
-                    ownerId: $stateParams.idDomain,
-                    pedibusGameId: $stateParams.idGame,
-                    itineraryId: $stateParams.idPath,
-                    legId: $stateParams.idLeg,
-                    externalUrls: $scope.leg.externalUrls
-                };
-                var legBackup;
-                for (var i = 0; i < $scope.legs.length; i++) {
-                    if ($scope.legs[i].objectId == $stateParams.idLeg) {
-                        legBackup = {
-                            value: $scope.legs[i],
-                            positon: i
-                        }
-                        $scope.legs[i] = $scope.leg;
-                        break;
-                    }
-                }
-                $scope.saveData('leg_content', toSend).then(
-                    function(response) {
-                        console.log('Salvataggio dati a buon fine.');
-                        $state.go('root.path.legs');
-                    }, function() {
-                        if (legBackup) {
-                            $scope.legs[legBackup.position] = legBackup.value;
-                        } else {
-                            $scope.legs.splice($scope.legs.length-1, 1);
-                        }
-                        alert('Errore nel salvataggio delle tappe.');
-                    }
-                );
-            } else {
+            if (PermissionsService.permissionEnabledEditLegs()) {
                 $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
                 var legBackup;
                 if ($stateParams.idLeg) { //edited, have to update array
@@ -160,14 +132,18 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                             break;
                         }
                     }
-                } else {
-                    $scope.legs.push($scope.leg);
                 }
-                $scope.currentPath.legs = $scope.legs;
-                $scope.saveData('legs', $scope.currentPath).then(
+                $scope.saveData('leg', $scope.leg).then(
                     function(response) {
                         console.log('Salvataggio dati a buon fine.');
-                        $state.go('root.path.legs');
+                        if (!$stateParams.idLeg) {
+                        	$scope.legs.push(response.data);
+                        	$stateParams.idLeg = response.data.objectId;
+                        }
+                        $scope.currentPath.legs = $scope.legs;
+                        $scope.saveData = DataService.editData;
+                        $scope.newLeg = false;
+                        //$state.go('root.path.legs');
                     }, function() {
                         if (legBackup) {
                             $scope.legs[legBackup.position] = legBackup.value;
@@ -177,7 +153,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                         alert('Errore nel salvataggio delle tappe.');
                     }
                 );
-            }            
+            } else {
+              $rootScope.modelErrors = "Errore! Non hai i permessi di modificare la tappa.";
+              $timeout(function () {
+                  $rootScope.modelErrors = '';
+              }, 5000);
+            }           
         } else {
           $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco, di avere inserito almeno una foto e un punto di interesse prima di salvare.";
           $timeout(function () {
@@ -185,6 +166,40 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
           }, 5000);
         }
     };
+    
+    $scope.saveLegLinks = function () {
+      var toSend = {
+          ownerId: $stateParams.idDomain,
+          pedibusGameId: $stateParams.idGame,
+          itineraryId: $stateParams.idPath,
+          legId: $stateParams.idLeg,
+          externalUrls: $scope.leg.externalUrls
+      };
+      var legBackup;
+      for (var i = 0; i < $scope.legs.length; i++) {
+          if ($scope.legs[i].objectId == $stateParams.idLeg) {
+              legBackup = {
+                  value: $scope.legs[i],
+                  positon: i
+              }
+              $scope.legs[i] = $scope.leg;
+              break;
+          }
+      }
+      $scope.saveData('leg_content', toSend).then(
+          function(response) {
+              console.log('Salvataggio dati a buon fine.');
+              //$state.go('root.path.legs');
+          }, function() {
+              if (legBackup) {
+                  $scope.legs[legBackup.position] = legBackup.value;
+              } else {
+                  $scope.legs.splice($scope.legs.length-1, 1);
+              }
+              alert('Errore nel salvataggio delle tappe.');
+          }
+      );    	
+    }
 
     function checkFields() {
         var allCompiled = true;
@@ -218,16 +233,26 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
     };
 
-    $scope.delete = function (element) {
+    $scope.deleteLink = function (element) {
         createDialog('templates/modals/delete-media.html',{
             id : 'delete-media-dialog',
             title: 'Attenzione!',
-            success: { label: 'Conferma', fn: function() {$scope.leg.externalUrls.splice($scope.leg.externalUrls.indexOf(element), 1);} }
+            success: { 
+            	label: 'Conferma', 
+            	fn: function() {
+            		$scope.leg.externalUrls.splice($scope.leg.externalUrls.indexOf(element), 1);
+            		$scope.saveLegLinks();
+            	} 
+            }
         });
     };
+    
+    $scope.updateLink = function(index, newTitle, newUrl, newType) {
+    	$scope.updateElementData(index, newTitle, newUrl, newType);
+    	$scope.saveLegLinks();
+    }
 
-    $scope.updateElementData = function(index, newTitle, newUrl, newType)
-    {
+    $scope.updateElementData = function(index, newTitle, newUrl, newType) {
         $scope.leg.externalUrls[index].name = newTitle;
         $scope.leg.externalUrls[index].link = newUrl;
         $scope.leg.externalUrls[index].type = newType;
@@ -239,12 +264,13 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.saveOrder = function() {
         if ($scope.enableOrder) {            
             $scope.currentPath.legs = $scope.legs;
-            createDialog('templates/modals/leg-multimedia-order-save.html',{
-                id : 'multimedia-save-order',
-                title: 'Tappa da salvare!',
-                success: { label: 'OK', fn: function() {} },
-                noCancelBtn: true
-            });
+//            createDialog('templates/modals/leg-multimedia-order-save.html',{
+//                id : 'multimedia-save-order',
+//                title: 'Tappa da salvare!',
+//                success: { label: 'OK', fn: function() {} },
+//                noCancelBtn: true
+//            });
+            $scope.saveLegLinks();
             $scope.enableOrder = false;
         } else {
             $scope.enableOrder = true;
@@ -281,7 +307,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 } 
             },
             {
-                addElementsFunction: addMultimediaElement
+                addElementsFunction: addMultimediaElement,
+                saveFunction: $scope.saveLegLinks
             }
         );
     }
@@ -301,7 +328,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 } 
             },
             {
-                addElementsFunction: addMultimediaElement
+                addElementsFunction: addMultimediaElement,
+                saveFunction: $scope.saveLegLinks
             }
         );
     }
@@ -323,6 +351,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             {
             		schoolId: $scope.$parent.currentGame.schoolId,
             		addElementsFunction: addMultimediaElement,
+            		saveFunction: $scope.saveLegLinks,
                 position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng],
                 getYoutubeImageFromLink: $scope.getYoutubeImageFromLink
             }

@@ -1,6 +1,6 @@
 angular.module('consoleControllers.leg')
 
-.controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, addElementsFunction) {
+.controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, addElementsFunction, saveFunction) {
     
 
     $scope.searchtype = 'image';
@@ -96,6 +96,7 @@ angular.module('consoleControllers.leg')
             });
         }
         $scope.$modalClose();
+        saveFunction();
     }
     $scope.resetResults = function() {
         $scope.wikiResults = undefined;

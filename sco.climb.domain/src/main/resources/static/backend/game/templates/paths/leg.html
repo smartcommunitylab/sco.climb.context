@@ -5,7 +5,7 @@
     </div>
 
     <div class="col-md-4 right" ng-if="PermissionsService.permissionEnabledEditLegs()">
-        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
+        <a ng-click="saveLeg()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
 </div>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col-lg-7 field add-media" style="display: table-cell; margin-top: 15px;">
-            <p>oppure carica una immagine sul sito <b>imgur</b>: {{img.filename ? img.filename : 'Nessun file selezionato'}}</p>
+            <p>oppure carica una immagine sul sito pubblico <b>imgur</b>: {{img.filename ? img.filename : 'Nessun file selezionato'}}</p>
             <span class="btn btn-info btn-file btn-margin">
                 Scegli file <input type="file" base-sixty-four-input ng-model="img" accept="image/*" />
             </span>
@@ -105,27 +105,27 @@
         <div id="map-leg"></div>
     </div>
 </fieldset>
-<fieldset class="row leg-media" ng-disabled="!PermissionsService.permissionEnabledEditLegsMultimedia()">
+<fieldset class="row leg-media" ng-disabled="!PermissionsService.permissionEnabledEditLegsMultimedia() || newLeg">
     <legend>Contenuti multimediali</legend>
     <div class="col-md-8">
         <a class="btn btn-info" ng-click="createNewMultimediaElement()"><span class="glyphicon glyphicon-plus"></span> Crea nuovo</a>
         <a class="btn btn-info" ng-click="searchMultimediaOnSearchEngines()"><span class="glyphicon glyphicon-search"></span> Cerca su motori di ricerca</a>
         <a class="btn btn-info" ng-click="searchMultimediaOnRepository()"><span class="glyphicon glyphicon-search"></span> Cerca già utilizzati</a>
     </div>
-    <div class="col-md-4 right" ng-if="!PermissionsService.permissionEnabledEditLegs()">
-        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
-        <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+    <div class="col-md-4 right">
+        <!-- <a ng-click="saveLegLinks()" class="btn btn-save btn-margin" role="button">Salva contenuti</a> -->
+        <!-- <a ng-click="back()" ng-if="!PermissionsService.permissionEnabledEditLegs()" class="btn btn-danger" role="button">Annulla</a> -->
+        <a class="btn btn-info btn-margin" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
     </div>
 
     <!-- List of available media -->
     <div class="col-md-12 media-type-title">
-        <div class="col-md-10">MULTIMEDIA ({{leg.externalUrls.length}})</div>
-        <a class="btn col-md-2" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina elementi'}}</a>
+        <div class="col-md-12">MULTIMEDIA ({{leg.externalUrls.length}})</div>
     </div>
     <div class="col-md-12">
         <ul ui-sortable="sortableOptions" ng-model="leg.externalUrls" class="list-group list-categories">
             <li class="list-group-item leg-multimedia-element" ng-repeat="element in leg.externalUrls">
-                <div class="row v-center" ng-init="editMode = false">
+                <div class="row v-center">
                     <a class="col-md-2" ng-class='element.type == "video" && element.youtubeThumbnail ? "multimedia-yt-video" : ""' ng-href="{{element.link}}" target="_blank">
                         <img class="path-img" ng-if="element.type == 'image'" ng-src="{{element.link}}" alt="{{element.name}}">
                         <img class="path-img" ng-if="element.type == 'video' && element.youtubeThumbnail" ng-src="{{element.youtubeThumbnail}}" alt="Video">
