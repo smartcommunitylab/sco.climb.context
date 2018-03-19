@@ -78,11 +78,14 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if(type === 'itinerary') {
                     sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId;
                 } else if(type === 'legs') {
-                    sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
+                    sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/legs";
                     return $http.put(sendUrl, element.legs, {headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if (type == 'leg_content') {
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/links";
                     return $http.put(postUrl, element.externalUrls, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                } else if (type == 'leg') {
+                  postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.objectId;
+                  return $http.put(postUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type === 'institute') {
                     sendUrl = baseUrl + "/api/institute/" + element.ownerId + "/" + element.objectId;
                 } else if(type == 'school') {
@@ -118,9 +121,12 @@ function ($q, $http, $rootScope, $timeout) {
                 } else if(type === 'itinerary') {
                     postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary";
                 } else if(type === 'legs') {
-                    postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/" + type;
+                    postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/legs";
                     return $http.post(postUrl, element.legs, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
-                } else if(type == 'stops') {
+                } else if (type == 'leg') {
+                  postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg";
+                  return $http.post(postUrl, element, {headers: {'Authorization': 'Bearer ' + profileToken}});
+                }	else if(type == 'stops') {
                     postUrl = baseUrl + "/api/stop/" + element.ownerId + "/" + element.routeId;              	
                     return $http.post(postUrl, element.stops, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
                 } else if(type == 'route') {

@@ -967,7 +967,7 @@ public class RepositoryManager {
 			update.set("score", leg.getScore());
 			update.set("transport", leg.getTransport());
 			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+			mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 		} else {
 			logger.warn("Cannot update existing PedibusItineraryLeg with gameId " 
 			+ leg.getPedibusGameId() + " and id " + leg.getObjectId());
