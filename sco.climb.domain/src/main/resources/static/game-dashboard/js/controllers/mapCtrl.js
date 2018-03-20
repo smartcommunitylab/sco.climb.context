@@ -1,7 +1,16 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "$window", "$timeout", "leafletData", "mapService", "configService", function ($scope, $window, $timeout, leafletData, mapService, configService) {
+  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService) {
     $scope.IMAGES_PREFIX_URL = configService.IMAGES_PREFIX_URL;
-    
+    $scope.demoUpdateTimeout = $location.search().demoupdatetimeout; 
+    $scope.demoCenterLat = $location.search().demolat; 
+    $scope.demoCenterLng = $location.search().demolng;
+    $scope.demoZoom = $location.search().demozoom;  
+    $scope.isDemoDisplayer = false;
+    if ($scope.demoUpdateTimeout && $scope.demoCenterLat && $scope.demoCenterLng && $scope.demoZoom) {
+      $scope.isDemoDisplayer = true;
+      console.log("Aggiornamento dati ogni " + $scope.demoUpdateTimeout + " secondi");
+    }
+
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -282,18 +291,20 @@ angular.module("climbGame.controllers.map", [])
         });
 
     }
-    init();
-    setMapSize();
 
-
-    mapService.getStatus().then(function (data) {
+    var loadData = function() {
+      console.log("Loading data");
+      mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.status = data;
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
         $scope.myInitialBounds = new L.latLngBounds();
 
-        if ($scope.$parent) $scope.$parent.gamePublicTitle = $scope.globalTeam + " - " + data.itinerary.name; 
+        if ($scope.$parent) {
+          $scope.$parent.gamePublicTitle = data.game.gameName;
+          $scope.$parent.gamePublicDescription = $scope.sanitizeHtmlString(data.game.gameDescription);
+        }
 
         // get actual situation
         for (var i = 0; i < data.teams.length; i++) {
@@ -306,6 +317,7 @@ angular.module("climbGame.controllers.map", [])
               $scope.endReached = true;
 
             }
+            $scope.lastReachedLeg = data.teams[i].previousLeg;
             $scope.globalStatus = data.teams[i];
             //            $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 500);
 
@@ -370,8 +382,13 @@ angular.module("climbGame.controllers.map", [])
         addPlayerPosition();
         //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
         setGallerySize();
+        setMapSize();
         leafletData.getMap('map').then(function (map) {
-          map.fitBounds($scope.myInitialBounds);         
+          if ($scope.isDemoDisplayer) {
+            map.setView([$scope.demoCenterLat, $scope.demoCenterLng], $scope.demoZoom);
+          } else {
+            map.fitBounds($scope.myInitialBounds);         
+          }
         }, function (err) {
 
         });
@@ -380,6 +397,16 @@ angular.module("climbGame.controllers.map", [])
         //error with status
       });
 
+      
+    }
+
+    init();
+    setMapSize();
+
+    loadData();
+    if ($scope.isDemoDisplayer) {
+      setInterval(loadData, $scope.demoUpdateTimeout*1000);
+    }
     //function that put the position on map using the actual points of the user
 
     function addPlayerPosition() {
@@ -628,7 +655,16 @@ angular.module("climbGame.controllers.map", [])
         g = d.getElementsByTagName('body')[0],
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight || g.clientHeight;
-      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64 - 140) + "px");
+      
+      var tmpHeight = y;
+      tmpHeight -= document.getElementById('gallery').clientHeight;
+      var tmpCreditsBanner = document.getElementsByClassName("credits-banner");
+      if (tmpCreditsBanner && tmpCreditsBanner.length) {
+        tmpHeight -= tmpCreditsBanner[0].clientHeight;
+      }
+      tmpHeight -= 64; //toolbar
+
+      document.getElementById('map-container').setAttribute("style", "height:" + tmpHeight + "px");
       leafletData.getMap('map').then(function (map) {
         map.invalidateSize();
       });
@@ -677,6 +713,13 @@ angular.module("climbGame.controllers.map", [])
       } else if (direction === 'down') {
         parent.scrollTop += parent.firstElementChild.offsetHeight;
       }
+    }
+
+    $scope.sanitizeHtmlString = function(string) {
+      return $sce.trustAsHtml(string);
+    }
+    $scope.floor = function(number) {
+      return Math.floor(number);
     }
 
   }]);

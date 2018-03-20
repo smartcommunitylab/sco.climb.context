@@ -1,9 +1,14 @@
+<div layout="row" class="credits-banner">
+  <img src="../game-dashboard/img/credits/logo_sco_fbk.png">
+  <img src="../game-dashboard/img/credits/logo_comune_TN.png">
+  <img src="../game-dashboard/img/credits/logo_climb.png">
+  <img src="../game-dashboard/img/credits/logo_smart_city.png">
+</div>
 <md-toolbar class="desktop bar-colors">
   <div class="md-toolbar-tools bar-colors">
-    <h2><span>{{gamePublicTitle}}</span></h2>
-    <div class="bar-logo">
-      <img src="../game-dashboard/img/logo_header.png">
-    </div>
+    <h2 class="header-custom">
+      <span style="margin-right:4px;">{{gamePublicTitle}}:</span><span class="game-description" ng-bind-html="gamePublicDescription"></span>      
+    </h2>
   </div>
 </md-toolbar>
 <main layout="row" flex>

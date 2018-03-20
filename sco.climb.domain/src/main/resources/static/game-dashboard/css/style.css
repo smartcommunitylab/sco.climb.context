@@ -290,6 +290,7 @@ md-sidenav {
   width: 100px;
   height: 100px;
   display: inline-block;
+  vertical-align: text-top;
   /*
   margin-left: 20px;margin-right: 20px;
 */
@@ -318,7 +319,6 @@ md-sidenav {
   height: 80px;
   width: 80px;
   margin: 6px;
-  padding-bottom: 19px;
 }
 
 .gallery-bar {
@@ -340,7 +340,7 @@ md-sidenav {
   position: fixed;
   left: 0px;
   width: 40px !important;
-  height: 140px !important;
+  height: 100px !important;
   background-color: white;
   margin: 0px;
 }
@@ -349,7 +349,7 @@ md-sidenav {
   position: fixed;
   right: 0px;
   width: 40px !important;
-  height: 140px !important;
+  height: 100px !important;
   background-color: white;
   margin: 0px;
 }
@@ -365,6 +365,7 @@ md-sidenav {
 
 .pic-container {
   width: 1500px;
+  height: 100px;
   padding-left: 100px;
   padding-right: 100px;
 }
@@ -876,3 +877,98 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
     overflow: scroll;
   }
 }
+
+.demo-leg-display {
+  background-color: #E0E0E0;
+  height: 160px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.gallery-bar-demo {
+  height: 306px;
+  overflow-x: hidden;
+}
+.demo-leg-image {
+  text-align: center;
+}
+.demo-leg-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.demo-leg-content {
+  background-color: #fff;
+  vertical-align: middle;
+  padding: 20px;
+  margin-left: 20px;
+}
+.demo-leg-title {
+  color: #f39512;
+  font-weight: bold;
+}
+.demo-leg-description p {
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  max-height: 3.4em;
+}
+.demo-leg-title span {
+  color: #000;
+}
+
+.path-percentage {
+  height: 46px;
+}
+.path-percentage > div {
+  font-size: 1.4em;
+  margin-top: -6px;
+}
+.path-percentage md-progress-linear {
+  margin-top: 6px;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.path-percentage md-progress-linear .md-container,
+.path-percentage md-progress-linear .md-container .md-bar {
+  height: 18px;
+}
+.path-percentage md-progress-linear .md-container .md-bar{
+  height: 18px;
+  background-color: #f39c12;
+}
+.path-percentage md-progress-linear .md-container {
+  background-color: #bdbdbd;
+}
+
+.credits-banner {
+  height: 70px;
+}
+.credits-banner img {
+  height: 50px;
+  margin: auto;
+}
+.md-toolbar-tools h2.header-custom {
+  margin-top: -16px!important;
+  font-size: 18px;
+}
+.md-toolbar-tools h2.header-custom > span {
+  display: inline-flex;
+}
+.game-description p {
+  margin: 0px;
+}
+.game-description *:nth-child(2) {
+  position: absolute;
+  left: 16px;
+  font-weight: 100;
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
+
+}
+
+.game-description *:nth-child(2):before {
+  content: "\a ";
+  white-space: pre;
+}
+
+
+
