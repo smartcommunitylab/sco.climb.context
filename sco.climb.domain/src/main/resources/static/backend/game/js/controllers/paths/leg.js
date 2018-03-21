@@ -136,6 +136,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 $scope.saveData('leg', $scope.leg).then(
                     function(response) {
                         console.log('Salvataggio dati a buon fine.');
+                        $scope.leg = response.data;
+                        $scope.leg.coordinates = {};
+                        $scope.leg.coordinates.lat = $scope.leg.geocoding[1];
+                        $scope.leg.coordinates.lng = $scope.leg.geocoding[0];
                         if (!$stateParams.idLeg) {
                         	$scope.legs.push(response.data);
                         	$stateParams.idLeg = response.data.objectId;
