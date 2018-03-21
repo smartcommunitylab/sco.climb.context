@@ -302,8 +302,8 @@ angular.module("climbGame.controllers.map", [])
         $scope.myInitialBounds = new L.latLngBounds();
 
         if ($scope.$parent) {
-          $scope.$parent.gamePublicTitle = data.game.gameName;
-          $scope.$parent.gamePublicDescription = $scope.sanitizeHtmlString(data.game.gameDescription);
+          $scope.$parent.gamePublicTitle = data.itinerary.name;
+          $scope.$parent.gamePublicDescription = $scope.sanitizeHtmlString(data.itinerary.description);
         }
 
         // get actual situation
@@ -657,7 +657,7 @@ angular.module("climbGame.controllers.map", [])
         y = w.innerHeight || e.clientHeight || g.clientHeight;
       
       var tmpHeight = y;
-      tmpHeight -= document.getElementById('gallery').clientHeight;
+      tmpHeight -= document.getElementById('map-footer').clientHeight;
       var tmpCreditsBanner = document.getElementsByClassName("credits-banner");
       if (tmpCreditsBanner && tmpCreditsBanner.length) {
         tmpHeight -= tmpCreditsBanner[0].clientHeight;

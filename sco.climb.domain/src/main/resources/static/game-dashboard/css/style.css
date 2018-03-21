@@ -288,7 +288,8 @@ md-sidenav {
 
 .leg-image {
   width: 100px;
-  height: 100px;
+  min-height: 110px;
+  max-height: 140px;
   display: inline-block;
   vertical-align: text-top;
   /*
@@ -313,6 +314,7 @@ md-sidenav {
   width: 80px;
   margin: 6px;
   object-fit: cover;
+  box-sizing: border-box;
 }
 
 .map-gallery-question {
@@ -321,7 +323,7 @@ md-sidenav {
   margin: 6px;
 }
 
-.gallery-bar {
+.map-footer {
   position: fixed;
   bottom: 0px;
   left: 0px;
@@ -331,16 +333,20 @@ md-sidenav {
   background-color: white;
   margin: 0 auto;
   white-space: nowrap;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   z-index: 999;
+}
+
+.gallery-bar {
+  overflow-x: hidden;
 }
 
 .gallery-left {
   position: fixed;
   left: 0px;
   width: 40px !important;
-  height: 100px !important;
+  height: 110px !important;
   background-color: white;
   margin: 0px;
 }
@@ -349,7 +355,7 @@ md-sidenav {
   position: fixed;
   right: 0px;
   width: 40px !important;
-  height: 100px !important;
+  height: 110px !important;
   background-color: white;
   margin: 0px;
 }
@@ -365,7 +371,6 @@ md-sidenav {
 
 .pic-container {
   width: 1500px;
-  height: 100px;
   padding-left: 100px;
   padding-right: 100px;
 }
@@ -864,18 +869,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
     text-align: center;
     margin-right: 37px;
   }
-  .gallery-bar {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    height: 160px;
-    /*  width: 1024px;*/
-    width: 100%;
-    background-color: white;
-    margin: 0 auto;
-    white-space: nowrap;
-    overflow: scroll;
-  }
+
 }
 
 .demo-leg-display {
@@ -884,8 +878,8 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   padding: 20px;
   box-sizing: border-box;
 }
-.gallery-bar-demo {
-  height: 306px;
+.map-footer-demo {
+  height: 316px;
   overflow-x: hidden;
 }
 .demo-leg-image {
