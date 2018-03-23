@@ -383,7 +383,7 @@ input.default-height + .input-group-btn {
 }
 
 .tabs-menu a.active-tab {
-    cursor: default
+    /* cursor: default */
 }
 
 .tabs-container {
@@ -508,7 +508,7 @@ input.default-height + .input-group-btn {
 
 .leg-multimedia-element h5 {
     text-overflow: ellipsis;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     overflow: hidden;
 }
 
