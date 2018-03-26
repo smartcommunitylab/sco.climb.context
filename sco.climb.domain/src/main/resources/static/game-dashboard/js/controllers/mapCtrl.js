@@ -15,7 +15,8 @@ angular.module("climbGame.controllers.map", [])
       angular.extend($scope, {
         defaults: {
           zoomControl: false,
-          worldCopyJump: true
+          worldCopyJump: true,
+          attributionControl: true
         },
         center: {
           lat: configService.getDefaultMapCenterConstant()[0],
@@ -29,7 +30,10 @@ angular.module("climbGame.controllers.map", [])
             altro: {
               name: 'Watercolor',
               url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
-              type: 'xyz'
+              type: 'xyz',
+              layerOptions: {
+                attribution: "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC-BY-SA",
+              }
             },
             osm: {
               name: 'OpenStreetMap',
@@ -38,6 +42,12 @@ angular.module("climbGame.controllers.map", [])
             }
 
           }
+        },
+        events: {
+            map: {
+                enable: ['click', 'popupclose'],
+                logic: 'emit'
+            }
         }
       });
       var controlsStyle = {
@@ -690,6 +700,7 @@ angular.module("climbGame.controllers.map", [])
     appWindow.bind('resize', onResize);
 
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
+      console.log("click");
       // Args will contain the marker name and other relevant information
       //console.log(args);
       var markerName = args.leafletEvent.target.options.name; //has to be set above
@@ -704,6 +715,15 @@ angular.module("climbGame.controllers.map", [])
           $scope.scrollToPoint($scope.selectedPosition);
         }, function (err) {});        
       }
+    });
+    
+    $scope.$on('leafletDirectiveMarker.map.popupclose', function(event){
+      leafletData.getMap('map').then(function (map) {
+        map.closePopup();
+        $scope.pathMarkers.forEach(element => {
+          element.focus = false;
+        });
+      }, function (err) {}); 
     });
 
     $scope.scroll = function (direction) {

@@ -1,6 +1,6 @@
 <md-content flex="">
   <div id="map-container">
-    <leaflet style="width: 100%; height: 700px;" center="center" markers="pathMarkers" paths="pathLine" layers="layers" id="map" defaults="defaults"></leaflet>
+    <leaflet style="width: 100%; height: 700px;" center="center" markers="pathMarkers" paths="pathLine" layers="layers" id="map" defaults="defaults" event-broadcast="events"></leaflet>
   </div>
   <div class="map-footer" id="map-footer" ng-class="{'map-footer-demo': isDemoDisplayer}">
     <div class="gallery-bar" id="gallery" drag-scroll="enabled" axis="x">

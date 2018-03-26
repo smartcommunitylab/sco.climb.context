@@ -894,6 +894,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   vertical-align: middle;
   padding: 20px;
   margin-left: 20px;
+  overflow: auto;
 }
 .demo-leg-title {
   color: #f39512;
@@ -902,8 +903,6 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .demo-leg-description p {
   overflow: hidden;
   white-space: normal;
-  text-overflow: ellipsis;
-  max-height: 3.4em;
 }
 .demo-leg-title span {
   color: #000;
@@ -936,9 +935,11 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .credits-banner {
   height: 70px;
 }
-.credits-banner img {
-  height: 50px;
+.credits-banner .credit-banner {
   margin: auto;
+}
+.credits-banner .credit-banner img {
+  height: 50px;
 }
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;
