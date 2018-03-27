@@ -961,8 +961,9 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 }
 
 .game-description *:nth-child(2):before {
-  content: "\a ";
+  content: "newline";
   white-space: pre;
+  color: transparent
 }
 
 

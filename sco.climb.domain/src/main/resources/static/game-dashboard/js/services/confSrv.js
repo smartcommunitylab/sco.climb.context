@@ -22,15 +22,15 @@ angular.module('climbGame.services.conf', [])
     configService.DEFAULT_POI_POPUP_OFFSET = 0.4
       // var APP_BUILD = ''
 
-    configService.TRAVEL_ICONS_MAP = {
-      [configService.FOOT_CONSTANT]: 'img/POI_foot',
-      [configService.PLANE_CONSTANT]: 'img/POI_airplane',
-      [configService.BOAT_CONSTANT]: 'img/POI_boat',
-      [configService.BALLOON_CONSTANT]: 'img/POI_baloon',
-      [configService.ZEPPELIN_CONSTANT]: 'img/POI_zeppelin',
-      [configService.TRAIN_CONSTANT]: 'img/POI_train',
-      [configService.SLED_CONSTANT]: 'img/POI_sleigh'
-    };
+    configService.TRAVEL_ICONS_MAP = {};
+      configService.TRAVEL_ICONS_MAP[configService.FOOT_CONSTANT] = 'img/POI_foot';
+      configService.TRAVEL_ICONS_MAP[configService.PLANE_CONSTANT] = 'img/POI_airplane';
+      configService.TRAVEL_ICONS_MAP[configService.BOAT_CONSTANT] = 'img/POI_boat';
+      configService.TRAVEL_ICONS_MAP[configService.BALLOON_CONSTANT] = 'img/POI_baloon';
+      configService.TRAVEL_ICONS_MAP[configService.ZEPPELIN_CONSTANT] = 'img/POI_zeppelin';
+      configService.TRAVEL_ICONS_MAP[configService.TRAIN_CONSTANT] = 'img/POI_train';
+      configService.TRAVEL_ICONS_MAP[configService.SLED_CONSTANT] = 'img/POI_sleigh';
+
     configService.TRAVEL_ICONS_STATE_MAP = {
       true: '_full.png',
       false: '_empty.png'

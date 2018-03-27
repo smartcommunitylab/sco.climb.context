@@ -623,15 +623,18 @@ angular.module("climbGame.controllers.map", [])
     }
     $scope.goToPoi = function (leg) {
       if (leg.position <= ($scope.currentLeg.position)) {
-        leafletData.getMap('map').then(function (map) {
-          if ($scope.selectedPosition !== undefined) {
-            $scope.pathMarkers[$scope.selectedPosition].focus = false;
-          }
-          $scope.pathMarkers[leg.position].focus = true;
-          map.setView([leg.geocoding[1] + configService.DEFAULT_POI_POPUP_OFFSET, leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
-          $scope.selectedPosition = leg.position;
-        }, function (err) {});
-        $scope.scrollToPoint(leg.position);
+        if ($scope.selectedPosition !== undefined) {
+          $scope.pathMarkers[$scope.selectedPosition].focus = false;
+        }
+        setTimeout(function() {          
+          leafletData.getMap('map').then(function (map) {
+            map.popupClose
+            $scope.pathMarkers[leg.position].focus = true;
+            map.setView([leg.geocoding[1] + configService.DEFAULT_POI_POPUP_OFFSET, leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
+            $scope.selectedPosition = leg.position;
+          }, function (err) {});
+          $scope.scrollToPoint(leg.position);
+        }, 100); //workaround for leaflet issue! Without delay the popup is opened and immediatly closed
         
       }
     }
@@ -706,25 +709,16 @@ angular.module("climbGame.controllers.map", [])
       var markerName = args.leafletEvent.target.options.name; //has to be set above
       //marker is clickable and already reached
       if (args.model.message) {
+        
         leafletData.getMap('map').then(function (map) {
           map.setView([args.model.lat + configService.DEFAULT_POI_POPUP_OFFSET, args.model.lng], configService.getDefaultZoomPoiConstant());
-          if ($scope.selectedPosition !== undefined) {
-            $scope.pathMarkers[$scope.selectedPosition].focus = false;
-          }
+          
           $scope.selectedPosition = Number(args.modelName);
-          $scope.scrollToPoint($scope.selectedPosition);
+          $scope.scrollToPoint($scope.legs[$scope.selectedPosition].position);
         }, function (err) {});        
       }
     });
     
-    $scope.$on('leafletDirectiveMarker.map.popupclose', function(event){
-      leafletData.getMap('map').then(function (map) {
-        map.closePopup();
-        $scope.pathMarkers.forEach(element => {
-          element.focus = false;
-        });
-      }, function (err) {}); 
-    });
 
     $scope.scroll = function (direction) {
       var parent = $window.document.getElementById('external-urls-viewer'); 
