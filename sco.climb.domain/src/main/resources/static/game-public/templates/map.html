@@ -23,11 +23,11 @@
     </div>
     <div layout="row" class="demo-leg-display" ng-if="isDemoDisplayer">
       <div flex="10" class="demo-leg-image">
-        <img ng-src="{{lastReachedLeg.imageUrl}}">
+        <img ng-src="{{selectedLeg.imageUrl}}">
       </div>
       <div class="demo-leg-content" flex="90">
-        <div class="demo-leg-title"><span>Tappa n. {{lastReachedLeg.position+1}}: </span>{{lastReachedLeg.name}}</div>
-        <div class="demo-leg-description" ng-bind-html="sanitizeHtmlString(lastReachedLeg.description)"></div>
+        <div class="demo-leg-title"><span>Tappa n. {{selectedLeg.position+1}}: </span>{{selectedLeg.name}}</div>
+        <div class="demo-leg-description" ng-bind-html="sanitizeHtmlString(selectedLeg.description)"></div>
       </div>
     </div>
     <div layout="row" layout-align="start" layout-padding class="path-percentage bar-colors" ng-if="isDemoDisplayer">

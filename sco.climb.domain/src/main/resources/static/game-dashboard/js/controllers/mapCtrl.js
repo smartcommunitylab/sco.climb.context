@@ -6,6 +6,7 @@ angular.module("climbGame.controllers.map", [])
     $scope.demoCenterLng = $location.search().demolng;
     $scope.demoZoom = $location.search().demozoom;  
     $scope.isDemoDisplayer = false;
+    $scope.firstInteraction = false;
     if ($scope.demoUpdateTimeout && $scope.demoCenterLat && $scope.demoCenterLng && $scope.demoZoom) {
       $scope.isDemoDisplayer = true;
       console.log("Aggiornamento dati ogni " + $scope.demoUpdateTimeout + " secondi");
@@ -304,6 +305,10 @@ angular.module("climbGame.controllers.map", [])
 
     var loadData = function() {
       console.log("Loading data");
+      if($scope.isDemoDisplayer && $scope.firstInteraction) {
+      	console.log("skip refresh data");
+      	return;
+      }
       mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.status = data;
@@ -335,6 +340,8 @@ angular.module("climbGame.controllers.map", [])
             break;
           }
         }
+        $scope.selectedLeg = $scope.currentLeg;
+        $scope.pathMarkers = [];
         for (var i = 0; i < data.legs.length; i++) {
           $scope.pathLine[i] = {
               color: '#3f51b5',
@@ -622,7 +629,9 @@ angular.module("climbGame.controllers.map", [])
       imagesBar.scrollLeft = widhtImages * (i+1) - imagesBar.offsetWidth / 2 + widhtImages / 2;
     }
     $scope.goToPoi = function (leg) {
+    	$scope.selectedLeg = leg;
       if (leg.position <= ($scope.currentLeg.position)) {
+      	$scope.firstInteraction = true;
         if ($scope.selectedPosition !== undefined) {
           $scope.pathMarkers[$scope.selectedPosition].focus = false;
         }
@@ -704,6 +713,11 @@ angular.module("climbGame.controllers.map", [])
 
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
       console.log("click");
+      $scope.selectedPosition = Number(args.modelName);
+      if($scope.selectedPosition) {
+      	$scope.selectedLeg = $scope.legs[$scope.selectedPosition];
+      	$scope.firstInteraction = true;
+      }
       // Args will contain the marker name and other relevant information
       //console.log(args);
       var markerName = args.leafletEvent.target.options.name; //has to be set above
