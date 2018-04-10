@@ -340,7 +340,7 @@ angular.module("climbGame.controllers.map", [])
             break;
           }
         }
-        $scope.selectedLeg = $scope.currentLeg;
+        $scope.selectedLeg = $scope.lastReachedLeg;
         $scope.pathMarkers = [];
         for (var i = 0; i < data.legs.length; i++) {
           $scope.pathLine[i] = {
