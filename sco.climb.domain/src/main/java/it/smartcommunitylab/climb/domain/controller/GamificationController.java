@@ -117,6 +117,9 @@ public class GamificationController extends AuthController {
 			List<Child> childrenList = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
 			List<String> childrenId = Lists.newArrayList();
 			for (Child child : childrenList) {
+				if(!child.isActiveForGame()) {
+					continue;
+				}
 				childrenId.add(child.getObjectId());
 				allChildrenId.add(child.getObjectId());
 

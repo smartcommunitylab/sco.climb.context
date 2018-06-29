@@ -1,5 +1,26 @@
 package it.smartcommunitylab.climb.domain.storage;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.data.mongodb.core.query.Update;
+
 import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
 import it.smartcommunitylab.climb.contextstore.model.Child;
@@ -27,32 +48,10 @@ import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfSummary;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.geo.Circle;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
-import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
 	private static final transient Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
@@ -1206,7 +1205,7 @@ public class RepositoryManager {
 		return result;
 	}
 
-	public List<PedibusGameConfSummary> getPedibusGameConfSummary(String ownerId, 
+	/*public List<PedibusGameConfSummary> getPedibusGameConfSummary(String ownerId, 
 			String instituteId, String schoolId) {
 		List<PedibusGameConfSummary> result = new ArrayList<PedibusGameConfSummary>();
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
@@ -1229,7 +1228,7 @@ public class RepositoryManager {
 			result.add(summary);
 		}
 		return result;
-	}
+	}*/
 
 	public PedibusGameConf getPedibusGameConf(String ownerId, String confId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
@@ -1238,9 +1237,16 @@ public class RepositoryManager {
 		return result;
 	}
 
+	public PedibusGameConf getPedibusGameConfByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("pedibusGameId").is(pedibusGameId));
+		PedibusGameConf result = mongoTemplate.findOne(query, PedibusGameConf.class);
+		return result;
+	}
+	
 	public void savePedibusGameConf(PedibusGameConf gameConf) {
 		Query query = new Query(new Criteria("ownerId").is(gameConf.getOwnerId())
-				.and("objectId").is(gameConf.getObjectId()));
+				.and("pedibusGameId").is(gameConf.getPedibusGameId()));
 		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
 		Date now = new Date();
 		if(gameCongDB == null) {
@@ -1248,12 +1254,20 @@ public class RepositoryManager {
 			gameConf.setLastUpdate(now);
 			gameConf.setObjectId(Utils.getUUID());
 			mongoTemplate.save(gameConf);
-		} else {
+		}
+	}
+	
+	public void updatePedibusGameConfParams(String ownerId, String pedibusGameId,
+			Map<String, String> params) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("pedibusGameId").is(pedibusGameId));
+		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
+		Date now = new Date();
+		if(gameCongDB != null) {
+			gameCongDB.getParams().putAll(params);
 			Update update = new Update();
 			update.set("lastUpdate", now);
-			update.set("active", gameConf.isActive());
-			update.set("confTemplateId", gameConf.getConfTemplateId());
-			update.set("params", gameConf.getParams());
+			update.set("params", gameCongDB.getParams());
 			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
 		}
 	}

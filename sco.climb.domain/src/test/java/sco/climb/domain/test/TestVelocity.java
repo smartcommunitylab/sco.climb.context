@@ -1,0 +1,48 @@
+package sco.climb.domain.test;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.junit.Test;
+
+import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
+
+public class TestVelocity {
+
+	@Test
+	public void testVelocity() {
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		    
+		Template t = velocityEngine.getTemplate("game-template/test.vm");
+		
+		Map<String, String> params = new HashMap<>();
+		params.put("const_zi_solo_bonus", "1000.0");
+		params.put("final_destination", "FineViaggio");
+		
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+		PedibusItineraryLeg leg = new PedibusItineraryLeg();
+		leg.setName("Tappa1");
+		leg.setScore(1000);
+		legs.add(leg);
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+		
+		System.out.println(writer.toString());
+	}
+}

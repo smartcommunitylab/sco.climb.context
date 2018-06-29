@@ -1,5 +1,10 @@
 package it.smartcommunitylab.climb.domain.model.gameconf;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 
@@ -9,6 +14,11 @@ public class PedibusGameConfTemplate extends BaseObject {
 	private String version;
 	private String description;
 	private PedibusGameConfParams params;
+	private List<String> ruleFileTemplates = new ArrayList<>();
+	private List<String> actions = new ArrayList<>();
+	private List<String> badgeCollections = new ArrayList<>();
+	private Map<String, List<String>> challengeModels = new HashMap<>();
+	private Map<String, List<String>> points = new HashMap<>();
 	
 	public String getVersion() {
 		return version;
@@ -33,6 +43,36 @@ public class PedibusGameConfTemplate extends BaseObject {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public List<String> getRuleFileTemplates() {
+		return ruleFileTemplates;
+	}
+	public void setRuleFileTemplates(List<String> ruleFileTemplates) {
+		this.ruleFileTemplates = ruleFileTemplates;
+	}
+	public List<String> getActions() {
+		return actions;
+	}
+	public void setActions(List<String> actions) {
+		this.actions = actions;
+	}
+	public List<String> getBadgeCollections() {
+		return badgeCollections;
+	}
+	public void setBadgeCollections(List<String> badgeCollections) {
+		this.badgeCollections = badgeCollections;
+	}
+	public Map<String, List<String>> getChallengeModels() {
+		return challengeModels;
+	}
+	public void setChallengeModels(Map<String, List<String>> challengeModels) {
+		this.challengeModels = challengeModels;
+	}
+	public Map<String, List<String>> getPoints() {
+		return points;
+	}
+	public void setPoints(Map<String, List<String>> points) {
+		this.points = points;
 	}
 
 }

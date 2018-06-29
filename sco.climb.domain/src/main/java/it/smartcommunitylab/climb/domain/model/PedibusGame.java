@@ -24,6 +24,8 @@ public class PedibusGame extends BaseObject {
 	private String toHour;
 	private String lastDaySeen;
 	private boolean lateSchedule;
+	private boolean usingPedibusData; 
+	private boolean inProduction;
 	
 	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
 	
@@ -122,6 +124,18 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setLateSchedule(boolean lateSchedule) {
 		this.lateSchedule = lateSchedule;
+	}
+	public boolean isInProduction() {
+		return inProduction;
+	}
+	public void setInProduction(boolean inProduction) {
+		this.inProduction = inProduction;
+	}
+	public boolean isUsingPedibusData() {
+		return usingPedibusData;
+	}
+	public void setUsingPedibusData(boolean usingPedibusData) {
+		this.usingPedibusData = usingPedibusData;
 	}
 
 }

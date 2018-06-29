@@ -104,8 +104,12 @@ public class EventsPoller {
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
 			logger.info("Reading game " + game.getGameId() + " events.");
+			if(!game.isUsingPedibusData()) {
+				logger.info("Game " + game.getGameId() + " skip is not using pedibus data.");
+				continue;
+			}
 			if(game.isLateSchedule() ^ lateSchedule) {
-				logger.info("Reading game " + game.getGameId() + " skip is not scheduled now.");
+				logger.info("Game " + game.getGameId() + " skip is not scheduled now.");
 				continue;
 			}
 			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
