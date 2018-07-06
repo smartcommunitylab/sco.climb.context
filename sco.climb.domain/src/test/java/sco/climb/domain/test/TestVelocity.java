@@ -24,7 +24,7 @@ public class TestVelocity {
 		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		    
-		Template t = velocityEngine.getTemplate("game-template/test.vm");
+		Template t = velocityEngine.getTemplate("game-template/constants.vm");
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("const_zi_solo_bonus", "1000.0");

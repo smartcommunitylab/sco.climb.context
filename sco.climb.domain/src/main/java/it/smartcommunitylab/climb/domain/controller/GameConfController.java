@@ -46,23 +46,20 @@ public class GameConfController extends AuthController {
 		return result; 
 	}
 	
-	/*@RequestMapping(value = "/api/game/conf/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusGameConfSummary> getConfSummaryBySchool(
-			@PathVariable String ownerId, 
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
+	@RequestMapping(value = "/api/game/conf/template", method = RequestMethod.POST)
+	public @ResponseBody PedibusGameConfTemplate saveConfTemplate(
+			@RequestBody PedibusGameConfTemplate confTemplate,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
-				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<PedibusGameConfSummary> result = storage.getPedibusGameConfSummary(ownerId, instituteId, schoolId);
+		PedibusGameConfTemplate result = storage.savePedibusGameConfTemplate(confTemplate);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getConfSummaryBySchool: %s - %s", ownerId, result.size()));
+			logger.info(String.format("saveConfTemplate: %s - %s", result.getName(), result.getVersion()));
 		}
-		return result; 
-	}*/
+		return result;
+	}
 	
 	@RequestMapping(value = "/api/game/conf/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusGameConf getConfByGameId(

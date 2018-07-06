@@ -1204,31 +1204,38 @@ public class RepositoryManager {
 		PedibusGameConfTemplate result = mongoTemplate.findOne(query, PedibusGameConfTemplate.class);
 		return result;
 	}
-
-	/*public List<PedibusGameConfSummary> getPedibusGameConfSummary(String ownerId, 
-			String instituteId, String schoolId) {
-		List<PedibusGameConfSummary> result = new ArrayList<PedibusGameConfSummary>();
-		Query query = new Query(new Criteria("ownerId").is(ownerId)
-				.and("instituteId").is(instituteId)
-				.and("schoolId").is(schoolId));
-		List<PedibusGameConf> confs = mongoTemplate.find(query, PedibusGameConf.class);
-		for(PedibusGameConf conf : confs) {
-			PedibusGameConfSummary summary = new PedibusGameConfSummary();
-			summary.setOwnerId(ownerId);
-			summary.setInstituteId(instituteId);
-			summary.setSchoolId(schoolId);
-			summary.setPedibusGameId(conf.getPedibusGameId());
-			summary.setPedibusGameConfId(conf.getObjectId());
-			summary.setActive(conf.isActive());
-			if(Utils.isNotEmpty(conf.getConfTemplateId())) {
-				PedibusGameConfTemplate confTemplate = getPedibusGameConfTemplate(conf.getConfTemplateId());
-				summary.setTemplateName(confTemplate.getName());
-				summary.setTemplateVersion(confTemplate.getVersion());
+	
+	public PedibusGameConfTemplate savePedibusGameConfTemplate(PedibusGameConfTemplate confTemplate) {
+		PedibusGameConfTemplate confTemplateDb = null;
+		Date now = new Date();
+		if(Utils.isNotEmpty(confTemplate.getObjectId())) {
+			Query query = new Query(new Criteria("objectId").is(confTemplate.getObjectId()));
+			confTemplateDb = mongoTemplate.findOne(query, PedibusGameConfTemplate.class);
+			if(confTemplateDb == null) {
+				confTemplate.setCreationDate(now);
+				confTemplate.setLastUpdate(now);
+				mongoTemplate.save(confTemplate);
+			} else {
+				Update update = new Update();
+				update.set("name", confTemplate.getName());
+				update.set("version", confTemplate.getVersion());
+				update.set("description", confTemplate.getDescription());
+				update.set("ruleFileTemplates", confTemplate.getRuleFileTemplates());
+				update.set("actions", confTemplate.getActions());
+				update.set("badgeCollections", confTemplate.getBadgeCollections());
+				update.set("challengeModels", confTemplate.getChallengeModels());
+				update.set("points", confTemplate.getPoints());
+				update.set("lastUpdate", now);
+				mongoTemplate.updateFirst(query, update, PedibusGameConfTemplate.class);
 			}
-			result.add(summary);
+		} else {
+			confTemplate.setObjectId(Utils.getUUID());
+			confTemplate.setCreationDate(now);
+			confTemplate.setLastUpdate(now);
+			mongoTemplate.save(confTemplate);
 		}
-		return result;
-	}*/
+		return confTemplate;
+	}
 
 	public PedibusGameConf getPedibusGameConf(String ownerId, String confId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId)

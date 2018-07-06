@@ -1,15 +1,5 @@
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
-import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
-import it.smartcommunitylab.climb.contextstore.model.User;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
+import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
 public class RoleController extends AuthController {
@@ -646,20 +645,6 @@ public class RoleController extends AuthController {
 		}
 	}
 
-	private boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
-		boolean result = false;
-		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
-		if(accountByEmail == null) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
-		}
-		String email = accountByEmail.getAttributeValue();
-		User user = storage.getUserByEmail(email);
-		if(user != null) {
-			result = user.getRoles().contains(role) && user.getOwnerIds().contains(ownerId);
-		}
-		return result;
-	}
-	
 	@ExceptionHandler({EntityNotFoundException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody

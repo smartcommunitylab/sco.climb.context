@@ -13,7 +13,6 @@ public class PedibusGameConfTemplate extends BaseObject {
 	private String name;
 	private String version;
 	private String description;
-	private PedibusGameConfParams params;
 	private List<String> ruleFileTemplates = new ArrayList<>();
 	private List<String> actions = new ArrayList<>();
 	private List<String> badgeCollections = new ArrayList<>();
@@ -25,12 +24,6 @@ public class PedibusGameConfTemplate extends BaseObject {
 	}
 	public void setVersion(String version) {
 		this.version = version;
-	}
-	public PedibusGameConfParams getParams() {
-		return params;
-	}
-	public void setParams(PedibusGameConfParams params) {
-		this.params = params;
 	}
 	public String getDescription() {
 		return description;

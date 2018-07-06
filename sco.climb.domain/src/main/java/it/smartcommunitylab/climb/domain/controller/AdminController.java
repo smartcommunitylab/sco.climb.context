@@ -1,21 +1,5 @@
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
-import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
-import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
-import it.smartcommunitylab.climb.contextstore.model.Child;
-import it.smartcommunitylab.climb.contextstore.model.Route;
-import it.smartcommunitylab.climb.contextstore.model.Stop;
-import it.smartcommunitylab.climb.contextstore.model.User;
-import it.smartcommunitylab.climb.contextstore.model.Volunteer;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
-import it.smartcommunitylab.climb.domain.converter.ExcelError;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,6 +34,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
+import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.contextstore.model.Stop;
+import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.contextstore.model.Volunteer;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
+import it.smartcommunitylab.climb.domain.converter.ExcelError;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
+
 @Controller
 public class AdminController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -61,7 +60,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody void uploadAuthSchema(
 			@RequestBody String json,
 			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		authorizationManager.loadAuthSchema(json);
@@ -71,7 +70,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody AuthorizationDTO addAuthorization(
 			@RequestBody AuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return authorizationManager.insertAuthorization(auth);
@@ -81,7 +80,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody void deleteAuthorization(
 			@PathVariable String authId,
 			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		authorizationManager.deleteAuthorization(authId);
@@ -91,7 +90,7 @@ public class AdminController extends AuthController {
 	public @ResponseBody String validateAuth(
 			@RequestBody RequestedAuthorizationDTO auth,
 			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return Boolean.toString(authorizationManager.validateAuthorization(auth));
@@ -102,7 +101,7 @@ public class AdminController extends AuthController {
 			@RequestParam("file") MultipartFile file,
 			@RequestParam(name="update", required=false) Boolean update,
 			HttpServletRequest request) throws Exception {
-		if(!validateAdminRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(update == null) {
@@ -229,35 +228,7 @@ public class AdminController extends AuthController {
 		}
 		storage.addChild(child);
 	}
-	
-	private boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
-		boolean result = false;
-		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
-		if(accountByEmail == null) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
-		}
-		String email = accountByEmail.getAttributeValue();
-		User user = storage.getUserByEmail(email);
-		if(user != null) {
-			result = user.getRoles().contains(role) && user.getOwnerIds().contains(ownerId);
-		}
-		return result;
-	}
-
-	private boolean validateAdminRole(String role, HttpServletRequest request) throws Exception {
-		boolean result = false;
-		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
-		if(accountByEmail == null) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
-		}
-		String email = accountByEmail.getAttributeValue();
-		User user = storage.getUserByEmail(email);
-		if(user != null) {
-			result = user.getRoles().contains(role);
-		}
-		return result;
-	}
-	
+		
 	@ExceptionHandler({EntityNotFoundException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody

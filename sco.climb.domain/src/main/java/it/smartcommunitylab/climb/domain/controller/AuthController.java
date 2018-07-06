@@ -7,10 +7,12 @@ import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
 import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
 import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +51,9 @@ public class AuthController {
 	
 	private AACProfileService profileConnector;
 	
+	@Autowired
+	private RepositoryManager storage;
+
 	@PostConstruct
 	public void init() throws Exception {
 		aacService = new AACService(oauthServerUrl, clientId, clientSecret);
@@ -143,4 +148,32 @@ public class AuthController {
 		return true;
 	}
 	
+	public boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
+		boolean result = false;
+		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
+		if(accountByEmail == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		String email = accountByEmail.getAttributeValue();
+		User user = storage.getUserByEmail(email);
+		if(user != null) {
+			result = user.getRoles().contains(role) && user.getOwnerIds().contains(ownerId);
+		}
+		return result;
+	}
+	
+	public boolean validateRole(String role, HttpServletRequest request) throws Exception {
+		boolean result = false;
+		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
+		if(accountByEmail == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		String email = accountByEmail.getAttributeValue();
+		User user = storage.getUserByEmail(email);
+		if(user != null) {
+			result = user.getRoles().contains(role);
+		}
+		return result;
+	}
+
 }
