@@ -1,10 +1,13 @@
 package it.smartcommunitylab.climb.domain.common;
 
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.Notification;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 
 import java.net.URLEncoder;
@@ -112,6 +115,28 @@ public class GEngineUtils {
 	public void deletePlayerState(String gameId, String playerId) throws Exception {
 		String address = gamificationURL + "/data/game/" + gameId + "/player/" + playerId;
 		HTTPUtils.delete(address, null, gamificationUser, gamificationPassword);
+	}
+	
+	public String createGame(GameDTO game) throws Exception {
+		String address = gamificationURL + "/model/game";
+		String json = HTTPUtils.post(address, game, null, gamificationUser, gamificationPassword);
+		GameDTO result = mapper.readValue(json, GameDTO.class);
+		return result.getId();
+	}
+	
+	public void createChallenge(String gameId, ChallengeModel challengeModel) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/challenge";
+		HTTPUtils.post(address, challengeModel, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void createRule(String gameId, RuleDTO rule) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/rule";
+		HTTPUtils.post(address, rule, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void createPointConcept(String gameId, PointConcept pointConcept) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/point";
+		HTTPUtils.post(address, pointConcept, null, gamificationUser, gamificationPassword);
 	}
 	
 }

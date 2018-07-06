@@ -13,16 +13,21 @@ import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
+import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.CustomData;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +41,11 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +119,51 @@ public class GamificationController extends AuthController {
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
+		//create game
+		if(Utils.isEmpty(game.getGameId())) {
+			PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
+			if(gameConf == null) {
+				throw new EntityNotFoundException("game conf not found");
+			}
+			GameDTO gameDTO = new GameDTO();
+			gameDTO.setName(game.getGameName());
+			//create actions
+			gameDTO.getActions().addAll(gameConf.getActions());
+			//create badgeCollections
+			for(String badgeCollection : gameConf.getBadgeCollections()) {
+				BadgeCollectionConcept badgeCollectionConcept = new BadgeCollectionConcept(badgeCollection);
+				gameDTO.getBadgeCollectionConcept().add(badgeCollectionConcept);
+			}
+			//create params
+			//TODO
+			List<PedibusItineraryLeg> legs = new ArrayList<>();
+			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+			//WARN use one itinerary 
+			if(itineraryList.size() > 0) {
+				PedibusItinerary pedibusItinerary = itineraryList.get(0);
+				legs = storage.getPedibusItineraryLegsByGameId(ownerId, pedibusGameId, pedibusItinerary.getObjectId());
+			}
+			//create rules
+			VelocityEngine velocityEngine = new VelocityEngine();
+			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+			velocityEngine.init();
+			for(String ruleFile : gameConf.getRuleFileTemplates()) {
+				String ruleName = ruleFile.replace("\\.vm", ""); 
+				Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
+				VelocityContext context = new VelocityContext();
+				context.put("params", gameConf.getParams());
+				context.put("legList", legs);
+				StringWriter writer = new StringWriter();
+				t.merge(context, writer);
+				RuleDTO ruleDTO = new RuleDTO();
+				ruleDTO.setName(ruleName);
+				ruleDTO.setContent(writer.toString());
+				writer.close();
+				gameDTO.getRules().add(ruleDTO);
+			}
+		}		
+		//create players and teams
 		List<String> allChildrenId = Lists.newArrayList();
 		List<String> allTeamsId = Lists.newArrayList();
 		for (String classRoom : game.getClassRooms()) {
@@ -166,7 +221,7 @@ public class GamificationController extends AuthController {
 				logger.warn("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
 			}
 		}	
-		
+		//create global team
 		if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
 			PedibusTeam pt = new PedibusTeam();
 			pt.setChildrenId(allChildrenId);
