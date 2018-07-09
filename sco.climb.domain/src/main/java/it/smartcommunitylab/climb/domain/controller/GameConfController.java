@@ -104,11 +104,7 @@ public class GameConfController extends AuthController {
 		if(confTemplate == null) {
 			throw new EntityNotFoundException("game conf template not found");
 		}
-		PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
-		if(gameConf != null) {
-			throw new EntityNotFoundException("game conf already exists");
-		}
-		gameConf = new PedibusGameConf();
+		PedibusGameConf gameConf = new PedibusGameConf();
 		gameConf.setOwnerId(ownerId);
 		gameConf.setPedibusGameId(pedibusGameId);
 		gameConf.setConfTemplateId(templateId);

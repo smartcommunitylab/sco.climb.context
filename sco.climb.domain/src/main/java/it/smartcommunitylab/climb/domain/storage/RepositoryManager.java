@@ -1273,6 +1273,17 @@ public class RepositoryManager {
 			gameConf.setLastUpdate(now);
 			gameConf.setObjectId(Utils.getUUID());
 			mongoTemplate.save(gameConf);
+		} else {
+			Update update = new Update();
+			update.set("confTemplateId", gameConf.getConfTemplateId());
+			update.set("ruleFileTemplates", gameConf.getRuleFileTemplates());
+			update.set("actions", gameConf.getActions());
+			update.set("badgeCollections", gameConf.getBadgeCollections());
+			update.set("challengeModels", gameConf.getChallengeModels());
+			update.set("points", gameConf.getPoints());
+			update.set("params", gameConf.getParams());
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
 		}
 	}
 	
