@@ -1,37 +1,12 @@
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.climb.contextstore.model.Child;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.GEngineUtils;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.StorageException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.model.Gamified;
-import it.smartcommunitylab.climb.domain.model.Link;
-import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
-import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
-import it.smartcommunitylab.climb.domain.model.PedibusTeam;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
-import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
-import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
-import it.smartcommunitylab.climb.domain.model.gamification.CustomData;
-import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
-import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
-import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
-import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
-import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
-import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.io.StringWriter;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -70,6 +45,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.GEngineUtils;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.model.Gamified;
+import it.smartcommunitylab.climb.domain.model.Link;
+import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
+import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
+import it.smartcommunitylab.climb.domain.model.PedibusTeam;
+import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
+import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
+import it.smartcommunitylab.climb.domain.model.gamification.CustomData;
+import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
+import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
+import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
+import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
 public class GamificationController extends AuthController {
@@ -146,13 +151,21 @@ public class GamificationController extends AuthController {
 				Map<String, PeriodInternal> intervalMap = new HashMap<>();
 				for(String period : periods) {
 					if(period.equals("daily")) {
-						Date start = new Date();
 						//TODO calcolo start date per daily 
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(game.getFrom());
+						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+						ld = ld.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+						Date start = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 86400000);
 						intervalMap.put(period, periodInternal);
 					} else if(period.equals("weekly")) {
-						Date start = new Date();
 						//TODO calcolo start date per weekly 
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(game.getFrom());
+						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+						ld = ld.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+						Date start = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 604800000);
 						intervalMap.put(period, periodInternal);
 					}
@@ -172,19 +185,23 @@ public class GamificationController extends AuthController {
 			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 			velocityEngine.init();
+			VelocityContext context = new VelocityContext();
+			context.put("params", gameConf.getParams());
+			context.put("legList", legs);
 			for(String ruleFile : gameConf.getRuleFileTemplates()) {
-				String ruleName = ruleFile.replace("\\.vm", ""); 
-				Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
-				VelocityContext context = new VelocityContext();
-				context.put("params", gameConf.getParams());
-				context.put("legList", legs);
-				StringWriter writer = new StringWriter();
-				t.merge(context, writer);
-				RuleDTO ruleDTO = new RuleDTO();
-				ruleDTO.setName(ruleName);
-				ruleDTO.setContent(writer.toString());
-				writer.close();
-				gameDTO.getRules().add(ruleDTO);
+				String ruleName = ruleFile.replace(".vm", ""); 
+				try {
+					Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
+					StringWriter writer = new StringWriter();
+					t.merge(context, writer);
+					RuleDTO ruleDTO = new RuleDTO();
+					ruleDTO.setName(ruleName);
+					ruleDTO.setContent(writer.toString());
+					gameDTO.getRules().add(ruleDTO);
+				} catch (Exception e) {
+					logger.error("Gamification engine rule creation error: " + e.getClass() + " " + e.getMessage());
+					throw new StorageException("unable to create rule");
+				}				
 			}
 			String gameId = null;
 			//create game
