@@ -240,7 +240,12 @@ function ($q, $http, $rootScope, $timeout) {
                     deferred.resolve(data);
                 })
                 return deferred.promise;
-            }
+          },            
+          updateTemplateToGame: function (template) {
+              var url = baseUrl + '/api/game/conf/' + template.ownerId + '/' + template.pedibusGameId + '/template/' + template.objectId;
+              return $http.put(url, null, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+          }  
+
       };
   }
 ]);

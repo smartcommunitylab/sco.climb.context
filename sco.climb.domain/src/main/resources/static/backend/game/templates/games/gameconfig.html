@@ -1,27 +1,41 @@
 <div class="row">
     <div class="col-md-8 header-path-category">
         <h4>{{isNewGameConf ? 'CREA NUOVE' : 'MODIFICA'}} REGOLE GIOCO</h4>
-        <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+        <p>I campi contrassegnati col simbolo
+            <span class="required-sign">*</span> sono obbligatori</p>
     </div>
 </div>
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
+
+<div class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
     <div class="col-md-12 right">
-        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva info</a>
-        <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+        <a ng-click="back()" class="btn btn-danger" role="button">Indietro</a>
     </div>
-    <div class="col-lg-12">        
-        <label>Seleziona configurazione:
-            <select ng-options="config.name for config in configs track by config.objectId" ng-model="selectedConfig"></select>
-        </label>
-        <p>{{selectedConfig.description}}</p>
-    </div>
-    <div class="gameconfig-sections">
-        <div class="conf-section col-lg-12" ng-repeat="groupSection in selectedConfig.params.groups">
-            <h4>{{groupSection.groupName}}</h4>
-            <label ng-repeat="field in groupSection.fields" class="col-lg-12">
-                <span class="required-sign">*</span> {{field.label}}:
-                <input name="{{field.name}}" type="{{field.type}}" ng-model="field.value"/>
-            </label>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <ul style="text-align: justify;">
+            <li class="list-group-item" ng-repeat="template in configs">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4>{{template.name}}</h4>
+                    </div>
+                    <div class="col-md-2 right">
+                        <h5>Version: {{template.version}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>{{template.description}}</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 right">
+                        <a ng-click="setTemplate($index)" class="btn btn-success" role="button" ng-disabled="template.saved">
+                            <i class="fa fas fa-check-circle" aria-hidden="true"> scegli</i>
+                        </a>
+                    </div>
+            </li>
+        </ul>
         </div>
     </div>
-</fieldset>
