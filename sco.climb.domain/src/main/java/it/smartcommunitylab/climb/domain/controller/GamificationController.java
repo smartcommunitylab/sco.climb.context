@@ -5,6 +5,7 @@ import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
 import it.smartcommunitylab.climb.domain.model.Link;
@@ -15,11 +16,13 @@ import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
 import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.CustomData;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -134,16 +138,36 @@ public class GamificationController extends AuthController {
 				BadgeCollectionConcept badgeCollectionConcept = new BadgeCollectionConcept(badgeCollection);
 				gameDTO.getBadgeCollectionConcept().add(badgeCollectionConcept);
 			}
-			//create params
-			//TODO
-			List<PedibusItineraryLeg> legs = new ArrayList<>();
-			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
-			//WARN use one itinerary 
-			if(itineraryList.size() > 0) {
-				PedibusItinerary pedibusItinerary = itineraryList.get(0);
-				legs = storage.getPedibusItineraryLegsByGameId(ownerId, pedibusGameId, pedibusItinerary.getObjectId());
+			//TODO create params
+			//create point concepts
+			for(String pointName : gameConf.getPoints().keySet()) {
+				List<String> periods = gameConf.getPoints().get(pointName);
+				PointConcept pointConcept = new PointConcept(pointName);
+				Map<String, PeriodInternal> intervalMap = new HashMap<>();
+				for(String period : periods) {
+					if(period.equals("daily")) {
+						Date start = new Date();
+						//TODO calcolo start date per daily 
+						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 86400000);
+						intervalMap.put(period, periodInternal);
+					} else if(period.equals("weekly")) {
+						Date start = new Date();
+						//TODO calcolo start date per weekly 
+						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 604800000);
+						intervalMap.put(period, periodInternal);
+					}
+				}
+				pointConcept.setPeriods(intervalMap);
+				gameDTO.getPointConcept().add(pointConcept);
 			}
 			//create rules
+			List<PedibusItineraryLeg> legs = new ArrayList<>();
+			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+			for(PedibusItinerary itinerary : itineraryList) {
+				List<PedibusItineraryLeg> legsByGameId = storage.getPedibusItineraryLegsByGameId(ownerId, 
+						pedibusGameId, itinerary.getObjectId());
+				legs.addAll(legsByGameId);
+			}
 			VelocityEngine velocityEngine = new VelocityEngine();
 			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
@@ -161,6 +185,29 @@ public class GamificationController extends AuthController {
 				ruleDTO.setContent(writer.toString());
 				writer.close();
 				gameDTO.getRules().add(ruleDTO);
+			}
+			String gameId = null;
+			//create game
+			try {
+				gameId = gengineUtils.createGame(gameDTO);
+				game.setGameId(gameId);
+				storage.updatePedibusGameGameId(ownerId, pedibusGameId, gameId);
+			} catch (Exception e) {
+				logger.error("Gamification engine game creation error: " + e.getClass() + " " + e.getMessage());
+				throw new StorageException("unable to create game");
+			}
+			//create challenges
+			for(String model : gameConf.getChallengeModels().keySet()) {
+				List<String> variables = gameConf.getChallengeModels().get(model);
+				ChallengeModel challengeModel = new ChallengeModel();
+				challengeModel.setName(model);
+				challengeModel.setVariables(variables);
+				try {
+					gengineUtils.createChallenge(gameId, challengeModel);
+				} catch (Exception e) {
+					logger.error("Gamification engine challenge creation error: " + e.getClass() + " " + e.getMessage());
+					throw new StorageException("unable to create challenge");
+				}
 			}
 		}		
 		//create players and teams
