@@ -25,7 +25,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                             }
                         }
                         $scope.selectedConfig = $scope.configs[i];
-                        formatIntFields($scope.selectedConfig);
                     }, function () {
                         alert('Errore nel caricamento della config specifica.');
                     }
@@ -78,7 +77,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
             success: {
                 label: 'Conferma',
                 fn: function () {
-
                     DataService.updateTemplateToGame($scope.selectedConfig).then(
                         function () {
                             console.log('Salvataggio template a buon fine.');
