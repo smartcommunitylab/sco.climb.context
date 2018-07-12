@@ -30,9 +30,9 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                     }
                 );
 
-                $scope.configs.forEach(config => {
-                    formatIntFields(config);
-                });
+                // $scope.configs.forEach(config => {
+                //     formatIntFields(config);
+                // });
 
             }, function () {
                 alert('Errore nel caricamento della config.');
@@ -47,18 +47,18 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
     $scope.initController();
     
 
-    function formatIntFields(config) {
-        config.params.groups.forEach(group => {
-            group.fields.forEach(field => {
-                if (!field.value) {
-                    field.value = field.defaultValue;
-                }
-                if (field.type == "number") {
-                    field.value = parseInt(field.value);
-                }   
-            });
-        });
-    }
+    // function formatIntFields(config) {
+    //     config.params.groups.forEach(group => {
+    //         group.fields.forEach(field => {
+    //             if (!field.value) {
+    //                 field.value = field.defaultValue;
+    //             }
+    //             if (field.type == "number") {
+    //                 field.value = parseInt(field.value);
+    //             }   
+    //         });
+    //     });
+    // }
 
     // Exit without saving changes
     $scope.back = function () {

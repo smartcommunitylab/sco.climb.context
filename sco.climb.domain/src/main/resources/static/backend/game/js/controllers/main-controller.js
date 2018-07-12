@@ -97,13 +97,13 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.paths = response.data;
             });
         };
-        $scope.reloadGamesConfig = function(schoolId, invalidate) {
-            MainDataService.getGamesConfigs(schoolId, invalidate).then(function (response) {                
-                response.data.forEach(config => {
-                    $scope.gamesConfigs[config.pedibusGameId] = config;
-                });
-            });
-        }
+        // $scope.reloadGamesConfig = function(schoolId, invalidate) {
+        //     MainDataService.getGamesConfigs(schoolId, invalidate).then(function (response) {                
+        //         response.data.forEach(config => {
+        //             $scope.gamesConfigs[config.pedibusGameId] = config;
+        //         });
+        //     });
+        // }
 
         $scope.uploadComplete = function (content) {
             if (content.id) {
