@@ -89,7 +89,7 @@ angular.module('consoleControllers.mainCtrl', [])
                     $scope.loadItineraries($scope.games[0]);
                 }
             });
-            $scope.reloadGamesConfig(school.objectId);
+            // $scope.reloadGamesConfig(school.objectId);
         };
         $scope.loadItineraries = function(game) {
             if (!game) return;          
