@@ -13,6 +13,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.junit.Test;
 
+import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 
 public class TestVelocity {
@@ -32,13 +33,14 @@ public class TestVelocity {
 		
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
 		PedibusItineraryLeg leg = new PedibusItineraryLeg();
-		leg.setName("Tappa1");
+		leg.setName("Tappa 1");
 		leg.setScore(1000);
 		legs.add(leg);
 		
 		VelocityContext context = new VelocityContext();
 		context.put("params", params);
 		context.put("legList", legs);
+		context.put("Utils", Utils.class);
 		
 		StringWriter writer = new StringWriter();
 		t.merge(context, writer);

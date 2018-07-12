@@ -136,6 +136,10 @@ public class GamificationController extends AuthController {
 			}
 			GameDTO gameDTO = new GameDTO();
 			gameDTO.setName(game.getGameName());
+			gameConf.getParams().put("const_school_name", game.getGameOwner());
+			gameConf.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
+			gameConf.getParams().put("const_weekly_nominal_distance", "???"); //TODO come si calcola const_weekly_nominal_distance?
+			gameConf.getParams().put("final_destination", "???"); //TODO final_destination dipende dall'itinerario
 			//create actions
 			gameDTO.getActions().addAll(gameConf.getActions());
 			//create badgeCollections
@@ -143,7 +147,6 @@ public class GamificationController extends AuthController {
 				BadgeCollectionConcept badgeCollectionConcept = new BadgeCollectionConcept(badgeCollection);
 				gameDTO.getBadgeCollectionConcept().add(badgeCollectionConcept);
 			}
-			//TODO create params
 			//create point concepts
 			for(String pointName : gameConf.getPoints().keySet()) {
 				List<String> periods = gameConf.getPoints().get(pointName);
@@ -173,6 +176,16 @@ public class GamificationController extends AuthController {
 				pointConcept.setPeriods(intervalMap);
 				gameDTO.getPointConcept().add(pointConcept);
 			}
+			//create game
+			String gameId = null;
+			try {
+				gameId = gengineUtils.createGame(gameDTO);
+				game.setGameId(gameId);
+				storage.updatePedibusGameGameId(ownerId, pedibusGameId, gameId);
+			} catch (Exception e) {
+				logger.error("Gamification engine game creation error: " + e.getClass() + " " + e.getMessage());
+				throw new StorageException("unable to create game");
+			}
 			//create rules
 			List<PedibusItineraryLeg> legs = new ArrayList<>();
 			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
@@ -188,6 +201,7 @@ public class GamificationController extends AuthController {
 			VelocityContext context = new VelocityContext();
 			context.put("params", gameConf.getParams());
 			context.put("legList", legs);
+			context.put("Utils", Utils.class); 
 			for(String ruleFile : gameConf.getRuleFileTemplates()) {
 				String ruleName = ruleFile.replace(".vm", ""); 
 				try {
@@ -197,22 +211,12 @@ public class GamificationController extends AuthController {
 					RuleDTO ruleDTO = new RuleDTO();
 					ruleDTO.setName(ruleName);
 					ruleDTO.setContent(writer.toString());
-					gameDTO.getRules().add(ruleDTO);
+					gengineUtils.createRule(gameId, ruleDTO);
 				} catch (Exception e) {
 					logger.error("Gamification engine rule creation error: " + e.getClass() + " " + e.getMessage());
 					throw new StorageException("unable to create rule");
 				}				
-			}
-			String gameId = null;
-			//create game
-			try {
-				gameId = gengineUtils.createGame(gameDTO);
-				game.setGameId(gameId);
-				storage.updatePedibusGameGameId(ownerId, pedibusGameId, gameId);
-			} catch (Exception e) {
-				logger.error("Gamification engine game creation error: " + e.getClass() + " " + e.getMessage());
-				throw new StorageException("unable to create game");
-			}
+			}			
 			//create challenges
 			for(String model : gameConf.getChallengeModels().keySet()) {
 				List<String> variables = gameConf.getChallengeModels().get(model);

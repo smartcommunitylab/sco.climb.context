@@ -128,5 +128,10 @@ public class Utils {
 		return null;
 	}
 	
+	public static String getNormalizeLegName(String name) {
+		//TODO capire come normalizzare il nome della tappa
+		return name.trim().replace(" ", "");
+	}
+	
 
 }

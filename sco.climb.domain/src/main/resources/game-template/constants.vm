@@ -39,7 +39,7 @@ final_destination = $params.final_destination
 
 $H constants representing distances to legs 
 #foreach($leg in $legList)
-$leg.name#[[_distance]]#=$leg.score#[[.0]]#
+$Utils.getNormalizeLegName($leg.name)#[[_distance]]#=$leg.score#[[.0]]#
 #end
 
 const_day_millis=86400000l
