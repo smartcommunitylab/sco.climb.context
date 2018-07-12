@@ -89,7 +89,7 @@ angular.module('consoleControllers.mainCtrl', [])
                     $scope.loadItineraries($scope.games[0]);
                 }
             });
-            $scope.reloadGamesConfig(school.objectId);
+            // $scope.reloadGamesConfig(school.objectId);
         };
         $scope.loadItineraries = function(game) {
             if (!game) return;          
@@ -97,13 +97,13 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.paths = response.data;
             });
         };
-        $scope.reloadGamesConfig = function(schoolId, invalidate) {
-            MainDataService.getGamesConfigs(schoolId, invalidate).then(function (response) {                
-                response.data.forEach(config => {
-                    $scope.gamesConfigs[config.pedibusGameId] = config;
-                });
-            });
-        }
+        // $scope.reloadGamesConfig = function(schoolId, invalidate) {
+        //     MainDataService.getGamesConfigs(schoolId, invalidate).then(function (response) {                
+        //         response.data.forEach(config => {
+        //             $scope.gamesConfigs[config.pedibusGameId] = config;
+        //         });
+        //     });
+        // }
 
         $scope.uploadComplete = function (content) {
             if (content.id) {

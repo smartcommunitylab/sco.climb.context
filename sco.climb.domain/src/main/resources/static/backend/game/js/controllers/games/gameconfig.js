@@ -25,15 +25,14 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                             }
                         }
                         $scope.selectedConfig = $scope.configs[i];
-                        formatIntFields($scope.selectedConfig);
                     }, function () {
                         alert('Errore nel caricamento della config specifica.');
                     }
                 );
 
-                $scope.configs.forEach(config => {
-                    formatIntFields(config);
-                });
+                // $scope.configs.forEach(config => {
+                //     formatIntFields(config);
+                // });
 
             }, function () {
                 alert('Errore nel caricamento della config.');
@@ -48,18 +47,18 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
     $scope.initController();
     
 
-    function formatIntFields(config) {
-        config.params.groups.forEach(group => {
-            group.fields.forEach(field => {
-                if (!field.value) {
-                    field.value = field.defaultValue;
-                }
-                if (field.type == "number") {
-                    field.value = parseInt(field.value);
-                }   
-            });
-        });
-    }
+    // function formatIntFields(config) {
+    //     config.params.groups.forEach(group => {
+    //         group.fields.forEach(field => {
+    //             if (!field.value) {
+    //                 field.value = field.defaultValue;
+    //             }
+    //             if (field.type == "number") {
+    //                 field.value = parseInt(field.value);
+    //             }   
+    //         });
+    //     });
+    // }
 
     // Exit without saving changes
     $scope.back = function () {
@@ -78,7 +77,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
             success: {
                 label: 'Conferma',
                 fn: function () {
-
                     DataService.updateTemplateToGame($scope.selectedConfig).then(
                         function () {
                             console.log('Salvataggio template a buon fine.');
