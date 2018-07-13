@@ -1,5 +1,4 @@
 #set( $H = '#' )
-
 $H for zero impact trips taken autonomously
 const_zi_solo_bonus = $params.const_zi_solo_bonus  
 
