@@ -1,0 +1,69 @@
+#set( $H = '#' )
+#set( $S = '$' )
+
+package  eu.trentorise.game.model
+
+import java.util.ArrayList;
+
+import eu.trentorise.game.notification.BadgeNotification;
+import eu.trentorise.game.notification.MessageNotification;
+
+import eu.trentorise.game.core.Utility;
+
+global Utility utils;
+
+global String badge_collection_name;
+global String const_school_name;
+global String final_destination;
+global Double const_leg_bonus;
+global Double const_almost_reached_next_leg;
+
+
+// TRIP LEGS
+#foreach($leg in $legList)
+global Double $Utils.getNormalizeLegName($leg.name)#[[_distance]];
+#end
+
+//add leg badge rules
+//only for SCHOOL
+
+#foreach($leg in $legList)
+rule \"R-add-badge $leg.name\"
+	salience -1000
+when 
+    PointConcept(name == 'total_distance', score >= $Utils.getNormalizeLegName($leg.name)#[[_distance]])
+    $Sbc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$leg.name') 
+    Game($SgameId: id)
+    Player( $SteamId : id, $SteamId == const_school_name, team == true )
+then
+    utils.log(\"apply \\'R-add-badge $leg.name\\'\");
+    $Sbc.getBadgeEarned().add('$leg.name');
+    insert(new BadgeNotification($SgameId, $SteamId, $Sbc.getName(), '$leg.name'));
+    update( $Sbc );
+end
+#end
+
+rule \"R-GAME-END\"
+//special END-OF-GAME MessageNotification for SCHOOL
+// minimal salience to guarantee the MessageNotification is the last seen
+salience -10000
+when
+	BadgeCollectionConcept(name == badge_collection_name, badgeEarned contains '$params.final_destination')
+	Game($SgameId: id)
+    Player( $SteamId : id, $SteamId == const_school_name, team == true )
+    $Scd : CustomData()
+    $Stot_dist : PointConcept(name == 'total_distance')
+then
+	utils.log(\"apply \\'R-GAME-END\\'\");
+	$Scd.put(\"game_finished\", new Boolean(true));
+	MessageNotification message = new MessageNotification($SgameId, $SteamId, 'GameFinished');
+    message.addData(\"_totalKm_\", $Stot_dist.getScore());
+    message.addData(\"_finalDestination_\", final_destination);
+    insert(message);
+	
+end
+
+
+// almost reached leg rules
+//inserts a Custom Data with the name of the leg to avoid duplicate notifications
+// only for SCHOOL

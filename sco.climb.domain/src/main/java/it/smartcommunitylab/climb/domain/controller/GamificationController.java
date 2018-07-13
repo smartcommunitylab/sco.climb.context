@@ -136,7 +136,7 @@ public class GamificationController extends AuthController {
 			}
 			GameDTO gameDTO = new GameDTO();
 			gameDTO.setName(game.getGameName());
-			gameConf.getParams().put("const_school_name", game.getGameOwner());
+			gameConf.getParams().put("const_school_name", game.getGlobalTeam());
 			gameConf.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
 			gameConf.getParams().put("const_weekly_nominal_distance", "???"); //TODO come si calcola const_weekly_nominal_distance?
 			gameConf.getParams().put("final_destination", "???"); //TODO final_destination dipende dall'itinerario
