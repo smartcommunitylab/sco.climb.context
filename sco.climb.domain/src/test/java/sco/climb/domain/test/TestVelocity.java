@@ -25,7 +25,7 @@ public class TestVelocity {
 		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		    
-		Template t = velocityEngine.getTemplate("game-template/constants.vm");
+		Template t = velocityEngine.getTemplate("game-template/constants_v1.vm");
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("const_zi_solo_bonus", "1000.0");
@@ -55,7 +55,7 @@ public class TestVelocity {
 		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		    
-		Template t = velocityEngine.getTemplate("game-template/calendartrips.vm");
+		Template t = velocityEngine.getTemplate("game-template/calendartrips_v1.vm");
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("const_pandr_distance", "100");
@@ -85,7 +85,7 @@ public class TestVelocity {
 		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		    
-		Template t = velocityEngine.getTemplate("game-template/legsbadges.vm");
+		Template t = velocityEngine.getTemplate("game-template/legsbadges_v1.vm");
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("const_zi_solo_bonus", "1000.0");
@@ -105,6 +105,42 @@ public class TestVelocity {
 		StringWriter writer = new StringWriter();
 		t.merge(context, writer);
 		
+		System.out.println(writer.toString());
+	}
+	
+	@Test
+	public void testVelocityTempletes() {
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		Template t = null;
+		StringWriter writer = new StringWriter();
+		
+		t = velocityEngine.getTemplate("game-template/classtrips_v1.vm");
+		t.merge(context, writer);
+		System.out.println(writer.toString());
+
+		t = velocityEngine.getTemplate("game-template/challenge_ScuolaSenzAuto_v1.vm");
+		t.merge(context, writer);
+		System.out.println(writer.toString());
+
+		t = velocityEngine.getTemplate("game-template/pedibus_v1.vm");
+		t.merge(context, writer);
+		System.out.println(writer.toString());
+
+		t = velocityEngine.getTemplate("game-template/challenge_ViaggiGiornalieri_v1.vm");
+		t.merge(context, writer);
+		System.out.println(writer.toString());
+
+		t = velocityEngine.getTemplate("game-template/weeklytasks_v1.vm");
+		t.merge(context, writer);
+		System.out.println(writer.toString());
+
+		t = velocityEngine.getTemplate("game-template/classday_v1.vm");
+		t.merge(context, writer);
 		System.out.println(writer.toString());
 	}
 	
