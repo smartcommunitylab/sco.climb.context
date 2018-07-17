@@ -115,8 +115,8 @@ public class GamificationController extends AuthController {
 
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/init", method = RequestMethod.GET)
-	public @ResponseBody void initGame(
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/deploy", method = RequestMethod.GET)
+	public @ResponseBody void deployGame(
 		@PathVariable String ownerId, 
 		@PathVariable String pedibusGameId, 
 		HttpServletRequest request, 
@@ -129,8 +129,22 @@ public class GamificationController extends AuthController {
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
+		if(game.isDeployed()) {
+			throw new StorageException("game already deployed");
+		}
 		//create game
 		if(Utils.isEmpty(game.getGameId())) {
+			//read legs
+			List<PedibusItineraryLeg> legs = new ArrayList<>();
+			String finalDestination = "";
+			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+			if(itineraryList.size() > 0) {
+				List<PedibusItineraryLeg> legsByGameId = storage.getPedibusItineraryLegsByGameId(ownerId, 
+						pedibusGameId, itineraryList.get(0).getObjectId());
+				legs.addAll(legsByGameId);
+				finalDestination = legsByGameId.get(legsByGameId.size() - 1).getName();	
+			}
+			//get game conf
 			PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
 			if(gameConf == null) {
 				throw new EntityNotFoundException("game conf not found");
@@ -140,7 +154,7 @@ public class GamificationController extends AuthController {
 			gameConf.getParams().put("const_school_name", game.getGlobalTeam());
 			gameConf.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
 			gameConf.getParams().put("const_weekly_nominal_distance", "400000.0"); //TODO come si calcola const_weekly_nominal_distance?
-			gameConf.getParams().put("final_destination", "TappaFinale"); //TODO final_destination dipende dall'itinerario
+			gameConf.getParams().put("final_destination", finalDestination);
 			//create actions
 			gameDTO.getActions().addAll(gameConf.getActions());
 			//create badgeCollections
@@ -155,20 +169,18 @@ public class GamificationController extends AuthController {
 				Map<String, PeriodInternal> intervalMap = new HashMap<>();
 				for(String period : periods) {
 					if(period.equals("daily")) {
-						//TODO calcolo start date per daily 
 						Calendar calendar = Calendar.getInstance();
 						calendar.setTime(game.getFrom());
-						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-						ld = ld.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+						ld = ld.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
 						Date start = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 86400000);
 						intervalMap.put(period, periodInternal);
 					} else if(period.equals("weekly")) {
-						//TODO calcolo start date per weekly 
 						Calendar calendar = Calendar.getInstance();
 						calendar.setTime(game.getFrom());
-						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-						ld = ld.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+						LocalDate ld = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+						ld = ld.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
 						Date start = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 						PeriodInternal periodInternal = pointConcept.new PeriodInternal(period, start, 604800000);
 						intervalMap.put(period, periodInternal);
@@ -183,18 +195,12 @@ public class GamificationController extends AuthController {
 				gameId = gengineUtils.createGame(gameDTO);
 				game.setGameId(gameId);
 				storage.updatePedibusGameGameId(ownerId, pedibusGameId, gameId);
+				storage.updatePedibusGameDeployed(ownerId, pedibusGameId, true);
 			} catch (Exception e) {
 				logger.error("Gamification engine game creation error: " + e.getClass() + " " + e.getMessage());
 				throw new StorageException("unable to create game");
 			}
 			//create rules
-			List<PedibusItineraryLeg> legs = new ArrayList<>();
-			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
-			for(PedibusItinerary itinerary : itineraryList) {
-				List<PedibusItineraryLeg> legsByGameId = storage.getPedibusItineraryLegsByGameId(ownerId, 
-						pedibusGameId, itinerary.getObjectId());
-				legs.addAll(legsByGameId);
-			}
 			VelocityEngine velocityEngine = new VelocityEngine();
 			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
@@ -315,7 +321,7 @@ public class GamificationController extends AuthController {
 			}				
 		}		
 		if (logger.isInfoEnabled()) {
-			logger.info("initGame");
+			logger.info("deployGame");
 		}
 	}
 	

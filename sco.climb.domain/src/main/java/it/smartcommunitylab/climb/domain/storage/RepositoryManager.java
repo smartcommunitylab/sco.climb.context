@@ -909,6 +909,18 @@ public class RepositoryManager {
 		}
 	}
 	
+	public void updatePedibusGameDeployed(String ownerId, String pedibusGameId, boolean deployed) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
+		Date now = new Date();
+		if (gameDB != null) {
+			Update update = new Update();
+			update.set("deployed", deployed);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+		}
+	}
+	
 	public void resetPollingFlag(String ownerId, String gameId) {
 		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
