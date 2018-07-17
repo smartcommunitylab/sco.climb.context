@@ -70,6 +70,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
@@ -138,8 +139,8 @@ public class GamificationController extends AuthController {
 			gameDTO.setName(game.getGameName());
 			gameConf.getParams().put("const_school_name", game.getGlobalTeam());
 			gameConf.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
-			gameConf.getParams().put("const_weekly_nominal_distance", "???"); //TODO come si calcola const_weekly_nominal_distance?
-			gameConf.getParams().put("final_destination", "???"); //TODO final_destination dipende dall'itinerario
+			gameConf.getParams().put("const_weekly_nominal_distance", "400000.0"); //TODO come si calcola const_weekly_nominal_distance?
+			gameConf.getParams().put("final_destination", "TappaFinale"); //TODO final_destination dipende dall'itinerario
 			//create actions
 			gameDTO.getActions().addAll(gameConf.getActions());
 			//create badgeCollections
@@ -208,6 +209,9 @@ public class GamificationController extends AuthController {
 					Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
 					StringWriter writer = new StringWriter();
 					t.merge(context, writer);
+					RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+					ruleValidateDTO.setRule(writer.toString());
+					gengineUtils.validateRule(gameId, ruleValidateDTO);
 					RuleDTO ruleDTO = new RuleDTO();
 					ruleDTO.setName(ruleName);
 					ruleDTO.setContent(writer.toString());

@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.domain.common;
 
+import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
@@ -8,6 +9,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.Notification;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 
 import java.net.URLEncoder;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -132,6 +135,16 @@ public class GEngineUtils {
 	public void createRule(String gameId, RuleDTO rule) throws Exception {
 		String address = gamificationURL + "/model/game/" + gameId + "/rule";
 		HTTPUtils.post(address, rule, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void validateRule(String gameId, RuleValidateDTO rule) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/rule/validate";
+		String json = HTTPUtils.post(address, rule, null, gamificationUser, gamificationPassword);
+		TypeReference<ArrayList<String>> typeRef = new TypeReference<ArrayList<String>>() {};
+		ArrayList<String> value = mapper.readValue(json, typeRef);
+		if(value.size() > 0) {
+			throw new StorageException(value.toString());
+		}
 	}
 	
 	public void createPointConcept(String gameId, PointConcept pointConcept) throws Exception {
