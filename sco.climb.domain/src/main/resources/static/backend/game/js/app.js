@@ -93,8 +93,13 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
         })
         .state('root.game.info', {
             url: '/info',
-            templateUrl: 'templates/games/info.html',
+            templateUrl: 'templates/games/tabs/info.html',
             controller: 'GameInfoCtrl'
+        })
+        .state('root.game.params', {
+            url: '/params',
+            templateUrl: 'templates/games/tabs/params.html',
+            controller: 'GameParamsCtrl'
         })
         .state('root.institutes-list', {
             url: '/institutes-list',

@@ -1,0 +1,173 @@
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
+
+        <div class="col-lg-12">
+            <h3>Abitudini di mobilità e distanze</h3>
+            <hr style="border-color: black;">
+        </div>
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <label style="font-style: italic; font-weight: normal">Numero studenti</label>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <label style="font-style: italic; font-weight: normal">Distanza media(Km)</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>&emsp;
+                    <b>Piedi o bici in autonomia</b>
+                </p>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>&emsp;
+                    <b>Piedi o bici con adulti</b>
+                </p>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>&emsp;
+                    <b>Scuolabus o autobus</b>
+                </p>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>&emsp;
+                    <b>Parcheggio attestamento</b>
+                </p>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>&emsp;
+                    <b>Auto fine a scuola</b>
+                </p>
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <p>&emsp;
+                    <b>Abitudini relevate:</b> 86/88</p>
+            </div>
+            <div class="col-lg-6">
+                <p>&emsp;
+                    <b>Velocità stimata(KM/gg):</b> 78,5</p>
+            </div>
+        </div>
+        <br/>
+        <div class="col-lg-12">
+            <h3>Calibrazione gioco</h3>
+            <hr style="border-color: black;">
+        </div>
+        <!-- Start and end date -->
+        <div class="col-lg-6" style="margin-bottom: 20px;">
+            <p style="display: inline-block">
+                <span class="required-sign">*</span>
+                <b>Data di inizio:&emsp;</b>
+            </p>
+            <p class="input-group" style="display: inline-block">
+                <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+                    ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="col-lg-6" style="margin-bottom: 20px;">
+            <p style="display: inline-block">
+                <span class="required-sign">*</span>
+                <b>Data di fine:&emsp;</b>
+            </p>
+            <p class="input-group" style="display: inline-block">
+                <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
+                    ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-lg-3"><p>&emsp;<b>Bonus autonomia:</b></p></div>
+            <div class="col-lg-3" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3"><p>&emsp;<b>Bonus meteo:</b></p></div>
+            <div class="col-lg-1">nuovoloso</div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-1">pioggia</div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-1">neve</div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4"><p>&emsp;<b>Bonus performance:</b></p></div>
+            <div class="col-lg-2">giorno impatto zero</div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-2">giorno senz'auto</div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4"><p>&emsp;<b>Km stimati:</b> 8800</p></div>
+            <div class="col-lg-2">
+                <b>km bonus</b>
+            </div>
+            <div class="col-lg-2" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+            </div>
+            <div class="col-lg-4">
+                <b>Km target:</b> 10000</p>
+            </div>
+        </div>
+    </fieldset>
