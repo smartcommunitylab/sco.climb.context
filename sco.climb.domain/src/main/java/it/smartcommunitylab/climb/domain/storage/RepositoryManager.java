@@ -827,6 +827,7 @@ public class RepositoryManager {
 			mongoTemplate.save(game);
 		} else if (canUpdate) {
 			Update update = new Update();
+			update.set("instituteId", game.getInstituteId());
 			update.set("schoolId", game.getSchoolId());
 			update.set("schoolName", game.getSchoolName());
 			update.set("classRooms", game.getClassRooms());
@@ -834,13 +835,13 @@ public class RepositoryManager {
 			update.set("gameName", game.getGameName());
 			update.set("gameDescription", game.getGameDescription());
 			update.set("gameOwner", game.getGameOwner());
-			update.set("globalTeam", game.getGlobalTeam());
 			update.set("from", game.getFrom());
 			update.set("to", game.getTo());
-			update.set("lastDaySeen", game.getLastDaySeen());
+			update.set("globalTeam", game.getGlobalTeam());
 			update.set("fromHour", game.getFromHour());
 			update.set("toHour", game.getToHour());
 			update.set("lateSchedule", game.isLateSchedule());
+			update.set("usingPedibusData", game.isUsingPedibusData());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
