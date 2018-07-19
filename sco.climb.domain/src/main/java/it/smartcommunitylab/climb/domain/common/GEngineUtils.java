@@ -138,8 +138,9 @@ public class GEngineUtils {
 	}
 	
 	public void validateRule(String gameId, RuleValidateDTO rule) throws Exception {
-		String address = gamificationURL + "/model/game/" + gameId + "/rule/validate";
-		String json = HTTPUtils.post(address, rule, null, gamificationUser, gamificationPassword);
+		//String address = gamificationURL + "/model/game/" + gameId + "/rule/validate";
+		String address = gamificationURL + "/console/rule/validate";
+		String json = HTTPUtils.post(address, rule.getRule(), null, gamificationUser, gamificationPassword);
 		TypeReference<ArrayList<String>> typeRef = new TypeReference<ArrayList<String>>() {};
 		ArrayList<String> value = mapper.readValue(json, typeRef);
 		if(value.size() > 0) {

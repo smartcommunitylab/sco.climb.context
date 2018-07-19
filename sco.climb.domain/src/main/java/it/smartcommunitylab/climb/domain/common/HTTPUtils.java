@@ -126,8 +126,13 @@ public class HTTPUtils {
 			conn.setRequestProperty("X-ACCESS-TOKEN", token);
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
-		String contentString = mapper.writeValueAsString(content);
+		String contentString = null;
+		if(content instanceof String) {
+			contentString = (String) content;
+		} else {
+			ObjectMapper mapper = new ObjectMapper();
+			contentString = mapper.writeValueAsString(content);
+		}
 		
 		OutputStream out = conn.getOutputStream();
 		Writer writer = new OutputStreamWriter(out, "UTF-8");
