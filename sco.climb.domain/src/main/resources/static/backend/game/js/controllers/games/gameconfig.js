@@ -25,6 +25,7 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                             }
                         }
                         $scope.selectedConfig = $scope.configs[i];
+                        $scope.$parent.selectedConfig = $scope.selectedConfig;
                     }, function () {
                         alert('Errore nel caricamento della config specifica.');
                     }
@@ -70,13 +71,14 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
         $scope.selectedConfig = $scope.configs[i];
         $scope.selectedConfig.pedibusGameId = $stateParams.idGame;
         $scope.selectedConfig.ownerId = $stateParams.idDomain;
-        // if ($scope.$parent.selectedGame.gameId) {
-            
-        // }
+        let titleMsg = 'Sei sicuro di salvare template?';
+        if ($scope.$parent.selectedGame.gameId) {
+            titleMsg = 'Gioco già istanziato. Sei sicuro di cambiare template?'
+        }
 
         createDialog('templates/modals/back.html', {
             id: 'back-dialog',
-            title: ($scope.$parent.selectedGame.gameId != null)?'Gioco Id esiste. Sei sicuro di salvare template?':'Sei sicuro di salvare template',
+            title: titleMsg,
             success: {
                 label: 'Conferma',
                 fn: function () {

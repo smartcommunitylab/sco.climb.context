@@ -244,7 +244,11 @@ function ($q, $http, $rootScope, $timeout) {
           updateTemplateToGame: function (template) {
               var url = baseUrl + '/api/game/conf/' + template.ownerId + '/' + template.pedibusGameId + '/template/' + template.objectId;
               return $http.put(url, null, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
-          }  
+          },
+          updateConfParams: function (game) {
+            var url = baseUrl + '/api/game/conf/' + game.ownerId + '/' + game.objectId + '/params';
+            return $http.put(url, game.params, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+        }  
 
       };
   }
