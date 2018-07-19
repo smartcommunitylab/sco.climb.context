@@ -125,6 +125,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 auto_fine_a_scuola_distanza: 0,
                 const_daily_nominal_distance: 0,
                 const_zi_solo_bonus: 0,
+                giorni_chiusi: 0,
                 const_cloudy_bonus: 0,
                 const_rain_bonus: 0,
                 const_snow_bonus: 0,
@@ -290,9 +291,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame) {
-                actualDays = 1;
                 // calcuate actual days.
-
+                actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to);
+                actualDays = actualDays - parseInt($scope.currentGame.params.giorni_chiusi);
                 $scope.kmStimati = $scope.currentGame.params.const_daily_nominal_distance * actualDays;
 
                 return $scope.kmStimati;
@@ -300,27 +301,24 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         }
 
-        // $scope.calculateKMBonus = function () {
-        //     if ($scope.currentGame) {
-        //         $scope.currentGame.params.km_bonus = (
-        //             parseInt($scope.currentGame.params.const_zi_solo_bonus) +
-        //             parseInt($scope.currentGame.params.const_cloudy_bonus) +
-        //             parseInt($scope.currentGame.params.const_rain_bonus) +
-        //             parseInt($scope.currentGame.params.const_snow_bonus) +
-        //             parseInt($scope.currentGame.params.const_ZeroImpactDayClass_bonus) +
-        //             parseInt($scope.currentGame.params.const_NoCarDayClass_bonus)
-        //         ) / 1000;
-        //         return $scope.currentGame.params.km_bonus;
-        //     } else {
-        //         return 0;
-        //     }
-
-        // }
-
         $scope.calculateKMTarget = function () {
             if ($scope.currentGame) {
                 return ($scope.kmStimati + parseInt($scope.currentGame.params.km_bonus));
             }
+        }
+
+        $scope.getNumWorkDays = function (startTS, endTS) {
+            var numWorkDays = 0;
+            var currentDate = new Date(startTS);
+            var endDate = new Date(endTS)
+            while (currentDate <= endDate) {
+                // Skips Sunday and Saturday
+                if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+                    numWorkDays++;
+                }
+                currentDate = new Date(currentDate.setTime( currentDate.getTime() + 1 * 86400000 ));
+            }
+            return numWorkDays;
         }
 
     });
