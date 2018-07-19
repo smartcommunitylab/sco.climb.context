@@ -10,7 +10,7 @@
                 <label style="font-style: italic; font-weight: normal">Numero studenti</label>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <label style="font-style: italic; font-weight: normal">Distanza media(Km)</label>
+                <label style="font-style: italic; font-weight: normal">Distanza media (meters)</label>
             </div>
         </div>
         <div class="row">
@@ -20,10 +20,10 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.piedi_o_bici_in_autonomia_studenti" />
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.piedi_o_bici_in_autonomia_distanza" />
             </div>
         </div>
         <div class="row">
@@ -33,10 +33,10 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.piedi_o_bici_con_adulti_studenti" />
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.piedi_o_bici_con_adulti_distanza" />
             </div>
         </div>
         <div class="row">
@@ -46,10 +46,10 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.scuolabus_o_autobus_studenti" />
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.scuolabus_o_autobus_distanza" />
             </div>
         </div>
         <div class="row">
@@ -59,10 +59,10 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.parcheggio_attestamento_studenti" />
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.parcheggio_attestamento_distanza" />
             </div>
         </div>
         <div class="row">
@@ -72,10 +72,10 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.auto_fine_a_scuola_studenti" />
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.auto_fine_a_scuola_distanza" />
             </div>
         </div>
         <div class="row">
@@ -85,7 +85,8 @@
             </div>
             <div class="col-lg-6">
                 <p>&emsp;
-                    <b>Velocità stimata(KM/gg):</b> 78,5</p>
+                    <b>Velocità stimata(KM/gg): {{calculateCDND()}}</b>
+                </p>
             </div>
         </div>
         <br/>
@@ -127,47 +128,51 @@
             </p>
         </div>
         <div class="row">
-            <div class="col-lg-3"><p>&emsp;<b>Bonus autonomia:</b></p></div>
+            <div class="col-lg-3"><p>&emsp;<b>Bonus autonomia (meters):</b></p></div>
             <div class="col-lg-3" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_zi_solo_bonus" />
+            </div>
+            <div class="col-lg-3"><p>&emsp;<b>Giorni chiusi:</b></p></div>
+            <div class="col-lg-3" style="margin-bottom: 20px;">
+                <input class="form-control" type="text" ng-model="currentGame.params.giorni_chiusi" />
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3"><p>&emsp;<b>Bonus meteo:</b></p></div>
+            <div class="col-lg-3"><p>&emsp;<b>Bonus meteo (meters):</b></p></div>
             <div class="col-lg-1">nuovoloso</div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_cloudy_bonus" />
             </div>
             <div class="col-lg-1">pioggia</div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_rain_bonus" />
             </div>
             <div class="col-lg-1">neve</div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_snow_bonus" />
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4"><p>&emsp;<b>Bonus performance:</b></p></div>
+            <div class="col-lg-4"><p>&emsp;<b>Bonus performance (meters):</b></p></div>
             <div class="col-lg-2">giorno impatto zero</div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
             </div>
             <div class="col-lg-2">giorno senz'auto</div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.const_NoCarDayClass_bonus" />
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4"><p>&emsp;<b>Km stimati:</b> 8800</p></div>
+            <div class="col-lg-4"><p>&emsp;<b>Km stimati: {{calculateKMStimati()}}</b></p></div>
             <div class="col-lg-2">
-                <b>km bonus</b>
+                <b>km sfide:</b>
             </div>
             <div class="col-lg-2" style="margin-bottom: 20px;">
-                <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+                <input class="form-control" type="text" ng-model="currentGame.params.km_bonus" />
             </div>
             <div class="col-lg-4">
-                <b>Km target:</b> 10000</p>
+                <b>Km target: {{calculateKMTarget()}}</b></p>
             </div>
         </div>
     </fieldset>

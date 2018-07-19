@@ -84,7 +84,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     classRooms: [],
                     ownerId: $stateParams.idDomain,
                     schoolId: $stateParams.idSchool,
-                    instituteId: $stateParams.idInstitute
+                    instituteId: $stateParams.idInstitute,
                 }
                 $scope.saveData = DataService.saveData;
             }
@@ -111,6 +111,40 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         alert('Errore nel caricamento delle classi.');
                     }
                 );
+
+            $scope.currentGame.params = {
+                piedi_o_bici_in_autonomia_studenti: 0,
+                piedi_o_bici_in_autonomia_distanza: 0,
+                piedi_o_bici_con_adulti_studenti: 0,
+                piedi_o_bici_con_adulti_distanza: 0,
+                scuolabus_o_autobus_studenti: 0,
+                scuolabus_o_autobus_distanza: 0,
+                parcheggio_attestamento_studenti: 0,
+                parcheggio_attestamento_distanza: 0,
+                auto_fine_a_scuola_studenti: 0,
+                auto_fine_a_scuola_distanza: 0,
+                const_daily_nominal_distance: 0,
+                const_zi_solo_bonus: 0,
+                const_cloudy_bonus: 0,
+                const_rain_bonus: 0,
+                const_snow_bonus: 0,
+                const_ZeroImpactDayClass_bonus: 0,
+                const_NoCarDayClass_bonus: 0,
+                km_bonus: 0
+            }
+            // read params of pedibus game configuration
+            DataService.getGameConfData('gameconfigbyid', { "ownerId": $stateParams.idDomain, "confId": $stateParams.idGame }).then(
+                function (response) {
+                    console.log('Caricamento della config specifica andata a buon fine.');
+                    var specificConfig = response.data;
+                    if (specificConfig.params) {
+                        $scope.currentGame.params = specificConfig.params;
+                    }
+                }, function () {
+                    alert('Errore nel caricamento della config specifica.');
+                }
+            );
+
         }
 
         if ($stateParams.idGame) {
@@ -132,53 +166,53 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         // Save the changes made to the path
         $scope.save = function () {
 
+            if (checkFields()) {
+                // Salvataggio date in timestamp Unix (ms)
+                $scope.currentGame.from = $scope.startDate.getTime();
+                $scope.currentGame.to = $scope.endDate.getTime();
 
-            if (this.selectedTab == 'info') {
-                if (checkFields()) {
-                    // Salvataggio date in timestamp Unix (ms)
-                    $scope.currentGame.from = $scope.startDate.getTime();
-                    $scope.currentGame.to = $scope.endDate.getTime();
+                // Salvataggio orari di inizio e fine raccolta dati
+                if (this.enablePiediBusParams) {
+                    $scope.currentGame.fromHour = $scope.collectFromHour.toTimeString().slice(0, 5);
+                    $scope.currentGame.toHour = $scope.collectToHour.toTimeString().slice(0, 5);
+                }
 
-                    // Salvataggio orari di inizio e fine raccolta dati
-                    if (this.enablePiediBusParams) {
-                        $scope.currentGame.fromHour = $scope.collectFromHour.toTimeString().slice(0, 5);
-                        $scope.currentGame.toHour = $scope.collectToHour.toTimeString().slice(0, 5);
+                $scope.currentGame.classRooms = [];
+                $scope.classes.forEach(function (entry) {
+                    if (entry.value) {
+                        $scope.currentGame.classRooms.push(entry.name);
                     }
-                    
-                    $scope.currentGame.classRooms = [];
-                    $scope.classes.forEach(function (entry) {
-                        if (entry.value) {
-                            $scope.currentGame.classRooms.push(entry.name);
-                        }
-                    });
+                });
 
-                    $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                        function (response) {
-                            console.log('Salvataggio dati a buon fine.');
-                            if ($scope.currentGame.objectId) { //edited
-                                for (var i = 0; i < $scope.games.length; i++) {
-                                    if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
-                                }
-                            } else {
-                                if ($scope.games) $scope.games.push(response.data);
+                $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+                    function (response) {
+                        console.log('Salvataggio dati a buon fine.');
+                        if ($scope.currentGame.objectId) { //edited
+                            for (var i = 0; i < $scope.games.length; i++) {
+                                if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
                             }
-                            $state.go('root.games-list');
-                        }, function () {
-                            alert('Errore nella richiesta.');
+                        } else {
+                            if ($scope.games) $scope.games.push(response.data);
                         }
-                    );
-                }
-                else {
-                    $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e che le date siano valide.";
-                    $timeout(function () {
-                        $rootScope.modelErrors = '';
-                    }, 5000);
-                }
-            } else if (this.selectedTab == 'params') {
-                // call update params API.
-                alert('saving PARAMS');
-            }
 
+                        DataService.updateConfParams($scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+                            function (response) {
+                                console.log('Salvataggio params a buon fine.');
+                                $state.go('root.games-list');
+                            });
+
+
+                    }, function () {
+                        alert('Errore nella richiesta.');
+                    }
+                );
+            }
+            else {
+                $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e che le date siano valide.";
+                $timeout(function () {
+                    $rootScope.modelErrors = '';
+                }, 5000);
+            }
         };
 
         // Controlla se ci sono campi vuoti e se le ore e le date di fine sono precedenti o uguali a quelle di inizio comparando le stringhe
@@ -238,6 +272,55 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         }
         $scope.classToggled = function () {
             $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) { return cl.value; })
+        }
+
+        $scope.calculateCDND = function () {
+            if ($scope.currentGame) {
+                $scope.currentGame.params.const_daily_nominal_distance = (
+                    (parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_distanza)) +
+                    (parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_distanza)) +
+                    (parseInt($scope.currentGame.params.scuolabus_o_autobus_studenti) * parseInt($scope.currentGame.params.scuolabus_o_autobus_distanza)) +
+                    (parseInt($scope.currentGame.params.parcheggio_attestamento_studenti) * parseInt($scope.currentGame.params.parcheggio_attestamento_distanza)) +
+                    (parseInt($scope.currentGame.params.auto_fine_a_scuola_studenti) * parseInt($scope.currentGame.params.auto_fine_a_scuola_distanza))
+                ) / 1000;
+
+                return $scope.currentGame.params.const_daily_nominal_distance;
+            }
+        };
+
+        $scope.calculateKMStimati = function () {
+            if ($scope.currentGame) {
+                actualDays = 1;
+                // calcuate actual days.
+
+                $scope.kmStimati = $scope.currentGame.params.const_daily_nominal_distance * actualDays;
+
+                return $scope.kmStimati;
+            }
+
+        }
+
+        // $scope.calculateKMBonus = function () {
+        //     if ($scope.currentGame) {
+        //         $scope.currentGame.params.km_bonus = (
+        //             parseInt($scope.currentGame.params.const_zi_solo_bonus) +
+        //             parseInt($scope.currentGame.params.const_cloudy_bonus) +
+        //             parseInt($scope.currentGame.params.const_rain_bonus) +
+        //             parseInt($scope.currentGame.params.const_snow_bonus) +
+        //             parseInt($scope.currentGame.params.const_ZeroImpactDayClass_bonus) +
+        //             parseInt($scope.currentGame.params.const_NoCarDayClass_bonus)
+        //         ) / 1000;
+        //         return $scope.currentGame.params.km_bonus;
+        //     } else {
+        //         return 0;
+        //     }
+
+        // }
+
+        $scope.calculateKMTarget = function () {
+            if ($scope.currentGame) {
+                return ($scope.kmStimati + parseInt($scope.currentGame.params.km_bonus));
+            }
         }
 
     });
