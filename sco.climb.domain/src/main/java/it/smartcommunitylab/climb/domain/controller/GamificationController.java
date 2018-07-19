@@ -431,6 +431,33 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/students", method = RequestMethod.GET)
+	public @ResponseBody Integer getStudentByClasses(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestParam List<String> classes,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		int result = 0;
+		List<Child> children = storage.getChildrenBySchool(ownerId, instituteId, schoolId);
+		for(Child child : children) {
+			if(child.isActiveForGame()) {
+				if(classes.contains(child.getClassRoom())) {
+					result++;
+				}
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getStudentByClasses[%s]: %s - %s - %s", ownerId, instituteId, schoolId, result));
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusGame> getPedibusGames(
 			@PathVariable String ownerId,
