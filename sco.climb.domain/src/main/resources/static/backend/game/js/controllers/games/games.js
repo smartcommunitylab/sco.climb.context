@@ -278,6 +278,12 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 });
         }
 
+        // refresh of checkbox while switching between views
+        if ($scope.currentGame) {
+            $scope.classToggled();
+        }
+        
+
     })
 
 
@@ -285,17 +291,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.$parent.selectedTab = 'params';
 
         $scope.$on('gameLoaded', function (e) {
-            $scope.classToggled();
+            // Variabili per date-picker(fix for refresh issue on parametri page)
+            $scope.$parent.dateFormat = 'dd/MM/yyyy';
+            $scope.$parent.startDate = new Date();
+            $scope.$parent.endDate = new Date();
+            $scope.$parent.isCalendarOpen = [false, false];
+            $scope.$parent.minDate = new Date(1970, 1, 1);
+            $scope.$parent.startDate.setTime($scope.currentGame.from);
+            $scope.$parent.endDate.setTime($scope.currentGame.to);
         });
-
-        $scope.toggleSelectedClasses = function () {
-            $scope.$parent.classes.forEach(function (currentClass) {
-                currentClass.value = $scope.classesAllSelected;
-            });
-        }
-        $scope.classToggled = function () {
-            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) { return cl.value; })
-        }
 
         $scope.calculateCDND = function () {
             if ($scope.currentGame) {
@@ -343,4 +347,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             return numWorkDays;
         }
 
+
+        
     });
