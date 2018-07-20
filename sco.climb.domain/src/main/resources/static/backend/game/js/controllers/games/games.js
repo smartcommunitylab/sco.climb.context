@@ -198,7 +198,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     isValidate = false;
                 }
             }
-            
+
             if (this.enablePiediBusParams) {
                 if ($scope.collectToHour.toTimeString().localeCompare($scope.collectFromHour.toTimeString(), { numeric: true }) <= 0) {
                     isValidate = false;    
@@ -258,6 +258,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             DataService.getNrOfStudents($scope.currentGame.ownerId, $scope.currentGame.instituteId, $scope.currentGame.schoolId, selectedClasses).then(
                 function (response) {
                     $scope.nrOfStudenti = response.data;
+                    $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
                 });
         }
 
@@ -349,6 +350,16 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 return $scope.currentGame.params.const_daily_nominal_distance;
             }
         };
+
+        $scope.calculateSS = function () { 
+            if ($scope.currentGame && $scope.currentGame.params) {
+                return ($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti +
+                    $scope.currentGame.params.piedi_o_bici_con_adulti_studenti +
+                    $scope.currentGame.params.scuolabus_o_autobus_studenti +
+                    $scope.currentGame.params.parcheggio_attestamento_studenti +
+                    $scope.currentGame.params.auto_fine_a_scuola_studenti);
+            }            
+        }
 
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
