@@ -29,20 +29,17 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                         }, function (error) {
                             if (error.data.errorMsg == 'game conf not found') {
                                 var titleMsg = 'Scegli un template per il gioco';
-                                createDialog('templates/modals/back.html', {
+                                createDialog(null, {
                                     id: 'back-dialog',
-                                    title: titleMsg,
+                                    title: 'Attenzione!',
                                     success: {
                                         label: 'Ok',
-                                    }
+                                    },
+                                    template: '<p>' + titleMsg + '</p>'
                                 });
                             }
-
                         }
                     );
-                    // $scope.configs.forEach(config => {
-                    //     formatIntFields(config);
-                    // });
                 }, function () {
                     alert('Errore nel caricamento della config.');
                 }
@@ -54,20 +51,6 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
 
 
         $scope.initController();
-
-
-        // function formatIntFields(config) {
-        //     config.params.groups.forEach(group => {
-        //         group.fields.forEach(field => {
-        //             if (!field.value) {
-        //                 field.value = field.defaultValue;
-        //             }
-        //             if (field.type == "number") {
-        //                 field.value = parseInt(field.value);
-        //             }   
-        //         });
-        //     });
-        // }
 
         // Exit without saving changes
         $scope.back = function () {
@@ -84,9 +67,9 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                 titleMsg = 'Gioco già istanziato. Sei sicuro di cambiare template?';
             }
 
-            createDialog('templates/modals/back.html', {
+            createDialog(null, {
                 id: 'back-dialog',
-                title: titleMsg,
+                title: 'Attenzione!',
                 success: {
                     label: 'Conferma',
                     fn: function () {
@@ -102,12 +85,11 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                                 }
                             }
                         );
-
+    
                     }
-                }
+                },
+                template: '<p>' + titleMsg + '</p>',
             });
-
-
         };
 
     });
