@@ -1,6 +1,6 @@
 angular.module('consoleControllers.gameconfig', ['ngSanitize'])
 
-    .controller('GameConfigCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, createDialog) {
+    .controller('GameConfigCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService, createDialog) {
 
         $scope.initController = function () {
             $scope.isNewGameConf = true;
@@ -26,6 +26,14 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                             }
                             $scope.selectedConfig = $scope.configs[i];
                             $scope.$parent.selectedConfig = $scope.selectedConfig;
+                            MainDataService.getGames($stateParams.idSchool).then(function (response) {
+                                $scope.games = response.data;
+                                $scope.games.forEach(game => {
+                                    if (game.objectId == $stateParams.idGame) {
+                                        $scope.selectedGame = game;
+                                    }
+                                });
+                            });
                         }, function (error) {
                             if (error.data.errorMsg == 'game conf not found') {
                                 var titleMsg = 'Scegli un template per il gioco';
@@ -62,8 +70,10 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
             $scope.selectedConfig = $scope.configs[i];
             $scope.selectedConfig.pedibusGameId = $stateParams.idGame;
             $scope.selectedConfig.ownerId = $stateParams.idDomain;
+
             var titleMsg = 'Sei sicuro di salvare template?';
-            if ($scope.$parent.selectedGame && $scope.$parent.selectedGame.gameId) {
+            // identify and select game object.
+            if ($scope.selectedGame.gameId) {
                 titleMsg = 'Gioco già istanziato. Sei sicuro di cambiare template?';
             }
 
@@ -85,11 +95,12 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                                 }
                             }
                         );
-    
+
                     }
                 },
                 template: '<p>' + titleMsg + '</p>',
             });
-        };
-
+        }
+            
+        
     });
