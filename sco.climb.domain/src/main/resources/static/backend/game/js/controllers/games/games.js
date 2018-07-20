@@ -258,20 +258,11 @@ angular.module('consoleControllers.games', ['ngSanitize'])
     })
 
 
-    .controller('GameParamsCtrl', function ($scope, DataService) {
+    .controller('GameParamsCtrl', function ($scope, DataService, createDialog) {
         $scope.$parent.selectedTab = 'params';
 
-        $scope.$on('gameLoaded', function (e) {
-            // Variabili per date-picker(fix for refresh issue on parametri page)
-            $scope.$parent.dateFormat = 'dd/MM/yyyy';
-            $scope.$parent.startDate = new Date();
-            $scope.$parent.endDate = new Date();
-            $scope.$parent.isCalendarOpen = [false, false];
-            $scope.$parent.minDate = new Date(1970, 1, 1);
-            $scope.$parent.startDate.setTime($scope.currentGame.from);
-            $scope.$parent.endDate.setTime($scope.currentGame.to);
 
-
+        $scope.initParamController = function () {
             $scope.currentGame.params = {
                 piedi_o_bici_in_autonomia_studenti: 0,
                 piedi_o_bici_in_autonomia_distanza: 0,
@@ -301,10 +292,33 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     if (specificConfig.params) {
                         $scope.currentGame.params = specificConfig.params;
                     }
-                }, function () {
-                    alert('Errore nel caricamento della config specifica.');
+                }, function (error) {
+                    if (error.data.errorMsg == 'game conf not found') {
+                        var titleMsg = 'Nessuno template associato con il gioco';
+                        createDialog(null, {
+                            id: 'back-dialog',
+                            title: 'Attenzione!',
+                            success: {
+                                label: 'Ok',
+                            },
+                            template: '<p>' + titleMsg + '</p>'
+                        });
+                    }
                 }
             );
+        }
+
+        $scope.$on('gameLoaded', function (e) {
+            // Variabili per date-picker(fix for refresh issue on parametri page)
+            $scope.$parent.dateFormat = 'dd/MM/yyyy';
+            $scope.$parent.startDate = new Date();
+            $scope.$parent.endDate = new Date();
+            $scope.$parent.isCalendarOpen = [false, false];
+            $scope.$parent.minDate = new Date(1970, 1, 1);
+            $scope.$parent.startDate.setTime($scope.currentGame.from);
+            $scope.$parent.endDate.setTime($scope.currentGame.to);
+
+            $scope.initParamController();
 
         });
 
@@ -352,6 +366,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
             }
             return numWorkDays;
+        }
+
+        if ($scope.currentGame) {
+            $scope.initParamController();
         }
 
 
