@@ -239,9 +239,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
     })
 
 
-    .controller('GameInfoCtrl', function ($scope) {
+    .controller('GameInfoCtrl', function ($scope, DataService) {
         $scope.$parent.selectedTab = 'info';
         $scope.$parent.enablePiediBusParams = false;
+        $scope.nrOfStudenti = 0;
 
         $scope.$on('gameLoaded', function (e) {
             $scope.classToggled();
@@ -251,9 +252,30 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.$parent.classes.forEach(function (currentClass) {
                 currentClass.value = $scope.classesAllSelected;
             });
+            $scope.classToggled();
         }
+
         $scope.classToggled = function () {
-            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) { return cl.value; })
+            $scope.selectedClasses = [];
+            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
+                return cl.value;
+            })
+
+            $scope.$parent.classes.forEach(function (cl) {
+                if (cl.value) {
+                    $scope.selectedClasses.push(cl.name);
+                }
+            })
+
+            $scope.calculateStudenti($scope.selectedClasses);
+        }
+
+        $scope.calculateStudenti = function (selectedClasses) {
+            //call api and calculate nr.of studenti.
+            DataService.getNrOfStudents($scope.currentGame.ownerId, $scope.currentGame.instituteId, $scope.currentGame.schoolId, selectedClasses).then(
+                function (response) {
+                    $scope.nrOfStudenti = response.data;
+                });
         }
 
     })
@@ -278,11 +300,11 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.calculateCDND = function () {
             if ($scope.currentGame) {
                 $scope.currentGame.params.const_daily_nominal_distance = (
-                    (parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_distanza)) +
-                    (parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_distanza)) +
-                    (parseInt($scope.currentGame.params.scuolabus_o_autobus_studenti) * parseInt($scope.currentGame.params.scuolabus_o_autobus_distanza)) +
-                    (parseInt($scope.currentGame.params.parcheggio_attestamento_studenti) * parseInt($scope.currentGame.params.parcheggio_attestamento_distanza)) +
-                    (parseInt($scope.currentGame.params.auto_fine_a_scuola_studenti) * parseInt($scope.currentGame.params.auto_fine_a_scuola_distanza))
+                    (parseFloat($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti) * parseFloat($scope.currentGame.params.piedi_o_bici_in_autonomia_distanza)) +
+                    (parseFloat($scope.currentGame.params.piedi_o_bici_con_adulti_studenti) * parseFloat($scope.currentGame.params.piedi_o_bici_con_adulti_distanza)) +
+                    (parseFloat($scope.currentGame.params.scuolabus_o_autobus_studenti) * parseFloat($scope.currentGame.params.scuolabus_o_autobus_distanza)) +
+                    (parseFloat($scope.currentGame.params.parcheggio_attestamento_studenti) * parseFloat($scope.currentGame.params.parcheggio_attestamento_distanza)) +
+                    (parseFloat($scope.currentGame.params.auto_fine_a_scuola_studenti) * parseFloat($scope.currentGame.params.auto_fine_a_scuola_distanza))
                 ) / 1000;
 
                 return $scope.currentGame.params.const_daily_nominal_distance;
@@ -293,7 +315,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             if ($scope.currentGame) {
                 // calcuate actual days.
                 actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to);
-                actualDays = actualDays - parseInt($scope.currentGame.params.giorni_chiusi);
+                actualDays = actualDays - parseFloat($scope.currentGame.params.giorni_chiusi);
                 $scope.kmStimati = $scope.currentGame.params.const_daily_nominal_distance * actualDays;
 
                 return $scope.kmStimati;
@@ -303,7 +325,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         $scope.calculateKMTarget = function () {
             if ($scope.currentGame) {
-                return ($scope.kmStimati + parseInt($scope.currentGame.params.km_bonus));
+                return ($scope.kmStimati + parseFloat($scope.currentGame.params.km_bonus));
             }
         }
 
