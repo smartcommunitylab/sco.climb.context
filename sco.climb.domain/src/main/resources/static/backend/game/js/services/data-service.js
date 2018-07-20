@@ -170,7 +170,7 @@ function ($q, $http, $rootScope, $timeout) {
           			});
             },
             initGameCall: function (ownerId, pedibusGameId) {
-                return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/init", 
+                return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/deploy", 
                     {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
                 );              
             },
