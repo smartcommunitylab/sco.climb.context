@@ -57,5 +57,12 @@
   	"pedibus_trips": ["daily","weekly"],
   	"absence_count": ["daily","weekly"],
   	"total_distance": ["daily","weekly"]
+  },
+  "tasks": {
+  	"team classification weekly": {
+  		"point":"total_distance",
+  		"period":"weekly",
+  		"type": "incremental" 
+  	}
   }
 }
