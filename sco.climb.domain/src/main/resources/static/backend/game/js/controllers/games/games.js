@@ -112,40 +112,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     }
                 );
 
-            $scope.currentGame.params = {
-                piedi_o_bici_in_autonomia_studenti: 0,
-                piedi_o_bici_in_autonomia_distanza: 0,
-                piedi_o_bici_con_adulti_studenti: 0,
-                piedi_o_bici_con_adulti_distanza: 0,
-                scuolabus_o_autobus_studenti: 0,
-                scuolabus_o_autobus_distanza: 0,
-                parcheggio_attestamento_studenti: 0,
-                parcheggio_attestamento_distanza: 0,
-                auto_fine_a_scuola_studenti: 0,
-                auto_fine_a_scuola_distanza: 0,
-                const_daily_nominal_distance: 0,
-                const_zi_solo_bonus: 0,
-                giorni_chiusi: 0,
-                const_cloudy_bonus: 0,
-                const_rain_bonus: 0,
-                const_snow_bonus: 0,
-                const_ZeroImpactDayClass_bonus: 0,
-                const_NoCarDayClass_bonus: 0,
-                km_bonus: 0
-            }
-            // read params of pedibus game configuration
-            DataService.getGameConfData('gameconfigbyid', { "ownerId": $stateParams.idDomain, "confId": $stateParams.idGame }).then(
-                function (response) {
-                    console.log('Caricamento della config specifica andata a buon fine.');
-                    var specificConfig = response.data;
-                    if (specificConfig.params) {
-                        $scope.currentGame.params = specificConfig.params;
-                    }
-                }, function () {
-                    alert('Errore nel caricamento della config specifica.');
-                }
-            );
-
         }
 
         if ($stateParams.idGame) {
@@ -196,11 +162,16 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             if ($scope.games) $scope.games.push(response.data);
                         }
 
-                        DataService.updateConfParams($scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                            function (response) {
-                                console.log('Salvataggio params a buon fine.');
-                                $state.go('root.games-list');
-                            });
+                        if ($scope.selectedConfig) {
+                            DataService.updateConfParams($scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+                                function (response) {
+                                    console.log('Salvataggio params a buon fine.');
+                                    $state.go('root.games-list');
+                                });
+
+                        } else {
+                            $state.go('root.games-list');
+                        }
 
 
                     }, function () {
@@ -239,9 +210,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
     })
 
 
-    .controller('GameInfoCtrl', function ($scope) {
+    .controller('GameInfoCtrl', function ($scope, DataService) {
         $scope.$parent.selectedTab = 'info';
         $scope.$parent.enablePiediBusParams = false;
+        $scope.nrOfStudenti = 0;
 
         $scope.$on('gameLoaded', function (e) {
             $scope.classToggled();
@@ -251,38 +223,99 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.$parent.classes.forEach(function (currentClass) {
                 currentClass.value = $scope.classesAllSelected;
             });
+            $scope.classToggled();
         }
+
         $scope.classToggled = function () {
-            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) { return cl.value; })
+            $scope.selectedClasses = [];
+            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
+                return cl.value;
+            })
+
+            $scope.$parent.classes.forEach(function (cl) {
+                if (cl.value) {
+                    $scope.selectedClasses.push(cl.name);
+                }
+            })
+
+            $scope.calculateStudenti($scope.selectedClasses);
         }
+
+        $scope.calculateStudenti = function (selectedClasses) {
+            //call api and calculate nr.of studenti.
+            DataService.getNrOfStudents($scope.currentGame.ownerId, $scope.currentGame.instituteId, $scope.currentGame.schoolId, selectedClasses).then(
+                function (response) {
+                    $scope.nrOfStudenti = response.data;
+                });
+        }
+
+        // refresh of checkbox while switching between views
+        if ($scope.currentGame) {
+            $scope.classToggled();
+        }
+
 
     })
 
 
-    .controller('GameParamsCtrl', function ($scope) {
+    .controller('GameParamsCtrl', function ($scope, DataService) {
         $scope.$parent.selectedTab = 'params';
 
         $scope.$on('gameLoaded', function (e) {
-            $scope.classToggled();
+            // Variabili per date-picker(fix for refresh issue on parametri page)
+            $scope.$parent.dateFormat = 'dd/MM/yyyy';
+            $scope.$parent.startDate = new Date();
+            $scope.$parent.endDate = new Date();
+            $scope.$parent.isCalendarOpen = [false, false];
+            $scope.$parent.minDate = new Date(1970, 1, 1);
+            $scope.$parent.startDate.setTime($scope.currentGame.from);
+            $scope.$parent.endDate.setTime($scope.currentGame.to);
+
+
+            $scope.currentGame.params = {
+                piedi_o_bici_in_autonomia_studenti: 0,
+                piedi_o_bici_in_autonomia_distanza: 0,
+                piedi_o_bici_con_adulti_studenti: 0,
+                piedi_o_bici_con_adulti_distanza: 0,
+                scuolabus_o_autobus_studenti: 0,
+                scuolabus_o_autobus_distanza: 0,
+                parcheggio_attestamento_studenti: 0,
+                parcheggio_attestamento_distanza: 0,
+                auto_fine_a_scuola_studenti: 0,
+                auto_fine_a_scuola_distanza: 0,
+                const_daily_nominal_distance: 0,
+                const_zi_solo_bonus: 0,
+                giorni_chiusi: 0,
+                const_cloudy_bonus: 0,
+                const_rain_bonus: 0,
+                const_snow_bonus: 0,
+                const_ZeroImpactDayClass_bonus: 0,
+                const_NoCarDayClass_bonus: 0,
+                km_bonus: 0
+            }
+            // read params of pedibus game configuration
+            DataService.getGameConfData('gameconfigbyid', { "ownerId": $scope.currentGame.ownerId, "confId": $scope.currentGame.objectId }).then(
+                function (response) {
+                    console.log('Caricamento della config specifica andata a buon fine.');
+                    var specificConfig = response.data;
+                    if (specificConfig.params) {
+                        $scope.currentGame.params = specificConfig.params;
+                    }
+                }, function () {
+                    alert('Errore nel caricamento della config specifica.');
+                }
+            );
+
         });
 
-        $scope.toggleSelectedClasses = function () {
-            $scope.$parent.classes.forEach(function (currentClass) {
-                currentClass.value = $scope.classesAllSelected;
-            });
-        }
-        $scope.classToggled = function () {
-            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) { return cl.value; })
-        }
-
         $scope.calculateCDND = function () {
-            if ($scope.currentGame) {
+            if ($scope.currentGame && $scope.currentGame.params) {
                 $scope.currentGame.params.const_daily_nominal_distance = (
-                    (parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_in_autonomia_distanza)) +
-                    (parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_studenti) * parseInt($scope.currentGame.params.piedi_o_bici_con_adulti_distanza)) +
-                    (parseInt($scope.currentGame.params.scuolabus_o_autobus_studenti) * parseInt($scope.currentGame.params.scuolabus_o_autobus_distanza)) +
-                    (parseInt($scope.currentGame.params.parcheggio_attestamento_studenti) * parseInt($scope.currentGame.params.parcheggio_attestamento_distanza)) +
-                    (parseInt($scope.currentGame.params.auto_fine_a_scuola_studenti) * parseInt($scope.currentGame.params.auto_fine_a_scuola_distanza))
+                    (parseFloat($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti) * parseFloat($scope.currentGame.params.piedi_o_bici_in_autonomia_distanza)) +
+                    (parseFloat($scope.currentGame.params.piedi_o_bici_con_adulti_studenti) * parseFloat($scope.currentGame.params.piedi_o_bici_con_adulti_distanza)) +
+                    (parseFloat($scope.currentGame.params.scuolabus_o_autobus_studenti) * parseFloat($scope.currentGame.params.scuolabus_o_autobus_distanza)) +
+                    (parseFloat($scope.currentGame.params.parcheggio_attestamento_studenti) * parseFloat($scope.currentGame.params.parcheggio_attestamento_distanza)) +
+                    (parseFloat($scope.currentGame.params.auto_fine_a_scuola_studenti) * parseFloat($scope.currentGame.params.auto_fine_a_scuola_distanza))
                 ) / 1000;
 
                 return $scope.currentGame.params.const_daily_nominal_distance;
@@ -290,10 +323,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         };
 
         $scope.calculateKMStimati = function () {
-            if ($scope.currentGame) {
+            if ($scope.currentGame && $scope.currentGame.params) {
                 // calcuate actual days.
                 actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to);
-                actualDays = actualDays - parseInt($scope.currentGame.params.giorni_chiusi);
+                actualDays = actualDays - parseFloat($scope.currentGame.params.giorni_chiusi);
                 $scope.kmStimati = $scope.currentGame.params.const_daily_nominal_distance * actualDays;
 
                 return $scope.kmStimati;
@@ -302,8 +335,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         }
 
         $scope.calculateKMTarget = function () {
-            if ($scope.currentGame) {
-                return ($scope.kmStimati + parseInt($scope.currentGame.params.km_bonus));
+            if ($scope.currentGame && $scope.currentGame.params) {
+                return ($scope.kmStimati + parseFloat($scope.currentGame.params.km_bonus));
             }
         }
 
@@ -316,9 +349,11 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
                     numWorkDays++;
                 }
-                currentDate = new Date(currentDate.setTime( currentDate.getTime() + 1 * 86400000 ));
+                currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
             }
             return numWorkDays;
         }
+
+
 
     });
