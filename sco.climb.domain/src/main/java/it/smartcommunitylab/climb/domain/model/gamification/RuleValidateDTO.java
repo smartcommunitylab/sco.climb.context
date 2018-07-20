@@ -10,5 +10,8 @@ public class RuleValidateDTO {
 	public void setRule(String rule) {
 		this.rule = rule;
 	}
+
+
+
 	
 }

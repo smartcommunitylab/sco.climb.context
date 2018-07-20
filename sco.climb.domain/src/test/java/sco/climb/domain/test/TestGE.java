@@ -35,48 +35,6 @@ public class TestGE {
 	private String gameId = "5b4c5d33e4b0b12fd6fe03cf";
 	
 	@Test
-	public void testValidationConstants() throws Exception {
-		Map<String, String> params = new HashMap<>();
-		params.put("const_zi_solo_bonus", "200");
-		params.put("const_school_name", "Scuola Schmid 2A-B-C");
-		params.put("const_number_of_teams", "4");
-		params.put("const_NoCarDayClass_bonus", "5000");
-		params.put("const_ZeroImpactDayClass_bonus", "10000");
-		params.put("const_weekly_nominal_distance", "400000");
-		params.put("final_destination", "Trento");
-		
-		List<PedibusItineraryLeg> legs = new ArrayList<>();
-		PedibusItineraryLeg leg1 = new PedibusItineraryLeg();
-		leg1.setName("Parco Adamello Brenta");
-		leg1.setScore(70000);
-		legs.add(leg1);
-
-		PedibusItineraryLeg leg2 = new PedibusItineraryLeg();
-		leg2.setName("Trento");
-		leg2.setScore(3700000);
-		legs.add(leg2);
-
-		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
-		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		velocityEngine.init();
-		
-		VelocityContext context = new VelocityContext();
-		context.put("params", params);
-		context.put("legList", legs);
-		context.put("Utils", Utils.class);
-		
-		Template t = velocityEngine.getTemplate("game-template/constants_v1.vm");
-		
-		StringWriter writer = new StringWriter();
-		t.merge(context, writer);
-
-		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
-		ruleValidateDTO.setRule(writer.toString());
-		gengineUtils.validateRule(gameId, ruleValidateDTO);
-	}
-
-	@Test
 	public void testValidationClassday() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -100,6 +58,240 @@ public class TestGE {
 		ruleValidateDTO.setRule(writer.toString());
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
+	
+	@Test
+	public void testValidationWeeklyTask() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/weeklytasks_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationViaggiGiornalieri() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/challenge_ViaggiGiornalieri_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationPedibus() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/pedibus_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationScuolaSenzAuto() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/challenge_ScuolaSenzAuto_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationClassTrips() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/classtrips_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationCalendarTrips() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		params.put("const_pandr_distance", "100");
+		params.put("const_bus_distance", "100");
+		params.put("const_zeroimpact_distance", "100");
+		params.put("const_cloudy_bonus", "100");
+		params.put("const_rain_bonus", "100");
+		params.put("const_snow_bonus", "100");
+		
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/calendartrips_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+
+	@Test
+	public void testValidationLegsBadges() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		params.put("final_destination", "Trento e dintorni");
+		
+		List<PedibusItineraryLeg> legs = new ArrayList<>();
+		PedibusItineraryLeg leg1 = new PedibusItineraryLeg();
+		leg1.setName("Parco Adamello Brenta");
+		leg1.setScore(70000);
+		legs.add(leg1);
+		PedibusItineraryLeg leg2 = new PedibusItineraryLeg();
+		leg2.setName("Trento e dintorni");
+		leg2.setScore(3700000);
+		legs.add(leg2);
+
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		velocityEngine.init();
+		
+		VelocityContext context = new VelocityContext();
+		context.put("params", params);
+		context.put("legList", legs);
+		context.put("Utils", Utils.class);
+		
+		Template t = velocityEngine.getTemplate("game-template/legsbadges_v1.vm");
+		
+		StringWriter writer = new StringWriter();
+		t.merge(context, writer);
+
+		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+		ruleValidateDTO.setRule(writer.toString());
+		gengineUtils.validateRule(gameId, ruleValidateDTO);
+	}
+	
+//	@Test
+//	public void testValidationConstants() throws Exception {
+//		Map<String, String> params = new HashMap<>();
+//		params.put("const_zi_solo_bonus", "100");
+//		params.put("const_school_name", "Scuola Schmid 2A-B-C");
+//		params.put("const_number_of_teams", "4");
+//		params.put("const_NoCarDayClass_bonus", "100");
+//		params.put("const_ZeroImpactDayClass_bonus", "100");
+//		params.put("const_weekly_nominal_distance", "100");
+//		params.put("final_destination", "Trento");
+//		
+//		List<PedibusItineraryLeg> legs = new ArrayList<>();
+//		PedibusItineraryLeg leg1 = new PedibusItineraryLeg();
+//		leg1.setName("Parco Adamello Brenta");
+//		leg1.setScore(70000);
+//		legs.add(leg1);
+//
+//		PedibusItineraryLeg leg2 = new PedibusItineraryLeg();
+//		leg2.setName("Trento");
+//		leg2.setScore(3700000);
+//		legs.add(leg2);
+//
+//		VelocityEngine velocityEngine = new VelocityEngine();
+//		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
+//		velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+//		velocityEngine.init();
+//		
+//		VelocityContext context = new VelocityContext();
+//		context.put("params", params);
+//		context.put("legList", legs);
+//		context.put("Utils", Utils.class);
+//		
+//		Template t = velocityEngine.getTemplate("game-template/constants_v1.vm");
+//		
+//		StringWriter writer = new StringWriter();
+//		t.merge(context, writer);
+//
+//		RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+//		ruleValidateDTO.setRule(writer.toString());
+//		gengineUtils.validateRule(gameId, ruleValidateDTO);
+//	}
 
 }
 

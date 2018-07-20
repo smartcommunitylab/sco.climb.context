@@ -1314,6 +1314,17 @@ public class RepositoryManager {
 			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
 		}
 	}
+	
+	public PedibusGameConf removePedibusGameConf(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		PedibusGameConf gameConfDB = mongoTemplate.findOne(query, PedibusGameConf.class);
+		if(gameConfDB != null) {
+			mongoTemplate.findAndRemove(query, PedibusGame.class);
+			return gameConfDB;
+		}
+		return null;
+	}
+
 
 	public void removeMultimediaContentByItineraryId(String ownerId, String instituteId,
 			String schoolId, String itineraryId) {

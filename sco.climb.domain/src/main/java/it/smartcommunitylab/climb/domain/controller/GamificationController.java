@@ -216,9 +216,12 @@ public class GamificationController extends AuthController {
 					Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
 					StringWriter writer = new StringWriter();
 					t.merge(context, writer);
-					RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
-					ruleValidateDTO.setRule(writer.toString());
-					gengineUtils.validateRule(gameId, ruleValidateDTO);
+					String ruleContent = writer.toString();
+					if(!ruleName.contains("constants")) {
+						RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
+						ruleValidateDTO.setRule(ruleContent);
+						gengineUtils.validateRule(gameId, ruleValidateDTO);
+					}
 					RuleDTO ruleDTO = new RuleDTO();
 					ruleDTO.setName(ruleName);
 					ruleDTO.setContent(writer.toString());
@@ -380,6 +383,10 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.removePedibusGame(ownerId, pedibusGameId);
+		PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
+		if(gameConf != null) {
+			storage.removePedibusGameConf(ownerId, pedibusGameId);
+		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deletePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}
