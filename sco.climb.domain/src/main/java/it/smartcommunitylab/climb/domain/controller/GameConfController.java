@@ -113,6 +113,7 @@ public class GameConfController extends AuthController {
 		gameConf.setBadgeCollections(confTemplate.getBadgeCollections());
 		gameConf.setChallengeModels(confTemplate.getChallengeModels());
 		gameConf.setPoints(confTemplate.getPoints());
+		gameConf.setTasks(confTemplate.getTasks());
 		storage.savePedibusGameConf(gameConf);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("setConfTemplate: %s - %s", ownerId, pedibusGameId));

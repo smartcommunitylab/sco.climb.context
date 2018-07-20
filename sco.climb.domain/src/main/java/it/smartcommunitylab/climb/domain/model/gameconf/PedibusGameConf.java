@@ -18,6 +18,7 @@ public class PedibusGameConf extends BaseObject {
 	private List<String> badgeCollections = new ArrayList<>();
 	private Map<String, List<String>> challengeModels = new HashMap<>();
 	private Map<String, List<String>> points = new HashMap<>();
+	private Map<String, Map<String, String>> tasks = new HashMap<>();
 	private Map<String, String> params = new HashMap<>();
 	
 	public String getPedibusGameId() {
@@ -73,6 +74,12 @@ public class PedibusGameConf extends BaseObject {
 	}
 	public void setPoints(Map<String, List<String>> points) {
 		this.points = points;
+	}
+	public Map<String, Map<String, String>> getTasks() {
+		return tasks;
+	}
+	public void setTasks(Map<String, Map<String, String>> tasks) {
+		this.tasks = tasks;
 	}
 
 }

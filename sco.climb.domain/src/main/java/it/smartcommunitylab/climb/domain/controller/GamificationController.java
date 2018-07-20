@@ -65,6 +65,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConce
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.IncrementalClassificationDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
@@ -199,7 +200,24 @@ public class GamificationController extends AuthController {
 				storage.updatePedibusGameDeployed(ownerId, pedibusGameId, true);
 			} catch (Exception e) {
 				logger.error("Gamification engine game creation error: " + e.getClass() + " " + e.getMessage());
-				throw new StorageException("unable to create game");
+				throw new StorageException("unable to create game:" + e.getMessage());
+			}
+			//create tasks
+			try {
+				for(String classificationName : gameConf.getTasks().keySet()) {
+					Map<String, String> taskMap = gameConf.getTasks().get(classificationName);
+					IncrementalClassificationDTO classificationDTO = new IncrementalClassificationDTO();
+					classificationDTO.setClassificationName(classificationName);
+					classificationDTO.setName(classificationName);
+					classificationDTO.setItemType(taskMap.get("point"));
+					classificationDTO.setPeriodName(taskMap.get("period"));
+					classificationDTO.setItemsToNotificate(game.getClassRooms().size() + 1);
+					classificationDTO.setType(taskMap.get("type"));
+					gengineUtils.createTask(gameId, classificationDTO);
+				}
+			} catch (Exception e) {
+				logger.error("Gamification engine task creation error: " + e.getClass() + " " + e.getMessage());
+				throw new StorageException("unable to create task:" + e.getMessage());
 			}
 			//create rules
 			VelocityEngine velocityEngine = new VelocityEngine();
@@ -228,7 +246,7 @@ public class GamificationController extends AuthController {
 					gengineUtils.createRule(gameId, ruleDTO);
 				} catch (Exception e) {
 					logger.error("Gamification engine rule creation error: " + e.getClass() + " " + e.getMessage());
-					throw new StorageException("unable to create rule");
+					throw new StorageException("unable to create rule:" + e.getMessage());
 				}				
 			}			
 			//create challenges
@@ -241,7 +259,7 @@ public class GamificationController extends AuthController {
 					gengineUtils.createChallenge(gameId, challengeModel);
 				} catch (Exception e) {
 					logger.error("Gamification engine challenge creation error: " + e.getClass() + " " + e.getMessage());
-					throw new StorageException("unable to create challenge");
+					throw new StorageException("unable to create challenge:" + e.getMessage());
 				}
 			}
 		}		

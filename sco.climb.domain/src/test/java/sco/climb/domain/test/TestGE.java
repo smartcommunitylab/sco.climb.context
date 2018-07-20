@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
+import it.smartcommunitylab.climb.domain.model.gamification.IncrementalClassificationDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 
 
@@ -292,6 +293,18 @@ public class TestGE {
 //		ruleValidateDTO.setRule(writer.toString());
 //		gengineUtils.validateRule(gameId, ruleValidateDTO);
 //	}
+	
+	@Test
+	public void testClassification() throws Exception {
+		IncrementalClassificationDTO classificationDTO = new IncrementalClassificationDTO();
+		classificationDTO.setClassificationName("team classification weekly");
+		classificationDTO.setName("team classification weekly");
+		classificationDTO.setItemType("total_distance");
+		classificationDTO.setPeriodName("weekly");
+		classificationDTO.setItemsToNotificate(10);
+		classificationDTO.setType("incremental");
+		gengineUtils.createTask(gameId, classificationDTO);
+	}
 
 }
 

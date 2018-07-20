@@ -5,6 +5,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.IncrementalClassificationDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.Notification;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
@@ -151,6 +152,11 @@ public class GEngineUtils {
 	public void createPointConcept(String gameId, PointConcept pointConcept) throws Exception {
 		String address = gamificationURL + "/model/game/" + gameId + "/point";
 		HTTPUtils.post(address, pointConcept, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void createTask(String gameId, IncrementalClassificationDTO classification) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/incclassification";
+		HTTPUtils.post(address, classification, null, gamificationUser, gamificationPassword);
 	}
 	
 }
