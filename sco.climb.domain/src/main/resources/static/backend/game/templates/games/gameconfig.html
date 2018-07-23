@@ -1,8 +1,6 @@
 <div class="row">
     <div class="col-md-8 header-path-category">
-        <h4>{{isNewGameConf ? 'CREA NUOVE' : 'MODIFICA'}} REGOLE GIOCO</h4>
-        <p>I campi contrassegnati col simbolo
-            <span class="required-sign">*</span> sono obbligatori</p>
+        <h4>SCEGLI IL TEMPLATE DI CONFIGURAZIONE DEL GIOCO</h4>
     </div>
 </div>
 
@@ -31,9 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 right">
-                        <a ng-click="setTemplate($index)" class="btn btn-success" role="button" ng-disabled="template.saved">
-                            <i class="fa fas fa-check-circle" aria-hidden="true"> scegli</i>
-                        </a>
+                        <a ng-click="setTemplate($index)" class="btn btn-success" role="button" ng-disabled="template.saved">Scegli</a>
                     </div>
             </li>
         </ul>
