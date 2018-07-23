@@ -163,7 +163,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             if ($scope.games) $scope.games.push(response.data);
                         }
 
-                        if ($scope.selectedConfig) {
+                        if ($scope.currentGame) {
                             DataService.updateConfParams($scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                                 function (response) {
                                     console.log('Salvataggio params a buon fine.');
