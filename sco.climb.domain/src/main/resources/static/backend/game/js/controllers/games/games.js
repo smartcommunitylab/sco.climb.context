@@ -346,7 +346,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     ($scope.currentGame.params.scuolabus_o_autobus_studenti * $scope.currentGame.params.scuolabus_o_autobus_distanza) +
                     ($scope.currentGame.params.parcheggio_attestamento_studenti * $scope.currentGame.params.parcheggio_attestamento_distanza) +
                     ($scope.currentGame.params.auto_fine_a_scuola_studenti * $scope.currentGame.params.auto_fine_a_scuola_distanza)
-                ) / 1000;
+                );
 
                 return $scope.currentGame.params.const_daily_nominal_distance;
             }
@@ -367,7 +367,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 // calcuate actual days.
                 actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to);
                 actualDays = actualDays - $scope.currentGame.params.giorni_chiusi;
-                $scope.kmStimati = $scope.currentGame.params.const_daily_nominal_distance * actualDays;
+                $scope.kmStimati = ($scope.currentGame.params.const_daily_nominal_distance/1000) * actualDays;
 
                 return $scope.kmStimati;
             }
