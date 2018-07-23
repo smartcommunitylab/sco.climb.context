@@ -154,7 +154,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                     function (response) {
                         console.log('Salvataggio dati a buon fine.');
-                        $scope.currentGame = response.data;
+                        $scope.currentGame.objectId = response.data.objectId;
                         if ($scope.currentGame.objectId) { //edited
                             for (var i = 0; i < $scope.games.length; i++) {
                                 if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
