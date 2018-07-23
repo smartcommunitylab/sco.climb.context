@@ -1319,7 +1319,7 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGameConf gameConfDB = mongoTemplate.findOne(query, PedibusGameConf.class);
 		if(gameConfDB != null) {
-			mongoTemplate.findAndRemove(query, PedibusGame.class);
+			mongoTemplate.findAndRemove(query, PedibusGameConf.class);
 			return gameConfDB;
 		}
 		return null;
