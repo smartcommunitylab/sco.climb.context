@@ -5,6 +5,8 @@ import java.util.List;
 
 public class ChallengeModel {
 	private String name;
+	private String gameId;
+	private String id;
 	private List<String> variables = new ArrayList<>();
 	
 	public String getName() {
@@ -18,6 +20,18 @@ public class ChallengeModel {
 	}
 	public void setVariables(List<String> variables) {
 		this.variables = variables;
+	}
+	public String getGameId() {
+		return gameId;
+	}
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

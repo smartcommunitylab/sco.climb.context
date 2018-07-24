@@ -3,6 +3,7 @@ package it.smartcommunitylab.climb.domain.model.gamification;
 public class RuleDTO {
 	private String name;
 	private String content;
+	private String id;
 	
 	public String getName() {
 		return name;
@@ -15,5 +16,11 @@ public class RuleDTO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }

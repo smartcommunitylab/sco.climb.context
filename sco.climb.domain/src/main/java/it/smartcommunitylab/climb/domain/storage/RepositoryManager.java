@@ -813,6 +813,11 @@ public class RepositoryManager {
 			}
 		}
 	}
+	
+	public void removeCalendarDayByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, CalendarDay.class);
+	}
 
 	public PedibusGame savePedibusGame(PedibusGame game, String ownerId, boolean canUpdate) throws StorageException {
 		Query query = new Query(new Criteria("objectId").is(game.getObjectId()).and("ownerId").is(ownerId));
@@ -979,6 +984,11 @@ public class RepositoryManager {
 		mongoTemplate.save(excursion);
 	}
 	
+	public void removeExcursionByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, Excursion.class);
+	}
+
 	public void savePedibusItineraryLeg(PedibusItineraryLeg leg, String ownerId, boolean canUpdate) throws StorageException {
 		Query query = new Query(new Criteria("pedibusGameId").is(leg.getPedibusGameId())
 				.and("itineraryId").is(leg.getItineraryId()).and("objectId").is(leg.getObjectId())
@@ -1034,7 +1044,12 @@ public class RepositoryManager {
 			logger.warn("Cannot update existing PedibusPlayer with childId " + player.getChildId());
 			return false;
 		}
-	}	
+	}
+	
+	public void removePedibusPlayerByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, PedibusPlayer.class);
+	}
 	
 	public boolean savePedibusTeam(PedibusTeam team, String ownerId, boolean canUpdate) throws StorageException {
 		Query query = new Query(new Criteria("classRoom").is(team.getClassRoom()).and("ownerId").is(ownerId));
@@ -1061,6 +1076,11 @@ public class RepositoryManager {
 		}
 	}	
 	
+	public void removePedibusTeamByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, PedibusTeam.class);
+	}
+
 	public void saveLastEvent(WsnEvent event) throws StorageException {
 		Query query = new Query(new Criteria("ownerId").is(event.getOwnerId()).and("routeId").is(event.getRouteId()));
 		WsnEvent eventDB = mongoTemplate.findOne(query, WsnEvent.class);

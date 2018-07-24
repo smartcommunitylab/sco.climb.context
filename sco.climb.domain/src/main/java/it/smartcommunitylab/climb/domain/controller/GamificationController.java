@@ -1028,60 +1028,36 @@ public class GamificationController extends AuthController {
 		try {
 			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, pedibusGameId);
 			for (PedibusPlayer player: players) {
-				resetChild(game.getGameId(), player.getChildId());
+				gengineUtils.deletePlayerState(game.getGameId(), player.getChildId());
 			}
 			
 			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
 			for (PedibusTeam team: teams) {
-				resetChild(game.getGameId(), team.getClassRoom());
-			}			
+				gengineUtils.deletePlayerState(game.getGameId(), team.getClassRoom());
+			}
+			
+			gengineUtils.deleteChallenges(game.getGameId());
+			
+			gengineUtils.deleteRules(game.getGameId());
+			
+			gengineUtils.deleteGame(game.getGameId());
+			
+			storage.removePedibusPlayerByGameId(ownerId, pedibusGameId);
+			
+			storage.removePedibusTeamByGameId(ownerId, pedibusGameId);
+			
+			storage.removeExcursionByGameId(ownerId, pedibusGameId);
+			
+			storage.removeCalendarDayByGameId(ownerId, pedibusGameId);
 			
 			if (logger.isInfoEnabled()) {
-				logger.info("reset game");
+				logger.info(String.format("resetGame[%s]: %s", ownerId, pedibusGameId));
 			}			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 	}	
 	
-	@RequestMapping(value = "/api/game/child/reset/{ownerId}/{pedibusGameId}/{playerId}", method = RequestMethod.PATCH)
-	public @ResponseBody void resetChild(
-			@PathVariable String ownerId, 
-			@PathVariable String pedibusGameId, 
-			@RequestParam String playerId, 
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
-		if(game == null) {
-			throw new EntityNotFoundException("game not found");
-		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		try {
-			resetChild(game.getGameId(), playerId);
-			
-			if (logger.isInfoEnabled()) {
-				logger.info("reset player");
-			}			
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
-		}
-	}		
-	
-	private void resetChild(String gameId, String playerId) throws Exception {
-//		ExecutionDataDTO ed = new ExecutionDataDTO();
-//		ed.setGameId(gameId);
-//		ed.setPlayerId(playerId);
-//		ed.setActionId(actionReset);
-//		Map<String, Object> data = Maps.newTreeMap();
-//		ed.setData(data);
-//		gengineUtils.executeAction(ed);
-		gengineUtils.deletePlayerState(gameId, playerId);
-	}
-	
-
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String pedibusGameId, String gameId, String id) throws Exception {
 		

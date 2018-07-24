@@ -128,9 +128,24 @@ public class GEngineUtils {
 		return result.getId();
 	}
 	
+	public void deleteGame(String gameId) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId;
+		HTTPUtils.delete(address, null, gamificationUser, gamificationPassword);
+	}
+	
 	public void createChallenge(String gameId, ChallengeModel challengeModel) throws Exception {
 		String address = gamificationURL + "/model/game/" + gameId + "/challenge";
 		HTTPUtils.post(address, challengeModel, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void deleteChallenges(String gameId) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/challenge";
+		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
+		TypeReference<ArrayList<ChallengeModel>> typeRef = new TypeReference<ArrayList<ChallengeModel>>() {};
+		ArrayList<ChallengeModel> challengeList = mapper.readValue(json, typeRef);
+		for(ChallengeModel challenge : challengeList) {
+			HTTPUtils.delete(address + "/" + challenge.getId(), null, gamificationUser, gamificationPassword); 
+		}
 	}
 	
 	public void createRule(String gameId, RuleDTO rule) throws Exception {
@@ -146,6 +161,16 @@ public class GEngineUtils {
 		ArrayList<String> value = mapper.readValue(json, typeRef);
 		if(value.size() > 0) {
 			throw new StorageException(value.toString());
+		}
+	}
+	
+	public void deleteRules(String gameId) throws Exception {
+		String address = gamificationURL + "/model/game/" + gameId + "/rule";
+		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
+		TypeReference<ArrayList<RuleDTO>> typeRef = new TypeReference<ArrayList<RuleDTO>>() {};
+		ArrayList<RuleDTO> ruleList = mapper.readValue(json, typeRef);
+		for(RuleDTO rule : ruleList) {
+			HTTPUtils.delete(address + "/" + rule.getId(), null, gamificationUser, gamificationPassword); 
 		}
 	}
 	
