@@ -152,32 +152,20 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 });
 
                 $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                    function (response) {
-                        console.log('Salvataggio dati a buon fine.');
-                        $scope.currentGame.objectId = response.data.objectId;
-                        if ($scope.currentGame.objectId) { //edited
-                            for (var i = 0; i < $scope.games.length; i++) {
-                                if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
-                            }
-                        } else {
-                            if ($scope.games) $scope.games.push(response.data);
-                        }
-
-                        if ($scope.currentGame) {
-                            DataService.updateConfParams($scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                                function (response) {
-                                    console.log('Salvataggio params a buon fine.');
-                                    $state.go('root.games-list');
-                                });
-
-                        } else {
-                            $state.go('root.games-list');
-                        }
-
-
-                    }, function () {
-                        alert('Errore nella richiesta.');
-                    }
+                  function (response) {
+                      console.log('Salvataggio dati a buon fine.');
+                      if ($scope.currentGame.objectId) { //edited
+                          for (var i = 0; i < $scope.games.length; i++) {
+                              if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
+                          }
+                      } else {
+                      	$scope.currentGame.objectId = response.data.objectId;
+                        if ($scope.games) $scope.games.push(response.data);
+                      }
+                      $state.go('root.games-list');
+                  }, function () {
+                      alert('Errore nella richiesta.');
+                  }
                 );
             }
             else {
@@ -277,6 +265,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 
         $scope.initParamController = function () {
+        	if(!$scope.currentGame.params) {
             $scope.currentGame.params = {
                 piedi_o_bici_in_autonomia_studenti: 0,
                 piedi_o_bici_in_autonomia_distanza: 0,
@@ -298,30 +287,12 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 const_NoCarDayClass_bonus: 0,
                 km_bonus: 0
             }
-            // read params of pedibus game configuration
-            DataService.getGameConfData('gameconfigbyid', { "ownerId": $scope.currentGame.ownerId, "confId": $scope.currentGame.objectId }).then(
-                function (response) {
-                    console.log('Caricamento della config specifica andata a buon fine.');
-                    var specificConfig = response.data;
-                    // typecast params.
-                    for (var p in specificConfig.params) {
-                        $scope.currentGame.params[p] = parseFloat(specificConfig.params[p]);
-                    }
-                    
-                }, function (error) {
-                    if (error.data.errorMsg == 'game conf not found') {
-                        var titleMsg = 'Nessuno template associato con il gioco';
-                        createDialog(null, {
-                            id: 'back-dialog',
-                            title: 'Attenzione!',
-                            success: {
-                                label: 'Ok',
-                            },
-                            template: '<p>' + titleMsg + '</p>'
-                        });
-                    }
-                }
-            );
+        	} else {
+            // typecast params.
+            for (var p in $scope.currentGame.params) {
+                $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
+            }
+        	}
         }
 
         $scope.$on('gameLoaded', function (e) {

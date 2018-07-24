@@ -87,7 +87,7 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'GameCtrl'
         })
         .state('root.gameconfig', {
-            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/:idGameConfig/gameconfig',
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/gameconfig',
             templateUrl: 'templates/games/gameconfig.html',
             controller: 'GameConfigCtrl'
         })

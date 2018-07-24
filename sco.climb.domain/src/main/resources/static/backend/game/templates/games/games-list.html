@@ -15,8 +15,8 @@
                         <h5>Inizio: {{game.from | date : 'dd/MM/yyyy'}} - Fine: {{game.to | date : 'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-md-4 right">
-                        <a class="btn btn-icon btn-info" ng-click="initGameOnServer(game)" ng-disabled="!PermissionsService.permissionEnabledEditGame()"><i class="fa fa-gamepad" aria-hidden="true" uib-tooltip="DEPLOY"></i></a>
-                        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/{{gamesConfigs[game.objectId].pedibusGameConfId}}/gameconfig"  class="btn btn-icon" ng-class="gamesConfigs[game.objectId] == null || gamesConfigs[game.objectId].pedibusGameConfId == null ? 'btn-primary' : 'btn-success'" role="button" ng-disabled="gamesConfigs[game.objectId].active"><i class="fa fa-cogs" aria-hidden="true" uib-tooltip="CONF TEMPLATE"></i></a>
+                        <a class="btn btn-icon btn-primary" ng-click="initGameOnServer(game)" ng-disabled="!PermissionsService.permissionEnabledEditGame()"><i class="fa fa-gamepad" aria-hidden="true" uib-tooltip="DEPLOY"></i></a>
+                        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/gameconfig"  class="btn btn-icon btn-primary" role="button" ng-disabled="gamesConfigs[game.objectId].active"><i class="fa fa-cogs" aria-hidden="true" uib-tooltip="CONF TEMPLATE"></i></a>
                         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.gamesModified = true"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         <a ng-click="delete(game)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledEditGame()"><i class="fa fa-trash" aria-hidden="true"></i></a>
                     </div>

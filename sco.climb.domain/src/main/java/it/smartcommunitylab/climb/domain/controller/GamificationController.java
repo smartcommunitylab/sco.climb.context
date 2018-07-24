@@ -60,12 +60,12 @@ import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
 import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
 import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.GameDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.IncrementalClassificationDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodInternal;
@@ -144,19 +144,19 @@ public class GamificationController extends AuthController {
 				legs.addAll(legsByGameId);
 				finalDestination = legsByGameId.get(legsByGameId.size() - 1).getName();	
 			}
-			//get game conf
-			PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
+			//get game conf template
+			PedibusGameConfTemplate gameConf = storage.getPedibusGameConfTemplate(game.getConfTemplateId());
 			if(gameConf == null) {
 				throw new EntityNotFoundException("game conf not found");
 			}
 			GameDTO gameDTO = new GameDTO();
 			gameDTO.setName(game.getGameName());
-			gameConf.getParams().put("const_school_name", game.getGlobalTeam());
-			gameConf.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
-			long dailyNominalDistance = Long.valueOf(gameConf.getParams().get("const_daily_nominal_distance"));
+			game.getParams().put("const_school_name", game.getGlobalTeam());
+			game.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
+			long dailyNominalDistance = Long.valueOf(game.getParams().get("const_daily_nominal_distance"));
 			long weeklyNominalDistance = dailyNominalDistance * 5; 
-			gameConf.getParams().put("const_weekly_nominal_distance", String.valueOf(weeklyNominalDistance));
-			gameConf.getParams().put("final_destination", finalDestination);
+			game.getParams().put("const_weekly_nominal_distance", String.valueOf(weeklyNominalDistance));
+			game.getParams().put("final_destination", finalDestination);
 			//create actions
 			gameDTO.getActions().addAll(gameConf.getActions());
 			//create badgeCollections
@@ -225,7 +225,7 @@ public class GamificationController extends AuthController {
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 			velocityEngine.init();
 			VelocityContext context = new VelocityContext();
-			context.put("params", gameConf.getParams());
+			context.put("params", game.getParams());
 			context.put("legList", legs);
 			context.put("Utils", Utils.class); 
 			for(String ruleFile : gameConf.getRuleFileTemplates()) {
@@ -401,10 +401,6 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.removePedibusGame(ownerId, pedibusGameId);
-		PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
-		if(gameConf != null) {
-			storage.removePedibusGameConf(ownerId, pedibusGameId);
-		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deletePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}
@@ -1020,6 +1016,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String pedibusGameId, 
 			HttpServletRequest request,	
 			HttpServletResponse response) throws Exception {
+		//TODO reset game
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");

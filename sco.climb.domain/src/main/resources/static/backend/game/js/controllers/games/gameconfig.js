@@ -5,58 +5,34 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
         $scope.initController = function () {
             $scope.isNewGameConf = true;
             if ($stateParams.idGameConfig) $scope.isNewGameConf = false;
-
-            MainDataService.getGames($stateParams.idSchool).then(function (response) {
-                $scope.games = response.data;
-                $scope.games.forEach(game => {
-                    if (game.objectId == $stateParams.idGame) {
-                        $scope.selectedGame = game;
-                        //load general templates
-                        DataService.getGameConfData('gameconfigtemplate').then(
-                            function (response) {
-                                console.log('Caricamento delle config andata a buon fine.');
-                                $scope.configs = response.data;
-                                // load conf data for game and check if template exists inside.
-                                DataService.getGameConfData('gameconfigbyid', { "ownerId": $stateParams.idDomain, "confId": $stateParams.idGame }).then(
-                                    function (response) {
-                                        console.log('Caricamento della config specifica andata a buon fine.');
-                                        var specificConfig = response.data;
-                                        for (var i = 0; i < $scope.configs.length; i++) {
-                                            if ($scope.configs[i].objectId == specificConfig.confTemplateId) {
-                                                var backupObjectId = $scope.configs[i].objectId; //used to preserve objectId when editing an existing config. objectId is used to identify template
-                                                angular.merge($scope.configs[i], specificConfig);
-                                                $scope.configs[i].objectId = backupObjectId;
-                                                $scope.configs[i].saved = true;
-                                                break;
-                                            }
-                                        }
-                                        $scope.selectedConfig = $scope.configs[i];
-                                        $scope.$parent.selectedConfig = $scope.selectedConfig;
-                                    }, function (error) {
-                                        if (error.data.errorMsg == 'game conf not found') {
-                                            var titleMsg = 'Scegli un template per il gioco';
-                                            createDialog(null, {
-                                                id: 'back-dialog',
-                                                title: 'Attenzione!',
-                                                success: {
-                                                    label: 'Ok',
-                                                },
-                                                template: '<p>' + titleMsg + '</p>'
-                                            });
-                                        }
-                                    }
-                                );
-                            }, function () {
-                                alert('Errore nel caricamento della config.');
-                            }
-                        );
+            //load general templates
+            DataService.getGameConfData('gameconfigtemplate').then(function (response) {
+                  console.log('Caricamento delle config andata a buon fine.');
+                  $scope.configs = response.data;
+                  for (var i = 0; i < $scope.configs.length; i++) {
+                    if ($scope.configs[i].objectId == $scope.currentGame.confTemplateId) {
+                        $scope.configs[i].saved = true;
+                        $scope.selectedConfig = $scope.configs[i];
+                        $scope.$parent.selectedConfig = $scope.selectedConfig;
+                        break;
                     }
-                });
+                }
             });
         }
 
-
-        $scope.initController();
+        if ($stateParams.idGame) {
+          MainDataService.getDomains().then(function (response) {
+              MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
+                  MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
+                      MainDataService.getGames($stateParams.idSchool).then(function (response) {
+                          $scope.games = response.data;
+                          $scope.currentGame = angular.copy($scope.games.find(function (e) { return e.objectId == $stateParams.idGame }));
+                          $scope.initController();
+                      });
+                  });
+              });
+          });
+        }
 
         // Exit without saving changes
         $scope.back = function () {
@@ -71,7 +47,7 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
 
             var titleMsg = 'Sei sicuro di salvare template?';
             // identify and select game object.
-            if ($scope.selectedGame.gameId) {
+            if ($scope.currentGame.gameId) {
                 titleMsg = 'Gioco già istanziato. Sei sicuro di cambiare template?';
             }
 
@@ -84,6 +60,7 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
                         DataService.updateTemplateToGame($scope.selectedConfig).then(
                             function () {
                                 console.log('Salvataggio template a buon fine.');
+                                $scope.currentGame.confTemplateId = $scope.selectedConfig.objectId;
                                 $scope.initController();
                             }, function (error) {
                                 if (error.data.errorMsg) {

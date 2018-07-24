@@ -24,8 +24,7 @@ import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
+import it.smartcommunitylab.climb.domain.model.gamification.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
@@ -61,32 +60,8 @@ public class GameConfController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/conf/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
-	public @ResponseBody PedibusGameConf getConfByGameId(
-			@PathVariable String ownerId, 
-			@PathVariable String pedibusGameId,
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
-		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
-		if(game == null) {
-			throw new EntityNotFoundException("game not found");
-		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
-		if(gameConf == null) {
-			throw new EntityNotFoundException("game conf not found");
-		}
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getConfByGameId: %s - %s", ownerId, pedibusGameId));
-		}
-		return gameConf; 
-	}
-	
 	@RequestMapping(value = "/api/game/conf/{ownerId}/{pedibusGameId}/template/{templateId}", method = RequestMethod.PUT)
-	public @ResponseBody PedibusGameConf setConfTemplate(
+	public @ResponseBody void setConfTemplate(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
 			@PathVariable String templateId,
@@ -104,25 +79,15 @@ public class GameConfController extends AuthController {
 		if(confTemplate == null) {
 			throw new EntityNotFoundException("game conf template not found");
 		}
-		PedibusGameConf gameConf = new PedibusGameConf();
-		gameConf.setOwnerId(ownerId);
-		gameConf.setPedibusGameId(pedibusGameId);
-		gameConf.setConfTemplateId(templateId);
-		gameConf.setRuleFileTemplates(confTemplate.getRuleFileTemplates());
-		gameConf.setActions(confTemplate.getActions());
-		gameConf.setBadgeCollections(confTemplate.getBadgeCollections());
-		gameConf.setChallengeModels(confTemplate.getChallengeModels());
-		gameConf.setPoints(confTemplate.getPoints());
-		gameConf.setTasks(confTemplate.getTasks());
-		storage.savePedibusGameConf(gameConf);
+		game.setConfTemplateId(templateId);
+		storage.updatePedibusGameConfTemplateId(ownerId, pedibusGameId, templateId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("setConfTemplate: %s - %s", ownerId, pedibusGameId));
 		}
-		return gameConf; 
 	}
 	
 	@RequestMapping(value = "/api/game/conf/{ownerId}/{pedibusGameId}/params", method = RequestMethod.PUT)
-	public @ResponseBody PedibusGameConf updateConfParams(
+	public @ResponseBody void updateConfParams(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
 			@RequestBody Map<String, String> params, 
@@ -136,15 +101,10 @@ public class GameConfController extends AuthController {
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		PedibusGameConf gameConf = storage.getPedibusGameConfByGameId(ownerId, pedibusGameId);
-		if(gameConf == null) {
-			throw new EntityNotFoundException("game conf not found");
-		}
 		storage.updatePedibusGameConfParams(ownerId, pedibusGameId, params);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateConfParams: %s - %s", ownerId, pedibusGameId));
 		}
-		return gameConf; 
 	}	
 	
 	@ExceptionHandler(EntityNotFoundException.class)

@@ -1,4 +1,4 @@
-package it.smartcommunitylab.climb.domain.model.gameconf;
+package it.smartcommunitylab.climb.domain.model.gamification;
 
 import java.util.ArrayList;
 import java.util.HashMap;

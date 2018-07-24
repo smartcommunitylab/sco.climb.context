@@ -26,6 +26,8 @@ public class PedibusGame extends BaseObject {
 	private boolean lateSchedule;
 	private boolean usingPedibusData; 
 	private boolean deployed;
+	private String confTemplateId;
+	private Map<String, String> params = new HashMap<>();
 	
 	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
 	
@@ -136,6 +138,18 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setDeployed(boolean deployed) {
 		this.deployed = deployed;
+	}
+	public String getConfTemplateId() {
+		return confTemplateId;
+	}
+	public void setConfTemplateId(String confTemplateId) {
+		this.confTemplateId = confTemplateId;
+	}
+	public Map<String, String> getParams() {
+		return params;
+	}
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 
 }

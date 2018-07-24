@@ -47,8 +47,7 @@ import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConf;
-import it.smartcommunitylab.climb.domain.model.gameconf.PedibusGameConfTemplate;
+import it.smartcommunitylab.climb.domain.model.gamification.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
@@ -842,6 +841,8 @@ public class RepositoryManager {
 			update.set("toHour", game.getToHour());
 			update.set("lateSchedule", game.isLateSchedule());
 			update.set("usingPedibusData", game.isUsingPedibusData());
+			update.set("confTemplateId", game.getConfTemplateId());
+			update.set("params", game.getParams());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
@@ -917,6 +918,18 @@ public class RepositoryManager {
 		if (gameDB != null) {
 			Update update = new Update();
 			update.set("deployed", deployed);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+		}
+	}
+	
+	public void updatePedibusGameConfTemplateId(String ownerId, String pedibusGameId, String templateId) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
+		Date now = new Date();
+		if (gameDB != null) {
+			Update update = new Update();
+			update.set("confTemplateId", templateId);
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		}
@@ -1262,70 +1275,19 @@ public class RepositoryManager {
 		return confTemplate;
 	}
 
-	public PedibusGameConf getPedibusGameConf(String ownerId, String confId) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId)
-				.and("objectId").is(confId));
-		PedibusGameConf result = mongoTemplate.findOne(query, PedibusGameConf.class);
-		return result;
-	}
-
-	public PedibusGameConf getPedibusGameConfByGameId(String ownerId, String pedibusGameId) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId)
-				.and("pedibusGameId").is(pedibusGameId));
-		PedibusGameConf result = mongoTemplate.findOne(query, PedibusGameConf.class);
-		return result;
-	}
-	
-	public void savePedibusGameConf(PedibusGameConf gameConf) {
-		Query query = new Query(new Criteria("ownerId").is(gameConf.getOwnerId())
-				.and("pedibusGameId").is(gameConf.getPedibusGameId()));
-		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
+	public void updatePedibusGameConfParams(String ownerId, String pedibusGameId, Map<String, String> params) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(pedibusGameId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
-		if(gameCongDB == null) {
-			gameConf.setCreationDate(now);
-			gameConf.setLastUpdate(now);
-			gameConf.setObjectId(Utils.getUUID());
-			mongoTemplate.save(gameConf);
-		} else {
-			Update update = new Update();
-			update.set("confTemplateId", gameConf.getConfTemplateId());
-			update.set("ruleFileTemplates", gameConf.getRuleFileTemplates());
-			update.set("actions", gameConf.getActions());
-			update.set("badgeCollections", gameConf.getBadgeCollections());
-			update.set("challengeModels", gameConf.getChallengeModels());
-			update.set("points", gameConf.getPoints());
-			update.set("params", gameConf.getParams());
-			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
-		}
-	}
-	
-	public void updatePedibusGameConfParams(String ownerId, String pedibusGameId,
-			Map<String, String> params) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId)
-				.and("pedibusGameId").is(pedibusGameId));
-		PedibusGameConf gameCongDB = mongoTemplate.findOne(query, PedibusGameConf.class);
-		Date now = new Date();
-		if(gameCongDB != null) {
-			gameCongDB.getParams().putAll(params);
+		if(gameDB != null) {
+			gameDB.getParams().putAll(params);
 			Update update = new Update();
 			update.set("lastUpdate", now);
-			update.set("params", gameCongDB.getParams());
-			mongoTemplate.updateFirst(query, update, PedibusGameConf.class);
+			update.set("params", gameDB.getParams());
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		}
 	}
 	
-	public PedibusGameConf removePedibusGameConf(String ownerId, String pedibusGameId) {
-		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
-		PedibusGameConf gameConfDB = mongoTemplate.findOne(query, PedibusGameConf.class);
-		if(gameConfDB != null) {
-			mongoTemplate.findAndRemove(query, PedibusGameConf.class);
-			return gameConfDB;
-		}
-		return null;
-	}
-
-
 	public void removeMultimediaContentByItineraryId(String ownerId, String instituteId,
 			String schoolId, String itineraryId) {
 		Query query = new Query(new Criteria("instituteId").is(instituteId)
