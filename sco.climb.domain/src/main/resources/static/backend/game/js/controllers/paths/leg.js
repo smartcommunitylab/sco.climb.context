@@ -147,7 +147,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                         $scope.currentPath.legs = $scope.legs;
                         $scope.saveData = DataService.editData;
                         $scope.newLeg = false;
-                        //$state.go('root.path.legs');
+                        $state.go('root.path.legs');
                     }, function() {
                         if (legBackup) {
                             $scope.legs[legBackup.position] = legBackup.value;
