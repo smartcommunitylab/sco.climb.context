@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-2 right">
                         <a ng-hide="enableOrder" ui-sref="root.path.leg({idLeg: leg.objectId})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-hide="enableOrder" ng-click="remove(leg)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledEditPath()"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a ng-hide="enableOrder" ng-click="remove(leg)" class="btn btn-icon btn-danger" role="button" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || ($parent.selectedGame.deployed)"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a ng-show="enableOrder" class="handle btn-icon btn-reorder"><i class="glyphicon glyphicon-align-justify"></i></a>
                     </div>
                 </div>

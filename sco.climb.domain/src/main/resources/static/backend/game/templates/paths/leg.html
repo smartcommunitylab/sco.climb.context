@@ -5,7 +5,7 @@
     </div>
 
     <div class="col-md-4 right" ng-if="PermissionsService.permissionEnabledEditLegs()">
-        <a ng-click="saveLeg()" class="btn btn-save btn-margin" role="button">Salva tappa</a>
+        <a ng-click="saveLeg()" class="btn btn-save btn-margin" role="button" ng-disabled="$parent.selectedGame.deployed">Salva tappa</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
 </div>

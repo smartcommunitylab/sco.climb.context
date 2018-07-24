@@ -22,7 +22,7 @@
                         <a href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}/{{path.objectId}}/legs" 
                         class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.pathsModified = true"
                         ng-if="!PermissionsService.permissionEnabledEditLegs()"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-click="delete(path)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledEditLegs()"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a ng-click="delete(path)" class="btn btn-icon btn-danger" role="button" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || (selectedGame.deployed)"><i class="fa fa-trash" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </li>
