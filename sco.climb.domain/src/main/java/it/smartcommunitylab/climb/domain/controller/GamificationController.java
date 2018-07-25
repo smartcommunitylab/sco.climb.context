@@ -1016,7 +1016,6 @@ public class GamificationController extends AuthController {
 			@PathVariable String pedibusGameId, 
 			HttpServletRequest request,	
 			HttpServletResponse response) throws Exception {
-		//TODO reset game
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
