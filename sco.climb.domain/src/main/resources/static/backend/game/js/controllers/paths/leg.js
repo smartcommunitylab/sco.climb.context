@@ -1,7 +1,7 @@
 angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.directives.dirPagination'])
 
 // Edit the leg for the selected path
-.controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, createDialog) {
+.controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, drawMapLine, createDialog) {
     $scope.$parent.selectedTab = 'legs';
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
@@ -68,6 +68,21 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         } else {
             drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
         }
+
+        // get previous leg scoreif exist.
+        var currentLegIndex = 0;
+        $scope.previousLegScore = 0;
+        for (var i = 0; i < $scope.legs.length; i++) {
+            if ($scope.legs[i].objectId == $stateParams.idLeg) {
+                currentLegIndex = i;
+                break;
+            }
+        }
+
+        if ($scope.legs[currentLegIndex - 1]) {
+            $scope.previousLegScore = $scope.legs[currentLegIndex - 1].score;
+        }
+
     }
 
 
@@ -147,7 +162,71 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                         $scope.currentPath.legs = $scope.legs;
                         $scope.saveData = DataService.editData;
                         $scope.newLeg = false;
-                        $state.go('root.path.legs');
+
+                        // modify next leg if exist.
+                        var modifiedLegIndex = 0;
+                        for (var i = 0; i < $scope.legs.length; i++) {
+                            if ($scope.legs[i].objectId == $stateParams.idLeg) {
+                                modifiedLegIndex = i;
+                                break;
+                            }
+                        }
+
+                        var nextLeg = $scope.legs[modifiedLegIndex + 1];
+                        
+                        if (nextLeg) {
+                            var modifiedLeg = $scope.legs[modifiedLegIndex];
+                            // generate simple polyline in case of plane and navetta targetto.                           
+                            if (nextLeg.transport.toLowerCase() == 'plane' || nextLeg.transport.toLowerCase() == 'boat') {
+                                // define polyline
+                                var points = new Array();
+                                points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
+                                points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
+                                // encode polyline                        
+                                nextLeg.polyline = drawMapLeg.createEncodings(points);
+                                var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
+                                $scope.saveData('leg', nextLeg).then(
+                                    function (response) {
+                                        console.log('Salvataggio dati a buon fine.');
+                                        $state.go('root.path.legs');
+                                    }, function (error) {
+                                        if (backUpLegNext) {
+                                            $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                        } else {
+                                            $scope.legs.splice($scope.legs.length - 1, 1);
+                                        }
+                                    });
+                            } else {
+                                var start = new google.maps.LatLng(modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]);
+                                var end = new google.maps.LatLng(nextLeg.geocoding[1], nextLeg.geocoding[0]);
+                                var request = {
+                                    origin: start,
+                                    destination: end,
+                                    travelMode: drawMapLine.selectMode(nextLeg.transport)
+                                };
+                                // calculate new route between 'new preious' -> 'next leg and update polyline.'
+                                drawMapLine.route(request).then(function (response) {
+                                    nextLeg.polyline = response.routes[0].overview_polyline;
+                                    var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
+                                    $scope.saveData('leg', nextLeg).then(
+                                        function (response) {
+                                            console.log('Salvataggio dati a buon fine.');
+                                            $state.go('root.path.legs');
+                                        }, function (error) {
+                                            if (backUpLegNext) {
+                                                $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                            } else {
+                                                $scope.legs.splice($scope.legs.length - 1, 1);
+                                            }
+                                            alert('Errore nel salvataggio delle tappe.');
+                                        });
+                                }, function (error) {
+                                    alert(error);
+                                });
+                            }
+                        } else {
+                            $state.go('root.path.legs');
+                        }
                     }, function() {
                         if (legBackup) {
                             $scope.legs[legBackup.position] = legBackup.value;
