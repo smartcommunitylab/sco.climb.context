@@ -15,6 +15,39 @@
         </p>
         <text-angular ng-model="currentGame.gameDescription" ng-required="true"></text-angular>
     </div>
+    <!-- Start and end date -->
+    <div class="col-lg-6" style="margin-bottom: 20px;">
+        <p style="display: inline-block">
+            <span class="required-sign">*</span>
+            <b>Data di inizio:&emsp;</b>
+        </p>
+        <p class="input-group" style="display: inline-block">
+            <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+                ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+            />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+            </span>
+        </p>
+    </div>
+    <div class="col-lg-6" style="margin-bottom: 20px;">
+        <p style="display: inline-block">
+            <span class="required-sign">*</span>
+            <b>Data di fine:&emsp;</b>
+        </p>
+        <p class="input-group" style="display: inline-block">
+            <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
+                ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+            />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+            </span>
+        </p>
+    </div>
     <div class="col-lg-12">
         <h3>Partecipanti</h3>
         <hr style="border-color: black;">

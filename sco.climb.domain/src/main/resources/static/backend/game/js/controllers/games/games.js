@@ -153,6 +153,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
             if (checkFields()) {
                 // Salvataggio date in timestamp Unix (ms)
+            		$scope.startDate.setHours(0, 0, 0, 0);
+            		$scope.endDate.setHours(23, 59, 59, 999);
                 $scope.currentGame.from = $scope.startDate.getTime();
                 $scope.currentGame.to = $scope.endDate.getTime();
 
@@ -235,7 +237,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.nrOfStudenti = 0;
 
         $scope.$on('gameLoaded', function (e) {
-            $scope.classToggled();
+        	// Variabili per date-picker(fix for refresh issue on parametri page)
+          $scope.$parent.dateFormat = 'dd/MM/yyyy';
+          $scope.$parent.startDate = new Date();
+          $scope.$parent.endDate = new Date();
+          $scope.$parent.isCalendarOpen = [false, false];
+          $scope.$parent.minDate = new Date(1970, 1, 1);
+          $scope.$parent.startDate.setTime($scope.currentGame.from);
+          $scope.$parent.endDate.setTime($scope.currentGame.to);
+          $scope.classToggled();
         });
 
         $scope.toggleSelectedClasses = function () {
