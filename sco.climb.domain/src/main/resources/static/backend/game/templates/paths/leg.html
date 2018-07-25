@@ -19,12 +19,12 @@
         <p><span class="required-sign">*</span> <b>Descrizione:</b></p>
         <text-angular ng-class="{error: !leg.description}" ng-model="leg.description"></text-angular>
     </div>
-    <div class="col-lg-8 field">
-        <p><span class="required-sign">*</span> <b>Punteggio:</b></p>
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Punteggio (metri):</b></p>
         <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-model="leg.score" />
     </div>
-    <div class="col-lg-4 field">
-        <p><b>Punteggio tappa precedente: {{previousLegScore}}</b></p>
+    <div class="col-lg-12 field">
+        <p><b>Punteggio tappa precedente (metri): {{previousLegScore}}</b></p>
     </div>
     <div class="col-lg-12 field">
         <p><b>Badge:</b></p>
