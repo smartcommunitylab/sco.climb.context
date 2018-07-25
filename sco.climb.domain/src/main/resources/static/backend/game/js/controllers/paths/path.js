@@ -288,8 +288,12 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.legs.splice($scope.legs.indexOf(leg), 1);
                             for (i = 0; i < $scope.legs.length; i++) {
                                 $scope.legs[i].position = i;
+                                // clear polyline of first tappa.
+                                if (i == 0) {
+                                    $scope.legs[0].polyline = "";
+                                }
                             }
-
+                            
                             $scope.currentPath.legs = $scope.legs;
                             DataService.editData('legs', $scope.currentPath).then(
                                 function () {
