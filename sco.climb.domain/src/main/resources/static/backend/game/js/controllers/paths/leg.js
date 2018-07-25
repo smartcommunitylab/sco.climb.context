@@ -221,13 +221,19 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                             alert('Errore nel salvataggio delle tappe.');
                                         });
                                 }, function (error) {
-                                    alert(error);
+                                    if (backUpLegNext) {
+                                        $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                    } else {
+                                        $scope.legs.splice($scope.legs.length - 1, 1);
+                                    }
+                                    alert('Errore nel salvataggio delle tappe.');
                                 });
                             }
                         } else {
                             $state.go('root.path.legs');
                         }
-                    }, function() {
+                    }, function (error) {
+                        console.log(error);
                         if (legBackup) {
                             $scope.legs[legBackup.position] = legBackup.value;
                         } else {
