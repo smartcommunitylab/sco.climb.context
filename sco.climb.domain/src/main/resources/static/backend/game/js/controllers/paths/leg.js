@@ -68,6 +68,21 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         } else {
             drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
         }
+
+        // get previous leg scoreif exist.
+        var currentLegIndex = 0;
+        $scope.previousLegScore = 0;
+        for (var i = 0; i < $scope.legs.length; i++) {
+            if ($scope.legs[i].objectId == $stateParams.idLeg) {
+                currentLegIndex = i;
+                break;
+            }
+        }
+
+        if ($scope.legs[currentLegIndex - 1]) {
+            $scope.previousLegScore = $scope.legs[currentLegIndex - 1].score;
+        }
+
     }
 
 
@@ -149,7 +164,6 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                         $scope.newLeg = false;
 
                         // modify next leg if exist.
-                        
                         var modifiedLegIndex = 0;
                         for (var i = 0; i < $scope.legs.length; i++) {
                             if ($scope.legs[i].objectId == $stateParams.idLeg) {
