@@ -41,7 +41,8 @@ public class HTTPUtils {
 		}
 
 		if (conn.getResponseCode() != 200) {
-			throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			String message = "Failed : HTTP error code : " + conn.getResponseCode() + " - " + conn.getResponseMessage();
+			throw new RuntimeException(message);
 		}
 
 		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.defaultCharset()));
@@ -84,7 +85,8 @@ public class HTTPUtils {
 		}
 
 		if (conn.getResponseCode() != 200) {
-			throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			String message = "Failed : HTTP error code : " + conn.getResponseCode() + " - " + conn.getResponseMessage();
+			throw new RuntimeException(message);
 		}
 
 		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.defaultCharset()));
@@ -141,7 +143,8 @@ public class HTTPUtils {
 		out.close();		
 		
 		if (conn.getResponseCode() != 200) {
-			throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			String message = "Failed : HTTP error code : " + conn.getResponseCode() + " - " + conn.getResponseMessage();
+			throw new RuntimeException(message);
 		}
 
 		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.defaultCharset()));
