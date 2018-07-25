@@ -22,6 +22,24 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 }
             });
         };
+        
+        $scope.reset = function (game) {
+          createDialog('templates/modals/reset-game.html', {
+              id: 'delete-dialog',
+              title: 'Attenzione!',
+              success: {
+                  label: 'Conferma', fn: function () {
+                      DataService.resetGame(MainDataService.getSelectedDomain(), game.objectId).then(
+                          function () {
+                              console.log("reset gioco effettuato con successo.");
+                          }, function () {
+                              alert("Errore nella richiesta.");
+                          });
+                  }
+              }
+          });
+      };
+        
         $scope.initGameOnServer = function (game) {
             createDialog('templates/modals/init-game-confirmation.html', {
                 id: 'init-game-confirmation-dialog',
@@ -278,6 +296,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 auto_fine_a_scuola_studenti: 0,
                 auto_fine_a_scuola_distanza: 0,
                 const_daily_nominal_distance: 0,
+                const_zeroimpact_distance: 0,
+                const_bus_distance: 0,
+                const_pandr_distance: 0,
                 const_zi_solo_bonus: 0,
                 giorni_chiusi: 0,
                 const_cloudy_bonus: 0,
@@ -308,6 +329,14 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.initParamController();
 
         });
+        
+        $scope.calculateBonusAutonomia = function() {
+        	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
+        	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
+        	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+        	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+        	return $scope.currentGame.params.const_zi_solo_bonus;
+        }
 
         $scope.calculateCDND = function () {
             if ($scope.currentGame && $scope.currentGame.params) {

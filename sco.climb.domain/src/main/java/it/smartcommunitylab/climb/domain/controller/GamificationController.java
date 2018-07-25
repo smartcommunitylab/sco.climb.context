@@ -1010,7 +1010,7 @@ public class GamificationController extends AuthController {
 		}			
 	}
 	
-	@RequestMapping(value = "/api/game/reset/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/reset", method = RequestMethod.GET)
 	public @ResponseBody void resetGame(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
@@ -1025,37 +1025,48 @@ public class GamificationController extends AuthController {
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		try {
-			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, pedibusGameId);
-			for (PedibusPlayer player: players) {
-				gengineUtils.deletePlayerState(game.getGameId(), player.getChildId());
-			}
-			
-			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
-			for (PedibusTeam team: teams) {
-				gengineUtils.deletePlayerState(game.getGameId(), team.getClassRoom());
-			}
-			
-			gengineUtils.deleteChallenges(game.getGameId());
-			
-			gengineUtils.deleteRules(game.getGameId());
-			
-			gengineUtils.deleteGame(game.getGameId());
-			
-			storage.removePedibusPlayerByGameId(ownerId, pedibusGameId);
-			
-			storage.removePedibusTeamByGameId(ownerId, pedibusGameId);
-			
-			storage.removeExcursionByGameId(ownerId, pedibusGameId);
-			
-			storage.removeCalendarDayByGameId(ownerId, pedibusGameId);
-			
-			if (logger.isInfoEnabled()) {
-				logger.info(String.format("resetGame[%s]: %s", ownerId, pedibusGameId));
-			}			
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		Date now = new Date();
+		if(now.after(game.getFrom()) && now.before(game.getTo())) {
+			throw new StorageException("game is in progress");
 		}
+		
+		if(Utils.isNotEmpty(game.getGameId())) {
+			try {
+				List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, pedibusGameId);
+				for (PedibusPlayer player: players) {
+					gengineUtils.deletePlayerState(game.getGameId(), player.getChildId());
+				}
+				
+				List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
+				for (PedibusTeam team: teams) {
+					gengineUtils.deletePlayerState(game.getGameId(), team.getClassRoom());
+				}
+				
+				gengineUtils.deleteChallenges(game.getGameId());
+				
+				gengineUtils.deleteRules(game.getGameId());
+				
+				gengineUtils.deleteGame(game.getGameId());
+			} catch (Exception e) {
+				throw e;
+			}
+		}
+		
+		storage.removePedibusPlayerByGameId(ownerId, pedibusGameId);
+		
+		storage.removePedibusTeamByGameId(ownerId, pedibusGameId);
+		
+		storage.removeExcursionByGameId(ownerId, pedibusGameId);
+		
+		storage.removeCalendarDayByGameId(ownerId, pedibusGameId);
+		
+		storage.updatePedibusGameGameId(ownerId, pedibusGameId, null);
+		
+		storage.updatePedibusGameDeployed(ownerId, pedibusGameId, false);
+		
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("resetGame[%s]: %s", ownerId, pedibusGameId));
+		}	
 	}	
 	
 	@SuppressWarnings("rawtypes")

@@ -45,10 +45,10 @@ angular.module('consoleControllers.gameconfig', ['ngSanitize'])
             $scope.selectedConfig.pedibusGameId = $stateParams.idGame;
             $scope.selectedConfig.ownerId = $stateParams.idDomain;
 
-            var titleMsg = 'Sei sicuro di salvare template?';
+            var titleMsg = 'Sei sicuro di voler utilizzare questo template?';
             // identify and select game object.
             if ($scope.currentGame.gameId) {
-                titleMsg = 'Gioco già istanziato. Sei sicuro di cambiare template?';
+                titleMsg = 'Gioco già istanziato. Sei sicuro di voler cambiare il template?';
             }
 
             createDialog(null, {

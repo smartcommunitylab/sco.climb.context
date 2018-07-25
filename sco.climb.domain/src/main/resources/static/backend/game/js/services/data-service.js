@@ -174,6 +174,11 @@ function ($q, $http, $rootScope, $timeout) {
                     {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
                 );              
             },
+            resetGame: function(ownerId, pedibusGameId) {
+            	return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/reset", 
+                  {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
+            	);
+            },
             logout: logout,
             setProfileToken: function(token) {
                 profileToken = token;

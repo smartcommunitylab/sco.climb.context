@@ -1,6 +1,6 @@
 {
 	"name":"KindsGoGreen",
-	"description":"...",
+	"description":"Modello regole gioco anno scolastico 2017/2018",
 	"version":"1.0",
 	"ruleFileTemplates": [
 		"constants_v1.vm",
