@@ -281,7 +281,7 @@ angular.module('MapsService', [])
     };
 })
 
-.service("drawMapLine", function ($rootScope) {
+.service("drawMapLine", function ($rootScope, $q) {
     var map;
     var directionsService = new google.maps.DirectionsService();
     var directionsDisplay;
@@ -373,5 +373,88 @@ angular.module('MapsService', [])
             else
                 window.alert('Errore nella richiesta: ' + status);
         });
+    }
+
+    this.selectMode = function (sMode) {
+        var mode = google.maps.TravelMode.WALKING;
+        if (sMode.toLowerCase() == 'foot') {
+            mode = google.maps.TravelMode.WALKING
+        } else if (sMode.toLowerCase() == 'transit') {
+            mode = google.maps.TravelMode.TRANSIT;
+        } else if (sMode.toLowerCase() == 'car') {
+            mode = google.maps.TravelMode.DRIVING;
+        }
+        return mode;
+
+    }
+
+    this.route = function (request) {
+        var deferred = $q.defer();
+        directionsService.route(request, function (response, status) {
+            if (status === 'OK')
+                deferred.resolve(response);
+            else
+                deferred.reject(status);
+        });
+        return deferred.promise;
+    }
+
+    this.createEncodings = function (coords) {
+        var i = 0;
+
+        var plat = 0;
+        var plng = 0;
+
+        var encoded_points = "";
+
+        for (i = 0; i < coords.length; ++i) {
+            var lat = coords[i][0];
+            var lng = coords[i][1];
+
+            encoded_points += this.encodePoint(plat, plng, lat, lng);
+
+            plat = lat;
+            plng = lng;
+        }
+
+        // close polyline
+        encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
+
+        return encoded_points;
+    }
+
+    this.encodePoint = function (plat, plng, lat, lng) {
+        var late5 = Math.round(lat * 1e5);
+        var plate5 = Math.round(plat * 1e5)
+
+        var lnge5 = Math.round(lng * 1e5);
+        var plnge5 = Math.round(plng * 1e5)
+
+        dlng = lnge5 - plnge5;
+        dlat = late5 - plate5;
+
+        return this.encodeSignedNumber(dlat) + this.encodeSignedNumber(dlng);
+    }
+
+    this.encodeSignedNumber = function (num) {
+        var sgn_num = num << 1;
+
+        if (num < 0) {
+            sgn_num = ~(sgn_num);
+        }
+
+        return (this.encodeNumber(sgn_num));
+    }
+
+    this.encodeNumber = function (num) {
+        var encodeString = "";
+
+        while (num >= 0x20) {
+            encodeString += (String.fromCharCode((0x20 | (num & 0x1f)) + 63));
+            num >>= 5;
+        }
+
+        encodeString += (String.fromCharCode(num + 63));
+        return encodeString;
     }
 });
