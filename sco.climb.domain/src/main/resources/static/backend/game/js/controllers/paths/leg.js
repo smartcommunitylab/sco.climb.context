@@ -183,7 +183,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
                                 points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
                                 // encode polyline                        
-                                nextLeg.polyline = drawMapLeg.createEncodings(points);
+                                nextLeg.polyline = drawMapLine.createEncodings(points);
                                 var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
                                 $scope.saveData('leg', nextLeg).then(
                                     function (response) {
