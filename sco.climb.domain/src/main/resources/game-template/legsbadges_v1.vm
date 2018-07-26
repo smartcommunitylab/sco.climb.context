@@ -45,7 +45,7 @@ rule "R-notify-almost $leg.name"
 when 
     $bc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$leg.name') 
     PointConcept(name == 'total_distance', 
-        score > CastellamaredelGolfo_distance - const_almost_reached_next_leg && const_almost_reached_next_leg < $Utils.getNormalizeLegName($leg.name)#[[_distance]]#)
+        score > $Utils.getNormalizeLegName($leg.name)#[[_distance]]# - const_almost_reached_next_leg && const_almost_reached_next_leg < $Utils.getNormalizeLegName($leg.name)#[[_distance]]#)
     $cd: CustomData($almost : this["almost_reached_legs"] == null || !((ArrayList)$almost).contains("$leg.name")) 
     Game( $gameId: id)
     Player( $teamId : id, $teamId == const_school_name, team == true )
