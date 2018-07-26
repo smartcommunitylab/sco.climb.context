@@ -62,6 +62,7 @@ then
     message.addData("_leg_", "$leg.name");
     insert(message);
 end
+
 #end
 
 rule "R-GAME-END"
