@@ -243,6 +243,12 @@ public class GamificationController extends AuthController {
 					RuleDTO ruleDTO = new RuleDTO();
 					ruleDTO.setName(ruleName);
 					ruleDTO.setContent(writer.toString());
+					if(ruleName.contains("constants")) {
+						int indexOf = ruleName.indexOf("_");
+						if(indexOf > 0) {
+							ruleDTO.setName(ruleName.substring(0, indexOf));
+						}
+					}
 					gengineUtils.createRule(gameId, ruleDTO);
 				} catch (Exception e) {
 					logger.error("Gamification engine rule creation error: " + e.getClass() + " " + e.getMessage());
@@ -1026,7 +1032,8 @@ public class GamificationController extends AuthController {
 		}
 		Date now = new Date();
 		if(now.after(game.getFrom()) && now.before(game.getTo())) {
-			throw new StorageException("game is in progress");
+			//TODO for testing only
+//			throw new StorageException("game is in progress");
 		}
 		
 		if(Utils.isNotEmpty(game.getGameId())) {

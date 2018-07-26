@@ -31,7 +31,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   label: 'Conferma', fn: function () {
                       DataService.resetGame(MainDataService.getSelectedDomain(), game.objectId).then(
                           function (response) {
-                              console.log("reset gioco effettuato con successo.");
+                              alert("reset gioco effettuato con successo.");
                           }, function (error) {
                               alert("Errore nella richiesta:" + error.data.errorMsg);
                           });
