@@ -12,11 +12,11 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 success: {
                     label: 'Conferma', fn: function () {
                         DataService.removeData('game', game).then(
-                            function () {
+                            function (result) {
                                 console.log("Rimozione gioco effettuata con successo.");
                                 $scope.games.splice($scope.games.indexOf(game), 1);
-                            }, function () {
-                                alert("Errore nella richiesta.");
+                            }, function (error) {
+                            	alert("Errore nella richiesta:" + error.data.errorMsg);
                             });
                     }
                 }
@@ -30,10 +30,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
               success: {
                   label: 'Conferma', fn: function () {
                       DataService.resetGame(MainDataService.getSelectedDomain(), game.objectId).then(
-                          function () {
+                          function (response) {
                               console.log("reset gioco effettuato con successo.");
-                          }, function () {
-                              alert("Errore nella richiesta.");
+                          }, function (error) {
+                              alert("Errore nella richiesta:" + error.data.errorMsg);
                           });
                   }
               }
@@ -49,8 +49,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         DataService.initGameCall(MainDataService.getSelectedDomain(), game.objectId).then(
                             function (response) {
                                 alert("Init game riuscito!");
-                            }, function () {
-                                alert('Errore in init game!');
+                            }, function (error) {
+                            	alert("Errore nella richiesta:" + error.data.errorMsg);
                             }
                         );
                     }
@@ -125,8 +125,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             });
                         }
                         $scope.$broadcast('gameLoaded');
-                    }, function () {
-                        alert('Errore nel caricamento delle classi.');
+                    }, function (error) {
+                        alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
                     }
                 );
 
@@ -183,8 +183,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         if ($scope.games) $scope.games.push(response.data);
                       }
                       $state.go('root.games-list');
-                  }, function () {
-                      alert('Errore nella richiesta.');
+                  }, function (error) {
+                  	alert("Errore nella richiesta:" + error.data.errorMsg);
                   }
                 );
             }
