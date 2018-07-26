@@ -183,19 +183,22 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
                                 points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
                                 // encode polyline                        
-                                nextLeg.polyline = drawMapLine.createEncodings(points);
-                                var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
-                                $scope.saveData('leg', nextLeg).then(
-                                    function (response) {
-                                        console.log('Salvataggio dati a buon fine.');
-                                        $state.go('root.path.legs');
-                                    }, function (error) {
-                                        if (backUpLegNext) {
-                                            $scope.legs[backUpLegNext.position] = backUpLegNext.value;
-                                        } else {
-                                            $scope.legs.splice($scope.legs.length - 1, 1);
-                                        }
-                                    });
+                                drawMapLine.createEncodings(points).then(function (response) {
+                                    nextLeg.polyline = response;
+                                    var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
+                                    $scope.saveData('leg', nextLeg).then(
+                                        function (response) {
+                                            console.log('Salvataggio dati a buon fine.');
+                                            $state.go('root.path.legs');
+                                        }, function (error) {
+                                            if (backUpLegNext) {
+                                                $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                            } else {
+                                                $scope.legs.splice($scope.legs.length - 1, 1);
+                                            }
+                                        });
+                                });
+        
                             } else {
                                 var start = new google.maps.LatLng(modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]);
                                 var end = new google.maps.LatLng(nextLeg.geocoding[1], nextLeg.geocoding[0]);

@@ -400,27 +400,25 @@ angular.module('MapsService', [])
     }
 
     this.createEncodings = function (coords) {
-        var i = 0;
+        var deferred = $q.defer();
 
+        var i = 0;
         var plat = 0;
         var plng = 0;
-
         var encoded_points = "";
 
         for (i = 0; i < coords.length; ++i) {
             var lat = coords[i][0];
             var lng = coords[i][1];
-
             encoded_points += this.encodePoint(plat, plng, lat, lng);
-
             plat = lat;
             plng = lng;
         }
-
         // close polyline
         encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
+        deferred.resolve(encoded_points);
 
-        return encoded_points;
+        return deferred.promise;
     }
 
     this.encodePoint = function (plat, plng, lat, lng) {
