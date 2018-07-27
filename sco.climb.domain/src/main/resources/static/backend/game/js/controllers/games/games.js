@@ -38,8 +38,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   }
               }
           });
-      };
-        
+        };
+                
         $scope.initGameOnServer = function (game) {
             createDialog('templates/modals/init-game-confirmation.html', {
                 id: 'init-game-confirmation-dialog',
@@ -85,11 +85,12 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.initController = function () {
             if ($scope.currentGame) { //edit game
                 $scope.saveData = DataService.editData;
-
-                $scope.startDate.setTime($scope.currentGame.from);
-                $scope.endDate.setTime($scope.currentGame.to);
-                $scope.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
-                $scope.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
+                if($scope.currentGame.usingPedibusData) {
+                  $scope.startDate.setTime($scope.currentGame.from);
+                  $scope.endDate.setTime($scope.currentGame.to);
+                  $scope.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
+                  $scope.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
+                }
             } else {
                 $scope.currentGame = {
                     gameName: '',

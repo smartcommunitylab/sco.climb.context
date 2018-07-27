@@ -629,6 +629,11 @@ public class RepositoryManager {
 		return mongoTemplate.findOne(query, PedibusGame.class);		
 	}		
 	
+	public PedibusGame getPedibusGame(String pedibusGameId) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId));
+		return mongoTemplate.findOne(query, PedibusGame.class);		
+	}
+	
 	public List<PedibusGame> getPedibusGames(String ownerId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId));
 		return mongoTemplate.find(query, PedibusGame.class);		

@@ -3,9 +3,10 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'ui.sortable',
 'consoleControllers.mainCtrl',
 'consoleControllers.paths',
-'consoleControllers.gameconfig',
 'consoleControllers.leg',
 'consoleControllers.games',
+'consoleControllers.gameconfig',
+'consoleControllers.gameclone',
 'consoleControllers.institutes',
 'consoleControllers.schools',
 'consoleControllers.line',
@@ -90,6 +91,11 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/gameconfig',
             templateUrl: 'templates/games/gameconfig.html',
             controller: 'GameConfigCtrl'
+        })
+        .state('root.gameclone', {
+            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/gameclone',
+            templateUrl: 'templates/games/gameclone.html',
+            controller: 'GameCloneCtrl'
         })
         .state('root.game.info', {
             url: '/info',

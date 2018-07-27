@@ -56,6 +56,8 @@ function ($q, $http, $rootScope, $timeout) {
                     fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/classes";
                 } else if(type === 'volunteers') {
                     fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
+                } else if(type == 'allgames') {
+                		fetchUrl = baseUrl + "/api/game";
                 }
                 return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
@@ -176,6 +178,12 @@ function ($q, $http, $rootScope, $timeout) {
             },
             resetGame: function(ownerId, pedibusGameId) {
             	return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/reset", 
+                  {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
+            	);
+            },
+            cloneGame: function(ownerId, instituteId, schoolId, pedibusGameId) {
+            	return $http.get(baseUrl + "/api/game/" + ownerId + "/" + instituteId 
+            			+ "/" + schoolId + "/clone/" + pedibusGameId, 
                   {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
             	);
             },

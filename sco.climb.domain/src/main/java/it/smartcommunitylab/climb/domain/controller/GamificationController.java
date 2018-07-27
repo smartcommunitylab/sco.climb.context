@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -485,8 +484,19 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusGame> getPedibusGames(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		List<PedibusGame> result = storage.getPedibusGames();
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getPedibusGames: %s", result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
+	public @ResponseBody List<PedibusGame> getPedibusGamesBySchool(
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,			
@@ -499,7 +509,7 @@ public class GamificationController extends AuthController {
 		try {
 			List<PedibusGame> result = storage.getPedibusGames(ownerId, instituteId, schoolId);
 			if (logger.isInfoEnabled()) {
-				logger.info(String.format("getPedibusGames[%s]: %s", ownerId, result.size()));
+				logger.info(String.format("getPedibusGamesBySchool[%s]: %s", ownerId, result.size()));
 			}
 			return result;
 		} catch (Exception e) {
@@ -1073,7 +1083,75 @@ public class GamificationController extends AuthController {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("resetGame[%s]: %s", ownerId, pedibusGameId));
 		}	
-	}	
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/clone/{pedibusGameId}", method = RequestMethod.GET)
+	public @ResponseBody PedibusGame cloneGame(			
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@PathVariable String pedibusGameId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+//		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
+//				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+//		}
+		PedibusGame gameToClone = storage.getPedibusGame(pedibusGameId);
+		if(gameToClone == null) {
+			throw new EntityNotFoundException("game to clone not found");
+		}
+		List<PedibusItineraryLeg> legsToClone = new ArrayList<>();
+		PedibusItinerary itineraryToClone = null;
+		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+		if(itineraryList.size() > 0) {
+			itineraryToClone = itineraryList.get(0);
+			legsToClone = storage.getPedibusItineraryLegsByGameId(ownerId, pedibusGameId, 
+					itineraryToClone.getObjectId());
+		}
+		//create game
+		PedibusGame game = new PedibusGame();
+		game.setOwnerId(ownerId);
+		game.setInstituteId(instituteId);
+		game.setSchoolId(schoolId);
+		game.setGameName(gameToClone.getGameName() + " - clone");
+		game.setConfTemplateId(gameToClone.getConfTemplateId());
+		storage.savePedibusGame(game, ownerId, false);
+		if(itineraryToClone!= null) {
+			//create itinerary
+			PedibusItinerary itinerary = new PedibusItinerary();
+			itinerary.setOwnerId(ownerId);
+			itinerary.setPedibusGameId(game.getObjectId());
+			itinerary.setObjectId(Utils.getUUID());
+			itinerary.setName(itineraryToClone.getName());
+			itinerary.setDescription(itineraryToClone.getDescription());
+			storage.savePedibusItinerary(itinerary);
+			//create legs
+			for(PedibusItineraryLeg legToClone : legsToClone) {
+				PedibusItineraryLeg leg = new PedibusItineraryLeg();
+				leg.setOwnerId(ownerId);
+				leg.setPedibusGameId(game.getObjectId());
+				leg.setItineraryId(itinerary.getObjectId());
+				leg.setName(legToClone.getName());
+				leg.setDescription(legToClone.getDescription());
+				leg.setBadgeId(legToClone.getBadgeId());
+				leg.setPosition(legToClone.getPosition());
+				leg.setGeocoding(legToClone.getGeocoding());
+				leg.setExternalUrls(legToClone.getExternalUrls());
+				leg.setImageUrl(legToClone.getImageUrl());
+				leg.setPolyline(legToClone.getPolyline());
+				leg.setScore(legToClone.getScore());
+				leg.setTransport(legToClone.getTransport());
+				leg.setIcon(legToClone.getIcon());
+				leg.setAdditionalPoints(legToClone.getAdditionalPoints());
+				storage.savePedibusItineraryLeg(leg, ownerId, false);
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("cloneGame[%s]: %s", ownerId, pedibusGameId));
+		}
+		return game;
+	}
 	
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String pedibusGameId, String gameId, String id) throws Exception {
@@ -1106,12 +1184,7 @@ public class GamificationController extends AuthController {
 			entity.setBadges(badges);
 		}
 		**/
-
 	}
-	
-	public static String getUUID() {
-		return UUID.randomUUID().toString();
-	}	
 	
 	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
