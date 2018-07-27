@@ -1093,10 +1093,10 @@ public class GamificationController extends AuthController {
 			@PathVariable String pedibusGameId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-//		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
-//				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
-//			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-//		}
+		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
+				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
 		PedibusGame gameToClone = storage.getPedibusGame(pedibusGameId);
 		if(gameToClone == null) {
 			throw new EntityNotFoundException("game to clone not found");
