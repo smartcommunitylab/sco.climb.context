@@ -1153,6 +1153,28 @@ public class GamificationController extends AuthController {
 		return game;
 	}
 	
+	@RequestMapping(value = "/api/game/{shortName}", method = RequestMethod.GET)
+	public void redirectShortName(
+			@PathVariable String shortName,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		List<PedibusGame> games = storage.getPedibusGamesByShortName(shortName);
+		if(games.size() != 1) {
+			throw new EntityNotFoundException("short name is not unique or not present");
+		}
+		PedibusGame game = games.get(0);
+		StringBuilder redirectUrl = new StringBuilder(request.getContextPath());
+		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+		if(itineraryList.size() == 0) {
+			throw new EntityNotFoundException("game has no itinerary");
+		}
+		redirectUrl.append("/game-public/index.html#/" + game.getOwnerId());
+		redirectUrl.append("/" + game.getObjectId());
+		redirectUrl.append("/" + itineraryList.get(0).getObjectId());
+		redirectUrl.append("/map");
+		response.sendRedirect(redirectUrl.toString());
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String pedibusGameId, String gameId, String id) throws Exception {
 		

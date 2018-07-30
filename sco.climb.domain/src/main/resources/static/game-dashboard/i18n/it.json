@@ -76,7 +76,7 @@
   "notif_WeeklyRecordClass": "CONGRATULAZIONI! Avete battuto il vostro record settimanale con {{_record_}} Km!",
   "notif_WeeklyPerformanceSchool": "La scorsa settimana la scuola ha percorso un totale di {{_performance_}} Km. Continuate così!",
   "notif_ChallengeWon": "COMPLIMENTI! Avete superato la sfida che vi era stata assegnata e avete guadagnato {{_VirtualPrize_}}!",
-	"notif_GameFinished": "BRAVISSIMI: SIETE ARRIVATI A {{_finalDestination_}}! Avete percorso {{_totalKm_}} Km sostenibili.",
+	"notif_GameFinished": "BRAVISSIMI: Siete arrivati a {{_finalDestination_}}! Avete percorso {{_totalKm_}} Km sostenibili.",
   "notif_badge": "BRAVI! Avete raggiunto la tappa {{badge}}!",
   "notif_empty": "Non sono ancora presenti notifiche. ",
   "challenge_ScuolaSenzAuto": "Sfida di scuola: Fate un giorno \"A Scuola Senz'Auto\" per vincere {{VirtualPrize}}",

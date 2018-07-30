@@ -28,6 +28,7 @@ public class PedibusGame extends BaseObject {
 	private boolean deployed;
 	private String confTemplateId;
 	private Map<String, String> params = new HashMap<>();
+	private String shortName;
 	
 	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
 	
@@ -151,5 +152,10 @@ public class PedibusGame extends BaseObject {
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
-
+	public String getShortName() {
+		return shortName;
+	}
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
 }

@@ -637,6 +637,11 @@ public class RepositoryManager {
 	public List<PedibusGame> getPedibusGames(String ownerId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId));
 		return mongoTemplate.find(query, PedibusGame.class);		
+	}
+	
+	public List<PedibusGame> getPedibusGamesByShortName(String shortName) {
+		Query query = new Query(new Criteria("shortName").is(shortName));
+		return mongoTemplate.find(query, PedibusGame.class);		
 	}	
 	
 	public List<PedibusGame> getPedibusGames(String ownerId, String instituteId, String schoolId) {
@@ -853,6 +858,7 @@ public class RepositoryManager {
 			update.set("usingPedibusData", game.isUsingPedibusData());
 			update.set("confTemplateId", game.getConfTemplateId());
 			update.set("params", game.getParams());
+			update.set("shortName", game.getShortName());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
