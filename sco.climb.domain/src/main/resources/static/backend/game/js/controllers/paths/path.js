@@ -370,10 +370,14 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                                 $scope.legs[i + 1].polyline = response[i].routes[0].overview_polyline;
                                             } else {   // response can be flat line (boat,plane).
                                                 $scope.legs[i + 1].polyline = response[i];
-                                            }
-                                            
+                                            }                                            
                                         }
 
+                                        // update position counter.
+                                        for (i = 0; i < $scope.legs.length; i++) {
+                                            $scope.legs[i].position = i;
+                                        }
+                                        
                                         // save the new ordered list only when all promise get resolved.
                                         $scope.currentPath.legs = $scope.legs;
                                         DataService.editData('legs', $scope.currentPath).then(
