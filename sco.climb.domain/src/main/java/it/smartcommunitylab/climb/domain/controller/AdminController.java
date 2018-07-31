@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,8 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
-import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
+import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
@@ -56,52 +53,12 @@ public class AdminController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 
-	@RequestMapping(value = "/admin/auth/schema/upload", method = RequestMethod.POST)
-	public @ResponseBody void uploadAuthSchema(
-			@RequestBody String json,
-			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		authorizationManager.loadAuthSchema(json);
-	}
-	
-	@RequestMapping(value = "/admin/auth", method = RequestMethod.POST)
-	public @ResponseBody AuthorizationDTO addAuthorization(
-			@RequestBody AuthorizationDTO auth,
-			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		return authorizationManager.insertAuthorization(auth);
-	}
-	
-	@RequestMapping(value = "/admin/auth/{authId}", method = RequestMethod.DELETE)
-	public @ResponseBody void deleteAuthorization(
-			@PathVariable String authId,
-			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		authorizationManager.deleteAuthorization(authId);
-	}
-	
-	@RequestMapping(value = "/admin/auth/validate", method = RequestMethod.POST)
-	public @ResponseBody String validateAuth(
-			@RequestBody RequestedAuthorizationDTO auth,
-			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		return Boolean.toString(authorizationManager.validateAuthorization(auth));
-	}
-	
 	@RequestMapping(value = "/admin/user/csv", method = RequestMethod.POST)
-	public @ResponseBody void uploadUserCsv(
+	public @ResponseBody void uploadOwnerUserCsv(
 			@RequestParam("file") MultipartFile file,
 			@RequestParam(name="update", required=false) Boolean update,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(update == null) {
@@ -118,8 +75,7 @@ public class AdminController extends AuthController {
 			Reader in = new FileReader(outputFileCSV);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
 			for (CSVRecord record : records) {
-		    String ownerIds = record.get("ownerIds");
-		    String roles = record.get("roles");
+		    String ownerId = record.get("ownerId");
 		    String subject = record.get("subject");
 		    String name = record.get("name");
 		    String surname = record.get("surname");
@@ -130,11 +86,9 @@ public class AdminController extends AuthController {
 	    	user.setCf(cf);
 	    	user.setEmail(email);
 	    	user.setName(name);
-	    	user.setOwnerIds(Arrays.asList(ownerIds.split(",")));
-	    	user.setRoles(Arrays.asList(roles.split(",")));
-	    	user.setSubject(subject);
 	    	user.setSurname(surname);
-		    
+	    	user.setSubject(subject);
+	    	
 		    User userDb = storage.getUserByCf(cf);
 		    if(userDb == null) {
 		    	user.setObjectId(Utils.getUUID());
@@ -143,6 +97,23 @@ public class AdminController extends AuthController {
 		    	user.setObjectId(userDb.getObjectId());
 		    	storage.updateUser(user);
 		    }
+		    
+	  		List<Authorization> auths = new ArrayList<Authorization>();
+	  		Authorization auth = new Authorization();
+	  		auth.getActions().add(Const.AUTH_ACTION_READ);
+	  		auth.getActions().add(Const.AUTH_ACTION_ADD);
+	  		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+	  		auth.getActions().add(Const.AUTH_ACTION_DELETE);
+	  		auth.setOwnerId(ownerId);
+	  		auth.setInstituteId("*");
+	  		auth.setSchoolId("*");
+	  		auth.setRouteId("*");
+	  		auth.setGameId("*");
+	  		auth.getResources().add("*");
+	  		auths.add(auth);
+	  		
+	  		storage.addUserRole(email, 
+	  				Utils.getAuthKey(ownerId, Const.ROLE_OWNER), auths);
 			}
 		}
 	}

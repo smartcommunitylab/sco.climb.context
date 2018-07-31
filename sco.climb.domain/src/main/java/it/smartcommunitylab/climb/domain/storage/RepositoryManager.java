@@ -21,8 +21,8 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 
-import it.smartcommunitylab.aac.authorization.beans.AuthorizationDTO;
 import it.smartcommunitylab.climb.contextstore.model.Anchor;
+import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.PassengerCalendar;
@@ -566,19 +566,20 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public List<User> getUsersByOwnerId(String ownerId) {
-		Query query = new Query(new Criteria("ownerIds").is(ownerId));
-		List<User> result = mongoTemplate.find(query, User.class);
-		return result;
-	}
-	
-	public List<User> getUsersByRole(String ownerId, String role) {
-		Criteria criteria = new Criteria("ownerIds").is(ownerId);
-		if(Utils.isNotEmpty(role)) {
-			criteria = criteria.and("roles").is(role);
+	public List<User> getUsersByOwnerIdAndRole(String ownerId, String role) {
+		List<User> result = new ArrayList<>();
+		List<User> list = mongoTemplate.findAll(User.class);
+		for(User user : list) {
+			if(Utils.checkOwnerId(ownerId, user)) {
+				if(Utils.isNotEmpty(role)) {
+					if(Utils.checkRole(role, user)) {
+						result.add(user);
+					}
+				} else {
+					result.add(user);
+				}
+			}
 		}
-		Query query = new Query(criteria);
-		List<User> result = mongoTemplate.find(query, User.class);
 		return result;
 	}
 	
@@ -1168,58 +1169,22 @@ public class RepositoryManager {
 		update.set("surname", user.getSurname());
 		//update.set("email", user.getEmail());
 		update.set("cf", user.getCf());
-		//update.set("subject", user.getSubject());
-		//update.set("ownerIds", user.getOwnerIds());
-		//update.set("roles", user.getRoles());
-		//update.set("authorizations", user.getAuthorizations());
+		update.set("subject", user.getSubject());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
 
-	public void addUserRole(String email, String role, String authKey, 
-			List<AuthorizationDTO> auths) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("email").is(email));
-		User userDb = mongoTemplate.findOne(query, User.class);
-		if(userDb == null) {
-			throw new EntityNotFoundException(String.format("User %s not found", email));
-		}
-		//add role
-		if(!userDb.getRoles().contains(role)) {
-			userDb.getRoles().add(role);
-		}
-		//add auths
-		List<Object> list = userDb.getAuthorizations().get(authKey);
-		if(list == null) {
-			list = new ArrayList<Object>();
-			userDb.getAuthorizations().put(authKey, list);
-		}
-		list.addAll(auths);
-		//update user
-		Date actualDate = new Date();
-		Update update = new Update();
-		update.set("roles", userDb.getRoles());
-		update.set("authorizations", userDb.getAuthorizations());
-		update.set("lastUpdate", actualDate);
-		mongoTemplate.updateFirst(query, update, User.class);
-	}
-	
-	public void removeUserRole(String email, String role, String authKey) 
+	public void addUserRole(String email, String authKey, List<Authorization> auths) 
 			throws EntityNotFoundException {
 		Query query = new Query(new Criteria("email").is(email));
 		User userDb = mongoTemplate.findOne(query, User.class);
 		if(userDb == null) {
 			throw new EntityNotFoundException(String.format("User %s not found", email));
 		}
-		userDb.getRoles().remove(role);
-		for(String key : userDb.getAuthorizations().keySet()) {
-			if(key.startsWith(authKey)) {
-				userDb.getAuthorizations().remove(key);
-			}
-		}
+		userDb.getRoles().put(authKey, auths);
 		Date actualDate = new Date();
 		Update update = new Update();
 		update.set("roles", userDb.getRoles());
-		update.set("authorizations", userDb.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
@@ -1231,31 +1196,16 @@ public class RepositoryManager {
 		if(userDb == null) {
 			throw new EntityNotFoundException(String.format("User %s not found", email));
 		}
-		userDb.getAuthorizations().remove(authKey);
-		String baseAuthKey = Utils.getBaseFromAuthKey(authKey);
-		if(Utils.isNotEmpty(baseAuthKey)) {
-			String role = Utils.getRoleFromAuthKey(authKey);
-			boolean otherRoles = false;
-			for(String key : userDb.getAuthorizations().keySet()) {
-				if(key.contains(role)) {
-					otherRoles = true;
-					break;
-				}
-			}
-			if(!otherRoles) {
-				userDb.getRoles().remove(role);
-			}
-		}
+		userDb.getRoles().remove(authKey);
 		Date actualDate = new Date();
 		Update update = new Update();
 		update.set("roles", userDb.getRoles());
-		update.set("authorizations", userDb.getAuthorizations());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
 	
-	public void removeUser(String ownerId, String objectId) throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerIds").is(ownerId).and("objectId").is(objectId));
+	public void removeUser(String objectId) throws EntityNotFoundException {
+		Query query = new Query(new Criteria("objectId").is(objectId));
 		User entityDB = mongoTemplate.findOne(query, User.class);
 		if(entityDB == null) {
 			throw new EntityNotFoundException(String.format("user with id %s not found", objectId));

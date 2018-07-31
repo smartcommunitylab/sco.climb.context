@@ -1,3 +1,3 @@
-"name","surname","email","cf","subject","ownerIds","roles"
-"Gino","Rivieccio","gino.rivieccio@gmail.com","AAAAAAAAAA",,"VELA,TEST","parent"
-"Rino","Rossi","rino.rossi@gmail.com","BBBBBBBB",,"TEST","parent,volunteer"
+"name","surname","email","cf","subject","ownerId"
+"Gino","Rivieccio","gino.rivieccio@gmail.com","AAAAAAAAAA",,"VELA,TEST"
+"Rino","Rossi","rino.rossi@gmail.com","BBBBBBBB",,"TEST"

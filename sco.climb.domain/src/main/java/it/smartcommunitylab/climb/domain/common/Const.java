@@ -19,8 +19,8 @@ public class Const {
 	public static final int BATTERY_STATE = 501;
 	public static final int TEST_STATE = 901;
 	
-	public static final String ROLE_SUPER_ADMIN = "super-admin";
 	public static final String ROLE_ADMIN = "admin";
+	public static final String ROLE_USER = "user";
 	public static final String ROLE_PARENT = "parent";
 	public static final String ROLE_TEACHER = "teacher";
 	public static final String ROLE_VOLUNTEER = "volunteer";

@@ -149,7 +149,6 @@ public class AuthController {
 	}
 	
 	public boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
-		boolean result = false;
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
 		if(accountByEmail == null) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
@@ -157,13 +156,18 @@ public class AuthController {
 		String email = accountByEmail.getAttributeValue();
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
-			result = user.getRoles().contains(role) && user.getOwnerIds().contains(ownerId);
+			for(String authKey : user.getRoles().keySet()) {
+				String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
+				String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
+				if(roleFromAuthKey.equals(role) && ownerIdFromAuthKey.equals(ownerId)) {
+					return true;
+				}
+			}
 		}
-		return result;
+		return false;
 	}
 	
 	public boolean validateRole(String role, HttpServletRequest request) throws Exception {
-		boolean result = false;
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
 		if(accountByEmail == null) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
@@ -171,9 +175,14 @@ public class AuthController {
 		String email = accountByEmail.getAttributeValue();
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
-			result = user.getRoles().contains(role);
+			for(String authKey : user.getRoles().keySet()) {
+				String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
+				if(roleFromAuthKey.equals(role)) {
+					return true;
+				}
+			}
 		}
-		return result;
+		return false;
 	}
-
+	
 }

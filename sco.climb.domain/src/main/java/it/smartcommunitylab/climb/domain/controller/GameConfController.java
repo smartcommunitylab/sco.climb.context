@@ -50,7 +50,7 @@ public class GameConfController extends AuthController {
 			@RequestBody PedibusGameConfTemplate confTemplate,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateRole(Const.ROLE_SUPER_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_ADMIN, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		PedibusGameConfTemplate result = storage.savePedibusGameConfTemplate(confTemplate);

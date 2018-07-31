@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import it.smartcommunitylab.climb.contextstore.model.User;
+
 public class Utils {
 	private static ObjectMapper fullMapper = new ObjectMapper();
 	static {
@@ -128,10 +130,29 @@ public class Utils {
 		return null;
 	}
 	
+	public static boolean checkOwnerId(String ownerId, User user) {
+		//TODO
+		return false;
+	}
+	
+	public static boolean checkRole(String role, User user) {
+		//TODO
+		return false;
+	}
+	
+	public static List<String> getUserRoles(User user) {
+		//TODO
+		return null;
+	}
+	
+	public static List<String> getUserOwnerIds(User user) {
+		//TODO
+		return null;
+	}
+	
 	public static String getNormalizeLegName(String name) {
 		//TODO capire come normalizzare il nome della tappa
 		return name.trim().replace(" ", "");
 	}
 	
-
 }

@@ -1,6 +1,5 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,14 +9,12 @@ public class User {
 	private String objectId;
 	private Date creationDate;
 	private Date lastUpdate;
-	private List<String> ownerIds = new ArrayList<String>();
-	private List<String> roles = new ArrayList<String>();
 	private String subject;
 	private String name;
 	private String surname;
 	private String email;
 	private String cf;
-	private Map<String, List<Object>> authorizations = new HashMap<String, List<Object>>();
+	private Map<String, List<Authorization>> roles = new HashMap<String, List<Authorization>>();
 	
 	public String getObjectId() {
 		return objectId;
@@ -36,18 +33,6 @@ public class User {
 	}
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
-	}
-	public List<String> getOwnerIds() {
-		return ownerIds;
-	}
-	public void setOwnerIds(List<String> ownerIds) {
-		this.ownerIds = ownerIds;
-	}
-	public List<String> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
 	}
 	public String getSubject() {
 		return subject;
@@ -79,11 +64,11 @@ public class User {
 	public void setCf(String cf) {
 		this.cf = cf;
 	}
-	public Map<String, List<Object>> getAuthorizations() {
-		return authorizations;
+	public Map<String, List<Authorization>> getRoles() {
+		return roles;
 	}
-	public void setAuthorizations(Map<String, List<Object>> authorizations) {
-		this.authorizations = authorizations;
+	public void setRoles(Map<String, List<Authorization>> roles) {
+		this.roles = roles;
 	}
 	
 }
