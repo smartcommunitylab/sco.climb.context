@@ -115,7 +115,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -137,7 +137,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -161,7 +161,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame_Calendar, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -221,7 +221,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -252,7 +252,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame_Excursion, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -297,7 +297,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -325,7 +325,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -368,7 +368,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -405,7 +405,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -481,7 +481,7 @@ public class DashboardController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

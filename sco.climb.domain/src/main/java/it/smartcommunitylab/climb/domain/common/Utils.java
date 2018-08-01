@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.User;
 
 public class Utils {
@@ -167,6 +168,25 @@ public class Utils {
 			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
 			if(result.contains(ownerIdFromAuthKey)) {
 				result.add(ownerIdFromAuthKey);
+			}
+		}
+		return result;
+	}
+	
+	public static List<String> getUserInstituteByOwnerId(String ownerId, User user) {
+		List<String> result = new ArrayList<>();
+		for(String authKey : user.getRoles().keySet()) {
+			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
+			if(ownerIdFromAuthKey.equals(ownerId)) {
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getResources().contains("*") || auth.getResources().contains(Const.AUTH_RES_Institute)) {
+						String instituteId = auth.getInstituteId();
+						if(!result.contains(instituteId)) {
+							result.add(instituteId);
+						}
+					}
+				}
 			}
 		}
 		return result;

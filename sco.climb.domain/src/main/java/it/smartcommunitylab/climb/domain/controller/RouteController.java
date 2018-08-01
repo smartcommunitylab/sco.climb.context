@@ -63,7 +63,7 @@ public class RouteController extends AuthController {
 			@PathVariable String schoolId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_Route, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -93,7 +93,7 @@ public class RouteController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				objectId, null, Const.AUTH_RES_Route, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -112,7 +112,7 @@ public class RouteController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				null, null, Const.AUTH_RES_Route, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -135,7 +135,7 @@ public class RouteController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				objectId, null, Const.AUTH_RES_Route, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -159,7 +159,7 @@ public class RouteController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				objectId, null, Const.AUTH_RES_Route, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

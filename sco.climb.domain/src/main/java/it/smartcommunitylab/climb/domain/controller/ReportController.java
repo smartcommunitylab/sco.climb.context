@@ -70,7 +70,7 @@ public class ReportController extends AuthController {
 			@PathVariable String routeId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, routeId, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, routeId, null, 
 				Const.AUTH_RES_Attendance, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

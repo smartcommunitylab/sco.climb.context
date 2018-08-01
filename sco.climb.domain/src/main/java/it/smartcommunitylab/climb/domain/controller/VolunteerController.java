@@ -60,7 +60,7 @@ public class VolunteerController extends AuthController {
 			@PathVariable String schoolId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, 
 				null,	null, Const.AUTH_RES_Volunteer, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -81,7 +81,7 @@ public class VolunteerController extends AuthController {
 		if(volunteer == null) {
 			throw new EntityNotFoundException("volunteer not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+		if(!validateAuthorization(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Volunteer, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -104,7 +104,7 @@ public class VolunteerController extends AuthController {
 		if(volunteer == null) {
 			throw new EntityNotFoundException("volunteer not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+		if(!validateAuthorization(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Volunteer, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -128,7 +128,7 @@ public class VolunteerController extends AuthController {
 		if(volunteer == null) {
 			throw new EntityNotFoundException("volunteer not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
+		if(!validateAuthorization(ownerId, volunteer.getInstituteId(), volunteer.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Volunteer, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

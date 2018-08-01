@@ -17,6 +17,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.climb.contextstore.model.Institute;
+import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
@@ -24,6 +25,7 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,11 +59,15 @@ public class InstituteController extends AuthController {
 			@PathVariable String ownerId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, null, null, null, null,
-				Const.AUTH_RES_Institute, Const.AUTH_ACTION_READ, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		User user = getUserByEmail(request);
+		List<Institute> result = new ArrayList<Institute>();
+		List<Institute> list = (List<Institute>) storage.findData(Institute.class, null, null, ownerId);
+		for(Institute institute : list) {
+			if(validateAuthorization(ownerId, null, null, null, null,
+				Const.AUTH_RES_Institute, Const.AUTH_ACTION_READ, user)) {
+				result.add(institute);
+			}
 		}
-		List<Institute> result = (List<Institute>) storage.findData(Institute.class, null, null, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchInstitute[%s]:%d", ownerId, result.size()));
 		}
@@ -74,7 +80,7 @@ public class InstituteController extends AuthController {
 			@PathVariable String ownerId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, null, null, null, null,
+		if(!validateAuthorization(ownerId, null, null, null, null,
 				Const.AUTH_RES_Institute, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -94,7 +100,7 @@ public class InstituteController extends AuthController {
 			@PathVariable String objectId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, null, null, null, null,
+		if(!validateAuthorization(ownerId, null, null, null, null,
 				Const.AUTH_RES_Institute, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -113,7 +119,7 @@ public class InstituteController extends AuthController {
 			@PathVariable String objectId, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, null, null, null, null,
+		if(!validateAuthorization(ownerId, null, null, null, null,
 				Const.AUTH_RES_Institute, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

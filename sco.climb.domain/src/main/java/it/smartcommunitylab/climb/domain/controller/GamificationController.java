@@ -124,7 +124,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -357,7 +357,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -378,7 +378,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -401,7 +401,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -422,7 +422,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -439,7 +439,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String schoolId,			
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -465,7 +465,7 @@ public class GamificationController extends AuthController {
 			@RequestParam List<String> classes,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -502,7 +502,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String schoolId,			
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -529,7 +529,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -555,7 +555,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -580,7 +580,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -600,7 +600,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -623,7 +623,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -667,7 +667,7 @@ public class GamificationController extends AuthController {
 		if(legDb == null) {
 			throw new EntityNotFoundException("pedibus itinerary leg not found");
 		}		
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -707,7 +707,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -746,7 +746,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -805,7 +805,7 @@ public class GamificationController extends AuthController {
 		if(leg == null) {
 			throw new EntityNotFoundException("pedibus itinerary leg not found");
 		}		
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -841,7 +841,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -869,7 +869,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -969,7 +969,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -1003,7 +1003,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -1036,7 +1036,7 @@ public class GamificationController extends AuthController {
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, game.getInstituteId(), game.getSchoolId(), 
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -1093,7 +1093,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String pedibusGameId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, 
 				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

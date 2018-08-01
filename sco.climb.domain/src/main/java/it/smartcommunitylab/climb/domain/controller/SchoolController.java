@@ -59,7 +59,7 @@ public class SchoolController extends AuthController {
 			@PathVariable String instituteId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, null, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, null, null, null, 
 				Const.AUTH_RES_School, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -78,7 +78,7 @@ public class SchoolController extends AuthController {
 			@RequestBody School school, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, null, null, null,
+		if(!validateAuthorization(ownerId, instituteId, null, null, null,
 				Const.AUTH_RES_School, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}		
@@ -102,7 +102,7 @@ public class SchoolController extends AuthController {
 		if(school == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), 
+		if(!validateAuthorization(ownerId, school.getInstituteId(), school.getObjectId(), 
 				null, null, Const.AUTH_RES_School, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -126,7 +126,7 @@ public class SchoolController extends AuthController {
 		if(school == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, school.getInstituteId(), school.getObjectId(), 
+		if(!validateAuthorization(ownerId, school.getInstituteId(), school.getObjectId(), 
 				null, null, Const.AUTH_RES_School, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

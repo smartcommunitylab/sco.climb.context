@@ -110,7 +110,19 @@ public class AuthController {
 		return result;
 	}
 	
-	public boolean validateAuthorizationByExp(String ownerId, String instituteId, 
+	public User getUserByEmail(HttpServletRequest request) throws Exception {
+		AccountAttributeDTO account = getAccountByEmail(getAccoutProfile(request));
+		if(account == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		User user = storage.getUserByEmail(account.getAttributeValue());
+		if(user == null) {
+			throw new UnauthorizedException("Unauthorized Exception: user email not found");
+		}
+		return user;
+	}
+	
+	public boolean validateAuthorization(String ownerId, String instituteId, 
 			String schoolId, String routeId, String gameId, String resource, String action,	
 			HttpServletRequest request) throws Exception {
 		AccountAttributeDTO account = getAccountByEmail(getAccoutProfile(request));
@@ -118,14 +130,21 @@ public class AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
 		if(!validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
-				resource, action, account.getAttributeValue())) {
+				resource, action, account.getAttributeValue(), false)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
 		return true;
 	}
 	
+	public boolean validateAuthorization(String ownerId, String instituteId, 
+			String schoolId, String routeId, String gameId, String resource, String action,	
+			User user) throws Exception {
+		return validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
+				resource, action, user.getEmail(), true);
+	}
+	
 	private boolean validateAuthorization(String ownerId, String instituteId, String schoolId, String routeId, 
-			String gameId, String resource, String action, String email) {
+			String gameId, String resource, String action, String email, boolean nullable) {
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {

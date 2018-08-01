@@ -76,7 +76,7 @@ public class ChildController extends AuthController {
 			@PathVariable String schoolId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_Child, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -97,7 +97,7 @@ public class ChildController extends AuthController {
 		if(child == null) {
 			throw new EntityNotFoundException("child not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), null, null, 
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), null, null, 
 				Const.AUTH_RES_Child, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -119,7 +119,7 @@ public class ChildController extends AuthController {
 			@RequestParam String classRoom, 
 			HttpServletRequest request, 
 			HttpServletResponse response)	throws Exception {
-		if(!validateAuthorizationByExp(ownerId, instituteId, schoolId, null, null, 
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
 				Const.AUTH_RES_Child, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -143,7 +143,7 @@ public class ChildController extends AuthController {
 		if(child == null) {
 			throw new EntityNotFoundException("child not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null, null, Const.AUTH_RES_Child, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -167,7 +167,7 @@ public class ChildController extends AuthController {
 		if(child == null) {
 			throw new EntityNotFoundException("child not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Child, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -189,7 +189,7 @@ public class ChildController extends AuthController {
 		if(child == null) {
 			throw new EntityNotFoundException("child not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -218,7 +218,7 @@ public class ChildController extends AuthController {
 		if(child == null) {
 			throw new EntityNotFoundException("child not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, child.getInstituteId(), child.getSchoolId(), 
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}

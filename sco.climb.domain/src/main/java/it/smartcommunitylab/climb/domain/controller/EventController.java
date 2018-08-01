@@ -87,7 +87,7 @@ public class EventController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -134,7 +134,7 @@ public class EventController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_WsnEvent, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -190,7 +190,7 @@ public class EventController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_EventLogFile, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -220,7 +220,7 @@ public class EventController extends AuthController {
 		if(route == null) {
 			throw new EntityNotFoundException("route not found");
 		}
-		if(!validateAuthorizationByExp(ownerId, route.getInstituteId(), route.getSchoolId(), 
+		if(!validateAuthorization(ownerId, route.getInstituteId(), route.getSchoolId(), 
 				routeId, null, Const.AUTH_RES_NodeState, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
