@@ -1,21 +1,6 @@
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.aac.AACException;
-import it.smartcommunitylab.aac.AACProfileService;
-import it.smartcommunitylab.aac.AACService;
-import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
-import it.smartcommunitylab.aac.authorization.beans.RequestedAuthorizationDTO;
-import it.smartcommunitylab.aac.model.AccountProfile;
-import it.smartcommunitylab.aac.model.TokenData;
-import it.smartcommunitylab.climb.contextstore.model.User;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import it.smartcommunitylab.aac.AACException;
+import it.smartcommunitylab.aac.AACProfileService;
+import it.smartcommunitylab.aac.AACService;
+import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
+import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.climb.contextstore.model.Authorization;
+import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 public class AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -43,9 +41,6 @@ public class AuthController {
 	@Autowired
 	@Value("${profile.serverUrl}")
 	private String profileServerUrl;
-
-	@Autowired
-	AuthorizationManager authorizationManager;
 
 	private AACService aacService;
 	
@@ -85,9 +80,9 @@ public class AuthController {
 		AccountAttributeDTO account = new AccountAttributeDTO();
 		account.setAccountName(Const.AUTH_ACCOUNT_NAME);
 		account.setAttributeName(Const.AUTH_ATTRIBUTE_NAME);
-		//TODO TEST
-		//account.setAttributeValue("smartcommunitytester@gmail.com");
 		account.setAttributeValue(email);
+		//TODO TEST
+		//account.setAttributeValue("gino.rivieccio@gmail.com");
 		return account;
 	}
 
@@ -122,30 +117,56 @@ public class AuthController {
 		if(account == null) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
-		String resourceName = "pedibus";
-		Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put("pedibus-resource", resource);
-		if(Utils.isNotEmpty(ownerId)) {
-			attributes.put("pedibus-ownerId", ownerId);
-		}
-		if(Utils.isNotEmpty(instituteId)) {
-			attributes.put("pedibus-instituteId", instituteId);
-		}
-		if(Utils.isNotEmpty(schoolId)) {
-			attributes.put("pedibus-schoolId", schoolId);
-		}
-		if(Utils.isNotEmpty(routeId)) {
-			attributes.put("pedibus-routeId", routeId);
-		}
-		if(Utils.isNotEmpty(gameId)) {
-			attributes.put("pedibus-gameId", gameId);
-		}
-		RequestedAuthorizationDTO authorization = authorizationManager.getAuthorization(account, action, 
-				resourceName, attributes);
-		if(!authorizationManager.validateAuthorization(authorization)) {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
+				resource, action, account.getAttributeValue())) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
 		return true;
+	}
+	
+	private boolean validateAuthorization(String ownerId, String instituteId, String schoolId, String routeId, 
+			String gameId, String resource, String action, String email) {
+		User user = storage.getUserByEmail(email);
+		if(user != null) {
+			for(String authKey : user.getRoles().keySet()) {
+				String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
+				if(ownerIdFromAuthKey.equals(ownerId)) {
+					List<Authorization> authList = user.getRoles().get(authKey);
+					for(Authorization auth : authList) {
+						if(auth.getResources().contains("*") || auth.getResources().contains(resource)) {
+							if(auth.getActions().contains(action)) {
+								if(Utils.isEmpty(instituteId)) {
+									instituteId = "*";
+								}
+								if(!auth.getInstituteId().equals(instituteId) && !auth.getInstituteId().equals("*")) {
+									continue;
+								}
+								if(Utils.isEmpty(schoolId)) {
+									schoolId = "*";
+								}
+								if(!auth.getSchoolId().equals(schoolId) && !auth.getSchoolId().equals("*")) {
+									continue;
+								}
+								if(Utils.isEmpty(routeId)) {
+									routeId = "*";
+								}
+								if(!auth.getRouteId().equals(routeId) && !auth.getRouteId().equals("*")) {
+									continue;
+								}
+								if(Utils.isEmpty(gameId)) {
+									gameId = "*";
+								}
+								if(!auth.getGameId().equals(gameId) && !auth.getGameId().equals("*")) {
+									continue;
+								}
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {

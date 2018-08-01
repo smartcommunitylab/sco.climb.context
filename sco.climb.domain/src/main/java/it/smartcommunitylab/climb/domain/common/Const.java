@@ -22,8 +22,9 @@ public class Const {
 	public static final String ROLE_ADMIN = "admin";
 	public static final String ROLE_USER = "user";
 	public static final String ROLE_PARENT = "parent";
-	public static final String ROLE_EDITOR = "editor";
+	public static final String ROLE_GAME_EDITOR = "game-editor";
 	public static final String ROLE_VOLUNTEER = "volunteer";
+	public static final String ROLE_TEACHER = "teacher";
 	public static final String ROLE_OWNER = "owner";
 	public static final String ROLE_SCHOOL_OWNER = "school-owner";
 	

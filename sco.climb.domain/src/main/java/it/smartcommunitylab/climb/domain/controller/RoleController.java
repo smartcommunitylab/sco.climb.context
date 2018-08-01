@@ -90,7 +90,7 @@ public class RoleController extends AuthController {
 		auths.add(auth);
 		
 		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_SCHOOL_OWNER), auths);
+				Utils.getAuthKey(ownerId, Const.ROLE_SCHOOL_OWNER, instituteId, schoolId), auths);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addSchoolOwner: %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId));
@@ -149,7 +149,59 @@ public class RoleController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/role/{ownerId}/editor", method = RequestMethod.POST)
-	public @ResponseBody List<Authorization> addEditor(
+	public @ResponseBody List<Authorization> addGameEditor(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			@RequestParam String instituteId,
+			@RequestParam String schoolId,
+			@RequestParam String pedibusGameId,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<Authorization> auths = new ArrayList<Authorization>();
+		
+		Authorization auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(instituteId);
+		auth.setSchoolId(schoolId);
+		auth.setRouteId("*");
+		auth.setGameId(pedibusGameId);
+		auth.getResources().add(Const.AUTH_RES_Institute);
+		auth.getResources().add(Const.AUTH_RES_School);
+		auth.getResources().add(Const.AUTH_RES_Child);
+		auth.getResources().add(Const.AUTH_RES_Image);
+		auth.getResources().add(Const.AUTH_RES_Volunteer);
+		auth.getResources().add(Const.AUTH_RES_Stop);
+		auth.getResources().add(Const.AUTH_RES_Route);
+		auth.getResources().add(Const.AUTH_RES_PedibusGame);
+		auth.getResources().add(Const.AUTH_RES_PedibusGame_Calendar);
+		auth.getResources().add(Const.AUTH_RES_PedibusGame_Excursion);
+		auths.add(auth);
+		
+		auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(instituteId);
+		auth.setSchoolId(schoolId);
+		auth.setRouteId("*");
+		auth.setGameId(pedibusGameId);
+		auth.getResources().add(Const.AUTH_RES_PedibusGame_Link);
+		auths.add(auth);
+
+		storage.addUserRole(email, 
+				Utils.getAuthKey(ownerId, Const.ROLE_GAME_EDITOR, instituteId, schoolId, pedibusGameId), auths);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addGameEditor: %s - %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId, pedibusGameId));
+		}
+		return auths;
+	}
+
+	@RequestMapping(value = "/api/role/{ownerId}/teacher", method = RequestMethod.POST)
+	public @ResponseBody List<Authorization> addTeacher(
 			@PathVariable String ownerId,
 			@RequestParam String email,
 			@RequestParam String instituteId,
@@ -188,17 +240,12 @@ public class RoleController extends AuthController {
 		auth.setGameId(pedibusGameId);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Calendar);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Excursion);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Link);
-		auth.getResources().add(Const.AUTH_RES_Image);
-		auth.getResources().add(Const.AUTH_RES_Volunteer);
-		auth.getResources().add(Const.AUTH_RES_Stop);
-		auth.getResources().add(Const.AUTH_RES_Route);
 		auths.add(auth);
 
 		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_EDITOR, instituteId, schoolId, pedibusGameId), auths);
+				Utils.getAuthKey(ownerId, Const.ROLE_TEACHER, instituteId, schoolId, pedibusGameId), auths);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addEditor: %s - %s - %s - %s - %s", ownerId, email, 
+			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId, pedibusGameId));
 		}
 		return auths;
