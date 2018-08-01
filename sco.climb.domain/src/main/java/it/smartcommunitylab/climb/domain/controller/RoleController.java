@@ -65,6 +65,39 @@ public class RoleController extends AuthController {
 		return auths;
 	}
 	
+	@RequestMapping(value = "/api/role/{ownerId}/school", method = RequestMethod.POST)
+	public @ResponseBody List<Authorization> addSchoolOwner(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			@RequestParam String instituteId,
+			@RequestParam String schoolId,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<Authorization> auths = new ArrayList<Authorization>();
+		Authorization auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.getActions().add(Const.AUTH_ACTION_ADD);
+		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.getActions().add(Const.AUTH_ACTION_DELETE);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(instituteId);
+		auth.setSchoolId(schoolId);
+		auth.setRouteId("*");
+		auth.setGameId("*");
+		auth.getResources().add("*");
+		auths.add(auth);
+		
+		storage.addUserRole(email, 
+				Utils.getAuthKey(ownerId, Const.ROLE_SCHOOL_OWNER), auths);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addSchoolOwner: %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId));
+		}
+		return auths;
+	}
+	
 	@RequestMapping(value = "/api/role/{ownerId}/volunteer", method = RequestMethod.POST)
 	public @ResponseBody List<Authorization> addVolunteer(
 			@PathVariable String ownerId,
@@ -115,8 +148,8 @@ public class RoleController extends AuthController {
 		return auths;
 	}
 	
-	@RequestMapping(value = "/api/role/{ownerId}/teacher", method = RequestMethod.POST)
-	public @ResponseBody List<Authorization> addTeacher(
+	@RequestMapping(value = "/api/role/{ownerId}/editor", method = RequestMethod.POST)
+	public @ResponseBody List<Authorization> addEditor(
 			@PathVariable String ownerId,
 			@RequestParam String email,
 			@RequestParam String instituteId,
@@ -163,9 +196,9 @@ public class RoleController extends AuthController {
 		auths.add(auth);
 
 		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_TEACHER, instituteId, schoolId, pedibusGameId), auths);
+				Utils.getAuthKey(ownerId, Const.ROLE_EDITOR, instituteId, schoolId, pedibusGameId), auths);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
+			logger.info(String.format("addEditor: %s - %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId, pedibusGameId));
 		}
 		return auths;
@@ -285,9 +318,8 @@ public class RoleController extends AuthController {
   		Authorization auth = new Authorization();
   		auth.setOwnerId(ownerId);
   		auths.add(auth);
-  		storage.addUserRole(user.getEmail(), 
+  		newUser = storage.addUserRole(user.getEmail(), 
   				Utils.getAuthKey(ownerId, Const.ROLE_USER), auths);
-  		
   		if(logger.isInfoEnabled()) {
   			logger.info(String.format("saveUser[new]: %s - %s", ownerId, user.getEmail()));
   		}

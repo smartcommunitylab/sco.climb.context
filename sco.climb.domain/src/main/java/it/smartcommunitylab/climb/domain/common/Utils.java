@@ -131,23 +131,45 @@ public class Utils {
 	}
 	
 	public static boolean checkOwnerId(String ownerId, User user) {
-		//TODO
+		for(String authKey : user.getRoles().keySet()) {
+			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
+			if(ownerIdFromAuthKey.equals(ownerId)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
 	public static boolean checkRole(String role, User user) {
-		//TODO
+		for(String authKey : user.getRoles().keySet()) {
+			String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
+			if(roleFromAuthKey.equals(role)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
 	public static List<String> getUserRoles(User user) {
-		//TODO
-		return null;
+		List<String> result = new ArrayList<>();
+		for(String authKey : user.getRoles().keySet()) {
+			String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
+			if(result.contains(roleFromAuthKey)) {
+				result.add(roleFromAuthKey);
+			}
+		}
+		return result;
 	}
 	
 	public static List<String> getUserOwnerIds(User user) {
-		//TODO
-		return null;
+		List<String> result = new ArrayList<>();
+		for(String authKey : user.getRoles().keySet()) {
+			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
+			if(result.contains(ownerIdFromAuthKey)) {
+				result.add(ownerIdFromAuthKey);
+			}
+		}
+		return result;
 	}
 	
 	public static String getNormalizeLegName(String name) {

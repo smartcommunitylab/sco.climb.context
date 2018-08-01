@@ -16,16 +16,8 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.aac.model.TokenData;
-import it.smartcommunitylab.climb.contextstore.model.User;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.security.DataSetDetails;
-import it.smartcommunitylab.climb.domain.security.DataSetInfo;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,13 +34,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
+import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.security.DataSetDetails;
+import it.smartcommunitylab.climb.domain.security.DataSetInfo;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
+
 
 @Controller
 public class ConsoleController extends AuthController {
 
-	@Autowired
-	private ServletContext context;		
-	
 	@Autowired
 	private RepositoryManager storage;
 	
@@ -108,8 +104,8 @@ public class ConsoleController extends AuthController {
 		//dsInfo.setEmail("smartcommunitytester@gmail.com");
 		User user = storage.getUserByEmail(details.getApp().getEmail());
 		if(user != null) {
-			dsInfo.setOwnerIds(user.getOwnerIds());
-			dsInfo.setRoles(user.getRoles());
+			dsInfo.setOwnerIds(Utils.getUserOwnerIds(user));
+			dsInfo.setRoles(Utils.getUserRoles(user));
 		}
 		//save rememeberme
 		Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();

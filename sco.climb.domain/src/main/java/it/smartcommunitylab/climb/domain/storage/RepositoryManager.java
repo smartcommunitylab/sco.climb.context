@@ -1174,7 +1174,7 @@ public class RepositoryManager {
 		mongoTemplate.updateFirst(query, update, User.class);
 	}
 
-	public void addUserRole(String email, String authKey, List<Authorization> auths) 
+	public User addUserRole(String email, String authKey, List<Authorization> auths) 
 			throws EntityNotFoundException {
 		Query query = new Query(new Criteria("email").is(email));
 		User userDb = mongoTemplate.findOne(query, User.class);
@@ -1187,6 +1187,7 @@ public class RepositoryManager {
 		update.set("roles", userDb.getRoles());
 		update.set("lastUpdate", actualDate);
 		mongoTemplate.updateFirst(query, update, User.class);
+		return userDb;
 	}
 	
 	public void removeUserAuthKey(String email, String authKey) 

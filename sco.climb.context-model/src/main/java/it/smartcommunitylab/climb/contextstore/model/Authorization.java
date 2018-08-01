@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Authorization {
@@ -8,8 +9,8 @@ public class Authorization {
 	private String schoolId;
 	private String routeId;
 	private String gameId;
-	private List<String> resources;
-	private List<String> actions;
+	private List<String> resources = new ArrayList<>();
+	private List<String> actions  = new ArrayList<>();
 	
 	public String getOwnerId() {
 		return ownerId;
