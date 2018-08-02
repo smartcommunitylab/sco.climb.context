@@ -291,6 +291,10 @@ public class RoleController extends AuthController {
 				!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		String role = Utils.getRoleFromAuthKey(authKey);
+		if(role.contains(Const.ROLE_ADMIN)) {
+			throw new UnauthorizedException("Unauthorized Exception: unable to delete admin role");
+		}
 		User user = storage.getUserByEmail(email);
 		if(user == null) {
 			throw new EntityNotFoundException(String.format("user %s not found", email));

@@ -6,14 +6,17 @@
             {{'role' | translate}}:
             <md-radio-group ng-model="actualRole" layout="row">            
                 <md-radio-button value='owner'>{{'user_list_owner' | translate}}</md-radio-button>
+                <md-radio-button value='school'>{{'user_list_school' | translate}}</md-radio-button>
                 <!-- <md-radio-button value='childrenedit'>{{'user_list_childrenedit' | translate}}</md-radio-button> -->
                 <!-- <md-radio-button value='parent'>{{'user_list_parent' | translate}}</md-radio-button> -->
                 <md-radio-button value='teacher'>{{'user_list_teacher' | translate}}</md-radio-button>
+                <md-radio-button value='editor'>{{'user_list_editor' | translate}}</md-radio-button>
                 <md-radio-button value='volunteer'>{{'user_list_volunteer' | translate}}</md-radio-button>            
             </md-radio-group>
         </md-input-container>
     
-        <md-input-container class="md-block" ng-show="actualRole == 'parent' || actualRole == 'teacher' || actualRole == 'volunteer'">
+        <md-input-container class="md-block" ng-show="actualRole == 'school' || actualRole == 'teacher' 
+        	|| actualRole == 'volunteer' || actualRole == 'editor'">
             <label>{{'role_editor_institute_id' | translate}}</label>
             <md-icon>domain</md-icon>
             <md-select ng-if="institutesList && institutesList.length" placeholder="{{'role_editor_institute_id' | translate}}" 
@@ -23,7 +26,8 @@
             </md-select>
         </md-input-container>
     
-        <md-input-container class="md-block" ng-show="actualRole == 'parent' || actualRole == 'teacher' || actualRole == 'volunteer'">
+        <md-input-container class="md-block" ng-show="actualRole == 'school' || actualRole == 'teacher' 
+        	|| actualRole == 'volunteer' || actualRole == 'editor'">
             <label>{{'role_editor_school_id' | translate}}</label>
             <md-icon>school</md-icon>
             <md-select ng-if="schoolsList && schoolsList.length" placeholder="{{'role_editor_school_id' | translate}}" 
@@ -33,11 +37,11 @@
             </md-select>
         </md-input-container>    
     
-        <md-input-container class="md-block" ng-show="actualRole == 'parent' || actualRole == 'teacher'">
+        <md-input-container class="md-block" ng-show="actualRole == 'editor' || actualRole == 'teacher'">
             <label>{{'role_editor_game_id' | translate}}</label>
             <md-icon>videogame_asset</md-icon>
             <md-select ng-if="gamesList && gamesList.length" placeholder="{{'role_editor_game_id' | translate}}" 
-            ng-model="user.gameId" ng-required="actualRole == 'parent' || actualRole == 'teacher'">
+            ng-model="user.gameId">
                 <md-option ng-value="game.objectId" ng-repeat="game in gamesList">{{game.gameName}}</md-option>
             </md-select>
         </md-input-container>

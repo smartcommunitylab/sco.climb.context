@@ -9,6 +9,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
       }
       $scope.$parent.currentUsersListTab = $stateParams.role + "-list-tab";
 
+      $scope.users = [];
       $scope.authTextMap = {};
       $scope.showAuthsMap = {};
       $scope.loading = true;
@@ -18,23 +19,27 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
       }
       dataService.getUsersByRole($scope.roleToShow).then(
         function (data) {
-          if ($stateParams.role == 'norole') {
-            $scope.users = [];
-            data.forEach(element => {
-              if (element.roles.length == 0) $scope.users.push(element);
-            });
-          } else {
-            $scope.users = data;
-          }
-          //console.log('[UsersList] Users number: ' + $scope.users.length)
-          $scope.users.forEach(function(user) {
-          	user.roleNames = [];
+        	data.forEach(user => {
+        		user.roleNames = [];
           	for(authKey in user.roles) {
           		var strings = authKey.split("__");
           		if(strings.length >= 2) {
+          			if(strings[1] == "user") {
+          				continue;
+          			}
           			user.roleNames.push(strings[1]);
           		}
           	}
+          	if($stateParams.role == 'norole') {
+          		if(user.roleNames.length == 0) {
+          			$scope.users.push(user);
+          		}
+          	} else {
+          		$scope.users.push(user);
+          	}
+          });
+          //console.log('[UsersList] Users number: ' + $scope.users.length)
+          $scope.users.forEach(function(user) {
           	$scope.showAuthsMap[user.objectId] = false;
           	$scope.authTextMap[user.objectId] = {};
           	if(!angular.equals(user.roles, {})) {
