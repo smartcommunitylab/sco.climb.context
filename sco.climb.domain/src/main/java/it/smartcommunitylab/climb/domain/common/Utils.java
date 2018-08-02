@@ -155,7 +155,7 @@ public class Utils {
 		List<String> result = new ArrayList<>();
 		for(String authKey : user.getRoles().keySet()) {
 			String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
-			if(result.contains(roleFromAuthKey)) {
+			if(!result.contains(roleFromAuthKey)) {
 				result.add(roleFromAuthKey);
 			}
 		}
@@ -166,7 +166,7 @@ public class Utils {
 		List<String> result = new ArrayList<>();
 		for(String authKey : user.getRoles().keySet()) {
 			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-			if(result.contains(ownerIdFromAuthKey)) {
+			if(!result.contains(ownerIdFromAuthKey)) {
 				result.add(ownerIdFromAuthKey);
 			}
 		}

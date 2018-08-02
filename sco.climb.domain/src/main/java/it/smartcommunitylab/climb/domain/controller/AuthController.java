@@ -82,7 +82,7 @@ public class AuthController {
 		account.setAttributeName(Const.AUTH_ATTRIBUTE_NAME);
 		account.setAttributeValue(email);
 		//TODO TEST
-		account.setAttributeValue("gino.rivieccio@gmail.com");
+		//account.setAttributeValue("gino.rivieccio@gmail.com");
 		return account;
 	}
 

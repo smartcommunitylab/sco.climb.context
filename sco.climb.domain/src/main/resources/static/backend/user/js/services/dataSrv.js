@@ -136,7 +136,7 @@ angular.module('climbGameUser.services.data', [])
           email: user.email,
           instituteId: user.instituteId,
           schoolId: user.schoolId,
-          gameId: user.gameId,
+          pedibusGameId: user.gameId,
         }
       }).then(function (response) {
         deferred.resolve(response.data)

@@ -8,9 +8,9 @@
       <div class="md-list-item-text" layout="column">
         <h3>{{user.surname}} {{user.name}}</h3>
         <p>{{user.email}}</p>
-        <p>{{'roles' | translate}}: {{user.roles}}</p>
+        <p>{{'roles' | translate}}: {{user.roleNames}}</p>
 	      <div ng-show="getShowAuths(user)" layout="column">
-	      	<div class="flex" ng-repeat="(key, value) in user.authorizations | fromMap">
+	      	<div class="flex" ng-repeat="(key, value) in user.roles | fromMap">
 			      <div layout="row">
 				      <div flex="5">
 					      <md-button class="md-icon-button md-primary" ng-disabled="!roleToShow" ng-click="deleteAuth($event, user, key)">
@@ -19,8 +19,8 @@
 				      </div>
 				      <div flex="95">
 				        <h3>Autorizzazione</h3>
-				        <p ng-show="authTextMap[user.objectId]['retrieved']">{{authTextMap[user.objectId][key]}}</p>
-				        <p ng-show="!authTextMap[user.objectId]['retrieved']">Attendere...</p>
+				        <p ng-show="authTextMap[user.objectId][key]['loaded']">{{authTextMap[user.objectId][key]['data']}}</p>
+				        <p ng-show="!authTextMap[user.objectId][key]['loaded']">Attendere...</p>
 				      </div>
 			      </div>
 	      	</div>
@@ -41,9 +41,9 @@
       <md-button class="md-icon-button md-primary" ng-show="!roleToShow" ng-click="deleteUser($event, user)">
         <md-icon>delete</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-primary" ng-show="roleToShow" ng-click="deleteRole($event, user, roleToShow)">
+      <!--<md-button class="md-icon-button md-primary" ng-show="roleToShow" ng-click="deleteRole($event, user, roleToShow)">
         <md-icon>delete</md-icon>
-      </md-button>
+      </md-button>-->
     </md-list-item>
 </md-list>
 <div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">

@@ -404,6 +404,7 @@ public class RoleController extends AuthController {
   	if(userRoles.contains(Const.ROLE_ADMIN)) {
   		throw new UnauthorizedException("Unauthorized Exception: unable to delete admin user");
   	}
+  	userRoles.remove(Const.ROLE_USER);
   	if((userOwnerIds.size() > 1) || (userRoles.size() > 1)) {
   		throw new UnauthorizedException("Unauthorized Exception: user has other roles and dataset");
   	}

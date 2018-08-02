@@ -7,6 +7,16 @@ angular.module('climbGameUser.controllers.home', [])
         dataService.getProfile().then(
           function (data) {
             $scope.myProfile = data;
+            $scope.myProfile.ownerIds = [];
+            for(authKey in $scope.myProfile.roles) {
+            	if(authKey.startsWith("SYSTEM")) {
+            		continue;
+            	}
+            	var strings = authKey.split("__");
+            	if(strings.length >= 1) {
+            		$scope.myProfile.ownerIds.push(strings[0]);
+          		}
+            }
             if ($scope.myProfile.ownerIds.length == 1)  { //if single domain available, select it 
               $scope.changeDomain($scope.myProfile.ownerIds[0]);
             } else { //check if domain inserted in the URL is present

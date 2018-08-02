@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGameUser.controllers.users.lists.list', [])
-.controller('usersListCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', '$state', '$stateParams', 'dataService', 'configService',
-  function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, $state, $stateParams, dataService, configService) {
+.controller('usersListCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', '$state', '$stateParams', '$translate', 'dataService', 'configService',
+  function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, $state, $stateParams, $translate, dataService, configService) {
       console.log("Selected user list: " + $stateParams.role);
       if (!$stateParams.role) {
         $state.go("home.users-lists.list", {'role':'all'});
@@ -26,14 +26,24 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
           } else {
             $scope.users = data;
           }
-          console.log('[UsersList] Users number: ' + $scope.users.length)
+          //console.log('[UsersList] Users number: ' + $scope.users.length)
           $scope.users.forEach(function(user) {
+          	user.roleNames = [];
+          	for(authKey in user.roles) {
+          		var strings = authKey.split("__");
+          		if(strings.length >= 2) {
+          			user.roleNames.push(strings[1]);
+          		}
+          	}
           	$scope.showAuthsMap[user.objectId] = false;
           	$scope.authTextMap[user.objectId] = {};
-          	if(!angular.equals(user.authorizations, {})) {
-          		var properties = Object.getOwnPropertyNames(user.authorizations);
+          	if(!angular.equals(user.roles, {})) {
+          		var properties = Object.getOwnPropertyNames(user.roles);
         			properties.forEach(function(key) {
-        				$scope.authTextMap[user.objectId][key] = '';
+        				$scope.authTextMap[user.objectId][key] = {
+        					"data": "",
+        					"loaded": false
+        				};
               });
           	}
           });
@@ -44,16 +54,6 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
           $scope.loading = false;
         }
       );
-      
-      //$scope.fromMap = function(user) {
-      	//var out = {};
-      	//user.authorizations.forEach((v, k) => out[k] = v);
-        //return out;
-      	//var result = [];
-      	//angular.forEach(user.authorizations, function(auth) {
-      	//	result.push(el);
-        //});
-      //};
       
       $scope.openUser = function(event, user) {
         $mdDialog.show({
@@ -86,7 +86,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
           locals: {
             currentUser: user,
             authKey: authKey,
-            authText: $scope.authTextMap[user.objectId][authKey]
+            authText: $scope.authTextMap[user.objectId][authKey]['data']
           }
         })
         .then(function(answer) {
@@ -94,11 +94,12 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
             $scope.loading = true;
             dataService.removeAuth(authKey, user).then(
               function (data) {
-              	delete user.authorizations[authKey];
+              	delete user.roles[authKey];
                 $scope.loading = false;
                 $state.go("home.users-lists.list", {'role':'all'});
               },
               function (reason) {
+              	console.log('[deleteAuth]' + JSON.stringify(reason));
                 $mdToast.show(
                   $mdToast.simple()
                     .textContent($translate.instant('user_delete_error_msg'))
@@ -146,6 +147,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
                 $state.go("home.users-lists.list", {'role':'all'});
               },
               function (reason) {
+              	console.log('[deleteRole]' + JSON.stringify(reason));
                 $mdToast.show(
                   $mdToast.simple()
                     .textContent($translate.instant('user_delete_error_msg'))
@@ -190,6 +192,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
                 $scope.loading = false;
               },
               function (reason) {
+              	console.log('[deleteUser]' + JSON.stringify(reason));
                 $mdToast.show(
                   $mdToast.simple()
                     .textContent($translate.instant('user_delete_error_msg'))
@@ -229,18 +232,20 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
     		return false;
     	}
     }
-      
+    
     $scope.toggleShowAuths = function(user) {
     	if(!$scope.showAuthsMap.hasOwnProperty(user.objectId)) {
     		$scope.showAuthsMap[user.objectId] = false;
     	}
     	$scope.showAuthsMap[user.objectId] = !$scope.showAuthsMap[user.objectId];
     	var showAuths = $scope.showAuthsMap[user.objectId];
-    	if(showAuths && !$scope.authTextMap[user.objectId].hasOwnProperty('retrieved')) {
-    		if(!angular.equals(user.authorizations, {})) {
-    			var properties = Object.getOwnPropertyNames(user.authorizations);
+    	if(showAuths) {
+    		if(!angular.equals(user.roles, {})) {
+    			var properties = Object.getOwnPropertyNames(user.roles);
     			properties.forEach(function(key) {
-    				getAuthText(user, key);
+    				if(!$scope.authTextMap[user.objectId][key]['loaded']) {
+    					getAuthText(user, key);
+    				}
           });
     		}
     	}
@@ -248,8 +253,8 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
       function getAuthText(user, authKey) {
         dataService.getAuthText(authKey).then(
           function (data) {
-            $scope.authTextMap[user.objectId][authKey] = data;
-            $scope.authTextMap[user.objectId]['retrieved'] = true;
+            $scope.authTextMap[user.objectId][authKey]['data'] = data;
+            $scope.authTextMap[user.objectId][authKey]['loaded'] = true;
           },
           function (reason) {
           	alert(reason);
