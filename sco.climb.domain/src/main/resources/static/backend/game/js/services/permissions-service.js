@@ -10,7 +10,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     permissionsService.setProfilePermissions = function(roles) {
         //roles = ['teacher']; //uncomment to debug UI as a teacher!
         roles.forEach(role => {
-            if (role == 'owner' || role == 'admin') {
+            if (role == 'owner' || role == 'admin' || role == 'school-owner') {
                 showInstitutes = true;
                 editInstitute = true;
                 showSchools = true;
@@ -25,12 +25,15 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
             } else if (role == 'teacher') {
                 showPaths = true;
                 showLegs = true;
-                editLegsMultimedia = true;
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
                 editInstitute = true;
                 showSchools = true;
                 editSchool = true;
+            } else if (role == 'game-editor') {
+              showPaths = true;
+              showLegs = true;
+              editLegsMultimedia = true;
             }
         });
         
