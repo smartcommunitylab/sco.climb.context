@@ -281,8 +281,9 @@ angular.module('climbGameUser.services.data', [])
     	var instituteId = null;
     	var schoolId = null;
     	var gameId = null;
-    	if(role == "parent") {
-    		gameId = tokens[2];
+    	if(role == "school-owner") {
+    		instituteId = tokens[2];
+    		schoolId = tokens[3];
     	} else if(role == "teacher") {
     		instituteId = tokens[2];
     		schoolId = tokens[3];
@@ -290,6 +291,10 @@ angular.module('climbGameUser.services.data', [])
     	} else if(role == "volunteer") {
     		instituteId = tokens[2];
     		schoolId = tokens[3];
+    	}  else if(role == "game-editor") {
+    		instituteId = tokens[2];
+    		schoolId = tokens[3];
+    		gameId = tokens[4];
     	}
     	authText = ownerId + " - " + role;
     	if(instituteId) {
