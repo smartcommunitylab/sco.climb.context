@@ -17,6 +17,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.climb.contextstore.model.School;
+import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
@@ -24,6 +25,7 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,12 +61,16 @@ public class SchoolController extends AuthController {
 			@PathVariable String instituteId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, null, null, null, 
-				Const.AUTH_RES_School, Const.AUTH_ACTION_READ, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
+		User user = getUserByEmail(request);
+		List<School> result = new ArrayList<>();
 		Criteria criteria = Criteria.where("instituteId").is(instituteId);
-		List<School> result = (List<School>) storage.findData(School.class, criteria, null, ownerId);
+		List<School> list = (List<School>) storage.findData(School.class, criteria, null, ownerId);
+		for(School school : list) {
+			if(validateAuthorization(ownerId, instituteId, school.getObjectId(), null, null,
+				Const.AUTH_RES_School, Const.AUTH_ACTION_READ, user)) {
+				result.add(school);
+			}
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchSchool[%s]:%d", ownerId, result.size()));
 		}

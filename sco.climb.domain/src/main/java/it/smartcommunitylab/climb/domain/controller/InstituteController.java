@@ -60,10 +60,10 @@ public class InstituteController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		User user = getUserByEmail(request);
-		List<Institute> result = new ArrayList<Institute>();
+		List<Institute> result = new ArrayList<>();
 		List<Institute> list = (List<Institute>) storage.findData(Institute.class, null, null, ownerId);
 		for(Institute institute : list) {
-			if(validateAuthorization(ownerId, null, null, null, null,
+			if(validateAuthorization(ownerId, institute.getObjectId(), null, null, null,
 				Const.AUTH_RES_Institute, Const.AUTH_ACTION_READ, user)) {
 				result.add(institute);
 			}

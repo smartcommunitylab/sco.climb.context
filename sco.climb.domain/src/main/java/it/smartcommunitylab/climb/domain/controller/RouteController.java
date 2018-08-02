@@ -17,6 +17,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
@@ -25,6 +26,7 @@ import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -63,10 +65,8 @@ public class RouteController extends AuthController {
 			@PathVariable String schoolId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
-				Const.AUTH_RES_Route, Const.AUTH_ACTION_READ, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
+		User user = getUserByEmail(request);
+		List<Route> result = new ArrayList<>();
 		Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
 		String dateString = request.getParameter("date");
 		if(Utils.isNotEmpty(dateString)) {
@@ -75,7 +75,13 @@ public class RouteController extends AuthController {
 					Criteria.where("from").lte(date), 
 					Criteria.where("to").gte(date));
 		}
-		List<Route> result = (List<Route>) storage.findData(Route.class, criteria, null, ownerId);
+		List<Route> list = (List<Route>) storage.findData(Route.class, criteria, null, ownerId);
+		for(Route route : list) {
+			if(validateAuthorization(ownerId, instituteId, schoolId, route.getObjectId(), null,
+				Const.AUTH_RES_Route, Const.AUTH_ACTION_READ, user)) {
+				result.add(route);
+			}
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchRoute[%s]:%d", ownerId, result.size()));
 		}

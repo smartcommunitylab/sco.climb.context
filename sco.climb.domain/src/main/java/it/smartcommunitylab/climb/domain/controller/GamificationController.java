@@ -46,6 +46,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
@@ -506,16 +507,19 @@ public class GamificationController extends AuthController {
 				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		try {
-			List<PedibusGame> result = storage.getPedibusGames(ownerId, instituteId, schoolId);
-			if (logger.isInfoEnabled()) {
-				logger.info(String.format("getPedibusGamesBySchool[%s]: %s", ownerId, result.size()));
+		User user = getUserByEmail(request);
+		List<PedibusGame> result = new ArrayList<>();
+		List<PedibusGame> list = storage.getPedibusGames(ownerId, instituteId, schoolId);
+		for(PedibusGame game : list) {
+			if(validateAuthorization(ownerId, instituteId, schoolId, null, game.getObjectId(),
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, user)) {
+				result.add(game);
 			}
-			return result;
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
-			return null;
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getPedibusGamesBySchool[%s]: %s", ownerId, result.size()));
+		}
+		return result;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary", method = RequestMethod.POST)

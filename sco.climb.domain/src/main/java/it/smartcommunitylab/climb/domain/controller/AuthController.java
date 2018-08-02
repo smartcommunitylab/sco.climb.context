@@ -82,7 +82,7 @@ public class AuthController {
 		account.setAttributeName(Const.AUTH_ATTRIBUTE_NAME);
 		account.setAttributeValue(email);
 		//TODO TEST
-		//account.setAttributeValue("gino.rivieccio@gmail.com");
+		account.setAttributeValue("gino.rivieccio@gmail.com");
 		return account;
 	}
 
@@ -129,8 +129,9 @@ public class AuthController {
 		if(account == null) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
+		User user = storage.getUserByEmail(account.getAttributeValue());
 		if(!validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
-				resource, action, account.getAttributeValue(), false)) {
+				resource, action, user)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
 		}
 		return true;
@@ -140,12 +141,11 @@ public class AuthController {
 			String schoolId, String routeId, String gameId, String resource, String action,	
 			User user) throws Exception {
 		return validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
-				resource, action, user.getEmail(), true);
+				resource, action, user, true);
 	}
 	
 	private boolean validateAuthorization(String ownerId, String instituteId, String schoolId, String routeId, 
-			String gameId, String resource, String action, String email, boolean nullable) {
-		User user = storage.getUserByEmail(email);
+			String gameId, String resource, String action, User user, boolean nullable) {
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
 				String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
@@ -154,29 +154,37 @@ public class AuthController {
 					for(Authorization auth : authList) {
 						if(auth.getResources().contains("*") || auth.getResources().contains(resource)) {
 							if(auth.getActions().contains(action)) {
-								if(Utils.isEmpty(instituteId)) {
-									instituteId = "*";
+								if(!Utils.isEmpty(instituteId) || !nullable) {
+									if(Utils.isEmpty(instituteId) && !nullable) {
+										instituteId = "*";
+									}
+									if(!auth.getInstituteId().equals(instituteId) && !auth.getInstituteId().equals("*")) {
+										continue;
+									}
 								}
-								if(!auth.getInstituteId().equals(instituteId) && !auth.getInstituteId().equals("*")) {
-									continue;
+								if(!Utils.isEmpty(schoolId) || !nullable) {
+									if(Utils.isEmpty(schoolId) && !nullable) {
+										schoolId = "*";
+									}
+									if(!auth.getSchoolId().equals(schoolId) && !auth.getSchoolId().equals("*")) {
+										continue;
+									}
 								}
-								if(Utils.isEmpty(schoolId)) {
-									schoolId = "*";
+								if(!Utils.isEmpty(routeId) || !nullable) {
+									if(Utils.isEmpty(routeId) && !nullable) {
+										routeId = "*";
+									}
+									if(!auth.getRouteId().equals(routeId) && !auth.getRouteId().equals("*")) {
+										continue;
+									}
 								}
-								if(!auth.getSchoolId().equals(schoolId) && !auth.getSchoolId().equals("*")) {
-									continue;
-								}
-								if(Utils.isEmpty(routeId)) {
-									routeId = "*";
-								}
-								if(!auth.getRouteId().equals(routeId) && !auth.getRouteId().equals("*")) {
-									continue;
-								}
-								if(Utils.isEmpty(gameId)) {
-									gameId = "*";
-								}
-								if(!auth.getGameId().equals(gameId) && !auth.getGameId().equals("*")) {
-									continue;
+								if(!Utils.isEmpty(gameId) || !nullable) {
+									if(Utils.isEmpty(gameId) && !nullable) {
+										gameId = "*";
+									}
+									if(!auth.getGameId().equals(gameId) && !auth.getGameId().equals("*")) {
+										continue;
+									}
 								}
 								return true;
 							}
