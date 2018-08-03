@@ -24,14 +24,22 @@ angular.module('climbGame.controllers.excursions', [])
       */
 
       $scope.refreshExcursions = function () {
-        dataService.getExcursions().then(
-          function (excursions) {
-            $scope.excursions = excursions
-          },
-          function (reason) {
-            // console.log(reason)
-          }
-        )
+      	dataService.getGameById().then(
+            function (game) {
+              $scope.game = game;
+              dataService.getExcursions(game.from, game.to).then(
+                function (excursions) {
+                  $scope.excursions = excursions
+                },
+                function (reason) {
+                  console.log("[refreshExcursions]" + JSON.stringify(reason));
+                }
+              );
+            },
+            function (reason) {
+            	console.log('[refreshExcursions]' + JSON.stringify(reason));
+            }
+      	);
       }
 
       $scope.refreshExcursions()

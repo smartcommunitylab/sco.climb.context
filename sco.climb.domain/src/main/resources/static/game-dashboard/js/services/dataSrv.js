@@ -69,6 +69,28 @@ angular.module('climbGame.services.data', [])
       return deferred.promise
     }
     
+    // get game by id
+    dataService.getGameById = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/' 
+        + loginService.getOwnerId()
+        + '/' + loginService.getGameId(),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+    
     // get status of the game
     dataService.getItinerary = function () {
       var deferred = $q.defer()
