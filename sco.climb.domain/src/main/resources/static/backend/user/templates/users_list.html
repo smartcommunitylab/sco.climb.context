@@ -13,7 +13,7 @@
 	      	<div class="flex" ng-repeat="(key, value) in user.roles | fromMap">
 			      <div layout="row">
 				      <div flex="5">
-					      <md-button class="md-icon-button md-primary" ng-disabled="!roleToShow" ng-click="deleteAuth($event, user, key)">
+					      <md-button class="md-icon-button md-primary" ng-disabled="!isAuthToDelete(key)" ng-click="deleteAuth($event, user, key)">
 		        			<md-icon>delete</md-icon>
 		      			</md-button>			      
 				      </div>

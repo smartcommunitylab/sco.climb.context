@@ -60,6 +60,22 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
         }
       );
       
+      $scope.isAuthToDelete = function(authKey) {
+      	if(authKey) {
+        	if(!$scope.roleToShow) {
+        		return false;
+        	}
+        	var strings = authKey.split("__");
+        	if(strings.length >= 2) {
+      			if((strings[1] == "user") || (strings[1] == "admin")) {
+      				return false;
+      			}
+      			return true;
+        	}
+      	}
+      	return false;
+      }
+      
       $scope.openUser = function(event, user) {
         $mdDialog.show({
           controller: ShowUserControllerDialog,
