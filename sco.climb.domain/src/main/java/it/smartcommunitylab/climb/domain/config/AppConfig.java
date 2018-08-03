@@ -16,11 +16,6 @@
 
 package it.smartcommunitylab.climb.domain.config;
 
-import it.smartcommunitylab.climb.domain.model.WsnEvent;
-import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
-import it.smartcommunitylab.climb.domain.security.AuthorizationManager;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,14 +34,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+
+import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 
 @Configuration
 @EnableSwagger2
@@ -109,11 +107,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		return new RepositoryManager(mongoTemplate, defaultLang);
 	}
 	
-	@Bean
-	AuthorizationManager getAuthorizationManager() {
-		return new AuthorizationManager();
-	}
-
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
