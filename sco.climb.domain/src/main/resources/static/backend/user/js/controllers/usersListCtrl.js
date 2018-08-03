@@ -60,18 +60,19 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
         }
       );
       
-      $scope.isAuthToDelete = function(authKey) {
-      	if(authKey) {
-        	if(!$scope.roleToShow) {
-        		return false;
-        	}
-        	var strings = authKey.split("__");
-        	if(strings.length >= 2) {
-      			if((strings[1] == "user") || (strings[1] == "admin")) {
-      				return false;
-      			}
-      			return true;
-        	}
+      $scope.isAuthToDelete = function(user, authKey) {
+      	if(!$scope.roleToShow) {
+      		return false;
+      	}
+      	if(user.roleNames.includes("admin")) {
+      		return false;
+      	}
+      	var strings = authKey.split("__");
+      	if(strings.length >= 2) {
+    			if((strings[1] == "user") || (strings[1] == "admin")) {
+    				return false;
+    			}
+    			return true;
       	}
       	return false;
       }
