@@ -255,6 +255,8 @@ public class RepositoryManager {
 		update.set("wsnId", child.getWsnId());
 		update.set("imageUrl", child.getImageUrl());
 		update.set("cf", child.getCf());
+		update.set("activeForPedibus", child.isActiveForPedibus());
+		update.set("activeForGame", child.isActiveForGame());
 		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 
@@ -1046,7 +1048,9 @@ public class RepositoryManager {
 			return false;
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("childId", player.getChildId());
+			update.set("name", player.getName());
+			update.set("surname", player.getSurname());
+			update.set("classRoom", player.getClassRoom());
 			update.set("wsnId", player.getWsnId());
 			update.set("pedibusGameId", player.getPedibusGameId());
 			update.set("lastUpdate", now);
@@ -1060,6 +1064,12 @@ public class RepositoryManager {
 	
 	public void removePedibusPlayerByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, PedibusPlayer.class);
+	}
+	
+	public void removePedibusPlayer(String ownerId, String pedibusGameId, String childId) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId)
+				.and("childId").is(childId));
 		mongoTemplate.remove(query, PedibusPlayer.class);
 	}
 	
@@ -1086,7 +1096,19 @@ public class RepositoryManager {
 			logger.warn("Cannot update existing savePedibusTeam with id " + team.getClassRoom());
 			return false;
 		}
-	}	
+	}
+	
+	public void updatePedibusTeamMembers(String ownerId, String teamId, List<String> childrenId) {
+		Query query = new Query(new Criteria("objectId").is(teamId).and("ownerId").is(ownerId));
+		PedibusTeam temaDB = mongoTemplate.findOne(query, PedibusTeam.class);
+		Date now = new Date();
+		if(temaDB != null) {
+			Update update = new Update();
+			update.set("childrenId", childrenId);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusTeam.class);
+		}
+	}
 	
 	public void removePedibusTeamByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));

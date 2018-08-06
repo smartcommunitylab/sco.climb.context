@@ -109,6 +109,21 @@ public class GEngineUtils {
 		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 	}
 	
+	public void addTeamMember(String gameId, String teamId, String playerId) throws Exception {
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + teamId
+				+ "/members/" + playerId;
+		List<String> list = new ArrayList<>();
+		HTTPUtils.put(address, list, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void deleteTeamMember(String gameId, String teamId, String playerId) throws Exception {
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + teamId
+				+ "/members/" + playerId;
+		List<String> list = new ArrayList<>();
+		String content = mapper.writeValueAsString(list);
+		HTTPUtils.delete(address, content, null, gamificationUser, gamificationPassword);
+	}
+	
 	public PlayerStateDTO getPlayerStatus(String gameId, String playerId) throws Exception {
 		String address = gamificationURL + "/data/game/" + gameId + "/player/" + URLEncoder.encode(playerId, "UTF-8");
 		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
@@ -118,7 +133,7 @@ public class GEngineUtils {
 	
 	public void deletePlayerState(String gameId, String playerId) throws Exception {
 		String address = gamificationURL + "/data/game/" + gameId + "/player/" + playerId;
-		HTTPUtils.delete(address, null, gamificationUser, gamificationPassword);
+		HTTPUtils.delete(address, null, null, gamificationUser, gamificationPassword);
 	}
 	
 	public String createGame(GameDTO game) throws Exception {
@@ -130,7 +145,7 @@ public class GEngineUtils {
 	
 	public void deleteGame(String gameId) throws Exception {
 		String address = gamificationURL + "/model/game/" + gameId;
-		HTTPUtils.delete(address, null, gamificationUser, gamificationPassword);
+		HTTPUtils.delete(address, null, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void createChallenge(String gameId, ChallengeModel challengeModel) throws Exception {
@@ -144,7 +159,7 @@ public class GEngineUtils {
 		TypeReference<ArrayList<ChallengeModel>> typeRef = new TypeReference<ArrayList<ChallengeModel>>() {};
 		ArrayList<ChallengeModel> challengeList = mapper.readValue(json, typeRef);
 		for(ChallengeModel challenge : challengeList) {
-			HTTPUtils.delete(address + "/" + challenge.getId(), null, gamificationUser, gamificationPassword); 
+			HTTPUtils.delete(address + "/" + challenge.getId(), null, null, gamificationUser, gamificationPassword); 
 		}
 	}
 	
@@ -170,7 +185,7 @@ public class GEngineUtils {
 		TypeReference<ArrayList<RuleDTO>> typeRef = new TypeReference<ArrayList<RuleDTO>>() {};
 		ArrayList<RuleDTO> ruleList = mapper.readValue(json, typeRef);
 		for(RuleDTO rule : ruleList) {
-			HTTPUtils.delete(address + "/" + rule.getId(), null, gamificationUser, gamificationPassword); 
+			HTTPUtils.delete(address + "/" + rule.getId(), null, null, gamificationUser, gamificationPassword); 
 		}
 	}
 	
