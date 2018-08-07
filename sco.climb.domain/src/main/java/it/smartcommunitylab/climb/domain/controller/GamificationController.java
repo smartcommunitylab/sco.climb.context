@@ -324,9 +324,8 @@ public class GamificationController extends AuthController {
 			}
 		}	
 		//create global team
-		if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
+		if (Utils.isNotEmpty(game.getGlobalTeam())) {
 			PedibusTeam pt = new PedibusTeam();
-			pt.setChildrenId(allChildrenId);
 			pt.setGameId(game.getGameId());
 			pt.setPedibusGameId(pedibusGameId);
 			pt.setClassRoom(game.getGlobalTeam());
