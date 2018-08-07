@@ -100,6 +100,9 @@ public class ReportController extends AuthController {
 			response.getOutputStream().write(outputBuffer.toByteArray());
 			response.getOutputStream().flush();
 			outputBuffer.close();
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("writeAttendance[%s]:%s - %s - %s", ownerId, instituteId, schoolId, routeId));
+			}
 		} catch (Exception e) {
 			logger.error("writeAttendance:" + e.getMessage());
 			throw new InvalidParametersException("Invalid query parameters:" + e.getMessage());
