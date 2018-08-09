@@ -272,29 +272,34 @@ angular.module('climbGameUser.services.data', [])
       return deferred.promise
     }
     
-    dataService.getAuthText = function (authKey) {
+    dataService.getAuthText = function (user, authKey) {
     	var deferred = $q.defer();
     	var authText = "";
-    	var tokens = authKey.split("__");
-    	var ownerId = tokens[0];
-    	var role = tokens[1];
+    	var ownerId = null;
+    	var role = null;
     	var instituteId = null;
     	var schoolId = null;
     	var gameId = null;
-    	if(role == "school-owner") {
-    		instituteId = tokens[2];
-    		schoolId = tokens[3];
-    	} else if(role == "teacher") {
-    		instituteId = tokens[2];
-    		schoolId = tokens[3];
-    		gameId = tokens[4];
-    	} else if(role == "volunteer") {
-    		instituteId = tokens[2];
-    		schoolId = tokens[3];
-    	}  else if(role == "game-editor") {
-    		instituteId = tokens[2];
-    		schoolId = tokens[3];
-    		gameId = tokens[4];
+    	var auths = user.roles[authKey];
+    	if(auths && auths.length > 0) {
+    		var auth = auths[0];
+    		ownerId = auth.ownerId;
+    		role = auth.role;
+      	if(role == "school-owner") {
+      		instituteId = auth.instituteId;
+      		schoolId = auth.schoolId;
+      	} else if(role == "teacher") {
+      		instituteId = auth.instituteId;
+      		schoolId = auth.schoolId;
+      		gameId = auth.gameId;
+      	} else if(role == "volunteer") {
+      		instituteId = auth.instituteId;
+      		schoolId = auth.schoolId;
+      	}  else if(role == "game-editor") {
+      		instituteId = auth.instituteId;
+      		schoolId = auth.schoolId;
+      		gameId = auth.gameId;
+      	}    		
     	}
     	authText = ownerId + " - " + role;
     	if(instituteId) {

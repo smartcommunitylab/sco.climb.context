@@ -148,10 +148,9 @@ public class AuthController {
 			String gameId, String resource, String action, User user, boolean nullable) {
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
-				String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-				if(ownerIdFromAuthKey.equals(ownerId)) {
-					List<Authorization> authList = user.getRoles().get(authKey);
-					for(Authorization auth : authList) {
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getOwnerId().equals(ownerId)) {
 						if(auth.getResources().contains("*") || auth.getResources().contains(resource)) {
 							if(auth.getActions().contains(action)) {
 								if(!Utils.isEmpty(instituteId) || !nullable) {
@@ -188,7 +187,7 @@ public class AuthController {
 								}
 								return true;
 							}
-						}
+						}						
 					}
 				}
 			}
@@ -205,10 +204,11 @@ public class AuthController {
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
-				String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
-				String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-				if(roleFromAuthKey.equals(role) && ownerIdFromAuthKey.equals(ownerId)) {
-					return true;
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getRole().equals(role) && auth.getOwnerId().equals(ownerId)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -224,9 +224,11 @@ public class AuthController {
 		User user = storage.getUserByEmail(email);
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
-				String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
-				if(roleFromAuthKey.equals(role)) {
-					return true;
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getRole().equals(role)) {
+						return true;
+					}
 				}
 			}
 		}

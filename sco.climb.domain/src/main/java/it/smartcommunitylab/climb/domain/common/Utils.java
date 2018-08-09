@@ -107,35 +107,37 @@ public class Utils {
 		return result;
 	}
 	
-	public static String getOwnerIdFromAuthKey(String authKey) {
-		String[] strings = authKey.split("__");
-		if(strings.length >= 1) {
-			return strings[0];
-		}
-		return null;
-	}
+//	public static String getOwnerIdFromAuthKey(String authKey) {
+//		String[] strings = authKey.split("__");
+//		if(strings.length >= 1) {
+//			return strings[0];
+//		}
+//		return null;
+//	}
 	
-	public static String getRoleFromAuthKey(String authKey) {
-		String[] strings = authKey.split("__");
-		if(strings.length >= 2) {
-			return strings[1];
-		}
-		return null;
-	}
+//	public static String getRoleFromAuthKey(String authKey) {
+//		String[] strings = authKey.split("__");
+//		if(strings.length >= 2) {
+//			return strings[1];
+//		}
+//		return null;
+//	}
 	
-	public static String getBaseFromAuthKey(String authKey) {
-		String[] strings = authKey.split("__");
-		if(strings.length >= 2) {
-			return strings[0] + "__" + strings[1];
-		}
-		return null;
-	}
+//	public static String getBaseFromAuthKey(String authKey) {
+//		String[] strings = authKey.split("__");
+//		if(strings.length >= 2) {
+//			return strings[0] + "__" + strings[1];
+//		}
+//		return null;
+//	}
 	
 	public static boolean checkOwnerId(String ownerId, User user) {
 		for(String authKey : user.getRoles().keySet()) {
-			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-			if(ownerIdFromAuthKey.equals(ownerId)) {
-				return true;
+			List<Authorization> authList = user.getRoles().get(authKey);
+			for(Authorization auth : authList) {
+				if(auth.getOwnerId().equals(ownerId)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -143,9 +145,11 @@ public class Utils {
 	
 	public static boolean checkRole(String role, User user) {
 		for(String authKey : user.getRoles().keySet()) {
-			String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
-			if(roleFromAuthKey.equals(role)) {
-				return true;
+			List<Authorization> authList = user.getRoles().get(authKey);
+			for(Authorization auth : authList) {
+				if(auth.getRole().equals(role)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -154,9 +158,11 @@ public class Utils {
 	public static List<String> getUserRoles(User user) {
 		List<String> result = new ArrayList<>();
 		for(String authKey : user.getRoles().keySet()) {
-			String roleFromAuthKey = Utils.getRoleFromAuthKey(authKey);
-			if(!result.contains(roleFromAuthKey)) {
-				result.add(roleFromAuthKey);
+			List<Authorization> authList = user.getRoles().get(authKey);
+			for(Authorization auth : authList) {
+				if(!result.contains(auth.getRole())) {
+					result.add(auth.getRole());
+				}
 			}
 		}
 		return result;
@@ -165,27 +171,10 @@ public class Utils {
 	public static List<String> getUserOwnerIds(User user) {
 		List<String> result = new ArrayList<>();
 		for(String authKey : user.getRoles().keySet()) {
-			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-			if(!result.contains(ownerIdFromAuthKey)) {
-				result.add(ownerIdFromAuthKey);
-			}
-		}
-		return result;
-	}
-	
-	public static List<String> getUserInstituteByOwnerId(String ownerId, User user) {
-		List<String> result = new ArrayList<>();
-		for(String authKey : user.getRoles().keySet()) {
-			String ownerIdFromAuthKey = Utils.getOwnerIdFromAuthKey(authKey);
-			if(ownerIdFromAuthKey.equals(ownerId)) {
-				List<Authorization> authList = user.getRoles().get(authKey);
-				for(Authorization auth : authList) {
-					if(auth.getResources().contains("*") || auth.getResources().contains(Const.AUTH_RES_Institute)) {
-						String instituteId = auth.getInstituteId();
-						if(!result.contains(instituteId)) {
-							result.add(instituteId);
-						}
-					}
+			List<Authorization> authList = user.getRoles().get(authKey);
+			for(Authorization auth : authList) {
+				if(!result.contains(auth.getOwnerId())) {
+					result.add(auth.getOwnerId());
 				}
 			}
 		}

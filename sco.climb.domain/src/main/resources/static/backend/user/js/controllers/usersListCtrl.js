@@ -22,13 +22,15 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
         	data.forEach(user => {
         		user.roleNames = [];
           	for(authKey in user.roles) {
-          		var strings = authKey.split("__");
-          		if(strings.length >= 2) {
-          			if(strings[1] == "user") {
-          				continue;
+          		var auths = user.roles[authKey];
+          		auths.forEach(function(auth) {
+          			if(auth.role == "user") {
+          				return true;
           			}
-          			user.roleNames.push(strings[1]);
-          		}
+          			if(!user.roleNames.includes(auth.role)) {
+          				user.roleNames.push(auth.role);
+          			}
+          		});
           	}
           	if($stateParams.role == 'norole') {
           		if(user.roleNames.length == 0) {
@@ -67,12 +69,14 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
       	if(user.roleNames.includes("admin")) {
       		return false;
       	}
-      	var strings = authKey.split("__");
-      	if(strings.length >= 2) {
-    			if((strings[1] == "user") || (strings[1] == "admin")) {
-    				return false;
-    			}
-    			return true;
+      	var auths = user.roles[authKey];
+      	if(auths) {
+        	for(var auth of auths) {
+        		if((auth.role == "user") || (auth.role == "admin")) {
+        			return false
+        		}
+        	}
+        	return true;
       	}
       	return false;
       }
@@ -273,7 +277,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
     	}
     	
       function getAuthText(user, authKey) {
-        dataService.getAuthText(authKey).then(
+        dataService.getAuthText(user, authKey).then(
           function (data) {
             $scope.authTextMap[user.objectId][authKey]['data'] = data;
             $scope.authTextMap[user.objectId][authKey]['loaded'] = true;

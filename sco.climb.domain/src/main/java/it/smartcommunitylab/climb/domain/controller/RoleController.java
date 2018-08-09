@@ -49,6 +49,7 @@ public class RoleController extends AuthController {
 		auth.getActions().add(Const.AUTH_ACTION_ADD);
 		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
 		auth.getActions().add(Const.AUTH_ACTION_DELETE);
+		auth.setRole(Const.ROLE_OWNER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId("*");
 		auth.setSchoolId("*");
@@ -81,6 +82,7 @@ public class RoleController extends AuthController {
 		auth.getActions().add(Const.AUTH_ACTION_ADD);
 		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
 		auth.getActions().add(Const.AUTH_ACTION_DELETE);
+		auth.setRole(Const.ROLE_SCHOOL_OWNER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -112,6 +114,7 @@ public class RoleController extends AuthController {
 		
 		Authorization auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setRole(Const.ROLE_VOLUNTEER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -130,6 +133,7 @@ public class RoleController extends AuthController {
 		auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
 		auth.getActions().add(Const.AUTH_ACTION_ADD);
+		auth.setRole(Const.ROLE_VOLUNTEER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -163,6 +167,7 @@ public class RoleController extends AuthController {
 		
 		Authorization auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setRole(Const.ROLE_GAME_EDITOR);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -183,6 +188,7 @@ public class RoleController extends AuthController {
 		auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
 		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.setRole(Const.ROLE_GAME_EDITOR);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -215,6 +221,7 @@ public class RoleController extends AuthController {
 		
 		Authorization auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setRole(Const.ROLE_TEACHER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -233,6 +240,7 @@ public class RoleController extends AuthController {
 		auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
 		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.setRole(Const.ROLE_TEACHER);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -265,6 +273,7 @@ public class RoleController extends AuthController {
 		List<Authorization> auths = new ArrayList<Authorization>();
 		Authorization auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setRole(Const.ROLE_PARENT);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);
 		auth.setSchoolId(schoolId);
@@ -291,17 +300,13 @@ public class RoleController extends AuthController {
 				!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		String role = Utils.getRoleFromAuthKey(authKey);
-		if(role.contains(Const.ROLE_ADMIN)) {
-			throw new UnauthorizedException("Unauthorized Exception: unable to delete admin role");
-		}
 		User user = storage.getUserByEmail(email);
+		if(user == null) {
+			throw new EntityNotFoundException(String.format("user %s not found", email));
+		}
 		List<String> roles = Utils.getUserRoles(user);
 		if(roles.contains(Const.ROLE_ADMIN)) {
 			throw new UnauthorizedException("Unauthorized Exception: unable to delete admin role");
-		}
-		if(user == null) {
-			throw new EntityNotFoundException(String.format("user %s not found", email));
 		}
 		storage.removeUserAuthKey(email, authKey);
 		if(logger.isInfoEnabled()) {
@@ -371,6 +376,7 @@ public class RoleController extends AuthController {
     	
   		List<Authorization> auths = new ArrayList<Authorization>();
   		Authorization auth = new Authorization();
+  		auth.setRole(Const.ROLE_USER);
   		auth.setOwnerId(ownerId);
   		auths.add(auth);
   		newUser = storage.addUserRole(user.getEmail(), 

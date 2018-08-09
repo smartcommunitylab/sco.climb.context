@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Authorization {
+	private String role;
 	private String ownerId;
 	private String instituteId;
 	private String schoolId;
@@ -53,5 +54,11 @@ public class Authorization {
 	}
 	public void setResources(List<String> resources) {
 		this.resources = resources;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 }
