@@ -36,6 +36,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.security.DataSetDetails;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
@@ -105,6 +106,7 @@ public class ConsoleController extends AuthController {
 		User user = storage.getUserByEmail(details.getApp().getEmail());
 		if(user != null) {
 			dsInfo.setOwnerIds(Utils.getUserOwnerIds(user));
+			dsInfo.getOwnerIds().remove(Const.SYSTEM_DOMAIN);
 			dsInfo.setRoles(Utils.getUserRoles(user));
 		}
 		//save rememeberme

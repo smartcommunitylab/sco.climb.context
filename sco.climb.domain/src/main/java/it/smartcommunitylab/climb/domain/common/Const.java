@@ -19,6 +19,8 @@ public class Const {
 	public static final int BATTERY_STATE = 501;
 	public static final int TEST_STATE = 901;
 	
+	public static final String SYSTEM_DOMAIN = "SYSTEM";
+	
 	public static final String ROLE_ADMIN = "admin";
 	public static final String ROLE_USER = "user";
 	public static final String ROLE_PARENT = "parent";
