@@ -244,8 +244,12 @@ angular.module('consoleControllers.games', ['ngSanitize'])
           $scope.$parent.endDate = new Date();
           $scope.$parent.isCalendarOpen = [false, false];
           $scope.$parent.minDate = new Date(1970, 1, 1);
-          $scope.$parent.startDate.setTime($scope.currentGame.from);
-          $scope.$parent.endDate.setTime($scope.currentGame.to);
+          if($scope.currentGame.from) {
+          	$scope.$parent.startDate.setTime($scope.currentGame.from);
+          }
+          if($scope.currentGame.to) {
+          	$scope.$parent.endDate.setTime($scope.currentGame.to);
+          }
           $scope.classToggled();
         });
 
@@ -334,11 +338,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.$parent.endDate = new Date();
             $scope.$parent.isCalendarOpen = [false, false];
             $scope.$parent.minDate = new Date(1970, 1, 1);
-            $scope.$parent.startDate.setTime($scope.currentGame.from);
-            $scope.$parent.endDate.setTime($scope.currentGame.to);
-
+            if($scope.currentGame.from) {
+            	$scope.$parent.startDate.setTime($scope.currentGame.from);
+            }
+            if($scope.currentGame.to) {
+            	$scope.$parent.endDate.setTime($scope.currentGame.to);
+            }
             $scope.initParamController();
-
         });
         
         $scope.calculateBonusAutonomia = function() {
