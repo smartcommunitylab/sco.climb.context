@@ -143,12 +143,37 @@ public class Utils {
 		return false;
 	}
 	
+	public static boolean checkOwnerId(String ownerId, User user, String authKey) {
+		List<Authorization> authList = user.getRoles().get(authKey);
+		if((authList != null) && (authList.size() > 0)) {
+			Authorization auth = authList.get(0);
+			if(auth.getOwnerId().equals(ownerId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static boolean checkRole(String role, User user) {
 		for(String authKey : user.getRoles().keySet()) {
 			List<Authorization> authList = user.getRoles().get(authKey);
 			for(Authorization auth : authList) {
 				if(auth.getRole().equals(role)) {
 					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean checkOwnerIdAndRole(String ownerId, String role, User user) {
+		for(String authKey : user.getRoles().keySet()) {
+			List<Authorization> authList = user.getRoles().get(authKey);
+			for(Authorization auth : authList) {
+				if(auth.getOwnerId().equals(ownerId)) {
+					if(auth.getRole().equals(role)) {
+						return true;
+					}
 				}
 			}
 		}

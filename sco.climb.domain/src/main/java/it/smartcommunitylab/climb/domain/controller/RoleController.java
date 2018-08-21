@@ -308,6 +308,9 @@ public class RoleController extends AuthController {
 		if(roles.contains(Const.ROLE_ADMIN)) {
 			throw new UnauthorizedException("Unauthorized Exception: unable to delete admin role");
 		}
+		if(!Utils.checkOwnerId(ownerId, user, authKey)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		storage.removeUserAuthKey(email, authKey);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("removeAuthKey: %s - %s - %s", ownerId, email, authKey));
@@ -386,11 +389,17 @@ public class RoleController extends AuthController {
   		}
     	return newUser;
     } else {
-    	if(!Utils.checkOwnerId(ownerId, userDb)) {
-    		throw new UnauthorizedException("Unauthorized Exception: ownerId not allowed");
-    	}
     	user.setObjectId(userDb.getObjectId());
     	storage.updateUser(user);
+    	if(!Utils.checkOwnerIdAndRole(ownerId, Const.ROLE_USER, userDb)) {
+    		List<Authorization> auths = new ArrayList<Authorization>();
+    		Authorization auth = new Authorization();
+    		auth.setRole(Const.ROLE_USER);
+    		auth.setOwnerId(ownerId);
+    		auths.add(auth);
+    		user = storage.addUserRole(user.getEmail(), 
+    				Utils.getAuthKey(ownerId, Const.ROLE_USER), auths);
+    	}
   		if(logger.isInfoEnabled()) {
   			logger.info(String.format("saveUser[update]: %s - %s", ownerId, user.getEmail()));
   		}
