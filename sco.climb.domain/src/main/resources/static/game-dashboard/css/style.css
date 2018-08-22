@@ -218,47 +218,40 @@ md-sidenav {
 
 
 .external-urls-viewer {
-  width: 90%;
+  width: 95%;
   overflow-y: hidden;
-  white-space: nowrap;
   text-align: center;
   -webkit-overflow-scrolling: touch;
   max-height: 270px;
-}
-.external-urls-viewer .url-view-col {
-  display: inline-block;
-  margin: 8px;
-  max-width: 200px;
-  max-height: 200px;
 }
 .external-urls-viewer .url-view-col-image img {
   max-width: 200px;
   max-height: 200px
 }
 .external-urls-viewer .url-view-col-image div {
-  white-space: nowrap;
   line-height: 30px;
 }
 .external-urls-viewer .url-view-col {
+	display: inline-block;
   float: left;
-  margin: 8px;
-  width: 180px;
-  height: 180px;
-  border: 2px solid black;
-  border-radius: 8px;
-  text-align: center;
-  vertical-align: bottom;
+  margin: 2px;
+  width: 95%;
+  text-align: left;
 }
 .external-urls-viewer .url-view-col img {
+	float: left;
   max-width: 100%;
   max-height: 130px;
   border-radius: 4px 4px 0px 0px;
 }
 .external-urls-viewer .url-view-col div {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0px 8px;
+}
+.external-urls-viewer .url-view-col p {
+	text-align: justify;
+	margin-top: 2px;
 }
 .external-urls-viewer .url-view-col:nth-child(2n+1) {
   clear: left;
@@ -266,6 +259,7 @@ md-sidenav {
 .external-urls-viewer .url-view-col a {
   text-decoration: none;
   color:black;
+  vertical-align: top;
 }
 .external-urls-viewer .url-view-col-video-yt {
   position: relative;  
