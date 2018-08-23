@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -92,14 +93,33 @@ public class TestVelocity {
 		params.put("final_destination", "Fine Viaggio");
 		
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
-		PedibusItineraryLeg leg = new PedibusItineraryLeg();
-		leg.setName("Tappa 1");
-		leg.setScore(1000);
-		legs.add(leg);
+		PedibusItineraryLeg leg1 = new PedibusItineraryLeg();
+		leg1.setObjectId(UUID.randomUUID().toString());
+		leg1.setName("Tappa 1");
+		leg1.setScore(1000);
+		legs.add(leg1);
+
+		PedibusItineraryLeg leg2 = new PedibusItineraryLeg();
+		leg2.setObjectId(UUID.randomUUID().toString());
+		leg2.setName("Tappa 2");
+		leg2.setScore(2000);
+		legs.add(leg2);
+
+		PedibusItineraryLeg leg3 = new PedibusItineraryLeg();
+		leg3.setObjectId(UUID.randomUUID().toString());
+		leg3.setName("Tappa 3");
+		leg3.setScore(4000);
+		legs.add(leg3);
+
+		Map<String, Boolean> almostReachedMap = new HashMap<>();
+		almostReachedMap.put(leg1.getObjectId(), Boolean.FALSE);
+		almostReachedMap.put(leg2.getObjectId(), Boolean.FALSE);
+		almostReachedMap.put(leg3.getObjectId(), Boolean.TRUE);
 		
 		VelocityContext context = new VelocityContext();
 		context.put("params", params);
 		context.put("legList", legs);
+		context.put("almostReachedMap", almostReachedMap);
 		context.put("Utils", Utils.class);
 		
 		StringWriter writer = new StringWriter();

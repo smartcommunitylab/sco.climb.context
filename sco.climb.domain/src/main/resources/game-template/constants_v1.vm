@@ -46,7 +46,7 @@ $H nominal weekly distance estimated for whole school
 const_weekly_nominal_distance=$params.const_weekly_nominal_distance#[[.0]]#
 
 $H "almost" distance from next leg (in meters, used in notifications)
-const_almost_reached_next_leg=150000.0
+const_almost_reached_next_leg=$params.const_almost_reached_next_leg#[[.0]]#
 
 $H name of the badge collection for journey stops
 badge_collection_name=LegsCollection

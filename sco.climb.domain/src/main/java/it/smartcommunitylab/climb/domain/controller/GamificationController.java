@@ -151,12 +151,31 @@ public class GamificationController extends AuthController {
 			}
 			GameDTO gameDTO = new GameDTO();
 			gameDTO.setName(game.getGameName());
+			//set params
 			game.getParams().put("const_school_name", game.getGlobalTeam());
 			game.getParams().put("const_number_of_teams", String.valueOf(game.getClassRooms().size() + 1));
 			long dailyNominalDistance = Long.valueOf(game.getParams().get("const_daily_nominal_distance"));
-			long weeklyNominalDistance = dailyNominalDistance * 5; 
+			long weeklyNominalDistance = dailyNominalDistance * 5;
+			long minDistanceLegsAlmostReached = dailyNominalDistance * 15;
+			long almostReachedNextLeg = dailyNominalDistance * 3;
 			game.getParams().put("const_weekly_nominal_distance", String.valueOf(weeklyNominalDistance));
+			game.getParams().put("const_almost_reached_next_leg", String.valueOf(almostReachedNextLeg));
 			game.getParams().put("final_destination", finalDestination);
+			//set almost reached rules
+			Map<String, Boolean> almostReachedMap = new HashMap<>();
+			for(int i = 0; i < legs.size(); i++) {
+				PedibusItineraryLeg currentLeg = legs.get(i);
+				if(i == 0) {
+					almostReachedMap.put(currentLeg.getObjectId(), Boolean.FALSE);
+				} else {
+					PedibusItineraryLeg previousLeg = legs.get(i - 1);
+					if(currentLeg.getScore() - previousLeg.getScore() >= minDistanceLegsAlmostReached) {
+						almostReachedMap.put(currentLeg.getObjectId(), Boolean.TRUE);
+					} else {
+						almostReachedMap.put(currentLeg.getObjectId(), Boolean.FALSE);
+					}
+				}
+			}
 			//create actions
 			gameDTO.getActions().addAll(gameConf.getActions());
 			//create badgeCollections
@@ -227,6 +246,7 @@ public class GamificationController extends AuthController {
 			VelocityContext context = new VelocityContext();
 			context.put("params", game.getParams());
 			context.put("legList", legs);
+			context.put("almostReachedMap", almostReachedMap);
 			context.put("Utils", Utils.class); 
 			for(String ruleFile : gameConf.getRuleFileTemplates()) {
 				String ruleName = ruleFile.replace(".vm", ""); 

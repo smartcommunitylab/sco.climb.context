@@ -26,6 +26,7 @@ global Double $Utils.getNormalizeLegName($leg.name)#[[_distance]]#;
 //only for SCHOOL
 
 #foreach($leg in $legList)
+#if($leg.position > 0)
 rule "R-add-badge $leg.name"
 	salience -1000
 when 
@@ -39,7 +40,9 @@ then
 	insert(new BadgeNotification($gameId, $teamId, $bc.getName(), '$leg.name'));
 	update( $bc );
 end
+#end
 
+#if(${almostReachedMap.get($leg.objectId)})
 rule "R-notify-almost $leg.name"
     salience -2000
 when 
@@ -63,6 +66,7 @@ then
     insert(message);
 end
 
+#end
 #end
 
 rule "R-GAME-END"
