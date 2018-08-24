@@ -56,6 +56,7 @@ import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
 import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
@@ -504,13 +505,28 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusGame> getPedibusGames(
+	@RequestMapping(value = "/api/game/report", method = RequestMethod.GET)
+	public @ResponseBody List<PedibusGameReport> getPedibusGameReports(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		List<PedibusGame> result = storage.getPedibusGames();
+		List<PedibusGameReport> result = new ArrayList<>();
+		List<PedibusGame> games = storage.getPedibusGames();
+		for(PedibusGame game : games) {
+			PedibusGameReport report = new PedibusGameReport(game);
+			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+			if(itineraryList.size() > 0) {
+				PedibusItinerary pedibusItinerary = itineraryList.get(0);
+				List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
+						pedibusItinerary.getObjectId());
+				report.setLegs(legs.size());
+				report.setFirstLeg(legs.get(0).getName());
+				report.setFinalLeg(legs.get(legs.size() - 1).getName());
+				report.setFinalScore(legs.get(legs.size() - 1).getScore());
+				result.add(report);
+			}
+		}
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("getPedibusGames: %s", result.size()));
+			logger.info(String.format("getPedibusGameReports: %s", result.size()));
 		}
 		return result;
 	}

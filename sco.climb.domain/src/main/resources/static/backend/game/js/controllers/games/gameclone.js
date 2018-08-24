@@ -3,8 +3,8 @@ angular.module('consoleControllers.gameclone', ['ngSanitize'])
     .controller('GameCloneCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService, createDialog) {
 
         $scope.initController = function () {
-            DataService.getData('allgames').then(function (response) {
-		            console.log('Caricamento dei giochi andata a buon fine.');
+            DataService.getData('gamereports').then(function (response) {
+		            console.log('Caricamento report dei giochi andata a buon fine.');
 		            $scope.allGames = response.data;
             });
         }

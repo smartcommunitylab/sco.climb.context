@@ -56,8 +56,8 @@ function ($q, $http, $rootScope, $timeout) {
                     fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/classes";
                 } else if(type === 'volunteers') {
                     fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
-                } else if(type == 'allgames') {
-                		fetchUrl = baseUrl + "/api/game";
+                } else if(type == 'gamereports') {
+                		fetchUrl = baseUrl + "/api/game/report";
                 }
                 return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
