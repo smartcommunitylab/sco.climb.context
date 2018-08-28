@@ -266,9 +266,9 @@ md-sidenav {
 }
 .external-urls-viewer .url-view-play {
   position: absolute;
-  left: 42px;
-  top: 17px;
-  opacity: 0.85;
+  left: 0px;
+  top: 0px;
+  opacity: 0.50;
 }
 .leaflet-popup-content {
   min-width: 450px;
