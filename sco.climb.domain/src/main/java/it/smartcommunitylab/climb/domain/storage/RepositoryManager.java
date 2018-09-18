@@ -859,7 +859,6 @@ public class RepositoryManager {
 			update.set("toHour", game.getToHour());
 			update.set("lateSchedule", game.isLateSchedule());
 			update.set("usingPedibusData", game.isUsingPedibusData());
-			update.set("confTemplateId", game.getConfTemplateId());
 			update.set("params", game.getParams());
 			update.set("shortName", game.getShortName());
 			update.set("lastUpdate", now);
@@ -1036,7 +1035,8 @@ public class RepositoryManager {
 	}	
 	
 	public boolean savePedibusPlayer(PedibusPlayer player, String ownerId, boolean canUpdate) throws StorageException {
-		Query query = new Query(new Criteria("childId").is(player.getChildId()).and("ownerId").is(ownerId));
+		Query query = new Query(new Criteria("childId").is(player.getChildId()).and("ownerId").is(ownerId)
+				.and("pedibusGameId").is(player.getPedibusGameId()));
 		PedibusPlayer playerDB = mongoTemplate.findOne(query, PedibusPlayer.class);
 		Date now = new Date();
 		if (playerDB == null) {
@@ -1074,7 +1074,8 @@ public class RepositoryManager {
 	}
 	
 	public boolean savePedibusTeam(PedibusTeam team, String ownerId, boolean canUpdate) throws StorageException {
-		Query query = new Query(new Criteria("classRoom").is(team.getClassRoom()).and("ownerId").is(ownerId));
+		Query query = new Query(new Criteria("classRoom").is(team.getClassRoom()).and("ownerId").is(ownerId)
+				.and("pedibusGameId").is(team.getPedibusGameId()));
 		PedibusTeam teamDB = mongoTemplate.findOne(query, PedibusTeam.class);
 		Date now = new Date();
 		if (teamDB == null) {
