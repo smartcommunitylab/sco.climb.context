@@ -10,8 +10,13 @@ angular.module('consoleControllers.leg')
     $scope.searchOnContentRepository = function() {
         //if (!$scope.searchtext) return;
         $scope.resetResults();
-        DataService.searchOnContentRepository($scope.searchtext, $scope.searchbyposition ? position : undefined, 
-        		$scope.searchbyposition ?  $scope.searchdistance : undefined,
+        var searchposition = undefined;
+        var searchdistance = undefined;
+        if($scope.searchdistance) {
+        	searchposition = position;
+        	searchdistance = $scope.searchdistance;
+        }
+        DataService.searchOnContentRepository($scope.searchtext, searchposition, searchdistance,
         		$scope.searchlocalschool ? schoolId : undefined, 
         		$scope.searchtype != 'all' ? $scope.searchtype : '').then(
                 function(response) {
