@@ -368,6 +368,9 @@ angular.module("climbGame.controllers.map", [])
               case 'link':
                 externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_link.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
                 break;
+              case 'file':
+                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_file.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
+                break;
             }
           }
           externalUrl += '</div>'

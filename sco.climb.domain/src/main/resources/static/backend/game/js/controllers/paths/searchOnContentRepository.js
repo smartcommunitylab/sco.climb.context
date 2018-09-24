@@ -37,6 +37,9 @@ angular.module('consoleControllers.leg')
                             case 'link':
                                 element.referenceImg = "img/link.png";
                                 break;
+                            case 'file':
+                              element.referenceImg = "img/file.png";
+                              break;
                         }
                     });          
                     $scope.contentResults = response.data;

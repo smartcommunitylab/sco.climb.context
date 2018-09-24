@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
@@ -76,6 +77,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
+import it.smartcommunitylab.climb.domain.storage.DocumentManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
@@ -105,6 +107,9 @@ public class GamificationController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	
+	@Autowired
+	private DocumentManager documentManager;
 
 	@Autowired
 	private EventsPoller eventsPoller;
@@ -867,6 +872,37 @@ public class GamificationController extends AuthController {
 		}
 		return links;
 	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/link/file", method = RequestMethod.POST)
+	public @ResponseBody Link uploadPedibusItineraryLegLinkFile(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			@RequestParam(required = false) MultipartFile file, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		PedibusItineraryLeg leg = storage.getPedibusItineraryLeg(ownerId, legId);
+		if(leg == null) {
+			throw new EntityNotFoundException("pedibus itinerary leg not found");
+		}		
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		String url = documentManager.uploadFile(file);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("uploadPedibusItineraryLegLinkFile: %s - %s - %s", ownerId, legId, url));
+		}
+		Link link = new Link();
+		link.setLink(url);
+		return link;
+	}
+
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(

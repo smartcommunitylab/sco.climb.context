@@ -76,6 +76,7 @@ public class Const {
 	public static final String MEDIA_LINK = "link";
 	public static final String MEDIA_VIDEO = "video";
 	public static final String MEDIA_IMAGE = "image";
+	public static final String MEDIA_FILE = "file";
 	
 	public static final String MERGED = "MERGED";
 	public static final String CLOSED = "CLOSED";

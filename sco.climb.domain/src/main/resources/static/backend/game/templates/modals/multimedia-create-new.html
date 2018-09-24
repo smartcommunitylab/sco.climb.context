@@ -7,6 +7,7 @@
                 <option value="image">Immagine</option>
                 <option value="video">Video</option>
                 <option value="link">Collegamento a pagina web</option>
+                <option value="file">File</option>
             </select>
         </div>
         <div class="add-media field">
@@ -19,14 +20,14 @@
         </div>
 
         <!-- Upload pic on imgur -->
-        <div ng-show="newMedia.type == 'image'">
+        <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
             <div class="field add-media">
-                <p>oppure scegli e carica un'immagine. Le immagini saranno caricate sul sito pubblico <b>imgur</b>:<p> 
+                <p>oppure scegli e carica un file. I file saranno ad accesso pubblico; devono essere prive di copyright e rispettare...:<p> 
                 <p>{{file.filename ? file.filename : 'Nessun file selezionato'}}</p>
                 <span class="btn btn-info btn-file btn-margin">
-                Scegli file <input type="file" base-sixty-four-input ng-model="file" accept="image/*" />
+                Scegli file <input type="file" id="upload-content-file" base-sixty-four-input ng-model="file" />
                 </span>
-                <a ng-disabled="!file" ng-click="!file || uploadPic(file)" class="btn btn-info">Carica</a>
+                <a ng-disabled="!file" ng-click="uploadFile()" class="btn btn-info">Carica</a>
                 <p></p>
             </div>
         </div>

@@ -171,6 +171,20 @@ function ($q, $http, $rootScope, $timeout) {
           				transformRequest: angular.identity
           			});
             },
+            uploadFileContent: function(element) 
+            {
+                var postUrl = baseUrl + '/api/game/' + element.ownerId + '/' + element.pedibusGameId + '/itinerary/'
+                + element.itineraryId + '/leg/' + element.legId + '/link/file';
+          	    return $http.post(postUrl, element.formdata, 
+          			{
+                        timeout: timeout,
+          				headers: {
+          					'Authorization': 'Bearer ' + profileToken,
+          					'Content-Type': undefined 
+          				},
+          				transformRequest: angular.identity
+          			});
+            },
             initGameCall: function (ownerId, pedibusGameId) {
                 return $http.get(baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/deploy", 
                     {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}

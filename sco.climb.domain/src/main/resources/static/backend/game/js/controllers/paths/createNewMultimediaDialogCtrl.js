@@ -1,7 +1,8 @@
 angular.module('consoleControllers.leg')
 
-.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, uploadImageOnImgur, addElementsFunction, saveFunction) {
-    
+.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, addElementsFunction, saveFunction, 
+		dataService, leg) {
+ 
     $scope.newMedia = {type: 'image'};
 
     $scope.$modalSuccess = function() {
@@ -20,8 +21,23 @@ angular.module('consoleControllers.leg')
         }
     }
     
-    $scope.uploadPic = function (file) {
-        uploadImageOnImgur(file).success(function (response) {
+    $scope.uploadFile = function () {
+    	var fileInput = document.getElementById('upload-content-file');
+    	if(fileInput.files.length == 0) {
+    		alert('Scegliere un file da caricare');
+    		return;
+    	}
+    	var file = fileInput.files[0];
+    	var formData = new FormData();
+    	formData.append('file', file);
+    	var element = {
+    			"ownerId": leg.ownerId,
+    			"pedibusGameId": leg.pedibusGameId,
+    			"itineraryId": leg.itineraryId,
+    			"legId": leg.objectId,
+          "formdata": formData,
+    	};
+    	dataService.uploadFileContent(element).then(function (response) {
             $scope.newMedia.link = response.data.link;
             $scope.file = null;
         });

@@ -400,7 +400,9 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             },
             {
                 addElementsFunction: addMultimediaElement,
-                saveFunction: $scope.saveLegLinks
+                saveFunction: $scope.saveLegLinks,
+                dataService: DataService,
+                leg: $scope.leg
             }
         );
     }
