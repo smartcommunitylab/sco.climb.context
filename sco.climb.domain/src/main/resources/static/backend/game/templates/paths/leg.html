@@ -37,11 +37,11 @@
         </div>
 
         <div class="col-lg-7 field add-media" style="display: table-cell; margin-top: 15px;">
-            <p>oppure carica una immagine sul sito pubblico <b>imgur</b>: {{img.filename ? img.filename : 'Nessun file selezionato'}}</p>
+            <p>oppure carica una immagine. I file saranno ad accesso pubblico; devono essere privi di copyright e rispettare...: {{img.filename ? img.filename : 'Nessun file selezionato'}}</p>
             <span class="btn btn-info btn-file btn-margin">
-                Scegli file <input type="file" base-sixty-four-input ng-model="img" accept="image/*" />
+                Scegli file <input type="file" id="upload-featured-img" base-sixty-four-input ng-model="img" accept="image/*" />
             </span>
-            <a ng-disabled="!img" ng-click="!img || uploadFeaturedPic(img)" class="btn btn-info">Carica</a>
+            <a ng-disabled="!img" ng-click="uploadFeaturedPic()" class="btn btn-info">Carica</a>
         </div>
     </div>
     <div class="col-md-12 field" ng-if="leg.position > 0">

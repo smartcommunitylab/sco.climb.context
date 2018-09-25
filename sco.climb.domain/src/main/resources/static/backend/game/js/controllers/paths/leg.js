@@ -317,12 +317,26 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     };
 
     
-
-    $scope.uploadFeaturedPic = function (file) {
-        uploadImageOnImgur(file).success(function (response) {
-            // Update the link of the new media with the imgur link
-            $scope.leg.imageUrl = response.data.link;
-        });
+    $scope.uploadFeaturedPic = function () {
+    	var fileInput = document.getElementById('upload-featured-img');
+    	if(fileInput.files.length == 0) {
+    		alert('Scegliere un file da caricare');
+    		return;
+    	}
+    	var file = fileInput.files[0];
+    	var formData = new FormData();
+    	formData.append('file', file);
+    	var element = {
+    			"ownerId": $scope.leg.ownerId,
+    			"pedibusGameId": $scope.leg.pedibusGameId,
+    			"itineraryId": $scope.leg.itineraryId,
+    			"legId": $scope.leg.objectId,
+          "formdata": formData,
+    	};
+    	DataService.uploadFileContent(element).then(function (response) {
+    		$scope.leg.imageUrl = response.data.link;
+        $scope.img = null;
+      });
     };
 
     $scope.deleteLink = function (element) {
