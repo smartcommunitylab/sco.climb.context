@@ -298,7 +298,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 
         $scope.initParamController = function () {
-        	if(!$scope.currentGame.params) {
+        	if((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
             $scope.currentGame.params = {
                 piedi_o_bici_in_autonomia_studenti: 0,
                 piedi_o_bici_in_autonomia_distanza: 0,

@@ -79,7 +79,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }
         }
         if($scope.newLeg) {
-        	if(currentLegIndex > 0) {
+        	if($scope.leg.position > 0) {
         		$scope.previousLegScore = $scope.legs[$scope.legs.length - 1].score;
         	} else {
         		$scope.previousLegScore = 0;
