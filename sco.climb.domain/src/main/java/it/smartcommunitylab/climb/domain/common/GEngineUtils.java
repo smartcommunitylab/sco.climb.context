@@ -107,7 +107,7 @@ public class GEngineUtils {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPlayer[%s]: %s", gameId, player.getPlayerId()));
 		}	
-		String address = gamificationURL + "/data/game/" + gameId + "/player/" + player.getPlayerId();
+		String address = gamificationURL + "/data/game/" + gameId + "/player/" + URLEncoder.encode(player.getPlayerId(), "UTF-8");
 		HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 	}
 	
@@ -115,13 +115,13 @@ public class GEngineUtils {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createTeam[%s]: %s %s", gameId, team.getName(), team.getMembers().size()));
 		}	
-		String address = gamificationURL + "/data/game/" + gameId + "/team/" + team.getPlayerId();
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + URLEncoder.encode(team.getPlayerId(), "UTF-8");
 		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void addTeamMember(String gameId, String teamId, String playerId) throws Exception {
-		String address = gamificationURL + "/data/game/" + gameId + "/team/" + teamId
-				+ "/members/" + playerId;
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + URLEncoder.encode(teamId, "UTF-8")
+				+ "/members/" + URLEncoder.encode(playerId, "UTF-8");
 		List<String> list = new ArrayList<>();
 		HTTPUtils.put(address, list, null, gamificationUser, gamificationPassword);
 	}
@@ -130,8 +130,8 @@ public class GEngineUtils {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deleteTeamMember[%s]: %s %s", gameId, teamId, playerId));
 		}	
-		String address = gamificationURL + "/data/game/" + gameId + "/team/" + teamId
-				+ "/members/" + playerId;
+		String address = gamificationURL + "/data/game/" + gameId + "/team/" + URLEncoder.encode(teamId, "UTF-8")
+				+ "/members/" + URLEncoder.encode(playerId, "UTF-8");
 		List<String> list = new ArrayList<>();
 		String content = mapper.writeValueAsString(list);
 		HTTPUtils.delete(address, content, null, gamificationUser, gamificationPassword);
@@ -148,7 +148,7 @@ public class GEngineUtils {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deletePlayerState[%s]: %s", gameId, playerId));
 		}	
-		String address = gamificationURL + "/data/game/" + gameId + "/player/" + playerId;
+		String address = gamificationURL + "/data/game/" + gameId + "/player/" + URLEncoder.encode(playerId, "UTF-8");
 		HTTPUtils.delete(address, null, null, gamificationUser, gamificationPassword);
 	}
 	
