@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Component
 public class GEngineUtils {
+	private static final transient Logger logger = LoggerFactory.getLogger(GEngineUtils.class);
+			
 	@Autowired
 	@Value("${gamification.url}")
 	private String gamificationURL;
@@ -100,11 +104,17 @@ public class GEngineUtils {
 	}
 	
 	public void createPlayer(String gameId, PlayerStateDTO player) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createPlayer[%s]: %s", gameId, player.getPlayerId()));
+		}	
 		String address = gamificationURL + "/data/game/" + gameId + "/player/" + player.getPlayerId();
 		HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void createTeam(String gameId, TeamDTO team) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createTeam[%s]: %s %s", gameId, team.getName(), team.getMembers().size()));
+		}	
 		String address = gamificationURL + "/data/game/" + gameId + "/team/" + team.getPlayerId();
 		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 	}
@@ -117,6 +127,9 @@ public class GEngineUtils {
 	}
 	
 	public void deleteTeamMember(String gameId, String teamId, String playerId) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("deleteTeamMember[%s]: %s %s", gameId, teamId, playerId));
+		}	
 		String address = gamificationURL + "/data/game/" + gameId + "/team/" + teamId
 				+ "/members/" + playerId;
 		List<String> list = new ArrayList<>();
@@ -132,11 +145,17 @@ public class GEngineUtils {
 	}
 	
 	public void deletePlayerState(String gameId, String playerId) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("deletePlayerState[%s]: %s", gameId, playerId));
+		}	
 		String address = gamificationURL + "/data/game/" + gameId + "/player/" + playerId;
 		HTTPUtils.delete(address, null, null, gamificationUser, gamificationPassword);
 	}
 	
 	public String createGame(GameDTO game) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createGame[%s]", game.getId()));
+		}	
 		String address = gamificationURL + "/model/game";
 		String json = HTTPUtils.post(address, game, null, gamificationUser, gamificationPassword);
 		GameDTO result = mapper.readValue(json, GameDTO.class);
@@ -144,11 +163,17 @@ public class GEngineUtils {
 	}
 	
 	public void deleteGame(String gameId) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("deleteGame[%s]", gameId));
+		}	
 		String address = gamificationURL + "/model/game/" + gameId;
 		HTTPUtils.delete(address, null, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void createChallenge(String gameId, ChallengeModel challengeModel) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createChallenge[%s]: %s", gameId, challengeModel.getName()));
+		}	
 		String address = gamificationURL + "/model/game/" + gameId + "/challenge";
 		HTTPUtils.post(address, challengeModel, null, gamificationUser, gamificationPassword);
 	}
@@ -159,11 +184,17 @@ public class GEngineUtils {
 		TypeReference<ArrayList<ChallengeModel>> typeRef = new TypeReference<ArrayList<ChallengeModel>>() {};
 		ArrayList<ChallengeModel> challengeList = mapper.readValue(json, typeRef);
 		for(ChallengeModel challenge : challengeList) {
+			if (logger.isInfoEnabled()) {
+				logger.info(String.format("deleteChallenges[%s]: %s", gameId, challenge.getName()));
+			}	
 			HTTPUtils.delete(address + "/" + challenge.getId(), null, null, gamificationUser, gamificationPassword); 
 		}
 	}
 	
 	public void createRule(String gameId, RuleDTO rule) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createRule[%s]: %s", gameId, rule.getName()));
+		}	
 		String address = gamificationURL + "/model/game/" + gameId + "/rule";
 		HTTPUtils.post(address, rule, null, gamificationUser, gamificationPassword);
 	}
@@ -185,16 +216,25 @@ public class GEngineUtils {
 		TypeReference<ArrayList<RuleDTO>> typeRef = new TypeReference<ArrayList<RuleDTO>>() {};
 		ArrayList<RuleDTO> ruleList = mapper.readValue(json, typeRef);
 		for(RuleDTO rule : ruleList) {
+			if (logger.isInfoEnabled()) {
+				logger.info(String.format("deleteRules[%s]: %s", gameId, rule.getName()));
+			}	
 			HTTPUtils.delete(address + "/" + rule.getId(), null, null, gamificationUser, gamificationPassword); 
 		}
 	}
 	
 	public void createPointConcept(String gameId, PointConcept pointConcept) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createPointConcept[%s]: %s", gameId, pointConcept.getName()));
+		}	
 		String address = gamificationURL + "/model/game/" + gameId + "/point";
 		HTTPUtils.post(address, pointConcept, null, gamificationUser, gamificationPassword);
 	}
 	
 	public void createTask(String gameId, IncrementalClassificationDTO classification) throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("createTask[%s]: %s", gameId, classification.getName()));
+		}	
 		String address = gamificationURL + "/model/game/" + gameId + "/incclassification";
 		HTTPUtils.post(address, classification, null, gamificationUser, gamificationPassword);
 	}
