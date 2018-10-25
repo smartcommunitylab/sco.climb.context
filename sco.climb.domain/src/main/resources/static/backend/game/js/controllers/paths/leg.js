@@ -66,7 +66,16 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         if($scope.leg.position === 0) {
             drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, null, $scope.leg.transport);
         } else {
-            drawMapLeg.createMap('map-leg', 'geocodeHintInput', {lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
+          if($scope.newLeg) {
+          	drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
+          			{lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
+          			{lat: $scope.legs[$scope.leg.position-1].geocoding[1] + 0.05, lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
+                $scope.leg.additionalPoints, $scope.leg.transport);
+          } else {
+          	drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
+          			{lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
+                $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
+          } 
         }
 
         // get previous leg scoreif exist.
