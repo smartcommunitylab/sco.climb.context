@@ -113,7 +113,7 @@ public class GEngineUtils {
 	
 	public void createTeam(String gameId, TeamDTO team) throws Exception {
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("createTeam[%s]: %s %s", gameId, team.getName(), team.getMembers().size()));
+			logger.info(String.format("createTeam[%s]: %s %s", gameId, team.getPlayerId(), team.getMembers().size()));
 		}	
 		String address = gamificationURL + "/data/game/" + gameId + "/team/" + URLEncoder.encode(team.getPlayerId(), "UTF-8");
 		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
