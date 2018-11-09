@@ -32,7 +32,11 @@ angular.module('climbGameUser.controllers.users.edit', [])
       dataService.saveUser($scope.user).then(
         function (data) {
           $scope.saving = false;
-          $state.go('home.user-edit', {'userEmail':$scope.user.email, 'newCreated': true});
+          if($scope.newUser) {
+            $state.go('home.user-role-edit', {userEmail:$scope.user.email});
+          } else {
+            $state.go('home.user-edit', {'userEmail':$scope.user.email, 'newCreated': true});
+          }
         },
         function (reason) {
           $scope.saving = false;
