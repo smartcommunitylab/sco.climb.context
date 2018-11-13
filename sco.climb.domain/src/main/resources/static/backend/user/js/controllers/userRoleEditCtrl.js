@@ -8,12 +8,24 @@ angular.module('climbGameUser.controllers.users.editRole', [])
     if (!$stateParams.userEmail) {    
       $state.go($rootScope.backStateToGo);
     }
+    $scope.authTextMap = {};
     $scope.saving = false;
     $scope.actualRole;
     dataService.getUserByEmail($stateParams.userEmail).then(
       function (data) {
         $scope.user = data;
         $scope.loadInstitutesList(true);
+        $scope.authTextMap[$scope.user.objectId] = {};
+        if(!angular.equals($scope.user.roles, {})) {
+          var properties = Object.getOwnPropertyNames($scope.user.roles);
+          properties.forEach(function(key) {
+            $scope.authTextMap[$scope.user.objectId][key] = {
+        	  "data": "",
+        	  "loaded": false
+            };
+            getAuthText($scope.user, key);
+          });
+    	}
       }
     );
 
@@ -32,7 +44,13 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       $scope.saving = true;
       dataService.addRole($scope.actualRole, $scope.user).then(
           function (data) {
-            $state.go($rootScope.backStateToGo);
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent($filter('translate')('role_add_ok_msg'))
+                .position("bottom")
+                .hideDelay(3000)
+            );
+            $state.reload();
           },
           function () {
             $scope.saving = false;
@@ -85,5 +103,16 @@ angular.module('climbGameUser.controllers.users.editRole', [])
       $rootScope.backStateToGo = "home.users-lists.list";
     }
 
+    function getAuthText(user, authKey) {
+      dataService.getAuthText(user, authKey).then(
+        function (data) {
+          $scope.authTextMap[user.objectId][authKey]['data'] = data;
+          $scope.authTextMap[user.objectId][authKey]['loaded'] = true;
+        },
+        function (reason) {
+          alert(reason);
+        }
+      );
+    }
   }
 ])

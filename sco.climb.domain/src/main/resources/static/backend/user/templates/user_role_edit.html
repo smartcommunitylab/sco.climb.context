@@ -1,6 +1,10 @@
 <md-content layout-padding>
-    <h4 class="title-no-margin">{{user.name}} {{user.surname}}</h4>
-    <span class="sub-title">{{user.email}}</span>
+    <h3 class="title-no-margin">{{user.name}} {{user.surname}} - {{user.email}}</h3>
+    <span class="sub-title">{{'auth_list_title' | translate}}:</span>
+    <div ng-repeat="(key, value) in user.roles">
+        <span ng-show="authTextMap[user.objectId][key]['loaded']">{{authTextMap[user.objectId][key]['data']}}</span>
+        <span ng-show="!authTextMap[user.objectId][key]['loaded']">Attendere...</span>
+    </div>
     <form name="role_edit" ng-disabled="saving">
         <md-input-container class="md-block">
             {{'role' | translate}}:
