@@ -1,7 +1,9 @@
 package it.smartcommunitylab.climb.domain.storage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -746,6 +748,13 @@ public class RepositoryManager {
 	
 	public Map<String, Boolean> saveCalendarDay(String ownerId, String pedibusGameId, 
 			String classRoom,	CalendarDay calendarDay) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(calendarDay.getDay());
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    calendarDay.setDay(cal.getTime());
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId)
 				.and("classRoom").is(classRoom).and("day").is(calendarDay.getDay()));
