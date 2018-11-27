@@ -16,19 +16,6 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.climb.contextstore.model.Child;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.GEngineUtils;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.StorageException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
-import it.smartcommunitylab.climb.domain.model.PedibusTeam;
-import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +48,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.GEngineUtils;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.model.Avatar;
+import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
+import it.smartcommunitylab.climb.domain.model.PedibusTeam;
+import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 
 @Controller
@@ -277,6 +279,87 @@ public class ChildController extends AuthController {
 		}
     headers.setContentLength(image.length);
     return new HttpEntity<byte[]>(image, headers);
+	}
+	
+	@RequestMapping(value = "/api/child/image/upload/{ownerId}/{objectId}", method = RequestMethod.POST)
+	public @ResponseBody void uploadAvatar(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId,
+			@RequestParam("data") MultipartFile data,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_ADD, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		criteria = Criteria.where("resourceId").is(objectId).and("resourceType").is(Const.AUTH_RES_Child);
+		Avatar avatar = storage.findOneData(Avatar.class, criteria, ownerId);
+		if(avatar == null) {
+			avatar = new Avatar();
+			avatar.setOwnerId(ownerId);
+			avatar.setObjectId(Utils.getUUID());
+			avatar.setResourceId(objectId);
+			avatar.setResourceType(Const.AUTH_RES_Child);
+		}
+		avatar.setContentType(data.getContentType());
+		avatar.setImage(new Binary(data.getBytes()));
+		storage.saveAvatar(avatar);
+	}
+	
+	@RequestMapping(value = "/api/child/image/info/{ownerId}/{objectId}", method = RequestMethod.GET)
+	public @ResponseBody Avatar getAvatarInfo(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		criteria = Criteria.where("resourceId").is(objectId).and("resourceType").is(Const.AUTH_RES_Child);
+		Avatar avatar = storage.findOneData(Avatar.class, criteria, ownerId);
+		if(avatar == null) {
+			throw new EntityNotFoundException("avatar not found");
+		}
+		avatar.setImage(null);
+		return avatar;
+	}
+	
+	@RequestMapping(value = "/api/child/image/download/{ownerId}/{objectId}", method = RequestMethod.GET)
+	public @ResponseBody HttpEntity<byte[]> downloadAvatar(
+			@PathVariable String ownerId, 
+			@PathVariable String objectId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		Criteria criteria = Criteria.where("objectId").is(objectId);
+		Child child = storage.findOneData(Child.class, criteria, ownerId);
+		if(child == null) {
+			throw new EntityNotFoundException("child not found");
+		}
+		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
+				null,	null, Const.AUTH_RES_Image, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		criteria = Criteria.where("resourceId").is(objectId).and("resourceType").is(Const.AUTH_RES_Child);
+		Avatar avatar = storage.findOneData(Avatar.class, criteria, ownerId);
+		if(avatar == null) {
+			throw new EntityNotFoundException("avatar not found");
+		}
+		byte[] data = avatar.getImage().getData();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(avatar.getContentType()));
+		headers.setContentLength(data.length);
+		return new HttpEntity<byte[]>(data, headers);
 	}
 	
 	private void addPlayer(Child child, String ownerId, String instituteId, String schoolId)

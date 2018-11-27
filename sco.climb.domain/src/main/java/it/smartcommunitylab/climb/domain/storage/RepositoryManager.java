@@ -39,6 +39,7 @@ import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
+import it.smartcommunitylab.climb.domain.model.Avatar;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
 import it.smartcommunitylab.climb.domain.model.Link;
@@ -1428,5 +1429,22 @@ public class RepositoryManager {
 		result.put("excursion", playExcursion);
 		
 		return result;
+	}
+	
+	public void saveAvatar(Avatar avatar) {
+		Query query = new Query(new Criteria("ownerId").is(avatar.getOwnerId()).and("objectId").is(avatar.getObjectId()));
+		Avatar avatarDb = mongoTemplate.findOne(query, Avatar.class);
+		Date now = new Date();
+		if(avatarDb == null) {
+			avatar.setCreationDate(now);
+			avatar.setLastUpdate(now);
+			mongoTemplate.save(avatar);
+		} else {
+			Update update = new Update();
+			update.set("contentType", avatar.getContentType());
+			update.set("image", avatar.getImage());
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, Avatar.class);
+		}
 	}
 }

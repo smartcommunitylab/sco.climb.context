@@ -123,7 +123,6 @@ public class RoleController extends AuthController {
 		auth.getResources().add(Const.AUTH_RES_Institute);
 		auth.getResources().add(Const.AUTH_RES_School);
 		auth.getResources().add(Const.AUTH_RES_Child);
-		auth.getResources().add(Const.AUTH_RES_Image);
 		auth.getResources().add(Const.AUTH_RES_Volunteer);
 		auth.getResources().add(Const.AUTH_RES_Stop);
 		auth.getResources().add(Const.AUTH_RES_Route);
@@ -141,6 +140,7 @@ public class RoleController extends AuthController {
 		auth.setGameId("*");
 		auth.getResources().add(Const.AUTH_RES_WsnEvent);
 		auth.getResources().add(Const.AUTH_RES_EventLogFile);
+		auth.getResources().add(Const.AUTH_RES_Image);
 		auths.add(auth);
 		
 		storage.addUserRole(email, 
