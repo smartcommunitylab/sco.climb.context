@@ -20,7 +20,6 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
             footerTemplate: null,
             modalClass: "modal",
             css: {
-                top: '100px',
                 left: '30%',
                 margin: '0 auto'
             }

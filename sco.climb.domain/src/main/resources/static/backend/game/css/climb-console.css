@@ -611,3 +611,8 @@ legend {
 .search-container .list-categories {
     text-align: left;
 }
+
+.modal-body .list-group-item {
+	padding-top: 5px;
+	padding-right: 5px;
+}

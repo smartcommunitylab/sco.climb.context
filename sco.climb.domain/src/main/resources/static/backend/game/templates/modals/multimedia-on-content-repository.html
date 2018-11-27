@@ -1,22 +1,24 @@
 <div>
 	<div class="modal-body">
-		<div class="row">
-            <form novalidate style="text-align:center;margin-bottom:8px;">    
-                <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
-                <select ng-model="$parent.searchtype">
-                    <option value="all">Tutti</option>
-                    <option value="image">Immagini</option>
-                    <option value="video">Video</option>
-                    <option value="link">Link</option>
-                    <option value="file">File</option>
-                </select>
-                <label><input type="checkbox" ng-model="$parent.searchlocalschool"/> Solo da questa scuola</label>
-                <label>Ricerca nel raggio di </label>
-                <input type="number" min="0" max="999" placeholder="inserisci i Km" ng-model="$parent.searchdistance" />
-                <label> kilometri dalla tappa</label>                
-                <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
-            </form>
-        </div>
+        <form novalidate style="text-align:center;margin-bottom:8px;">    
+            <div class="row">
+	            <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
+	            <select ng-model="$parent.searchtype">
+	                <option value="all">Tutti</option>
+	                <option value="image">Immagini</option>
+	                <option value="video">Video</option>
+	                <option value="link">Link</option>
+	                <option value="file">File</option>
+	            </select>
+	            <label><input type="checkbox" ng-model="$parent.searchlocalschool"/> Solo da questa scuola</label>
+            </div>
+            <div class="row">
+	            <label>Ricerca nel raggio di </label>
+	            <input type="number" min="0" max="999" placeholder="inserisci i Km" ng-model="$parent.searchdistance" />
+	            <label> kilometri dalla tappa</label>                
+	            <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
+            </div>
+        </form>
         <div class="row"style="overflow: auto;height: 350px;" id="contentList">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
