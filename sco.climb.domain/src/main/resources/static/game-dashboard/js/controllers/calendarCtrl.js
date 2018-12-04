@@ -19,7 +19,10 @@ angular.module('climbGame.controllers.calendar', [])
         means: {}
       }
       $scope.ENABLE_PAST_DAYS_EDIT = configService.ENABLE_PAST_DAYS_EDIT;
-
+      
+      $scope.lastLeg = {}
+      $scope.isGameFinishedNotificationDisplaied = false;
+      
       setTodayIndex()
       setClassSize()
       for (var i = 0; i < 5; i++) {
@@ -60,7 +63,15 @@ angular.module('climbGame.controllers.calendar', [])
 	          )
 	        },
 	        function () {}
-	      )	    	
+	      )
+	      dataService.getStatus().then(
+	      	function(data) {
+		      	if(data.legs && data.legs.length) {
+		      		var pos = data.legs.length - 1;
+		      		$scope.lastLeg = data.legs[pos]
+		      	}
+		      }, function (err) {}
+	      )
 	    }, function (err) {
 	      console.log(err)
 	      // Toast the Problem
@@ -494,7 +505,45 @@ angular.module('climbGame.controllers.calendar', [])
             function (data) {
               if (data && data.length) {
                 console.log('[Calendar] New notifications: ' + data.length)
-                data[0].data = $scope.convertFields(data[0].data)
+                angular.forEach(data, function(notification) {
+                	notification.data =  $scope.convertFields(notification.data)
+	                if(!CacheSrv.isGameFinishedNotified(loginService.getOwnerId(),
+	                		loginService.getGameId(), loginService.getClassRoom())) {
+	                	if((notification.key == 'GameFinished') && 
+	                			(!$scope.isGameFinishedNotificationDisplaied)) {
+                  		$scope.gameFinishedNotification = notification;
+                  		$scope.isGameFinishedNotificationDisplaied = true;
+                      $mdDialog.show({
+                        // targetEvent: $event,
+                        scope: $scope, // use parent scope in template
+                        preserveScope: true, // do not forget this if use parent scope
+                        template: '<md-dialog-game-finisched>' +
+                        	'<div class="cal-dialog-game-finisched">' +
+                          '  <div class="cal-dialog-title">COMPLIMENTI!</div>' +
+                          '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog1" | translate}}</div>' +
+                          '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog2" | translate:gameFinishedNotification.data}}</div>' +
+                          '  <img class="cal-dialog-img" ng-src="{{lastLeg.imageUrl}}">' +
+                          '  <div class="cal-dialog-leg">{{"notif_gameFinishedDialogLeg" | translate:gameFinishedNotification.data}}</div>' +
+                          '  <div layout="row" layout-align="end">' +
+                          '    <div layout="column" layout-align="end">' + 
+                          '      <md-button ng-click="closeDialog()" class="send-dialog-dismiss">' +
+                          '        Chiudi' +
+                          '      </md-button>' +
+                          '    </div>' +
+                          '  </div>' +
+                          '</div></md-dialog-game-finisched>',
+                        controller: function DialogController($scope, $mdDialog) {
+                          $scope.closeDialog = function () {
+                          	CacheSrv.setGameFinishedNotified(loginService.getOwnerId(),
+                          			loginService.getGameId(), loginService.getClassRoom(), true);
+                          	$scope.isGameFinishedNotificationDisplaied = false;
+                            $mdDialog.hide();
+                          }
+                        }
+                      })
+                  	} 	
+	                }
+                })
                 $scope.lastNotification = data[0]
                 CacheSrv.updateLastCheck('calendar')
               }

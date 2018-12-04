@@ -20,6 +20,26 @@ angular.module('climbGame.services.cache', [])
     cacheService.resetLastCheck = function (page) {
       localStorage.removeItem(page + '_page_last_check')
     }
-
+    
+    cacheService.setGameFinishedNotified = function (ownerId, gameId, classRoom, booleanValue) {
+    	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
+    	localStorage.setItem(key, booleanValue);
+    }
+    
+    cacheService.isGameFinishedNotified = function (ownerId, gameId, classRoom) {
+    	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
+    	var result = localStorage.getItem(key);
+    	if(result) {
+    		return JSON.parse(result);
+    	} else {
+    		return false;
+    	}
+    } 
+    
+    cacheService.resetGameFinishedNotified = function (ownerId, gameId, classRoom) {
+    	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
+    	localStorage.removeItem(key);
+    }
+    
     return cacheService
   })
