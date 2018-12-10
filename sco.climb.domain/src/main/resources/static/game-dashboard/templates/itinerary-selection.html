@@ -15,12 +15,7 @@
               <md-radio-group ng-model="selectedItinerary">
                 <md-radio-button ng-repeat="itinerary in itineraries" ng-value="itinerary">{{itinerary.name}}</md-radio-button>
               </md-radio-group>
-              <!--
-              <md-select ng-model="selectedClass" placeholder="Classes" class="md-no-underline">
-                <md-option ng-repeat="class in formClasses" ng-value="class">{{class.value}}</md-option>
-              </md-select>
-              -->
-              <div layout="row" layout-align="center center">
+              <div layout="row" layout-align="left center">
                 <div layout="column">
                   <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="select()">{{'login_enter' | translate}}</md-button>
                 </div>
@@ -29,6 +24,9 @@
                 </div>
               </div>
             </md-content>
+		        <div layout="row" layout-align="center center">
+		       		<label class="login-label">{{'login_selection_google_warning' | translate}}</label>              
+		        </div>
           </div>
         </div>
       </md-content>

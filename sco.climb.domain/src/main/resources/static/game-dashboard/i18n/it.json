@@ -62,6 +62,7 @@
   "login_select_game": "Seleziona il gioco",
   "login_select_itinerary": "Seleziona il percorso",
   "login_select_classes": "Seleziona la classe che desideri",
+  "login_selection_google_warning": "Se state utilizzando un account Google e persistono errori di caricamento dei dati o non viene chiesto quale account Google utilizzare, assicuratevi di fare 'Logout/Esci' dalle applicazioni web di Google",
   "choose_owner": "Selezionare un dominio",
   "choose_institute": "Selezionare un Istituto",
   "choose_school": "Selezionare una Scuola",

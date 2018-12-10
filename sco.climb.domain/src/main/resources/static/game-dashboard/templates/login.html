@@ -22,7 +22,7 @@
                   <input ng-model="user.password" type="password">
                 </md-input-container>
               </div>
-              <div layout="row" layout-align="center center">
+              <div layout="row" layout-align="left center">
                 <div layout="column">
                   <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="login()">{{'login_enter'|translate}}</md-button>
                 </div>
@@ -30,8 +30,10 @@
                   <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="logout()">{{'menu_logout' | translate}}</md-button>
                 </div>
               </div>
-
             </md-content>
+		        <div layout="row" layout-align="center center">
+		       		<label class="login-label">{{'login_selection_google_warning' | translate}}</label>              
+		        </div>
           </div>
         </div>
       </md-content>
