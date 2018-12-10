@@ -104,6 +104,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     ownerId: $stateParams.idDomain,
                     schoolId: $stateParams.idSchool,
                     instituteId: $stateParams.idInstitute,
+                    usingPedibusData: false
                 }
                 $scope.saveData = DataService.saveData;
             }
@@ -160,7 +161,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 $scope.currentGame.to = $scope.endDate.getTime();
 
                 // Salvataggio orari di inizio e fine raccolta dati
-                if (this.enablePiediBusParams) {
+                if ($scope.currentGame.usingPedibusData) {
                     $scope.currentGame.fromHour = $scope.collectFromHour.toTimeString().slice(0, 5);
                     $scope.currentGame.toHour = $scope.collectToHour.toTimeString().slice(0, 5);
                 }
@@ -209,7 +210,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 }
             }
 
-            if (this.enablePiediBusParams) {
+            if ($scope.currentGame.usingPedibusData) {
                 if ($scope.collectToHour.toTimeString().localeCompare($scope.collectFromHour.toTimeString(), { numeric: true }) <= 0) {
                     isValidate = false;    
                 }
@@ -234,7 +235,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
     .controller('GameInfoCtrl', function ($scope, DataService) {
         $scope.$parent.selectedTab = 'info';
-        $scope.$parent.enablePiediBusParams = false;
         $scope.nrOfStudenti = 0;
 
         $scope.$on('gameLoaded', function (e) {
