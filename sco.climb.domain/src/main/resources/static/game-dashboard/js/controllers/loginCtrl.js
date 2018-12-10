@@ -1,6 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.login', [])
-  .controller('loginCtrl', function ($scope, $state, $mdToast, $filter, loginService, profileService) {
+  .controller('loginCtrl', function ($scope, $state, $mdToast, $filter, 
+  		$location, $window, loginService, profileService) {
   		profileService.getProfile().then(function(profile) {
 	    	loginService.setUserToken(profile.token)
 	    	loginService.setAllOwners(profile.ownerIds)
@@ -10,6 +11,13 @@ angular.module('climbGame.controllers.login', [])
 	      // Toast the Problem
 	      $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
 	    });
-	  	
+  		
+      $scope.logout = function () {
+        var logoutUrl = loginService.logout()
+        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+        logoutUrl += '?target=' + baseAppUrl;
+        $window.location.href = logoutUrl;
+      }
+
     }
   )

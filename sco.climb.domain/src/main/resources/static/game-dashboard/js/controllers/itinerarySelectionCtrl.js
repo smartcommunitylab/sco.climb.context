@@ -1,6 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.itinerarySelection', [])
-  .controller('itinerarySelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
+  .controller('itinerarySelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, 
+  		$location, $window, loginService, CacheSrv, dataService) {
   		$rootScope.isLoading = true;
       $scope.itineraries = []; 
       if(loginService.getItineraryId()) {
@@ -9,11 +10,15 @@ angular.module('climbGame.controllers.itinerarySelection', [])
         dataService.getItinerary().then(
           	function(data) {
           		$scope.itineraries = data;
-              loginService.setSingleItinerary($scope.itineraries.length == 1);
-          		if($scope.itineraries.length == 1) {
-          			loginService.setItineraryId($scope.itineraries[0].objectId)
-          			loginService.setAllClasses($scope.itineraries[0].classRooms);
-          			$state.go('classSelection')
+          		if($scope.itineraries.length == 0) {
+          			$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
+          		} else {
+                loginService.setSingleItinerary($scope.itineraries.length == 1);
+            		if($scope.itineraries.length == 1) {
+            			loginService.setItineraryId($scope.itineraries[0].objectId)
+            			loginService.setAllClasses($scope.itineraries[0].classRooms);
+            			$state.go('classSelection')
+            		}
           		}
           		$rootScope.isLoading = false;
           	}, 
@@ -21,14 +26,18 @@ angular.module('climbGame.controllers.itinerarySelection', [])
           		console.log(err)
           		//Toast the Problem
           		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
-          		setTimeout(function() {
-          			$state.go('login')
-          		}, 3000)          		
           	}
           );	
       	
       }
-
+      
+      $scope.logout = function () {
+        var logoutUrl = loginService.logout()
+        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+        logoutUrl += '?target=' + baseAppUrl;
+        $window.location.href = logoutUrl;
+      }
+      
       $scope.select = function () {
         if ($scope.selectedItinerary) {
           loginService.setItineraryId($scope.selectedItinerary.objectId);

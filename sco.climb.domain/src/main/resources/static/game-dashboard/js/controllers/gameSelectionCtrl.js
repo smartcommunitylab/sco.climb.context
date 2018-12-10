@@ -1,6 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.gameSelection', [])
-  .controller('gameSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv, dataService) {
+  .controller('gameSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, 
+  		$location, $window, loginService, CacheSrv, dataService) {
   		$rootScope.isLoading = true;
       $scope.games = []; 
       if(loginService.getGameId()) {
@@ -9,10 +10,14 @@ angular.module('climbGame.controllers.gameSelection', [])
         dataService.getGame().then(
           	function(data) {
           		$scope.games = data;
-              loginService.setSingleGame($scope.games.length == 1);
-          		if($scope.games.length == 1) {
-          			loginService.setGameId($scope.games[0].objectId)
-          			$state.go('itinerarySelection')
+          		if($scope.games.length == 0) {
+          			$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
+          		} else {
+                loginService.setSingleGame($scope.games.length == 1);
+            		if($scope.games.length == 1) {
+            			loginService.setGameId($scope.games[0].objectId)
+            			$state.go('itinerarySelection')
+            		}          			
           		}
           		$rootScope.isLoading = false;
           	}, 
@@ -20,11 +25,15 @@ angular.module('climbGame.controllers.gameSelection', [])
           		console.log(err)
           		//Toast the Problem
           		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
-          		setTimeout(function() {
-          			$state.go('login')
-          		}, 3000)
           	}
           );	
+      }
+      
+      $scope.logout = function () {
+        var logoutUrl = loginService.logout()
+        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+        logoutUrl += '?target=' + baseAppUrl;
+        $window.location.href = logoutUrl;
       }
 
       $scope.select = function () {

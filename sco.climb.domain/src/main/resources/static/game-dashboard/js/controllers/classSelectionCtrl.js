@@ -1,11 +1,19 @@
 /* global angular */
 angular.module('climbGame.controllers.classSelection', [])
-  .controller('classSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, loginService, CacheSrv) {
+  .controller('classSelectionCtrl', function ($scope, $rootScope, $state, $mdToast, $filter, 
+  		$location, $window, loginService, CacheSrv) {
   		$rootScope.isLoading = false;	
       $scope.classes = loginService.getAllClasses()
       loginService.setSingleClass($scope.classes.length == 1);
       if(loginService.getClassRoom()) {
       	$state.go('home')
+      }
+      
+      $scope.logout = function () {
+        var logoutUrl = loginService.logout()
+        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+        logoutUrl += '?target=' + baseAppUrl;
+        $window.location.href = logoutUrl;
       }
       
       $scope.select = function () {
