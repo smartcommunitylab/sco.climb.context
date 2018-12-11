@@ -467,8 +467,8 @@ public class RepositoryManager {
 		}
 		Query query = new Query(criteria);
 		query.addCriteria(new Criteria().andOperator(
-			Criteria.where("timestamp").lte(dateTo),
-			Criteria.where("timestamp").gte(dateFrom)));
+				Criteria.where("timestamp").lte(dateTo),
+				Criteria.where("timestamp").gte(dateFrom)));
 		query.with(new Sort(Sort.Direction.ASC, "timestamp"));
 		if(logger.isDebugEnabled()) {
 			logger.debug("searchEvents:" + query.toString());
@@ -476,6 +476,33 @@ public class RepositoryManager {
 		List<WsnEvent> result = mongoTemplate.find(query, WsnEvent.class);
 		if(logger.isDebugEnabled()) {
 			logger.debug("searchEvents:" + result.size());
+		}
+		return result;
+	}
+	
+	public List<WsnEvent> searchEventsByLastUpdate(String ownerId, String routeId, Date dateFrom, Date dateTo, 
+			List<Integer> eventTypeList, List<String> nodeIdList) {
+		Criteria criteria = new Criteria("ownerId").is(ownerId);
+		if(Utils.isNotEmpty(routeId)) {
+			criteria = criteria.and("routeId").is(routeId);
+		}
+		if(eventTypeList.size() > 0) {
+			criteria = criteria.and("eventType").in(eventTypeList);
+		}
+		if(nodeIdList.size() > 0) {
+			criteria = criteria.and("wsnNodeId").in(nodeIdList);
+		}
+		Query query = new Query(criteria);
+		query.addCriteria(new Criteria().andOperator(
+				Criteria.where("lastUpdate").lte(dateTo),
+				Criteria.where("lastUpdate").gte(dateFrom)));
+		query.with(new Sort(Sort.Direction.ASC, "lastUpdate"));
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchEventsByLastUpdate:" + query.toString());
+		}
+		List<WsnEvent> result = mongoTemplate.find(query, WsnEvent.class);
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchEventsByLastUpdate:" + result.size());
 		}
 		return result;
 	}
@@ -867,6 +894,7 @@ public class RepositoryManager {
 			update.set("globalTeam", game.getGlobalTeam());
 			update.set("fromHour", game.getFromHour());
 			update.set("toHour", game.getToHour());
+			update.set("interval", game.getInterval());
 			update.set("lateSchedule", game.isLateSchedule());
 			update.set("usingPedibusData", game.isUsingPedibusData());
 			update.set("params", game.getParams());

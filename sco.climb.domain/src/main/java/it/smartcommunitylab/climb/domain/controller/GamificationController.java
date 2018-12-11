@@ -1040,6 +1040,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String pedibusGameId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
+		Date actualTime = new Date();
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
@@ -1049,12 +1050,12 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		try {
-			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, false);
+			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, actualTime, false);
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId);
 				if(!eventsPoller.isEmptyResponse(childrenStatus)) {
 					Map<String, Boolean> updateClassScores = 
-							eventsPoller.updateCalendarDayFromPedibus(ownerId, pedibusGameId, childrenStatus); 
+							eventsPoller.updateCalendarDayFromPedibus(game, childrenStatus); 
 					eventsPoller.sendScores(childrenStatus, updateClassScores, game);
 					storage.updatePollingFlag(ownerId, pedibusGameId, routeId, Boolean.FALSE);
 				}

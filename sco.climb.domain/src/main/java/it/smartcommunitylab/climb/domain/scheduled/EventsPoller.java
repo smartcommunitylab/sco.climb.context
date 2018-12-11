@@ -5,6 +5,7 @@ import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.HTTPUtils;
+import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
@@ -13,6 +14,7 @@ import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -65,155 +67,139 @@ public class EventsPoller {
 	private RepositoryManager storage;
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsPoller.class);
-//	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 5,10,15 8 * * MON-FRI") // second, minute, hour, day, month, weekday
-	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
-	public void earlyScheduledPollEvents() throws Exception {
-		if(logger.isInfoEnabled()) {
-			logger.info("scheduledPollEvents");
-		}
-		pollEvents(true, false);
-	}
-	
-	@Scheduled(cron = "0 5,10,15 18 * * MON-FRI") // second, minute, hour, day, month, weekday
-	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
-	public void lateScheduledPollEvents() throws Exception {
-		if(logger.isInfoEnabled()) {
-			logger.info("scheduledPollEvents");
-		}
-		pollEvents(true, true);
-	}
-	
-	@Scheduled(cron = "0 45,55 7 * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 5,15 0 * * *") // second, minute, hour, day, month, weekday
 	public void resetPollingFlag() {
 		List<PedibusGame> games = storage.getPedibusGames();
 		Calendar cal = new GregorianCalendar(TimeZone.getDefault());
-		String date = shortSdf.format(cal.getTime());
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+		String date = sdf.format(cal.getTime());
 		for (PedibusGame game : games) {
 			storage.resetPollingFlag(game.getOwnerId(), game.getGameId());
 			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), date);
 		}
 	}
 	
-	public Map<String, Collection<ChildStatus>> pollEvents(boolean checkDate, 
-			boolean lateSchedule) throws Exception {
+	public Map<String, Collection<ChildStatus>> pollEvents(String pedibusGameId,
+			boolean checkDate) throws Exception {
+		Date actualTime = new Date();		
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
-		List<PedibusGame> games = storage.getPedibusGames();
-		for (PedibusGame game : games) {
-			logger.info("Reading game " + game.getGameId() + " events.");
-			if(!game.isUsingPedibusData()) {
-				logger.info("Game " + game.getGameId() + " skip is not using pedibus data.");
-				continue;
-			}
-			if(game.isLateSchedule() ^ lateSchedule) {
-				logger.info("Game " + game.getGameId() + " skip is not scheduled now.");
-				continue;
-			}
-			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
+		PedibusGame game = storage.getPedibusGame(pedibusGameId);
+		logger.info("Reading game " + game.getGameId() + " events.");
+		if(!game.isUsingPedibusData()) {
+			logger.info("Game " + game.getGameId() + " skip is not using pedibus data.");
+		} else {
+			try {
+				sdf.parse(game.getLastDaySeen());
+			} catch (Exception e) {
+				logger.info("pollEvents: lastDaySeen not well formed for game " + game.getObjectId());
+				game.setLastDaySeen(sdf.format(Utils.getStartOfTheDay(actualTime)));
+			}			
+			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, actualTime, checkDate);
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
-					Map<String, Boolean> updateClassScores = 
-							updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), childrenStatus);
+					Map<String, Boolean> updateClassScores = updateCalendarDayFromPedibus(game, childrenStatus);
 					sendScores(childrenStatus, updateClassScores, game);
-					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.FALSE);
+					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.TRUE);
 				}
 			}
 			results.putAll(childrenStatusMap);
+			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), sdf.format(actualTime));
 		}
 		return results;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Collection<ChildStatus>> pollGameEvents(PedibusGame game, 
-			boolean checkDate) throws Exception {
+			Date actualTime, boolean checkDate) {
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
 		if(game != null) {
 			Date date = new Date();
 			if(checkDate) {
 				if(game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
-					logger.info("Skipping game " + game.getGameId() + ", date out of range.");
+					logger.info("pollGameEvents: Skipping game " + game.getGameId() + ", date out of range.");
 					return results;
 				}
 			}
-			
-			Criteria criteria = Criteria.where("instituteId").is(game.getInstituteId())
-					.and("schoolId").is(game.getSchoolId());
-			List<Route> routesList = (List<Route>) storage.findData(Route.class, criteria, 
-					null, game.getOwnerId());
+			try {
+				Criteria criteria = Criteria.where("instituteId").is(game.getInstituteId())
+						.and("schoolId").is(game.getSchoolId());
+				List<Route> routesList = (List<Route>) storage.findData(Route.class, criteria, 
+						null, game.getOwnerId());
 
-			Calendar cal = new GregorianCalendar(TimeZone.getDefault());
+				Calendar cal = new GregorianCalendar(TimeZone.getDefault());
 
-//			String from, to;
-
-			if (game.getLastDaySeen() != null) {
-				cal.setTime(shortSdf.parse(game.getLastDaySeen()));
-			} else {
-				cal.setTime(cal.getTime());
-			}
-
-			String h[];
-
-			// h = (game.getFromHour() != null ? game.getFromHour() :
-			// "00:01").split(":");
-			h = game.getFromHour().split(":");
-			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
-			cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 0);
-
-//			from = sdf.format(cal.getTime());
-			Date dateFrom = cal.getTime(); 
-
-			// h = (game.getToHour() != null ? game.getToHour() :
-			// "23:59").split(":");
-			h = game.getToHour().split(":");
-			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
-			cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
-
-//			to = sdf.format(cal.getTime());
-			Date dateTo = cal.getTime();
-
-			for (Route route : routesList) {
-				String routeId = route.getObjectId();
-				logger.info("Reading route " + routeId + " events.");
-				
-				Boolean pollingFlag = game.getPollingFlagMap().get(routeId);
-				if((pollingFlag != null) && (pollingFlag == Boolean.FALSE)) {
-					logger.info("Events already managed for route " + routeId);
-					continue;
-				}
-				
-				List<Integer> eventTypeList = Lists.newArrayList();
-				List<String> nodeIdList = Lists.newArrayList();
-				List<WsnEvent> eventsList = storage.searchEvents(game.getOwnerId(), routeId, dateFrom, dateTo, 
-						eventTypeList, nodeIdList);
-				
-				if (!eventsList.isEmpty()) {
-					Criteria routeCriteria = Criteria.where("routeId").is(routeId);
-					Sort sort = new Sort(Sort.Direction.ASC, "position");
-					List<Stop> stopList = (List<Stop>) storage.findData(Stop.class, routeCriteria, sort, 
-							game.getOwnerId());
-
-					Map<String, Stop> stopsMap = Maps.newTreeMap();
-					for (Stop stop : stopList) {
-						stopsMap.put(stop.getObjectId(), stop);
+				if (game.getLastDaySeen() != null) {
+					try {
+						cal.setTime(sdf.parse(game.getLastDaySeen()));
+					} catch (ParseException e) {
+						logger.info("pollGameEvents: lastDaySeen not well formed for game " + game.getObjectId());
 					}
+				} 
+				Date dateFrom = cal.getTime();
+				
+				cal.setTime(actualTime);
+				Date dateTo = cal.getTime();
 
-					logger.info("Computing scores for route " + routeId);
-					EventsProcessor ep = new EventsProcessor(stopsMap);
-					Collection<ChildStatus> status = ep.process(eventsList);
+				for (Route route : routesList) {
+					String routeId = route.getObjectId();
+					logger.info("pollGameEvents: Reading route " + routeId + " events.");
+					
+					Boolean pollingFlag = game.getPollingFlagMap().get(routeId);
+					if((pollingFlag != null) && (pollingFlag == Boolean.FALSE)) {
+						logger.info("pollGameEvents: Events already managed for route " + routeId);
+						continue;
+					}
+					
+					List<Integer> eventTypeList = Lists.newArrayList();
+					List<String> nodeIdList = Lists.newArrayList();
+					List<WsnEvent> eventsList = storage.searchEventsByLastUpdate(game.getOwnerId(), 
+							routeId, dateFrom, dateTo, eventTypeList, nodeIdList);
+					
+					//remove events that are not in this day
+					Date startOfTheDay = Utils.getStartOfTheDay(actualTime);
+					Date endOfTheDay = Utils.getEndOfTheDay(actualTime);
+					List<WsnEvent> eventsListCleaned = new ArrayList<>();
+					for(WsnEvent event : eventsList) {
+						if(event.getTimestamp().before(startOfTheDay) 
+								|| event.getTimestamp().after(endOfTheDay)) {
+							continue;
+						}	
+						eventsListCleaned.add(event);
+					}
+					if (!eventsListCleaned.isEmpty()) {
+						Criteria routeCriteria = Criteria.where("routeId").is(routeId);
+						Sort sort = new Sort(Sort.Direction.ASC, "position");
+						List<Stop> stopList = (List<Stop>) storage.findData(Stop.class, routeCriteria, sort, 
+								game.getOwnerId());
 
-					results.put(routeId, status);
-					logger.info("Computed scores for route " + routeId + " = " + status);
-				} else {
-					results.put(routeId, null);
-					logger.info("No recent events for route " + routeId);
-				}
-			}	
+						Map<String, Stop> stopsMap = Maps.newTreeMap();
+						for (Stop stop : stopList) {
+							stopsMap.put(stop.getObjectId(), stop);
+						}
+
+						logger.info("pollGameEvents: Computing scores for route " + routeId);
+						EventsProcessor ep = new EventsProcessor(stopsMap);
+						Collection<ChildStatus> status = ep.process(eventsListCleaned);
+
+						results.put(routeId, status);
+						logger.info("pollGameEvents: Computed scores for route " + routeId + " = " + status);
+					} else {
+						results.put(routeId, null);
+						logger.info("pollGameEvents: No recent events for route " + routeId);
+					}
+				}					
+			} catch (Exception e) {
+				logger.warn(String.format("pollGameEvents[%s]:%s", game.getGameId(), e.getMessage()));
+			}
 		}
 		return results;
 	}
@@ -238,7 +224,7 @@ public class EventsPoller {
 						continue;
 					}
 				} catch (ClassNotFoundException e) {
-					logger.warn(e.getMessage());
+					logger.warn("sendScores:" + e.getMessage());
 					continue;
 				}
 				
@@ -254,9 +240,9 @@ public class EventsPoller {
 				data.put(paramDistance, score);
 				Date date = new Date();
 				try {
-					date = shortSdf.parse(game.getLastDaySeen());
+					date = Utils.getStartOfTheDay(sdf.parse(game.getLastDaySeen()));
 				} catch (ParseException e) {
-					logger.warn("sendScores error:" + e.getMessage());
+					logger.warn("sendScores:" + e.getMessage());
 					continue;
 				}
 				data.put(paramDate, date.getTime());
@@ -268,13 +254,14 @@ public class EventsPoller {
 					}
 					HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
 				} catch (Exception e) {
-					logger.warn(e.getMessage());
+					logger.warn("sendScores error:" + e.getMessage());
+					continue;
 				}				
 			}
 		}
 	}
 	
-	public Map<String, Boolean> updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, 
+	public Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 
 			Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
@@ -285,7 +272,8 @@ public class EventsPoller {
 		}
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived()) {
-				PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, pedibusGameId, childStatus.getChildId());
+				PedibusPlayer player = storage.getPedibusPlayerByChildId(game.getOwnerId(), game.getObjectId(), 
+						childStatus.getChildId());
 				if(player != null) {
 					String classRoom = player.getClassRoom();
 					Map<String, String> modeMap = classModeMap.get(classRoom);
@@ -298,13 +286,13 @@ public class EventsPoller {
 			}
 		}
 		
-		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game != null) {
 			try {
-				Date day = shortSdf.parse(game.getLastDaySeen());
+				Date day = Utils.getStartOfTheDay(sdf.parse(game.getLastDaySeen()));
 				for(String classRoom : classModeMap.keySet()) {
 					Map<String, String> modeMap = classModeMap.get(classRoom);
-					Boolean update = storage.updateCalendarDayFromPedibus(ownerId, pedibusGameId, classRoom, day, modeMap);
+					Boolean update = storage.updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), 
+							classRoom, day, modeMap);
 					classUpdateScoreMap.put(classRoom, update);
 				}
 			} catch (ParseException e) {
@@ -320,5 +308,5 @@ public class EventsPoller {
 			result = false;
 		}
 		return result;
-	}
+	}	
 }

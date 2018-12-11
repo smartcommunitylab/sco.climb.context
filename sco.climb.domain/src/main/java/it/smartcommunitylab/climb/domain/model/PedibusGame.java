@@ -22,6 +22,7 @@ public class PedibusGame extends BaseObject {
 	private String globalTeam;
 	private String fromHour;
 	private String toHour;
+	private int interval;
 	private String lastDaySeen;
 	private boolean lateSchedule;
 	private boolean usingPedibusData; 
@@ -157,5 +158,11 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
+	}
+	public int getInterval() {
+		return interval;
+	}
+	public void setInterval(int interval) {
+		this.interval = interval;
 	}
 }

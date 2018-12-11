@@ -104,7 +104,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     ownerId: $stateParams.idDomain,
                     schoolId: $stateParams.idSchool,
                     instituteId: $stateParams.idInstitute,
-                    usingPedibusData: false
+                    usingPedibusData: false,
+                    interval: 5
                 }
                 $scope.saveData = DataService.saveData;
             }
@@ -213,6 +214,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             if ($scope.currentGame.usingPedibusData) {
                 if ($scope.collectToHour.toTimeString().localeCompare($scope.collectFromHour.toTimeString(), { numeric: true }) <= 0) {
                     isValidate = false;    
+                }
+                if(($scope.currentGame.interval <= 0) || ($scope.currentGame.interval > 30)) {
+                	isValidate = false;
                 }
             }
 

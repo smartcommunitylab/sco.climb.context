@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,6 +212,26 @@ public class Utils {
 	public static String getNormalizeLegName(String name) {
 		//TODO capire come normalizzare il nome della tappa
 		return name.trim().replace(" ", "");
+	}
+	
+	public static Date getStartOfTheDay(Date date) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    return cal.getTime();
+	}
+	
+	public static Date getEndOfTheDay(Date date) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+    cal.set(Calendar.HOUR_OF_DAY, 23);
+    cal.set(Calendar.MINUTE, 59);
+    cal.set(Calendar.SECOND, 59);
+    cal.set(Calendar.MILLISECOND, 999);
+    return cal.getTime();
 	}
 	
 }
