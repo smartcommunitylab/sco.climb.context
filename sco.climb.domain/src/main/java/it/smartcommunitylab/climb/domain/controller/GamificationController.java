@@ -77,6 +77,7 @@ import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
+import it.smartcommunitylab.climb.domain.scheduled.SchedulerManager;
 import it.smartcommunitylab.climb.domain.storage.DocumentManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -116,6 +117,9 @@ public class GamificationController extends AuthController {
 	
 	@Autowired
 	private GEngineUtils gengineUtils;
+	
+	@Autowired
+	private SchedulerManager schedulerManager;
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -388,6 +392,12 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
+		try {
+			schedulerManager.resetJob(result.getObjectId());
+		} catch (Exception e) {
+			logger.warn(String.format("createPedibusGame[%s]: error in reset job for %s", 
+					ownerId, result.getObjectId()));
+		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusGame[%s]: %s", ownerId, game.getObjectId()));
 		}
@@ -411,6 +421,12 @@ public class GamificationController extends AuthController {
 		game.setOwnerId(ownerId);
 		game.setObjectId(pedibusGameId);
 		PedibusGame result = storage.savePedibusGame(game, ownerId, true);
+		try {
+			schedulerManager.resetJob(result.getObjectId());
+		} catch (Exception e) {
+			logger.warn(String.format("updatePedibusGame[%s]: error in reset job for %s", 
+					ownerId, result.getObjectId()));
+		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}
@@ -432,6 +448,11 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.removePedibusGame(ownerId, pedibusGameId);
+		try {
+			schedulerManager.removeJob(pedibusGameId);
+		} catch (Exception e) {
+			logger.warn(String.format("deletePedibusGame[%s]: error in removing job for %s", ownerId, pedibusGameId));
+		}		
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deletePedibusGame[%s]: %s", ownerId, pedibusGameId));
 		}

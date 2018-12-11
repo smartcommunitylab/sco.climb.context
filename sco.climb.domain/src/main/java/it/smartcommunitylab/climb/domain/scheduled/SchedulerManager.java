@@ -94,14 +94,17 @@ public class SchedulerManager {
 		addJob(game);
 	}
 	
-	private void removeJob(String pedibusGameId) {
+	public void removeJob(String pedibusGameId) {
 		JobKey jobKey = jobMaps.get(pedibusGameId);
 		if(jobKey != null) {
 			try {
-				scheduler.deleteJob(jobKey);
+				boolean deleteJob = scheduler.deleteJob(jobKey);
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("removeJob[%s]:%s", pedibusGameId, deleteJob));
+				}
 				jobMaps.remove(pedibusGameId);
 			} catch (SchedulerException e) {
-				logger.warn(String.format("removeTask[%s]:%s", pedibusGameId, e.getMessage()));
+				logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
 			}
 		}
 	}
