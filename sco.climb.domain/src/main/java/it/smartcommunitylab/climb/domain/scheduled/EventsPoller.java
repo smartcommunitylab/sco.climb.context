@@ -147,6 +147,8 @@ public class EventsPoller {
 				Date dateFrom = cal.getTime();
 				
 				cal.setTime(actualTime);
+		    cal.set(Calendar.SECOND, 0);
+		    cal.set(Calendar.MILLISECOND, 0);
 				Date dateTo = cal.getTime();
 
 				for (Route route : routesList) {

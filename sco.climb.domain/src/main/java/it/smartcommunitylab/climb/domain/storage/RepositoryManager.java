@@ -494,7 +494,7 @@ public class RepositoryManager {
 		}
 		Query query = new Query(criteria);
 		query.addCriteria(new Criteria().andOperator(
-				Criteria.where("lastUpdate").lte(dateTo),
+				Criteria.where("lastUpdate").lt(dateTo),
 				Criteria.where("lastUpdate").gte(dateFrom)));
 		query.with(new Sort(Sort.Direction.ASC, "lastUpdate"));
 		if(logger.isDebugEnabled()) {
