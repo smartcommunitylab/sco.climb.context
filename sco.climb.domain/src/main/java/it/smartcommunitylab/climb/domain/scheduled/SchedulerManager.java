@@ -1,8 +1,7 @@
 package it.smartcommunitylab.climb.domain.scheduled;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +16,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.TimeOfDay;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class SchedulerManager {
 	@Autowired
 	private EventsPoller eventsPoller;
 
-	private Map<String, JobKey> jobMaps = new HashMap<>();
+	private List<String> jobList = new ArrayList<>();
 	
 	private Scheduler scheduler;
 	
@@ -76,11 +76,11 @@ public class SchedulerManager {
 							.build();
 					JobDetail job = JobBuilder.newJob(GameEventJob.class)
 							.withIdentity("gameId-" + game.getObjectId()).build();
-					job.getJobDataMap().put("RepositoryManager", storage);
-					job.getJobDataMap().put("EventsPoller", eventsPoller);
-					job.getJobDataMap().put("pedibusGameId", game.getObjectId());
+					scheduler.getContext().put("RepositoryManager", storage);
+					scheduler.getContext().put("EventsPoller", eventsPoller);
+					scheduler.getContext().put("pedibusGameId", game.getObjectId());
 					scheduler.scheduleJob(job, trigger);
-					jobMaps.put(game.getObjectId(), job.getKey());
+					jobList.add(game.getObjectId());
 				}
 			} catch (Exception e) {
 				throw new InvalidParametersException(e.getMessage());
@@ -95,14 +95,13 @@ public class SchedulerManager {
 	}
 	
 	public void removeJob(String pedibusGameId) {
-		JobKey jobKey = jobMaps.get(pedibusGameId);
-		if(jobKey != null) {
+		if(jobList.contains(pedibusGameId)) {
 			try {
-				boolean deleteJob = scheduler.deleteJob(jobKey);
-				if(logger.isInfoEnabled()) {
-					logger.info(String.format("removeJob[%s]:%s", pedibusGameId, deleteJob));
-				}
-				jobMaps.remove(pedibusGameId);
+				TriggerKey triggerKey = new TriggerKey("gameId-" +  pedibusGameId);
+				scheduler.unscheduleJob(triggerKey);
+				JobKey jobKey = new JobKey("gameId-" +  pedibusGameId);
+				scheduler.deleteJob(jobKey);
+				jobList.remove(pedibusGameId);
 			} catch (SchedulerException e) {
 				logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
 			}
