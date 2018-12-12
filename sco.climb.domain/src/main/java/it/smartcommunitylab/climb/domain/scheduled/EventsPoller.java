@@ -81,9 +81,9 @@ public class EventsPoller {
     cal.set(Calendar.SECOND, 0);
     cal.set(Calendar.MILLISECOND, 0);
 		String date = sdf.format(cal.getTime());
-		for (PedibusGame game : games) {
-			storage.resetPollingFlag(game.getOwnerId(), game.getGameId());
-			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), date);
+		for (PedibusGame game : games) {		
+			storage.resetPollingFlag(game.getOwnerId(), game.getObjectId());
+			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getObjectId(), date);
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class EventsPoller {
 				}
 			}
 			results.putAll(childrenStatusMap);
-			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), sdf.format(actualTime));
+			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getObjectId(), sdf.format(actualTime));
 		}
 		return results;
 	}

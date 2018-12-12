@@ -943,8 +943,8 @@ public class RepositoryManager {
 		removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, objectId);
 	}
 		
-	public void updatePedibusGameLastDaySeen(String ownerId, String gameId, String lastDaySeen) {
-		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
+	public void updatePedibusGameLastDaySeen(String ownerId, String pedibusGameId, String lastDaySeen) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
 		if (gameDB != null) {
@@ -991,8 +991,8 @@ public class RepositoryManager {
 		}
 	}
 	
-	public void resetPollingFlag(String ownerId, String gameId) {
-		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
+	public void resetPollingFlag(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
 		if (gameDB != null) {
@@ -1003,8 +1003,8 @@ public class RepositoryManager {
 		}
 	}
 	
-	public void updatePollingFlag(String ownerId, String objectId, String routeId, boolean flag) {
-		Query query = new Query(new Criteria("objectId").is(objectId).and("ownerId").is(ownerId));
+	public void updatePollingFlag(String ownerId, String pedibusGameId, String routeId, boolean flag) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
 		if (gameDB != null) {
