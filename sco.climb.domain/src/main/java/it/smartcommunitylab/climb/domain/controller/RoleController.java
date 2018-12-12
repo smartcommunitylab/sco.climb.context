@@ -127,6 +127,7 @@ public class RoleController extends AuthController {
 		auth.getResources().add(Const.AUTH_RES_Stop);
 		auth.getResources().add(Const.AUTH_RES_Route);
 		auth.getResources().add(Const.AUTH_RES_Attendance);
+		auth.getResources().add(Const.AUTH_RES_NodeState);
 		auths.add(auth);
 		
 		auth = new Authorization();
