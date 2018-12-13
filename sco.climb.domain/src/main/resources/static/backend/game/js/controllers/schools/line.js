@@ -178,6 +178,11 @@ angular.module('consoleControllers.line', [])
     
     
     $scope.assignPassengers = function(index) {
+    	//backup original value
+    	$scope.originalPassangersList = [];
+    	if($scope.line.stops[index].passengerList) {
+    		$scope.originalPassangersList = $scope.line.stops[index].passengerList.slice();
+    	}
       DataService.getData('children',
       		$scope.currentSchool.ownerId, 
       		$scope.currentSchool.instituteId, 
@@ -189,7 +194,19 @@ angular.module('consoleControllers.line', [])
           		{
               	id : 'assign-passengers-dialog',
               	title: 'Assegna i passeggeri alla fermata',
-              	controller: 'AssignPassegersModalController'
+              	controller: 'AssignPassegersModalController',
+              	cancel: {
+              		label: 'Annulla',
+              		fn: function () {
+              			if($scope.originalPassangersList) {
+              				$scope.line.stops[index].passengerList.splice(0, 
+              						$scope.line.stops[index].passengerList.length);
+              				$scope.originalPassangersList.forEach(function(entry) {
+              					$scope.line.stops[index].passengerList.push(entry);
+              				});
+              			}
+              		}
+              	}               	
           		},
           		{
           			stop: $scope.line.stops[index],
@@ -203,6 +220,11 @@ angular.module('consoleControllers.line', [])
 	};
 	
   $scope.assignVolunteers = function() {
+  	//backup original value
+  	$scope.originalVolunteerList = [];
+  	if($scope.line.volunteerList) {
+  		$scope.originalVolunteerList = $scope.line.volunteerList.slice();	
+  	}
     DataService.getData('volunteers',
     		$scope.currentSchool.ownerId, 
     		$scope.currentSchool.instituteId, 
@@ -214,7 +236,18 @@ angular.module('consoleControllers.line', [])
         		{
             	id : 'assign-valunteers-dialog',
             	title: 'Assegna i volontari alla linea',
-            	controller: 'AssignVolunteersModalController'
+            	controller: 'AssignVolunteersModalController',
+            	cancel: {
+            		label: 'Annulla',
+            		fn: function () {
+            			if($scope.originalVolunteerList) {
+            				$scope.line.volunteerList.splice(0, $scope.line.volunteerList.length);
+            				$scope.originalVolunteerList.forEach(function(entry) {
+            					$scope.line.volunteerList.push(entry);
+            				});
+            			}
+            		}
+            	} 
         		},
         		{
         			line: $scope.line,
@@ -375,7 +408,7 @@ angular.module('consoleControllers.line', [])
 		$scope.volunteersAvailable.push(entry);
 	});
 	
-	if($scope.line.volunteerList !=  null) {
+	if($scope.line.volunteerList !=  null) {		
 		$scope.line.volunteerList.forEach(function(entry) {
 			var volunteer = $scope.volunteerMap[entry];
 			if(volunteer != null) {
