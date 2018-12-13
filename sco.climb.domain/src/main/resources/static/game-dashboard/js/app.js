@@ -33,6 +33,32 @@ angular.module('climbGame', [
   'climbGame.services.classSelection'
 ])
 
+.factory('401-403-Error', ['$q', '$injector', '$location', '$window',
+	function($q, $injector, $location, $window) {  
+	  var sessionRecoverer  = {
+	  		responseError: function(response) {
+	        if ((response.status == 401) || (response.status == 403)) {
+	        	var mdToast = $injector.get('$mdToast');
+	        	var traslator = $injector.get('$filter');
+	        	mdToast.show(mdToast.simple().content(traslator('translate')('toast_session_expired')));
+	        	setTimeout(function() {
+	        		var loginService = $injector.get('loginService');
+		        	var logoutUrl = loginService.logout();
+		          var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+		          logoutUrl += '?target=' + baseAppUrl;
+		          $window.location.href = logoutUrl;          	
+	        	}, 3000);
+	        }
+	        return $q.reject(response);
+	      }
+	  };
+	  return sessionRecoverer;
+}])
+
+.config(['$httpProvider', function($httpProvider) {  
+  $httpProvider.interceptors.push('401-403-Error');
+}])
+
 .config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('light-blue', {
@@ -211,4 +237,4 @@ angular.module('climbGame', [
       return doc.label || doc.name
     }
   }
-})
+});

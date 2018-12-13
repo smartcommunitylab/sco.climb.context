@@ -40,6 +40,7 @@
   "cal_save_popup_content": "Invia dati definitivi al sistema, completata l'operazione non sarà piu possibile modificarli.",
   "toast_uname_not_valid": "Nome utente o password non validi",
   "toast_api_error": "Errore nel caricamento dati",
+  "toast_session_expired": "Sessione scaduta o non valida",
   "cal_notifications": "Notifiche",
   "cal_notifications_empty": "Non ci sono notifiche",
   "cal_challenges": "Sfide",
