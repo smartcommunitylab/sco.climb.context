@@ -1,6 +1,8 @@
 package it.smartcommunitylab.climb.contextstore.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Route extends BaseObject {
 	private String name;
@@ -9,6 +11,7 @@ public class Route extends BaseObject {
 	private Date from;
 	private Date to;
 	private double distance;
+	private List<String> volunteerList = new ArrayList<String>();
 	
 	public String getName() {
 		return name;
@@ -45,5 +48,11 @@ public class Route extends BaseObject {
 	}
 	public void setInstituteId(String instituteId) {
 		this.instituteId = instituteId;
+	}
+	public List<String> getVolunteerList() {
+		return volunteerList;
+	}
+	public void setVolunteerList(List<String> volunteerList) {
+		this.volunteerList = volunteerList;
 	}
 }

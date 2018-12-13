@@ -1,7 +1,7 @@
 <div>
 	<div class="modal-body">
 		<div class="row">
-			<div class="col-md-5">
+			<div class="col-md-5 select-list">
 				<label for="multipleSelect">Scolari</label><br> 
 				<select name="multipleSelect" id="multipleSelect" 
 				ng-options="item as getChildName(item) for item in children track by item.objectId"
@@ -12,7 +12,7 @@
 				<br/>
 				<a class="handle btn-icon btn-standard" ng-click="moveFromStop()"><i class="glyphicon glyphicon-chevron-left"></i></a>
 			</div>
-			<div class="col-md-5 right">
+			<div class="col-md-5 right select-list">
 				<label for="multipleSelect">Alla fermata ({{passengers.length}})</label><br> 
 				<select name="stopList" id="stopList" 
 				ng-options="item as getChildName(item) for item in passengers track by item.objectId"

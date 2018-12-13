@@ -1,0 +1,23 @@
+<div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-md-5 select-list">
+				<label for="volunteersAvailableList">Volontari</label><br> 
+				<select name="volunteersAvailableList" id="volunteersAvailableList" 
+				ng-options="item.name for item in volunteersAvailable track by item.objectId"
+				ng-model="data.volunteersToLineSelected" multiple size="10" />
+			</div>
+			<div class="col-md-2">
+				<a class="handle btn-icon btn-standard" ng-click="moveToLine()"><i class="glyphicon glyphicon-chevron-right"></i></a>
+				<br/>
+				<a class="handle btn-icon btn-standard" ng-click="moveFromLine()"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			</div>
+			<div class="col-md-5 right select-list">
+				<label for="volunteersSelectedList">Della linea ({{volunteersSelected.length}})</label><br> 
+				<select name="volunteersSelectedList" id="volunteersSelectedList" 
+				ng-options="item.name for item in volunteersSelected track by item.objectId"
+				ng-model="data.volunteersFromLineSelected" multiple size="10" />
+			</div>
+		</div>
+	</div>
+</div>

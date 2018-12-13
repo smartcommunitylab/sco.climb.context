@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
+import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
@@ -24,6 +25,7 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -57,15 +60,27 @@ public class VolunteerController extends AuthController {
 	public @ResponseBody List<Volunteer> searchVolunteer(
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
-			@PathVariable String schoolId, 
+			@PathVariable String schoolId,
+			@RequestParam(required=false) String routeId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		if(!validateAuthorization(ownerId, instituteId, schoolId, 
 				null,	null, Const.AUTH_RES_Volunteer, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
-		List<Volunteer> result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
+		List<Volunteer> result = new ArrayList<>();
+		if(Utils.isEmpty(routeId)) {
+			Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId);
+			result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
+		} else {
+			Criteria criteriaRoute = Criteria.where("objectId").is(routeId);
+			Route route = storage.findOneData(Route.class, criteriaRoute, ownerId);
+			if(route != null) {
+				Criteria criteria = Criteria.where("instituteId").is(instituteId).and("schoolId").is(schoolId)
+						.and("objectId").in(route.getVolunteerList());
+				result = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
+			}
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchVolunteer[%s]:%d", ownerId, result.size()));
 		}

@@ -45,7 +45,8 @@ angular.module('consoleControllers.line', [])
             "schoolId": $stateParams.idSchool,
             "from": '',             
             "to": '',
-            "distance": '',         
+            "distance": '', 
+            "volunteerList": [],
             "stops": []
         };
         $scope.saveData = DataService.saveData;
@@ -201,28 +202,53 @@ angular.module('consoleControllers.line', [])
       );
 	};
 	
-    $scope.saveOrder = function() {
-        if (!$scope.enableOrder) {
-            $scope.enableOrder = true;
-        } else {
-			for (i = 0; i < $scope.line.stops.length; i++) { 
-				$scope.line.stops[i].position = i;
-			}
-			var routeModel = {
-				"routeId": '',
-				"ownerId": '',
-				"stops": []
-			}
-			routeModel['ownerId'] = $scope.line.ownerId;
-			routeModel['routeId'] = $scope.line.objectId;
-			routeModel['stops'] = $scope.line.stops;
-			$scope.saveData('stops', routeModel).then(
-				function(response) {
-					$scope.enableOrder = false;
-				}
-			);
+  $scope.assignVolunteers = function() {
+    DataService.getData('volunteers',
+    		$scope.currentSchool.ownerId, 
+    		$scope.currentSchool.instituteId, 
+    		$scope.currentSchool.objectId).then(
+        function(response) {
+        	$scope.volunteers = response.data; 
+          console.log('Caricamento volontari a buon fine.');
+        	createDialog('templates/modals/assign-volunteers.html',
+        		{
+            	id : 'assign-valunteers-dialog',
+            	title: 'Assegna i volontari alla linea',
+            	controller: 'AssignVolunteersModalController'
+        		},
+        		{
+        			line: $scope.line,
+        			volunteers: $scope.volunteers
+        		}
+        	);
+        }, function() {
+          alert('Errore nel caricamento dei volontari.');
         }
-    }
+    );
+  };
+  
+  $scope.saveOrder = function() {
+      if (!$scope.enableOrder) {
+          $scope.enableOrder = true;
+      } else {
+		for (i = 0; i < $scope.line.stops.length; i++) { 
+			$scope.line.stops[i].position = i;
+		}
+		var routeModel = {
+			"routeId": '',
+			"ownerId": '',
+			"stops": []
+		}
+		routeModel['ownerId'] = $scope.line.ownerId;
+		routeModel['routeId'] = $scope.line.objectId;
+		routeModel['stops'] = $scope.line.stops;
+		$scope.saveData('stops', routeModel).then(
+			function(response) {
+				$scope.enableOrder = false;
+			}
+		);
+      }
+  }
 })
 
 .controller('AssignPassegersModalController', function($scope, stop, children) {
@@ -329,6 +355,112 @@ angular.module('consoleControllers.line', [])
 		$scope.fillPassengers();
 		$scope.children.sort(compareChild);
 		$scope.data.stopSelected.splice(0, $scope.data.stopSelected.length);
+	}
+	
+})
+
+.controller('AssignVolunteersModalController', function($scope, line, volunteers) {
+	$scope.line = line;
+	$scope.volunteers = volunteers;
+	$scope.volunteerMap = {};
+	$scope.volunteersSelected = [];
+	$scope.volunteersAvailable = [];
+	$scope.data = {
+		volunteersToLineSelected: [],
+		volunteersFromLineSelected: []
+	};
+	
+	$scope.volunteers.forEach(function(entry) {
+		$scope.volunteerMap[entry.objectId] = entry;
+		$scope.volunteersAvailable.push(entry);
+	});
+	
+	if($scope.line.volunteerList !=  null) {
+		$scope.line.volunteerList.forEach(function(entry) {
+			var volunteer = $scope.volunteerMap[entry];
+			if(volunteer != null) {
+				$scope.volunteersSelected.push(volunteer);
+				var index = findIndexById($scope.volunteersAvailable, entry);
+				if(index > -1) {
+					$scope.volunteersAvailable.splice(index, 1);
+				}			
+			}
+		});
+	}
+	$scope.volunteersSelected.sort(compareVolunteer);
+	$scope.volunteersAvailable.sort(compareVolunteer);
+	
+	$scope.getVolunteerNameById = function(id) {
+		var volunteer = $scope.volunteerMap[id];
+		if(volunteer != null) {
+			return volunteer.name;
+		} else {
+			return "";
+		}
+	}
+	
+	function findById(source, id) {
+	  for (var i = 0; i < source.length; i++) {
+	    if (source[i].objectId === id) {
+	      return source[i];
+	    }
+	  }
+	  return null;
+	}
+	
+	function findIndexById(source, id) {
+	  for (var i = 0; i < source.length; i++) {
+	    if (source[i].objectId === id) {
+	      return i;
+	    }
+	  }
+	  return -1;
+	}
+	
+	function compareVolunteer(a,b) {
+		var aName = a.name;
+		var bName = b.name;
+	  if (aName < bName)
+	    return -1;
+	  if (aName > bName)
+	    return 1;
+	  return 0;
+	}
+	
+	$scope.fillPassengers = function() {
+		if($scope.line.volunteerList ==  null) {
+			$scope.line.volunteerList = [];
+		}
+		$scope.line.volunteerList.splice(0, $scope.line.volunteerList.length);
+		$scope.volunteersSelected.forEach(function(entry) {
+			$scope.line.volunteerList.push(entry.objectId);
+		});
+	}
+	
+	$scope.moveToLine = function() {
+		$scope.data.volunteersToLineSelected.forEach(function(entry) {
+			$scope.volunteersSelected.push(entry);
+			var index = findIndexById($scope.volunteersAvailable, entry.objectId);
+			if(index > -1) {
+				$scope.volunteersAvailable.splice(index, 1);
+			}
+		});
+		$scope.volunteersSelected.sort(compareVolunteer);
+		$scope.fillPassengers();
+		$scope.data.volunteersToLineSelected.splice(0, $scope.data.volunteersToLineSelected.length);
+	}
+	
+	$scope.moveFromLine = function() {
+		$scope.data.volunteersFromLineSelected.forEach(function(entry) {
+			$scope.volunteersAvailable.push(entry);
+			var index = findIndexById($scope.volunteersSelected, entry.objectId);
+			if(index > -1) {
+				$scope.volunteersSelected.splice(index, 1);
+			}
+		});
+		$scope.volunteersAvailable.sort(compareVolunteer);
+		$scope.fillPassengers();
+		$scope.data.volunteersFromLineSelected.splice(0, $scope.data.volunteersFromLineSelected.length);
 	}
 	
 });

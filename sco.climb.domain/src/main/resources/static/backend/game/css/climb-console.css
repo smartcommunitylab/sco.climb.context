@@ -616,3 +616,9 @@ legend {
 	padding-top: 5px;
 	padding-right: 5px;
 }
+
+.select-list select {
+	width: 100%;
+	overflow-x:auto;
+	overflow-y:auto;	
+}

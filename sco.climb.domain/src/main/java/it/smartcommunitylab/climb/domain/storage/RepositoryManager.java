@@ -178,6 +178,7 @@ public class RepositoryManager {
 		update.set("from", route.getFrom());
 		update.set("to", route.getTo());
 		update.set("distance", route.getDistance());
+		update.set("volunteerList", route.getVolunteerList());
 		mongoTemplate.updateFirst(query, update, Route.class);
 	}
 
