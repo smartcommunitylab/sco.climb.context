@@ -1,7 +1,7 @@
 angular.module('consoleControllers.games', ['ngSanitize'])
 
     // Games controller
-    .controller('GamesListCtrl', function ($scope, $rootScope, DataService, MainDataService, createDialog, PermissionsService) {
+    .controller('GamesListCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
         $scope.$parent.mainView = 'game';
         $scope.PermissionsService = PermissionsService;
 
@@ -29,9 +29,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
               title: 'Attenzione!',
               success: {
                   label: 'Conferma', fn: function () {
-                      DataService.resetGame(MainDataService.getSelectedDomain(), game.objectId).then(
+                      DataService.resetGame(game.ownerId, game.objectId).then(
                           function (response) {
-                              alert("reset gioco effettuato con successo.");
+                          	var gameUpdated = response.data;
+                            for (var i = 0; i < $scope.games.length; i++) {
+                              if ($scope.games[i].objectId == gameUpdated.objectId) {
+                              	$scope.games[i] = gameUpdated;
+                              }
+                            }
+                            alert("reset gioco effettuato con successo.");
                           }, function (error) {
                               alert("Errore nella richiesta:" + error.data.errorMsg);
                           });
@@ -46,9 +52,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 title: 'Inizializzare gioco?',
                 success: {
                     label: 'Conferma', fn: function () {
-                        DataService.initGameCall(MainDataService.getSelectedDomain(), game.objectId).then(
+                        DataService.initGameCall(game.ownerId, game.objectId).then(
                             function (response) {
-                                alert("Init game riuscito!");
+                            	var gameUpdated = response.data;
+                              for (var i = 0; i < $scope.games.length; i++) {
+                                if ($scope.games[i].objectId == gameUpdated.objectId) {
+                                	$scope.games[i] = gameUpdated;
+                                }
+                              }
+                              alert("Init game riuscito!");                            
                             }, function (error) {
                             	alert("Errore nella richiesta:" + error.data.errorMsg);
                             }
@@ -60,7 +72,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         }
     })
 
-    .controller('GameCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, DataService, MainDataService, createDialog, $filter) {
+    .controller('GameCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, DataService, createDialog, $filter) {
         $scope.$parent.mainView = 'game';
 
         // Variabili per date-picker
@@ -90,6 +102,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   $scope.endDate.setTime($scope.currentGame.to);
                   $scope.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
                   $scope.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
+                }
+                if($scope.currentGame.interval == 0) {
+                	$scope.currentGame.interval = 5;
                 }
             } else {
                 $scope.currentGame = {
@@ -132,21 +147,23 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
                     }
                 );
-
         }
 
         if ($stateParams.idGame) {
-            MainDataService.getDomains().then(function (response) {
-                MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
-                    MainDataService.getSchools($stateParams.idInstitute).then(function (response) {
-                        MainDataService.getGames($stateParams.idSchool).then(function (response) {
-                            $scope.games = response.data;
-                            $scope.currentGame = angular.copy($scope.games.find(function (e) { return e.objectId == $stateParams.idGame }));
-                            $scope.initController();
-                        });
-                    });
-                });
-            });
+        	if(!$scope.currentGame) {
+            DataService.getGameById(
+            		$stateParams.idDomain,
+            		$stateParams.idGame).then(
+                    function (response) {
+                    	$scope.currentGame = response.data;
+                    	$scope.initController();
+                    }, function (error) {
+                        alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
+                    }
+                );	
+        	} else {
+        		$scope.initController();
+        	} 
         } else { //new game
             $scope.initController();
         }
@@ -178,9 +195,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   function (response) {
                       console.log('Salvataggio dati a buon fine.');
                       if ($scope.currentGame.objectId) { //edited
-                          for (var i = 0; i < $scope.games.length; i++) {
-                              if ($scope.games[i].objectId == $scope.currentGame.objectId) $scope.games[i] = $scope.currentGame;
-                          }
+                      	if ($scope.games) {
+                        	for (var i = 0; i < $scope.games.length; i++) {
+                            if ($scope.games[i].objectId == $scope.currentGame.objectId) {
+                            	$scope.games[i] = $scope.currentGame;
+                            }
+                        	}                      		
+                      	}  
                       } else {
                       	$scope.currentGame.objectId = response.data.objectId;
                         if ($scope.games) $scope.games.push(response.data);

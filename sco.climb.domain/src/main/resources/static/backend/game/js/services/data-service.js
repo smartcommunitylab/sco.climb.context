@@ -279,8 +279,11 @@ function ($q, $http, $rootScope, $timeout) {
           getNrOfStudents: function (ownerId, instituteId, schoolId, classes) {
               var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/students?classes=" + classes;
               return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+          },
+          getGameById: function (ownerId, id) {
+          	var fetchUrl = baseUrl + '/api/game/' + ownerId + "/" + id;
+          	return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
           }
-
       };
   }
 ]);

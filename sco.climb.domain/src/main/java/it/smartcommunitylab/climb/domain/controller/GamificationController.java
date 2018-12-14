@@ -126,7 +126,7 @@ public class GamificationController extends AuthController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/deploy", method = RequestMethod.GET)
-	public @ResponseBody void deployGame(
+	public @ResponseBody PedibusGame deployGame(
 		@PathVariable String ownerId, 
 		@PathVariable String pedibusGameId, 
 		HttpServletRequest request, 
@@ -374,8 +374,9 @@ public class GamificationController extends AuthController {
 			}				
 		}		
 		if (logger.isInfoEnabled()) {
-			logger.info("deployGame");
+			logger.info("deployGame:" + game.getObjectId());
 		}
+		return game;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.POST)
@@ -1126,7 +1127,7 @@ public class GamificationController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/reset", method = RequestMethod.GET)
-	public @ResponseBody void resetGame(
+	public @ResponseBody PedibusGame resetGame(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
 			HttpServletRequest request,	
@@ -1182,6 +1183,8 @@ public class GamificationController extends AuthController {
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("resetGame[%s]: %s", ownerId, pedibusGameId));
 		}	
+		game = storage.getPedibusGame(ownerId, pedibusGameId);
+		return game;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/clone/{pedibusGameId}", method = RequestMethod.GET)
