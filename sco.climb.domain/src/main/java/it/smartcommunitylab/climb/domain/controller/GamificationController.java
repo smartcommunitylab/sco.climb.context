@@ -1202,11 +1202,12 @@ public class GamificationController extends AuthController {
 		}
 		List<PedibusItineraryLeg> legsToClone = new ArrayList<>();
 		PedibusItinerary itineraryToClone = null;
-		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(ownerId, pedibusGameId);
+		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(gameToClone.getOwnerId(), 
+				gameToClone.getObjectId());
 		if(itineraryList.size() > 0) {
 			itineraryToClone = itineraryList.get(0);
-			legsToClone = storage.getPedibusItineraryLegsByGameId(ownerId, pedibusGameId, 
-					itineraryToClone.getObjectId());
+			legsToClone = storage.getPedibusItineraryLegsByGameId(gameToClone.getOwnerId(), 
+					gameToClone.getObjectId(), itineraryToClone.getObjectId());
 		}
 		//create game
 		PedibusGame game = new PedibusGame();
