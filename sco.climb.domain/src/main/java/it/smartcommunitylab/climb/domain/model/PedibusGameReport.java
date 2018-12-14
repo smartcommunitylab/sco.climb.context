@@ -9,6 +9,7 @@ public class PedibusGameReport extends PedibusGame {
 	public PedibusGameReport() {}
 	
 	public PedibusGameReport(PedibusGame game) {
+		this.setObjectId(game.getObjectId());
 		this.setGameName(game.getGameName());
 		this.setGameDescription(game.getGameDescription());
 		this.setGameOwner(game.getGameOwner());
