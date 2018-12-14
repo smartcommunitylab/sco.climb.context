@@ -544,11 +544,13 @@ public class GamificationController extends AuthController {
 				PedibusItinerary pedibusItinerary = itineraryList.get(0);
 				List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
 						pedibusItinerary.getObjectId());
-				report.setLegs(legs.size());
-				report.setFirstLeg(legs.get(0).getName());
-				report.setFinalLeg(legs.get(legs.size() - 1).getName());
-				report.setFinalScore(legs.get(legs.size() - 1).getScore());
-				result.add(report);
+				if(legs.size() > 0) {
+					report.setLegs(legs.size());
+					report.setFirstLeg(legs.get(0).getName());
+					report.setFinalLeg(legs.get(legs.size() - 1).getName());
+					report.setFinalScore(legs.get(legs.size() - 1).getScore());
+					result.add(report);					
+				}
 			}
 		}
 		if (logger.isInfoEnabled()) {
