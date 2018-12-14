@@ -1215,7 +1215,6 @@ public class GamificationController extends AuthController {
 		game.setInstituteId(instituteId);
 		game.setSchoolId(schoolId);
 		game.setGameName(gameToClone.getGameName() + " - clone");
-		game.setConfTemplateId(gameToClone.getConfTemplateId());
 		storage.savePedibusGame(game, ownerId, false);
 		if(itineraryToClone!= null) {
 			//create itinerary
@@ -1223,7 +1222,7 @@ public class GamificationController extends AuthController {
 			itinerary.setOwnerId(ownerId);
 			itinerary.setPedibusGameId(game.getObjectId());
 			itinerary.setObjectId(Utils.getUUID());
-			itinerary.setName(itineraryToClone.getName());
+			itinerary.setName(itineraryToClone.getName() + " - clone");
 			itinerary.setDescription(itineraryToClone.getDescription());
 			storage.savePedibusItinerary(itinerary);
 			//create legs
