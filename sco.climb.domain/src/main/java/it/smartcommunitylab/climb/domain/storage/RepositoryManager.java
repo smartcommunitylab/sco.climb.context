@@ -255,6 +255,7 @@ public class RepositoryManager {
 		update.set("parentName", child.getParentName());
 		update.set("phone", child.getPhone());
 		update.set("schoolId", child.getSchoolId());
+		update.set("instituteId", child.getInstituteId());
 		update.set("classRoom", child.getClassRoom());
 		update.set("wsnId", child.getWsnId());
 		update.set("imageUrl", child.getImageUrl());
@@ -322,8 +323,10 @@ public class RepositoryManager {
 		update.set("address", volunteer.getAddress());
 		update.set("phone", volunteer.getPhone());
 		update.set("schoolId", volunteer.getSchoolId());
+		update.set("instituteId", volunteer.getInstituteId());
 		update.set("password", volunteer.getPassword());
 		update.set("wsnId", volunteer.getWsnId());
+		update.set("cf", volunteer.getCf());
 		mongoTemplate.updateFirst(query, update, Volunteer.class);
 	}
 

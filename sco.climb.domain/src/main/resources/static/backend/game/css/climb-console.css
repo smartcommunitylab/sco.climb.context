@@ -586,12 +586,24 @@ p.fixed-width
 
 .header-fixed > tbody {
     overflow-y: auto;
-    height: 250px;
+    max-height: 250px;
 }
 
-.header-fixed > tbody > tr > td,
-.header-fixed > thead > tr > th {
-    width: 32%;
+.header-fixed > tbody > tr > td.foglio,
+.header-fixed > thead > tr > th.foglio {
+    width: 20%;
+    float: left;
+}
+
+.header-fixed > tbody > tr > td.riga,
+.header-fixed > thead > tr > th.riga {
+    width: 10%;
+    float: left;
+}
+
+.header-fixed > tbody > tr > td.errore,
+.header-fixed > thead > tr > th.errore {
+    width: 70%;
     float: left;
 }
 

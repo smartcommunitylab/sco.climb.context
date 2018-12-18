@@ -52,6 +52,9 @@ public class AdminController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	
+	@Autowired
+	private ExcelConverter excelConverter;
 
 	@RequestMapping(value = "/admin/user/csv", method = RequestMethod.POST)
 	public @ResponseBody void uploadOwnerUserCsv(
@@ -132,37 +135,37 @@ public class AdminController extends AuthController {
 		List<ExcelError> errors = new ArrayList<ExcelError>();
 		if(onlyChild) {
 			Map<String, Stop> stopsMap = new HashMap<String, Stop>();
-			Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
-					ownerId, instituteId, schoolId, stopsMap, errors);
+			Map<String, Child> childrenMap = excelConverter.readChildren(file.getInputStream(), 
+					ownerId, instituteId, schoolId, stopsMap, onlyChild, errors);
 			if(errors.size() == 0) {
 				for(Child child : childrenMap.values()) {
-					storeChild(child);
+					storeChild(child, onlyChild);
 				}
 				if(logger.isInfoEnabled()) {
 					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
 				}
 			}
 		} else {
-			Map<String, Route> routesMap = ExcelConverter.readRoutes(file.getInputStream(), 
+			Map<String, Route> routesMap = excelConverter.readRoutes(file.getInputStream(), 
 					ownerId, instituteId, schoolId, errors);
-			Map<String, Stop> stopsMap = ExcelConverter.readStops(file.getInputStream(), 
+			Map<String, Stop> stopsMap = excelConverter.readStops(file.getInputStream(), 
 					ownerId, instituteId, schoolId, routesMap, errors);
-			Map<String, Child> childrenMap = ExcelConverter.readChildren(file.getInputStream(), 
-					ownerId, instituteId, schoolId, stopsMap, errors);
-			Map<String, Volunteer> volunteersMap = ExcelConverter.readVolunteers(file.getInputStream(), 
-					ownerId, instituteId, schoolId, errors);
+			Map<String, Child> childrenMap = excelConverter.readChildren(file.getInputStream(), 
+					ownerId, instituteId, schoolId, stopsMap, onlyChild, errors);
+			Map<String, Volunteer> volunteersMap = excelConverter.readVolunteers(file.getInputStream(), 
+					ownerId, instituteId, schoolId, routesMap, errors);
 			if(errors.size() == 0) {
 				for(Route route : routesMap.values()) {
-					storage.addRoute(route);
+					storeRoute(route);
 				}
 				for(Stop stop : stopsMap.values()) {
-					storage.addStop(stop);
+					storeStop(stop);
 				}
 				for(Child child : childrenMap.values()) {
-					storeChild(child);
+					storeChild(child, onlyChild);
 				}
 				for(Volunteer volunteer : volunteersMap.values()) {
-					storage.addVolunteer(volunteer);
+					storeVolunteer(volunteer);
 				}			
 				if(logger.isInfoEnabled()) {
 					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
@@ -172,32 +175,107 @@ public class AdminController extends AuthController {
 		return errors;
 	}
 	
-	private void storeChild(Child child) throws ClassNotFoundException {
-		Criteria criteriaBase = Criteria.where("schoolId").is(child.getSchoolId())
-				.and("instituteId").is(child.getInstituteId());
-		Child childDb;
-		if(Utils.isNotEmpty(child.getCf())) {
-			Criteria criteriaCf = criteriaBase.and("cf").is(child.getCf());
-			childDb = storage.findOneData(Child.class, criteriaCf, child.getOwnerId());
-			if(childDb != null) {
-				if(logger.isInfoEnabled()) {
-					logger.info(String.format("Child already exists: %s %s", 
-							child.getName(), child.getSurname()));
-				}
-				return;
-			}
-		}
-		Criteria criteriaName = criteriaBase.and("name").is(child.getName())
-				.and("surname").is(child.getSurname());
-		childDb = storage.findOneData(Child.class, criteriaName, child.getOwnerId());
-		if(childDb != null) {
+	private void storeVolunteer(Volunteer volunteer) throws Exception {
+		if(Utils.isEmpty(volunteer.getCf())) {
 			if(logger.isInfoEnabled()) {
-				logger.info(String.format("Child already exists: %s %s", 
-						child.getName(), child.getSurname()));
+				logger.info("Volunteer cf not found");
+			}
+			return;			
+		}
+		Criteria criteria = Criteria.where("schoolId").is(volunteer.getSchoolId())
+				.and("instituteId").is(volunteer.getInstituteId())
+				.and("cf").is(volunteer.getCf());
+		Volunteer volunteerDb = storage.findOneData(Volunteer.class, criteria, 
+				volunteer.getOwnerId());
+		if(volunteerDb == null) {
+			storage.addVolunteer(volunteer);
+		} else {
+			volunteerDb.setName(volunteer.getName());
+			volunteerDb.setPhone(volunteer.getPhone());
+			volunteerDb.setPassword(volunteer.getPassword());
+			storage.updateVolunteer(volunteerDb);
+		}
+	}
+
+	private void storeStop(Stop stop) throws Exception {
+		if(Utils.isEmpty(stop.getName())) {
+			if(logger.isInfoEnabled()) {
+				logger.info("Stop name not found");
+			}
+			return;			
+		}
+		Criteria criteria = Criteria.where("routeId").is(stop.getRouteId())
+				.and("name").is(stop.getName());
+		Stop stopDb = storage.findOneData(Stop.class, criteria, stop.getOwnerId());
+		if(stopDb == null) {
+			storage.addStop(stop);
+		} else {
+			stopDb.setDepartureTime(stop.getDepartureTime());
+			stopDb.setStart(stop.isStart());
+			stopDb.setDestination(stop.isDestination());
+			stopDb.setSchool(stop.isSchool());
+			stopDb.setGeocoding(stop.getGeocoding());
+			stopDb.setDistance(stop.getDistance());
+			stopDb.setPosition(stop.getPosition());
+			stopDb.setPassengerList(stop.getPassengerList());
+			storage.updateStop(stopDb);
+		}
+	}
+
+	private void storeRoute(Route route) throws Exception {
+		if(Utils.isEmpty(route.getName())) {
+			if(logger.isInfoEnabled()) {
+				logger.info("Route name not found");
 			}
 			return;
 		}
-		storage.addChild(child);
+		Criteria criteria = Criteria.where("schoolId").is(route.getSchoolId())
+				.and("instituteId").is(route.getInstituteId())
+				.and("name").is(route.getName());
+		Route routeDb = storage.findOneData(Route.class, criteria, route.getOwnerId());
+		if(routeDb == null) {
+			storage.addRoute(route);
+		} else {
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("merge Route:%s", route.getName()));
+			}
+			routeDb.setFrom(route.getFrom());
+			routeDb.setTo(route.getTo());
+			routeDb.setVolunteerList(route.getVolunteerList());
+			storage.updateRoute(routeDb);
+		}
+	}
+
+	private void storeChild(Child child, Boolean onlyChild) throws Exception {
+		Criteria criteriaBase = Criteria.where("schoolId").is(child.getSchoolId())
+				.and("instituteId").is(child.getInstituteId());
+		if(Utils.isNotEmpty(child.getCf())) {
+			Criteria criteriaCf = criteriaBase.and("cf").is(child.getCf());
+			Child childDb = storage.findOneData(Child.class, criteriaCf, child.getOwnerId());
+			if(childDb == null) {
+				storage.addChild(child);
+			} else {
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("merge Child:%s", child.getCf()));
+				}
+				childDb.setName(child.getName());
+				childDb.setSurname(child.getSurname());
+				childDb.setParentName(child.getParentName());
+				childDb.setPhone(child.getPhone());
+				if(Utils.isNotEmpty(child.getClassRoom())) {
+					childDb.setClassRoom(child.getClassRoom());
+				}
+				if(!onlyChild) {
+					childDb.setWsnId(child.getWsnId());
+				}
+				storage.updateChild(childDb);
+			}
+		} else {
+			if(logger.isInfoEnabled()) {
+				logger.info(String.format("Child cf not found: %s %s", 
+						child.getName(), child.getSurname()));
+			}
+		}
 	}
 		
 	@ExceptionHandler({EntityNotFoundException.class})

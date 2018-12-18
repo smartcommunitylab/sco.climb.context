@@ -60,6 +60,9 @@ public class ReportController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	
+	@Autowired
+	private ExcelConverter excelConverter;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/report/attendance/{ownerId}/{instituteId}/{schoolId}/{routeId}", method = RequestMethod.GET)
@@ -92,7 +95,7 @@ public class ReportController extends AuthController {
  			childList = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
  			volunteerList = (List<Volunteer>) storage.findData(Volunteer.class, criteria, null, ownerId);
  			ByteArrayOutputStream outputBuffer = new ByteArrayOutputStream();
-			ExcelConverter.writeAttendance(dateFrom, dateTo, eventList, childList, volunteerList, outputBuffer);
+			excelConverter.writeAttendance(dateFrom, dateTo, eventList, childList, volunteerList, outputBuffer);
 			response.setContentType("application/octet-stream");
 			response.addHeader("Content-Disposition", "attachment; filename=\"report-" + ownerId + ".xls\"");
 			response.addHeader("Content-Transfer-Encoding", "binary");
