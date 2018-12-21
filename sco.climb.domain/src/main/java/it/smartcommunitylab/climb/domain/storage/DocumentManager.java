@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,7 @@ public class DocumentManager {
 		PutObjectRequest request = new PutObjectRequest(bucketName, fileKey, createTmpFile(file));
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setContentType(file.getContentType());
-    metadata.addUserMetadata("x-amz-meta-title", file.getOriginalFilename());
+    metadata.addUserMetadata("x-amz-meta-title", StringEscapeUtils.escapeJson(file.getOriginalFilename()));
     request.setMetadata(metadata);
     request.setCannedAcl(CannedAccessControlList.PublicRead);
 		s3.putObject(request);
