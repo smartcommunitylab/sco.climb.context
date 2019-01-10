@@ -39,14 +39,17 @@ public class DocumentManager {
 	
 	public String uploadFile(MultipartFile file) throws IOException {
 		String fileKey = Utils.getUUID();
-		PutObjectRequest request = new PutObjectRequest(bucketName, fileKey, createTmpFile(file));
+		File tmpFile = createTmpFile(file);
+		PutObjectRequest request = new PutObjectRequest(bucketName, fileKey, tmpFile);
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setContentType(file.getContentType());
     metadata.addUserMetadata("x-amz-meta-title", StringEscapeUtils.escapeJson(file.getOriginalFilename()));
     request.setMetadata(metadata);
     request.setCannedAcl(CannedAccessControlList.PublicRead);
 		s3.putObject(request);
-		return s3.getUrl(bucketName, fileKey).toExternalForm(); 
+		String url = s3.getUrl(bucketName, fileKey).toExternalForm();
+		tmpFile.delete();
+		return url;
 	}
 	
 	private File createTmpFile(MultipartFile file) throws IOException {
