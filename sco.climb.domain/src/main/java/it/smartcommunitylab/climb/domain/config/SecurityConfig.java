@@ -120,6 +120,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.headers()
 			.frameOptions().disable();
 		http
+			.headers()
+			.cacheControl().disable();
+		http
 			.logout()
 				.clearAuthentication(true)
 				.deleteCookies("rememberme", "JSESSIONID")

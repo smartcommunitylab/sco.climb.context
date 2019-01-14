@@ -359,6 +359,10 @@ public class ChildController extends AuthController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.parseMediaType(avatar.getContentType()));
 		headers.setContentLength(data.length);
+		headers.setCacheControl("max-age=86400");
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("downloadAvatar[%s]:%s", ownerId, objectId));
+		}
 		return new HttpEntity<byte[]>(data, headers);
 	}
 	
