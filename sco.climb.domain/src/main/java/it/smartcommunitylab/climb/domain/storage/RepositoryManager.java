@@ -1067,6 +1067,7 @@ public class RepositoryManager {
 			update.set("imageUrl", leg.getImageUrl());
 			update.set("polyline", leg.getPolyline());
 			update.set("score", leg.getScore());
+			update.set("icon", leg.getIcon());
 			update.set("transport", leg.getTransport());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
