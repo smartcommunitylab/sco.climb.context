@@ -308,6 +308,9 @@ public class ChildController extends AuthController {
 		}
 		avatar.setContentType(data.getContentType());
 		avatar.setImage(new Binary(data.getBytes()));
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("uploadAvatar[%s]:%s", ownerId, objectId));
+		}		
 		storage.saveAvatar(avatar);
 	}
 	
