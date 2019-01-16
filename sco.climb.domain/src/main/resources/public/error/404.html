@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="utf-8">
+	<title>Errore - pagina non trovata</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container" style="padding:15px">
+	  <div class="row panel panel-default">
+	  	<h3 style="text-align:center">La pagina cercata non è stata trovata.</h3>
+	  	<h3 style="text-align:center">Prova una delle seguenti alternative:</h3>
+	    <ul>
+	    	<li><a style="font-size:18px" href="javascript:goToUrl('game-dashboard/index.html');">Gioco Kids Go Green</a></li>
+	    	<li><a style="font-size:18px" href="javascript:goToUrl('backend/game/index.html');">Console di gestione dei contenuti del gioco</a></li>
+	    </ul>
+	  </div>
+	</div>  
+</body>
+
+<script type="text/javascript">
+	function goToUrl(page) {
+		var getUrl = window.location;
+		var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+		var destination = baseUrl + "/" + page; 
+		document.location.href = destination; 
+	}
+</script>
+</html>
