@@ -413,7 +413,9 @@ public class ExcelConverter {
 					if(!onlyChild && Utils.isNotEmpty(fermata)) {
 						stop = stopsMap.get(fermata);
 						if(stop == null) {
-							logger.warn(String.format("Stop '%s' not found", fermata));
+							ExcelError error = new ExcelError(sheet.getSheetName(), i, "fermata non trovata");
+							errors.add(error);
+							continue;
 						}
 					}
 					
