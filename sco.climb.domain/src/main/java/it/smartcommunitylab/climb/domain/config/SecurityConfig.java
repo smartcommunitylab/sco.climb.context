@@ -131,16 +131,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.csrf()
 				.disable()
-			.antMatcher("/**")
-				.authorizeRequests()
-			.antMatchers("/", "/index.html", "/login**", "/logout**", "/swagger-ui.html", "/v2/api-docs**")
-				.permitAll();
-		http
-			.csrf()
-				.disable()
 			.authorizeRequests()
 				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**/*.html")
 					.authenticated()
+				.anyRequest()
+					.permitAll()
 			.and()
 				.addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
