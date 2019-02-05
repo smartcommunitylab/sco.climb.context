@@ -37,6 +37,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -339,7 +340,7 @@ public class ChildController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/child/image/download/{ownerId}/{objectId}", method = RequestMethod.GET)
-	public @ResponseBody HttpEntity<byte[]> downloadAvatar(
+	public @ResponseBody ResponseEntity<byte[]> downloadAvatar(
 			@PathVariable String ownerId, 
 			@PathVariable String objectId, 
 			HttpServletRequest request, 
@@ -359,14 +360,14 @@ public class ChildController extends AuthController {
 			throw new EntityNotFoundException("avatar not found");
 		}
 		byte[] data = avatar.getImage().getData();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType(avatar.getContentType()));
-		headers.setContentLength(data.length);
-		headers.setCacheControl("max-age=86400");
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("downloadAvatar[%s]:%s", ownerId, objectId));
 		}
-		return new HttpEntity<byte[]>(data, headers);
+		response.setHeader("Cache-Control", "public, max-age=86400");
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(avatar.getContentType()))
+				.contentLength(data.length)
+				.body(data);
 	}
 	
 	private void addPlayer(Child child, String ownerId, String instituteId, String schoolId)

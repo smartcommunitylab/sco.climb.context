@@ -120,9 +120,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.headers()
 			.frameOptions().disable();
 		http
-			.headers()
-			.cacheControl().disable();
-		http
 			.logout()
 				.clearAuthentication(true)
 				.deleteCookies("rememberme", "JSESSIONID")
@@ -130,8 +127,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessHandler(customLogoutSuccessHandler);
 		http
 			.csrf()
-				.disable()
-			.anonymous()
 				.disable()
 			.authorizeRequests()
 				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**/*.html")
