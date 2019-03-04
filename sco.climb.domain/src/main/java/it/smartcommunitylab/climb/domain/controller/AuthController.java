@@ -2,17 +2,14 @@ package it.smartcommunitylab.climb.domain.controller;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 
 import it.smartcommunitylab.aac.AACException;
-import it.smartcommunitylab.aac.AACProfileService;
-import it.smartcommunitylab.aac.AACService;
 import it.smartcommunitylab.aac.authorization.beans.AccountAttributeDTO;
 import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.aac.model.TokenData;
@@ -21,42 +18,21 @@ import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.security.AuthManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
+@Controller
 public class AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
-	@Value("${oauth.serverUrl}")	
-	private String oauthServerUrl;
-	
-	@Autowired
-	@Value("${security.oauth2.client.clientId}")	
-	private String clientId;
-
-	@Autowired
-	@Value("${security.oauth2.client.clientSecret}")	
-	private String clientSecret;
-	
-	@Autowired
-	@Value("${profile.serverUrl}")
-	private String profileServerUrl;
-
-	private AACService aacService;
-	
-	private AACProfileService profileConnector;
-	
-	@Autowired
 	private RepositoryManager storage;
-
-	@PostConstruct
-	public void init() throws Exception {
-		aacService = new AACService(oauthServerUrl, clientId, clientSecret);
-		profileConnector = new AACProfileService(profileServerUrl);
-	}
+	
+	@Autowired
+	private AuthManager authManager;
 	
 	protected TokenData refreshToken(String refreshToken) throws SecurityException, AACException {
-		return aacService.refreshToken(refreshToken);
+		return authManager.getAACService().refreshToken(refreshToken);
 	}
 	
 	protected AccountAttributeDTO getAccountByEmail(AccountProfile accountProfile) {
@@ -100,7 +76,7 @@ public class AuthController {
 		if (Utils.isNotEmpty(token)) {
 			token = token.replace("Bearer ", "");
 			try {
-				result = profileConnector.findAccountProfile(token);
+				result = authManager.getCache().get(token);
 			} catch (Exception e) {
 				if (logger.isWarnEnabled()) {
 					logger.warn(String.format("getAccoutProfile[%s]: %s", token, e.getMessage()));
