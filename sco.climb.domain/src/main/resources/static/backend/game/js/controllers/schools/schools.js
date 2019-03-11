@@ -336,6 +336,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     "phone": '',
                     "classRoom": '',
                     "wsnId": '',
+                    "activeForPedibus": false,
+                    "activeForGame": false,
                     "ownerId": $scope.currentSchool.ownerId,
                     "instituteId": $scope.currentSchool.instituteId,
                     "schoolId": $scope.currentSchool.objectId
