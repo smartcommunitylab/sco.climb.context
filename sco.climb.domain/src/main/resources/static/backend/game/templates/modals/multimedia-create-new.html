@@ -1,5 +1,11 @@
 <div>
     <div class="modal-body">
+    		
+				<div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
+					<a class="close" data-hide="alert" aria-label="close"
+					data-ng-click="resetError()">&times;</a>
+					{{errorMsg}}
+				</div>
         <p><b>Aggiungi un nuovo elemento multimediale</b></p>
         <div class="add-media field">
             <p><b>Tipologia:</b></p>
@@ -24,10 +30,13 @@
             <div class="field add-media">
                 <p>oppure scegli e carica un file. I file saranno ad accesso pubblico; devono essere privi di copyright e rispettare...:<p> 
                 <p>{{file.filename ? file.filename : 'Nessun file selezionato'}}</p>
-                <span class="btn btn-info btn-file btn-margin">
+                <span ng-disabled="loading" class="btn btn-info btn-file btn-margin">
                 Scegli file <input type="file" id="upload-content-file" base-sixty-four-input ng-model="file" />
                 </span>
-                <a ng-disabled="!file" ng-click="uploadFile()" class="btn btn-info">Carica</a>
+                <button ng-disabled="!file" ng-click="uploadFile()" class="btn btn-info">
+                	<span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                	Carica
+                </button>
                 <p></p>
             </div>
         </div>
