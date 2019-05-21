@@ -3,6 +3,7 @@ angular.module('climbGame.controllers.calendar', [])
   .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService', 'loginService', 'profileService',
     function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService, loginService, profileService) {
       $scope.week = []
+      $scope.prev2Week=true;
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
       $scope.selectedMeanColor = 'cal-menu-col'
@@ -362,10 +363,35 @@ angular.module('climbGame.controllers.calendar', [])
         // take date of week[0] and go 1 week before or after
         var monday = $scope.week[0]
         monday.setDate(monday.getDate() + 7 * skipWeek)
-        $scope.week = []
-        for (var i = 0; i < 5; i++) {
-          $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
+        /** */
+        if(skipWeek == -1){
+          var currentDate = new Date;
+          var first = currentDate.getDate() - currentDate.getDay()+1;
+          var weekStart = new Date(currentDate.setDate(first));
+          var last2week = new Date(weekStart.setDate(weekStart.getDate()-13));
+          if(monday  > last2week ){
+            // console.log("it's within last 2 week")
+            $scope.week = []
+            for (var i = 0; i < 5; i++) {
+              $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
+            }
+          }else{
+            $scope.prev2Week=false;
+            // console.log("it's more then last 2 week")
+          }
+        }else{
+          $scope.prev2Week=true;
+          $scope.week = []
+          for (var i = 0; i < 5; i++) {
+            $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
+          }
         }
+        
+        /** */
+        // $scope.week = []
+        // for (var i = 0; i < 5; i++) {
+        //   $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
+        // }
 
         calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
           function (calendar) {
