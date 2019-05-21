@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.smartcommunitylab.climb.contextstore.model.User.TermUsage;
+
 public class DataSetInfo implements Serializable {
 	private static final long serialVersionUID = -130084868920590202L;
 
@@ -17,6 +19,7 @@ public class DataSetInfo implements Serializable {
 	private String token;
 	private long expiration;
 	private String refreshToken;
+    private TermUsage termUsage;
 	
 	@Override
 	public String toString() {
@@ -102,5 +105,13 @@ public class DataSetInfo implements Serializable {
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
+
+    public TermUsage getTermUsage() {
+        return termUsage;
+    }
+
+    public void setTermUsage(TermUsage termUsage) {
+        this.termUsage = termUsage;
+    }
 
 }

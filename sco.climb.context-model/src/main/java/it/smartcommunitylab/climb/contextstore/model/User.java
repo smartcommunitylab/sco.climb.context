@@ -15,6 +15,7 @@ public class User {
 	private String email;
 	private String cf;
 	private Map<String, List<Authorization>> roles = new HashMap<String, List<Authorization>>();
+    private TermUsage termUsage = new TermUsage();
 	
 	public String getObjectId() {
 		return objectId;
@@ -71,4 +72,38 @@ public class User {
 		this.roles = roles;
 	}
 	
+    public void acceptTerms() {
+        termUsage.setAcceptance(true);
+        termUsage.setAcceptanceDate(new Date());
+    }
+
+    public static class TermUsage {
+        private boolean acceptance;
+        private Date acceptanceDate;
+
+        public boolean isAcceptance() {
+            return acceptance;
+        }
+
+        public void setAcceptance(boolean acceptance) {
+            this.acceptance = acceptance;
+        }
+
+        public Date getAcceptanceDate() {
+            return acceptanceDate;
+        }
+
+        public void setAcceptanceDate(Date acceptanceDate) {
+            this.acceptanceDate = acceptanceDate;
+        }
+
+    }
+
+    public TermUsage getTermUsage() {
+        return termUsage;
+    }
+
+    public void setTermUsage(TermUsage termUsage) {
+        this.termUsage = termUsage;
+    }
 }
