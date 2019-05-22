@@ -1017,5 +1017,10 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   color: transparent
 }
 
-
-
+/***************/
+div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up>md-fab-actions{
+  max-height: 1px !important;
+}
+div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up.md-is-open>md-fab-actions{
+  height: auto;
+}

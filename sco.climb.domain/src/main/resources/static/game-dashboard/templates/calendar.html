@@ -46,7 +46,10 @@
       <div layout="row" class="days-row">
         <div layout="column" flex="25" class="cal-header">
           <div layout="row" class="cal-header">
-            <md-button class="md-icon-button week-button" ng-click="prevWeek()"><i layout="column" flex="25" class="icon-arrow_left"></i></md-button><span class="cal-header" layout="column" flex="80">{{labelWeek}}</span>
+            <!-- preweek limit should be last 2week -->
+            <md-button class="md-icon-button week-button" ng-if="prev2Week" ng-click="prevWeek()"><i layout="column" flex="5" class="icon-arrow_left"></i></md-button>
+            <md-button class="md-icon-button week-button" ng-if="!prev2Week" ng-disabled="true" ><i layout="column" flex="5" class="icon-arrow_left"></i></md-button>
+            <span class="cal-header" layout="column" flex="80">{{labelWeek}}</span>
             <md-button class="md-icon-button week-button" ng-click="nextWeek()"><i layout="column" flex="25" class="icon-arrow_right"></i></md-button>
           </div>
         </div>
