@@ -1,11 +1,11 @@
 package it.smartcommunitylab.climb.domain.model;
 
-import it.smartcommunitylab.climb.contextstore.model.BaseObject;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 public class PedibusGame extends BaseObject {
 	
@@ -32,6 +32,9 @@ public class PedibusGame extends BaseObject {
 	private String shortName;
 	
 	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
+    private boolean saturdayClosure;
+    private List<String> classes;
+    private List<String> modalities;
 	
 	public String getSchoolId() {
 		return schoolId;
@@ -165,4 +168,28 @@ public class PedibusGame extends BaseObject {
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
+
+    public boolean isSaturdayClosure() {
+        return saturdayClosure;
+    }
+
+    public void setSaturdayClosure(boolean saturdayClosure) {
+        this.saturdayClosure = saturdayClosure;
+    }
+
+    public List<String> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(List<String> classes) {
+        this.classes = classes;
+    }
+
+    public List<String> getModalities() {
+        return modalities;
+    }
+
+    public void setModalities(List<String> modalities) {
+        this.modalities = modalities;
+    }
 }

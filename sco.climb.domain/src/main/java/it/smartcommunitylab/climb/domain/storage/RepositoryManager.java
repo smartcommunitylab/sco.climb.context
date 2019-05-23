@@ -904,6 +904,9 @@ public class RepositoryManager {
 			update.set("params", game.getParams());
 			update.set("shortName", game.getShortName());
 			update.set("lastUpdate", now);
+            update.set("saturdayClosure", game.isSaturdayClosure());
+            update.set("classes", game.getClasses());
+            update.set("modalities", game.getModalities());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with gameId " + game.getGameId());
