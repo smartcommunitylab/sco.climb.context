@@ -1,6 +1,6 @@
 /* global angular */
 angular.module('climbGame.controllers.stats', [])
-  .controller('statsCtrl', function ($scope, $filter, $window, dataService) {
+  .controller('statsCtrl', function ($scope, $filter, $window, dataService, mapService) {
     var KMS_PER_FOOT = 10
 
     $scope.stats = {
@@ -24,13 +24,36 @@ angular.module('climbGame.controllers.stats', [])
 
     dataService.getStats().then(
       function (stats) {
+        console.log("getStats:",stats);
         $scope.stats = data2stats(stats)
+        console.log("$scope.stats:",$scope.stats);
       },
       function (reason) {
         console.log(reason)
       }
     )
-
+    mapService.getStatus().then(function (data) {
+      console.log("Legs:",data.legs);
+      $scope.status = data;
+      $scope.legs = data.legs;
+      $scope.globalTeam = data.game.globalTeam;
+      // get actual situation
+      for (var i = 0; i < data.teams.length; i++) {
+        if (data.teams[i].classRoom == $scope.globalTeam) {
+          $scope.globalScore = data.teams[i].score;
+          if (data.teams[i].currentLeg) {
+            $scope.currentLeg = data.teams[i].currentLeg;
+          } else {
+            $scope.currentLeg = data.legs[data.legs.length - 1];
+            $scope.endReached = true;
+          }
+          $scope.lastReachedLeg = data.teams[i].previousLeg;
+          $scope.globalStatus = data.teams[i];
+          break;
+        }
+      }
+      console.log("currentLeg:",$scope.currentLeg);
+    });
     $scope.scroll = function (id, direction) {
       if (direction === 'up') {
         $window.document.getElementById(id).scrollTop -= 50
