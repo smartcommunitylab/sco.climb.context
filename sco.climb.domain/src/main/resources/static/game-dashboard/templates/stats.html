@@ -7,8 +7,8 @@
         <md-progress-linear md-mode="determinate" ng-value="getGameScorePercentage()"></md-progress-linear>
         <h1 class="md-display-1">{{stats.maxGameScore}}</h1>
       </div>
-      <div ng-if="endReached" class="md-title title-progress"><h2> <i class="icon icon-foot ng-scope flex-10"></i> Successfully finish</h2></div>
-      <div ng-if="!endReached"><h2><i class="icon icon-foot"></i> Current position: {{currentLeg.name}}</h2></div>
+      <div ng-if="endReached"><h2 class="md-title title-progress"> <i class="icon icon-foot ng-scope flex-10"></i> Successfully finish</h2></div>
+      <div ng-if="!endReached"><h2 class="md-title title-progress"> Next <i class="icon icon-foot"></i> {{nextLag.name}}, {{distanceNextPosition}} km</h2></div>
     </div>
   </div>
   <div layout="row" layout-align="start center">

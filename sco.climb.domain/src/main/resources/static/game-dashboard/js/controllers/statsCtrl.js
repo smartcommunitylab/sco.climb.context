@@ -32,8 +32,24 @@ angular.module('climbGame.controllers.stats', [])
         console.log(reason)
       }
     )
+    var rad = function(x) {
+      return x * Math.PI / 180;
+    };
+    //find the distance between two position
+    var getDistance = function(p1, p2) {
+      var R = 6378137; // Earth’s mean radius in meter
+      var dLat = rad(p2.lat - p1.lat);
+      var dLong = rad(p2.lng - p1.lng);
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c;
+      return d; // returns the distance in meter
+    };
     mapService.getStatus().then(function (data) {
-      console.log("Legs:",data.legs);
+      console.log("Data:",data);
+      console.log("teams:",data.teams);
       $scope.status = data;
       $scope.legs = data.legs;
       $scope.globalTeam = data.game.globalTeam;
@@ -43,6 +59,13 @@ angular.module('climbGame.controllers.stats', [])
           $scope.globalScore = data.teams[i].score;
           if (data.teams[i].currentLeg) {
             $scope.currentLeg = data.teams[i].currentLeg;
+            //find the next leg
+            var currentIndex=data.legs.findIndex(item=>item.objectId==data.teams[i].currentLeg.objectId);
+            $scope.nextLag=data.legs[currentIndex+1];
+            //find the distance of current to next leg
+            var currentPosition={lat:data.teams[i].currentLeg.geocoding[1],lng:data.teams[i].currentLeg.geocoding[0]};
+            var nextPosition={lat:data.legs[currentIndex+1].geocoding[1],lng:data.legs[currentIndex+1].geocoding[0]};
+            $scope.distanceNextPosition=Math.round(getDistance(currentPosition,nextPosition)/1000)
           } else {
             $scope.currentLeg = data.legs[data.legs.length - 1];
             $scope.endReached = true;
