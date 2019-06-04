@@ -52,16 +52,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Avatar;
-import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
-import it.smartcommunitylab.climb.domain.model.PedibusTeam;
-import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 
@@ -76,9 +71,6 @@ public class ChildController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 	
-	@Autowired
-	private GEngineUtils gengineUtils;
-
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/child/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
 	public @ResponseBody List<Child> searchChild(
@@ -114,9 +106,6 @@ public class ChildController extends AuthController {
 		child.setOwnerId(ownerId);
 		child.setObjectId(Utils.getUUID());
 		storage.addChild(child);
-		if(child.isActiveForGame()) {
-			addPlayer(child, ownerId, instituteId, schoolId);
-		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addChild[%s]:%s", ownerId, child.getName()));
 		}
@@ -157,32 +146,9 @@ public class ChildController extends AuthController {
 				null, null, Const.AUTH_RES_Child, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Criteria criteria = Criteria.where("objectId").is(objectId).and("ownerId").is(ownerId);
-		Child oldChild = storage.findOneData(Child.class, criteria, ownerId);
 		child.setOwnerId(ownerId);
 		child.setObjectId(objectId);
 		storage.updateChild(child);
-		if(child.isActiveForGame() && !oldChild.isActiveForGame()) {
-			//add player
-			String instituteId = child.getInstituteId();
-			String schoolId = child.getSchoolId();			
-			addPlayer(child, ownerId, instituteId, schoolId);			
-		} else if(!child.isActiveForGame() && oldChild.isActiveForGame()) {
-			//delete player
-			String instituteId = child.getInstituteId();
-			String schoolId = child.getSchoolId();
-			deletePlayer(oldChild, ownerId, instituteId, schoolId);				
-		} else if(child.isActiveForGame() && !child.getClassRoom().equals(oldChild.getClassRoom())) {
-			String instituteId = child.getInstituteId();
-			String schoolId = child.getSchoolId();
-			List<PedibusGame> gameList = storage.getPedibusGames(ownerId, instituteId, schoolId);
-			for(PedibusGame game : gameList) {
-				if(game.isDeployed()) {
-					deletePlayerToTeam(ownerId, game, oldChild);
-					addPlayerToTeam(ownerId, game, child);
-				}
-			}
-		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateChild[%s]:%s", ownerId, child.getName()));
 		}
@@ -203,11 +169,6 @@ public class ChildController extends AuthController {
 		if(!validateAuthorization(ownerId, child.getInstituteId(), child.getSchoolId(), 
 				null,	null, Const.AUTH_RES_Child, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		if(child.isActiveForGame()) {
-			String instituteId = child.getInstituteId();
-			String schoolId = child.getSchoolId();
-			deletePlayer(child, ownerId, instituteId, schoolId);			
 		}
 		storage.removeChild(ownerId, objectId);
 		if(logger.isInfoEnabled()) {
@@ -368,86 +329,6 @@ public class ChildController extends AuthController {
 				.contentType(MediaType.parseMediaType(avatar.getContentType()))
 				.contentLength(data.length)
 				.body(data);
-	}
-	
-	private void addPlayer(Child child, String ownerId, String instituteId, String schoolId)
-			throws StorageException {
-		List<PedibusGame> gameList = storage.getPedibusGames(ownerId, instituteId, schoolId);
-		for(PedibusGame game : gameList) {
-			if(game.isDeployed()) {
-				if(game.getClassRooms().contains(child.getClassRoom())) {
-					//create local player
-					PedibusPlayer pp = new PedibusPlayer();
-					pp.setChildId(child.getObjectId());
-					pp.setWsnId(child.getWsnId());
-					pp.setPedibusGameId(game.getObjectId());
-					pp.setName(child.getName());
-					pp.setSurname(child.getSurname());
-					pp.setClassRoom(child.getClassRoom());
-					storage.savePedibusPlayer(pp, ownerId, false);
-					//create player in GE
-					PlayerStateDTO player = new PlayerStateDTO();
-					player.setPlayerId(child.getObjectId());
-					player.setGameId(game.getGameId());
-					try {
-						gengineUtils.createPlayer(game.getGameId(), player);
-					} catch (Exception e) {
-						logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
-					}
-					//update team
-					addPlayerToTeam(ownerId, game, child);
-				}					
-			}
-		}
-	}
-
-	private void deletePlayer(Child child, String ownerId, String instituteId, String schoolId) {
-		List<PedibusGame> gameList = storage.getPedibusGames(ownerId, instituteId, schoolId);
-		for(PedibusGame game : gameList) {
-			if(game.isDeployed()) {
-				if(game.getClassRooms().contains(child.getClassRoom())) {
-					//delete local player
-					storage.removePedibusPlayer(ownerId, game.getObjectId(), child.getObjectId());
-					try {
-						gengineUtils.deletePlayerState(game.getGameId(), child.getObjectId());
-					} catch (Exception e) {
-						logger.warn("Gamification engine player delete warning: " + e.getClass() + " " + e.getMessage());
-					}
-					//update team
-					deletePlayerToTeam(ownerId, game, child);
-				}					
-			}
-		}
-	}
-	
-	private void addPlayerToTeam(String ownerId, PedibusGame game, Child child) {
-		List<PedibusTeam> pedibusTeams = storage.getPedibusTeams(ownerId, game.getObjectId());
-		for(PedibusTeam pedibusTeam : pedibusTeams) {
-			if(pedibusTeam.getClassRoom().equals(child.getClassRoom())) {
-				pedibusTeam.getChildrenId().add(child.getObjectId());
-				storage.updatePedibusTeamMembers(ownerId, pedibusTeam.getObjectId(), pedibusTeam.getChildrenId());
-				try {
-					gengineUtils.addTeamMember(game.getGameId(), child.getClassRoom(), child.getObjectId());
-				} catch (Exception e) {
-					logger.warn("Gamification engine team update warning: " + e.getClass() + " " + e.getMessage());
-				}
-			}
-		}		
-	}
-	
-	private void deletePlayerToTeam(String ownerId, PedibusGame game, Child child) {
-		List<PedibusTeam> pedibusTeams = storage.getPedibusTeams(ownerId, game.getObjectId());
-		for(PedibusTeam pedibusTeam : pedibusTeams) {
-			if(pedibusTeam.getClassRoom().equals(child.getClassRoom())) {
-				pedibusTeam.getChildrenId().remove(child.getObjectId());
-				storage.updatePedibusTeamMembers(ownerId, pedibusTeam.getObjectId(), pedibusTeam.getChildrenId());
-				try {
-					gengineUtils.deleteTeamMember(game.getGameId(), child.getClassRoom(), child.getObjectId());
-				} catch (Exception e) {
-					logger.warn("Gamification engine team update warning: " + e.getClass() + " " + e.getMessage());
-				}
-			}
-		}		
 	}
 	
 	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})

@@ -274,17 +274,18 @@ public class EventsPoller {
 		}
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived()) {
-				PedibusPlayer player = storage.getPedibusPlayerByChildId(game.getOwnerId(), game.getObjectId(), 
-						childStatus.getChildId());
-				if(player != null) {
-					String classRoom = player.getClassRoom();
-					Map<String, String> modeMap = classModeMap.get(classRoom);
-					if(modeMap == null) {
-						modeMap = new HashMap<String, String>();
-						classModeMap.put(classRoom, modeMap);
-					}
-					modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
-				}
+				//TODO new pedibus -> game interaction
+//				PedibusPlayer player = storage.getPedibusPlayerByChildId(game.getOwnerId(), game.getObjectId(), 
+//						childStatus.getChildId());
+//				if(player != null) {
+//					String classRoom = player.getClassRoom();
+//					Map<String, String> modeMap = classModeMap.get(classRoom);
+//					if(modeMap == null) {
+//						modeMap = new HashMap<String, String>();
+//						classModeMap.put(classRoom, modeMap);
+//					}
+//					modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
+//				}
 			}
 		}
 		

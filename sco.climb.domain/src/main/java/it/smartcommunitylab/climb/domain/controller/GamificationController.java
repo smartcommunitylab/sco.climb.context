@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import it.smartcommunitylab.climb.contextstore.model.Child;
@@ -60,7 +58,6 @@ import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
@@ -124,7 +121,6 @@ public class GamificationController extends AuthController {
 	private ObjectMapper mapper = new ObjectMapper();
 
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/deploy", method = RequestMethod.GET)
 	public @ResponseBody PedibusGame deployGame(
 		@PathVariable String ownerId, 
@@ -299,74 +295,24 @@ public class GamificationController extends AuthController {
 				}
 			}
 		}		
-		//create players and teams
-		List<String> allChildrenId = Lists.newArrayList();
-		List<String> allTeamsId = Lists.newArrayList();
+		//create players
 		for (String classRoom : game.getClassRooms()) {
-			Criteria criteria = Criteria.where("instituteId").is(game.getInstituteId())
-					.and("schoolId").is(game.getSchoolId()).and("classRoom").is(classRoom);
-			List<Child> childrenList = (List<Child>) storage.findData(Child.class, criteria, null, ownerId);
-			List<String> childrenId = Lists.newArrayList();
-			for (Child child : childrenList) {
-				if(!child.isActiveForGame()) {
-					continue;
-				}
-				childrenId.add(child.getObjectId());
-				allChildrenId.add(child.getObjectId());
-
-				PedibusPlayer pp = new PedibusPlayer();
-				pp.setChildId(child.getObjectId());
-				pp.setWsnId(child.getWsnId());
-				pp.setPedibusGameId(pedibusGameId);
-				pp.setName(child.getName());
-				pp.setSurname(child.getSurname());
-				pp.setClassRoom(child.getClassRoom());
-				storage.savePedibusPlayer(pp, ownerId, false);
-
-				PlayerStateDTO player = new PlayerStateDTO();
-				player.setPlayerId(child.getObjectId());
-				player.setGameId(game.getGameId());
-
-				try {
-					gengineUtils.createPlayer(game.getGameId(), player);
-				} catch (Exception e) {
-					logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
-				}
-			}
-			PedibusTeam pt = new PedibusTeam();
-			pt.setChildrenId(childrenId);
-			pt.setGameId(game.getGameId());
-			pt.setPedibusGameId(pedibusGameId);
-			pt.setClassRoom(classRoom);
-			storage.savePedibusTeam(pt, ownerId, false);
-
-			TeamDTO team = new TeamDTO();
-			team.setName(classRoom);
-			team.setMembers(childrenId);
-			team.setPlayerId(classRoom);
-			team.setGameId(game.getGameId());
-			allTeamsId.add(classRoom);
-
+			PlayerStateDTO player = new PlayerStateDTO();
+			player.setPlayerId(classRoom);
+			player.setGameId(game.getGameId());
 			try {
-				gengineUtils.createTeam(game.getGameId(), team);
+				gengineUtils.createPlayer(game.getGameId(), player);
 			} catch (Exception e) {
-				logger.warn("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
+				logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
 			}
 		}	
 		//create global team
 		if (Utils.isNotEmpty(game.getGlobalTeam())) {
-			PedibusTeam pt = new PedibusTeam();
-			pt.setGameId(game.getGameId());
-			pt.setPedibusGameId(pedibusGameId);
-			pt.setClassRoom(game.getGlobalTeam());
-			storage.savePedibusTeam(pt, ownerId, false);
-
 			TeamDTO team = new TeamDTO();
 			team.setName(game.getGlobalTeam());
-			team.setMembers(allTeamsId);
+			team.setMembers(game.getClassRooms());
 			team.setPlayerId(game.getGlobalTeam());
 			team.setGameId(game.getGameId());
-
 			try {
 				gengineUtils.createTeam(game.getGameId(), team);
 			} catch (Exception e) {
@@ -1020,8 +966,12 @@ public class GamificationController extends AuthController {
 			**/
 
 			// teams score
-			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
-			for (PedibusTeam team : teams) {
+			List<PedibusTeam> teams = new ArrayList<>();
+			for (String classRoom : game.getClassRooms()) {
+				PedibusTeam team = new PedibusTeam();
+				team.setClassRoom(classRoom);
+				team.setGameId(game.getGameId());
+				team.setPedibusGameId(game.getObjectId());
 				updateGamificationData(team, pedibusGameId, game.getGameId(), team.getClassRoom());
 
 				// find "current" leg
@@ -1044,7 +994,6 @@ public class GamificationController extends AuthController {
 			result.put("game", game);
 			result.put("itinerary", itinerary);
 			result.put("legs", legs);
-			//result.put("players", players);
 			result.put("teams", teams);
 
 			if (logger.isInfoEnabled()) {
@@ -1148,14 +1097,8 @@ public class GamificationController extends AuthController {
 		
 		if(Utils.isNotEmpty(game.getGameId())) {
 			try {
-				List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, pedibusGameId);
-				for (PedibusPlayer player: players) {
-					gengineUtils.deletePlayerState(game.getGameId(), player.getChildId());
-				}
-				
-				List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
-				for (PedibusTeam team: teams) {
-					gengineUtils.deletePlayerState(game.getGameId(), team.getClassRoom());
+				for(String classRoom : game.getClassRooms()) {
+					gengineUtils.deletePlayerState(game.getGameId(), classRoom);
 				}
 				
 				gengineUtils.deleteChallenges(game.getGameId());
@@ -1167,10 +1110,6 @@ public class GamificationController extends AuthController {
 				throw e;
 			}
 		}
-		
-		storage.removePedibusPlayerByGameId(ownerId, pedibusGameId);
-		
-		storage.removePedibusTeamByGameId(ownerId, pedibusGameId);
 		
 		storage.removeExcursionByGameId(ownerId, pedibusGameId);
 		

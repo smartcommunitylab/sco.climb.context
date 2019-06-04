@@ -128,7 +128,7 @@ public class DashboardController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/game/team/{ownerId}/{pedibusGameId}", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusTeam> getTeams(
+	public @ResponseBody List<String> getTeams(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId, 
 			HttpServletRequest request, 
@@ -141,11 +141,7 @@ public class DashboardController extends AuthController {
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, pedibusGameId);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getTeams[%s]: %s - %s", ownerId, pedibusGameId, teams.size()));
-		}
-		return teams; 
+		return game.getClassRooms(); 
 	}
 	
 	@RequestMapping(value = "/api/game/calendar/{ownerId}/{pedibusGameId}/{classRoom}", 
