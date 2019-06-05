@@ -70,6 +70,8 @@
         </div>
         <div layout="row">
           <i flex="10" class="icon icon-foot" ng-repeat="n in getCount(stats.scoreModeMap.zeroImpact_wAdult % 10) track by $index"></i>
+          <!-- create another 'i' it show if backend calculation have =>0.5 value -->
+          <i flex="10" ng-if="checkHalfFoot()" class="icon icon-foot blackFoot" ></i>
         </div>
       </md-content>
     </div>

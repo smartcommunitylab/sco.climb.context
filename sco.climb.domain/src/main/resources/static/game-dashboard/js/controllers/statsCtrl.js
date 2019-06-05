@@ -14,6 +14,7 @@ angular.module('climbGame.controllers.stats', [])
         'maxGameScore': Math.round(data.maxGameScore / 1000, 0),
         'scoreModeMap': {
           'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
+          'zeroImpact_wAdult_withoutFloor': data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT),
           'bus': Math.floor(data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT)),
           'pandr': Math.floor(data['scoreModeMap']['pandr'] / (1000 * KMS_PER_FOOT)),
           'bonus': Math.floor(data['scoreModeMap']['bonus'] / (1000 * KMS_PER_FOOT)),
@@ -96,6 +97,14 @@ angular.module('climbGame.controllers.stats', [])
     $scope.getGameScorePercentage = function () {
       if ($scope.stats) {
         return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
+      }
+    }
+
+    $scope.checkHalfFoot = function () {
+      if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+        return true
+      }else{
+        return false
       }
     }
 
