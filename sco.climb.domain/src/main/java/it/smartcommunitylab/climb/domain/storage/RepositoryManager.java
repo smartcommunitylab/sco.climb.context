@@ -43,6 +43,7 @@ import it.smartcommunitylab.climb.domain.model.Avatar;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
 import it.smartcommunitylab.climb.domain.model.Link;
+import it.smartcommunitylab.climb.domain.model.ModalityMap;
 import it.smartcommunitylab.climb.domain.model.NodeState;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -905,9 +906,9 @@ public class RepositoryManager {
 			update.set("params", game.getParams());
 			update.set("shortName", game.getShortName());
 			update.set("lastUpdate", now);
-            update.set("saturdayClosure", game.isSaturdayClosure());
-            update.set("classes", game.getClasses());
-            update.set("modalities", game.getModalities());
+      update.set("daysOfWeek", game.getDaysOfWeek());
+      update.set("classes", game.getClasses());
+      update.set("modalities", game.getModalities());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with gameId " + game.getGameId());
@@ -1438,5 +1439,9 @@ public class RepositoryManager {
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, Avatar.class);
 		}
+	}
+	
+	public ModalityMap getModalityMap() {
+		return mongoTemplate.findOne(new Query(), ModalityMap.class);
 	}
 }
