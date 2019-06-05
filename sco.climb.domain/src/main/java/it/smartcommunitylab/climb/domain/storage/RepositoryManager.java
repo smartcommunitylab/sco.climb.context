@@ -261,8 +261,6 @@ public class RepositoryManager {
 		update.set("wsnId", child.getWsnId());
 		update.set("imageUrl", child.getImageUrl());
 		update.set("cf", child.getCf());
-		update.set("activeForPedibus", child.isActiveForPedibus());
-		update.set("activeForGame", child.isActiveForGame());
 		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 
