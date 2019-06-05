@@ -8,44 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class PedibusPlayer extends BaseObject {
 
-	private String childId;
-	private String name;
-	private String surname;
+	private String nickname;
 	private String classRoom;	
-	private String wsnId;
-	private String pedibusGameId;
-
-	public String getChildId() {
-		return childId;
-	}
-
-	public void setChildId(String childId) {
-		this.childId = childId;
-	}
-
-	public String getWsnId() {
-		return wsnId;
-	}
-
-	public void setWsnId(String wsnId) {
-		this.wsnId = wsnId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
+	private String schoolId;
+	private String instituteId;
 
 	public String getClassRoom() {
 		return classRoom;
@@ -55,12 +21,28 @@ public class PedibusPlayer extends BaseObject {
 		this.classRoom = classRoom;
 	}
 
-	public String getPedibusGameId() {
-		return pedibusGameId;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setPedibusGameId(String pedibusGameId) {
-		this.pedibusGameId = pedibusGameId;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public String getInstituteId() {
+		return instituteId;
+	}
+
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 	
 }

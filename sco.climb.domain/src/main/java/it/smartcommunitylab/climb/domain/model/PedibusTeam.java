@@ -1,22 +1,19 @@
 package it.smartcommunitylab.climb.domain.model;
 
-import it.smartcommunitylab.climb.contextstore.model.BaseObject;
-import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
-
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
+
 @JsonInclude(Include.NON_NULL)
-public class PedibusTeam extends BaseObject implements Gamified {
+public class PedibusTeam implements Gamified {
 
 	private String classRoom;
 	private String gameId;
 	private String pedibusGameId;
-	private List<String> childrenId;
 	private Map<String, Collection> badges;
 	private Double score;
 	private PlayerStateDTO playerState;
@@ -40,14 +37,6 @@ public class PedibusTeam extends BaseObject implements Gamified {
 
 	public void setGameId(String gameId) {
 		this.gameId = gameId;
-	}
-
-	public List<String> getChildrenId() {
-		return childrenId;
-	}
-
-	public void setChildrenId(List<String> childrenId) {
-		this.childrenId = childrenId;
 	}
 
 	public Map<String, Collection> getBadges() {

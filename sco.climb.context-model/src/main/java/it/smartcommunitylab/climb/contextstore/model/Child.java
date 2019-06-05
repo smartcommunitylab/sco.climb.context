@@ -12,8 +12,7 @@ public class Child extends BaseObject {
 	private String wsnId;
 	private String imageUrl;
 	private String cf;
-	private boolean activeForPedibus = true;
-	private boolean activeForGame = true;
+	private String nickname;
 	
 	public String getExternalId() {
 		return externalId;
@@ -81,16 +80,10 @@ public class Child extends BaseObject {
 	public void setCf(String cf) {
 		this.cf = cf;
 	}
-	public boolean isActiveForPedibus() {
-		return activeForPedibus;
+	public String getNickname() {
+		return nickname;
 	}
-	public void setActiveForPedibus(boolean activeForPedibus) {
-		this.activeForPedibus = activeForPedibus;
-	}
-	public boolean isActiveForGame() {
-		return activeForGame;
-	}
-	public void setActiveForGame(boolean activeForGame) {
-		this.activeForGame = activeForGame;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 }
