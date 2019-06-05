@@ -7,6 +7,8 @@ import com.google.common.collect.Sets;
 public class ChildStatus {
 
 	private String childId;
+	private String nickname;
+	private String classRoom;
 	private Set<String> stops;
 	private boolean inRange = false;
 	private boolean inPedibus = false;
@@ -14,13 +16,9 @@ public class ChildStatus {
 	
 	private Double score;
 	
-	public ChildStatus(String id) {
-		this.childId = id;
+	public ChildStatus(String childId) {
+		this.childId = childId;
 		stops = Sets.newLinkedHashSet();
-	}
-
-	public String getChildId() {
-		return childId;
 	}
 
 	public Set<String> getStops() {
@@ -67,4 +65,25 @@ public class ChildStatus {
 	public String toString() {
 		return childId + " (" + inRange + "," + inPedibus + "," + arrived + ") => " + stops + " = " + ((score != null)? score: "");
 	}
+
+	public String getChildId() {
+		return childId;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getClassRoom() {
+		return classRoom;
+	}
+
+	public void setClassRoom(String classRoom) {
+		this.classRoom = classRoom;
+	}
+
 }

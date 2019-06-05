@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +57,7 @@ import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.PedibusTeam;
 import it.smartcommunitylab.climb.domain.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.domain.model.gamification.ChallengeModel;
@@ -72,8 +72,6 @@ import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
-import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
-import it.smartcommunitylab.climb.domain.scheduled.EventsPoller;
 import it.smartcommunitylab.climb.domain.scheduled.SchedulerManager;
 import it.smartcommunitylab.climb.domain.storage.DocumentManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -110,16 +108,12 @@ public class GamificationController extends AuthController {
 	private DocumentManager documentManager;
 
 	@Autowired
-	private EventsPoller eventsPoller;
-	
-	@Autowired
 	private GEngineUtils gengineUtils;
 	
 	@Autowired
 	private SchedulerManager schedulerManager;
 
 	private ObjectMapper mapper = new ObjectMapper();
-
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/deploy", method = RequestMethod.GET)
 	public @ResponseBody PedibusGame deployGame(
@@ -464,12 +458,10 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		int result = 0;
-		List<Child> children = storage.getChildrenBySchool(ownerId, instituteId, schoolId);
-		for(Child child : children) {
-			if(child.isActiveForGame()) {
-				if(classes.contains(child.getClassRoom())) {
-					result++;
-				}
+		List<PedibusPlayer> pedibusPlayers = storage.getPedibusPlayers(ownerId, instituteId, schoolId);
+		for(PedibusPlayer player : pedibusPlayers) {
+			if(classes.contains(player.getClassRoom())) {
+				result++;
 			}
 		}
 		if (logger.isInfoEnabled()) {
@@ -1001,39 +993,6 @@ public class GamificationController extends AuthController {
 			}
 
 			return result;
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
-			return null;
-		}
-	}
-
-	@RequestMapping(value = "/api/game/events/{ownerId}/{pedibusGameId}", method = RequestMethod.PATCH)
-	public @ResponseBody Map<String, Collection<ChildStatus>> pollEvents(
-			@PathVariable String ownerId, 
-			@PathVariable String pedibusGameId,
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
-		Date actualTime = new Date();
-		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
-		if(game == null) {
-			throw new EntityNotFoundException("game not found");
-		}
-		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
-				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		try {
-			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, actualTime, false);
-			for(String routeId : childrenStatusMap.keySet()) {
-				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId);
-				if(!eventsPoller.isEmptyResponse(childrenStatus)) {
-					Map<String, Boolean> updateClassScores = 
-							eventsPoller.updateCalendarDayFromPedibus(game, childrenStatus); 
-					eventsPoller.sendScores(childrenStatus, updateClassScores, game);
-					storage.updatePollingFlag(ownerId, pedibusGameId, routeId, Boolean.FALSE);
-				}
-			}
-			return childrenStatusMap;
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 			return null;

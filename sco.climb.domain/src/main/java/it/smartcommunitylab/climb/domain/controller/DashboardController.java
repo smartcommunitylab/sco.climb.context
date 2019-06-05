@@ -1,30 +1,5 @@
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.GEngineUtils;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.model.CalendarDay;
-import it.smartcommunitylab.climb.domain.model.Excursion;
-import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
-import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
-import it.smartcommunitylab.climb.domain.model.PedibusTeam;
-import it.smartcommunitylab.climb.domain.model.Stats;
-import it.smartcommunitylab.climb.domain.model.gamification.Challenge;
-import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
-import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.Notification;
-import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
-import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
-import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringChallenge;
-import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringItinerary;
-import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
-import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringStats;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +28,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.collect.Maps;
+
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.GEngineUtils;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.model.CalendarDay;
+import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
+import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
+import it.smartcommunitylab.climb.domain.model.Stats;
+import it.smartcommunitylab.climb.domain.model.gamification.Challenge;
+import it.smartcommunitylab.climb.domain.model.gamification.ChallengeConcept;
+import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.Notification;
+import it.smartcommunitylab.climb.domain.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.domain.model.gamification.PointConcept;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringChallenge;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringItinerary;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
+import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringStats;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
 public class DashboardController extends AuthController {

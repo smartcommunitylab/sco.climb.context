@@ -709,7 +709,22 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId));
 		return mongoTemplate.find(query, PedibusItinerary.class);
 	}
+	
+	public PedibusPlayer getPedibusPlayer(String id) {
+		Query query = new Query(new Criteria("objectId").is(id));
+		return mongoTemplate.findOne(query, PedibusPlayer.class);		
+	}
 
+	public PedibusPlayer getPedibusPlayer(String ownerId, String instituteId, String schoolId,
+			String nickname, String classRoom) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId)
+				.and("nickname").is(nickname)
+				.and("classRoom").is(classRoom));
+		return mongoTemplate.findOne(query, PedibusPlayer.class);		
+	}
+	
 	public List<PedibusPlayer> getPedibusPlayers(String ownerId, String instituteId, String schoolId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId));
@@ -717,28 +732,17 @@ public class RepositoryManager {
 	}
 	
 	public List<PedibusPlayer> getPedibusPlayersByClassRoom(String ownerId, String pedibusGameId, String classRoom) {
+		PedibusGame pedibusGame = getPedibusGame(pedibusGameId);
+		if(pedibusGame == null) {
+			return new ArrayList<>();
+		}
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
-				.and("pedibusGameId").is(pedibusGameId).and("classRoom").is(classRoom))
-		.with(new Sort(Sort.Direction.ASC, "surname", "name"));
+				.and("instituteId").is(pedibusGame.getInstituteId())
+				.and("schoolId").is(pedibusGame.getSchoolId())
+				.and("classRoom").is(classRoom))
+		.with(new Sort(Sort.Direction.ASC, "nickname"));
 		return mongoTemplate.find(query, PedibusPlayer.class);		
 	}	
-
-	
-//	public PedibusPlayer getPedibusPlayerByWsnId(String ownerId, String gameId, int wsnId) {
-//		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId).and("wsnId").is(wsnId));
-//		return mongoTemplate.findOne(query, PedibusPlayer.class);		
-//	}
-	
-//	public PedibusPlayer getPedibusPlayerByChildId(String ownerId, String pedibusGameId, String id) {
-//		Query query = new Query(new Criteria("ownerId").is(ownerId)
-//				.and("pedibusGameId").is(pedibusGameId).and("childId").is(id));
-//		return mongoTemplate.findOne(query, PedibusPlayer.class);		
-//	}		
-	
-//	public List<PedibusTeam> getPedibusTeams(String ownerId, String pedibusGameId) {
-//		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId));
-//		return mongoTemplate.find(query, PedibusTeam.class);		
-//	}
 	
 	public CalendarDay getCalendarDay(String ownerId, String gameId, String classRoom,
 			Date day) {

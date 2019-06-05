@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
+import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 
 public class Utils {
 	private static ObjectMapper fullMapper = new ObjectMapper();
@@ -232,6 +234,14 @@ public class Utils {
     cal.set(Calendar.SECOND, 59);
     cal.set(Calendar.MILLISECOND, 999);
     return cal.getTime();
+	}
+	
+	public static String getPlayerKey(ChildStatus status) {
+		return status.getClassRoom() + "-" + status.getNickname();
+	}
+	
+	public static String getPlayerKey(Child child) {
+		return child.getClassRoom() + "-" + child.getNickname();
 	}
 	
 }

@@ -1,8 +1,5 @@
 package it.smartcommunitylab.climb.domain.scheduled;
 
-import it.smartcommunitylab.climb.contextstore.model.Stop;
-import it.smartcommunitylab.climb.domain.model.WsnEvent;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,20 +10,26 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Stop;
+import it.smartcommunitylab.climb.domain.model.WsnEvent;
+
 public class EventsProcessor {
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsProcessor.class);
 	
-	private Map<String, Stop> childStopsMap;
-
-	public EventsProcessor(Map<String, Stop> stopsMap) {
-		childStopsMap = new HashMap<String, Stop>();
+	private Map<String, Stop> childStopsMap = new HashMap<>();
+	private Map<String, Child> childrenMap = new HashMap<>();
+	
+	public EventsProcessor(Map<String, Stop> stopsMap, 
+			Map<String, Child> childrenMap) {
 		Collection<Stop> stops = stopsMap.values();
 		for (Stop stop: stops) {
 			for (String childId: stop.getPassengerList()) {
 				childStopsMap.put(childId, stop);
 			}
 		}
+		this.childrenMap = childrenMap;
 	}
 
 	public Collection<ChildStatus> process(List<WsnEvent> events) {
@@ -105,12 +108,21 @@ public class EventsProcessor {
 		return childrenStatus.values();
 	}
 	
-	private ChildStatus getChildStatus(Map<String, ChildStatus> childrenStatus, String id) {
-		if (!childrenStatus.containsKey(id)) {
-			ChildStatus cs = new ChildStatus(id);
-			childrenStatus.put(id, cs);
+	private ChildStatus getChildStatus(Map<String, ChildStatus> childrenStatus, String childId) {
+		if (!childrenStatus.containsKey(childId)) {
+			String nickname = "";
+			String classRoom = "";
+			Child child = childrenMap.get(childId);
+			if(child != null) {
+				nickname = child.getNickname();
+				classRoom = child.getClassRoom();
+			}
+			ChildStatus cs = new ChildStatus(childId);
+			cs.setClassRoom(classRoom);
+			cs.setNickname(nickname);
+			childrenStatus.put(childId, cs);
 		}
-		return childrenStatus.get(id);
+		return childrenStatus.get(childId);
 	}
 
 	private double computeScore(Collection<ChildStatus> childrenStatus) {

@@ -1,17 +1,5 @@
 package it.smartcommunitylab.climb.domain.scheduled;
 
-import it.smartcommunitylab.climb.contextstore.model.Child;
-import it.smartcommunitylab.climb.contextstore.model.Route;
-import it.smartcommunitylab.climb.contextstore.model.Stop;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.HTTPUtils;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.model.PedibusGame;
-import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
-import it.smartcommunitylab.climb.domain.model.WsnEvent;
-import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +23,18 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.contextstore.model.Stop;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.HTTPUtils;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
+import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.model.gamification.ExecutionDataDTO;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Component
 public class EventsPoller {
@@ -118,7 +118,7 @@ public class EventsPoller {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Map<String, Collection<ChildStatus>> pollGameEvents(PedibusGame game, 
+	private Map<String, Collection<ChildStatus>> pollGameEvents(PedibusGame game, 
 			Date actualTime, boolean checkDate) {
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
 		if(game != null) {
@@ -187,9 +187,18 @@ public class EventsPoller {
 						for (Stop stop : stopList) {
 							stopsMap.put(stop.getObjectId(), stop);
 						}
-
+						
+						Criteria childCriteria = Criteria.where("instituteId").is(game.getInstituteId())
+								.and("schoolId").is(game.getSchoolId());
+						List<Child> childenList = (List<Child>) storage.findData(Child.class, childCriteria, 
+								null, game.getOwnerId());
+						Map<String, Child> childrenMap = Maps.newTreeMap();
+						for(Child child : childenList) {
+							childrenMap.put(child.getObjectId(), child);
+						}
+						
 						logger.info("pollGameEvents: Computing scores for route " + routeId);
-						EventsProcessor ep = new EventsProcessor(stopsMap);
+						EventsProcessor ep = new EventsProcessor(stopsMap, childrenMap);
 						Collection<ChildStatus> status = ep.process(eventsListCleaned);
 
 						results.put(routeId, status);
@@ -206,7 +215,7 @@ public class EventsPoller {
 		return results;
 	}
 	
-	public void sendScores(Collection<ChildStatus> childrenStatus, 
+	private void sendScores(Collection<ChildStatus> childrenStatus, 
 			Map<String, Boolean> updateClassScores, PedibusGame game) {
 		String address = gamificationURL + "/gengine/execute";
 		if(childrenStatus == null) { 
@@ -230,7 +239,7 @@ public class EventsPoller {
 					continue;
 				}
 				
-				String playerId = childStatus.getChildId();
+				String playerId = childStatus.getClassRoom();
 				Double score = childStatus.getScore();
 						
 				ExecutionDataDTO ed = new ExecutionDataDTO();
@@ -263,7 +272,7 @@ public class EventsPoller {
 		}
 	}
 	
-	public Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 
+	private Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 
 			Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
@@ -273,19 +282,19 @@ public class EventsPoller {
 			return classUpdateScoreMap;
 		}
 		for(ChildStatus childStatus : childrenStatus) {
-			if(childStatus.isArrived()) {
-				//TODO new pedibus -> game interaction
-//				PedibusPlayer player = storage.getPedibusPlayerByChildId(game.getOwnerId(), game.getObjectId(), 
-//						childStatus.getChildId());
-//				if(player != null) {
-//					String classRoom = player.getClassRoom();
-//					Map<String, String> modeMap = classModeMap.get(classRoom);
-//					if(modeMap == null) {
-//						modeMap = new HashMap<String, String>();
-//						classModeMap.put(classRoom, modeMap);
-//					}
-//					modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
-//				}
+			if(childStatus.isArrived() && Utils.isNotEmpty(childStatus.getNickname()) 
+					&& Utils.isNotEmpty(childStatus.getClassRoom())) {
+				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), 
+						game.getInstituteId(), game.getSchoolId(),
+						childStatus.getNickname(), childStatus.getClassRoom());
+				if(player != null) {
+					Map<String, String> modeMap = classModeMap.get(player.getClassRoom());
+					if(modeMap == null) {
+						modeMap = new HashMap<String, String>();
+						classModeMap.put(player.getClassRoom(), modeMap);
+					}
+					modeMap.put(player.getObjectId(), Const.MODE_PEDIBUS);
+				}
 			}
 		}
 		
@@ -305,7 +314,7 @@ public class EventsPoller {
 		return classUpdateScoreMap;
 	}
 	
-	public boolean isEmptyResponse(Collection<ChildStatus> childrenStatus) {
+	private boolean isEmptyResponse(Collection<ChildStatus> childrenStatus) {
 		boolean result = true;
 		if((childrenStatus != null) && !childrenStatus.isEmpty()) {
 			result = false;
