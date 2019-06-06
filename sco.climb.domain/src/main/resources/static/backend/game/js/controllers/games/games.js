@@ -96,6 +96,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         $scope.initController = function () {
             if ($scope.currentGame) { //edit game
+                $scope.weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
+                $scope.currentGame.daysOfWeek=[1,1,1,1,1,0,0]
                 $scope.saveData = DataService.editData;
                 if($scope.currentGame.usingPedibusData) {
                   $scope.startDate.setTime($scope.currentGame.from);
@@ -155,8 +157,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             		$stateParams.idDomain,
             		$stateParams.idGame).then(
                     function (response) {
-                    	$scope.currentGame = response.data;
+                        $scope.currentGame = response.data;
                     	$scope.initController();
+                        console.log("$scope.currentGame:",$scope.currentGame)
                     }, function (error) {
                         alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
                     }
