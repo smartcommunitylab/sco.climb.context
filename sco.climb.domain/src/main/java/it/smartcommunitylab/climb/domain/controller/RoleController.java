@@ -198,6 +198,20 @@ public class RoleController extends AuthController {
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Link);
 		auths.add(auth);
 
+		auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.getActions().add(Const.AUTH_ACTION_ADD);
+		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.getActions().add(Const.AUTH_ACTION_DELETE);
+		auth.setRole(Const.ROLE_GAME_EDITOR);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(instituteId);
+		auth.setSchoolId(schoolId);
+		auth.setRouteId("*");
+		auth.setGameId("*");
+		auth.getResources().add(Const.AUTH_RES_Player);
+		auths.add(auth);
+		
 		storage.addUserRole(email, 
 				Utils.getAuthKey(ownerId, Const.ROLE_GAME_EDITOR, instituteId, schoolId, pedibusGameId), auths);
 		if(logger.isInfoEnabled()) {

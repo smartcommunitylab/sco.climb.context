@@ -1175,6 +1175,47 @@ public class GamificationController extends AuthController {
 		response.sendRedirect(redirectUrl.toString());
 	}
 	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/player", method = RequestMethod.GET)
+	public PedibusPlayer savePedibusPlayer(
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestBody PedibusPlayer player,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
+				null, Const.AUTH_RES_Player, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		player.setOwnerId(ownerId);
+		player.setInstituteId(instituteId);
+		player.setSchoolId(schoolId);
+		storage.savePedibusPlayer(player, ownerId, true);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("savePedibusPlayer[%s]: %s", ownerId, player.getObjectId()));
+		}
+		return player;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/player/{id}", method = RequestMethod.DELETE)
+	public PedibusPlayer deletePedibusPlayer(
+			@PathVariable String ownerId, 
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@PathVariable String id,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
+				null, Const.AUTH_RES_Player, Const.AUTH_ACTION_DELETE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		PedibusPlayer player = storage.removePedibusPlayer(ownerId, id);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("deletePedibusPlayer[%s]: %s", ownerId, id));
+		}
+		return player;		
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String pedibusGameId, String gameId, String id) throws Exception {
 		

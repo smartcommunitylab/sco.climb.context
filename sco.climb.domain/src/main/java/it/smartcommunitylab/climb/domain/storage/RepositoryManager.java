@@ -1115,9 +1115,9 @@ public class RepositoryManager {
 		mongoTemplate.remove(query, PedibusPlayer.class);
 	}
 	
-	public void removePedibusPlayer(String ownerId, String objectId) {
+	public PedibusPlayer removePedibusPlayer(String ownerId, String objectId) {
 		Query query = new Query(new Criteria("objectId").is(objectId).and("ownerId").is(ownerId));
-		mongoTemplate.remove(query, PedibusPlayer.class);
+		return mongoTemplate.findAndRemove(query, PedibusPlayer.class);
 	}
 	
 	public void saveLastEvent(WsnEvent event) throws StorageException {

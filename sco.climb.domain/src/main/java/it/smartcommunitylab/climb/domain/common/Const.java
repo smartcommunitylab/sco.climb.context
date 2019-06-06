@@ -47,6 +47,7 @@ public class Const {
 	public static final String AUTH_RES_Route = "Route";
 	public static final String AUTH_RES_Institute = "Institute";
 	public static final String AUTH_RES_Attendance = "Attendance";
+	public static final String AUTH_RES_Player = "Player";
 	public static final String AUTH_RES_PedibusGame = "PedibusGame";
 	public static final String AUTH_RES_PedibusGame_Link = "PedibusGame-Link";
 	public static final String AUTH_RES_PedibusGame_Calendar = "PedibusGame-Calendar";
