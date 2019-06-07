@@ -59,13 +59,13 @@
     <div class="col-lg-12 ">
         <label class="checkbox-inline" ng-repeat="d in currentGame.daysOfWeek track by $index">
             <div ng-if="$index < 5">
-                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-model="true"  disabled>{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle" value="{{d}}"  ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 5">
-                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-click="toggleSelection()">{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 6">
-                <input type="checkbox" class="checkBoxStyle" value="" disabled>{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div>
         </label>
     </div>

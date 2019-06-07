@@ -97,7 +97,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.initController = function () {
             if ($scope.currentGame) { //edit game
                 $scope.weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
-                $scope.currentGame.daysOfWeek=[1,1,1,1,1,0,0]
+                if($scope.currentGame.daysOfWeek.length==0){
+                    $scope.currentGame.daysOfWeek=[1,1,1,1,1,0,0]
+                }
                 $scope.saveData = DataService.editData;
                 if($scope.currentGame.usingPedibusData) {
                   $scope.startDate.setTime($scope.currentGame.from);
@@ -150,7 +152,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     }
                 );
         }
-
+        $scope.toggleSelectionWeekDay= function toggleSelectionWeekDay(index){
+            if($scope.currentGame.daysOfWeek[index]){
+                $scope.currentGame.daysOfWeek[index]=0;
+            }else{
+                $scope.currentGame.daysOfWeek[index]=1;
+            }
+        }
         if ($stateParams.idGame) {
         	if(!$scope.currentGame) {
             DataService.getGameById(
@@ -159,7 +167,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                     function (response) {
                         $scope.currentGame = response.data;
                     	$scope.initController();
-                        console.log("$scope.currentGame:",$scope.currentGame)
                     }, function (error) {
                         alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
                     }
