@@ -14,7 +14,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
       $scope.classMap = {}
       $scope.weekData = []
-
+      $scope.daysOfWeek = 5;
       $scope.todayData = {
         babies: [],
         means: {}
@@ -26,7 +26,7 @@ angular.module('climbGame.controllers.calendar', [])
       
       setTodayIndex()
       setClassSize()
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < $scope.daysOfWeek; i++) {
         $scope.week.push(new Date(getMonday(new Date()).getTime() + (i * 24 * 60 * 60 * 1000)))
       }
 
@@ -55,18 +55,24 @@ angular.module('climbGame.controllers.calendar', [])
 	            $scope.classMap[players[i].childId] = players[i]
 	          }
 	
-	          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+	          
+	        },
+	        function () {}
+	      )
+	      dataService.getStatus().then(
+	      	function(data) {
+            console.log("Sabato::",data.game.daysOfWeek[5])
+            if(data.game.daysOfWeek[5]){
+              $scope.daysOfWeek = 6
+              $scope.week.push(new Date(getMonday(new Date()).getTime() + (5 * 24 * 60 * 60 * 1000)))
+            }
+            calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
 	            function (calendar) {
 	              createWeekData(calendar)
 	              updateTodayData(calendar)
 	            },
 	            function () {}
 	          )
-	        },
-	        function () {}
-	      )
-	      dataService.getStatus().then(
-	      	function(data) {
 		      	if(data.legs && data.legs.length) {
 		      		var pos = data.legs.length - 1;
 		      		$scope.lastLeg = data.legs[pos]
@@ -372,7 +378,7 @@ angular.module('climbGame.controllers.calendar', [])
           if(monday  > last2week ){
             // console.log("it's within last 2 week")
             $scope.week = []
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < $scope.daysOfWeek; i++) {
               $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
             }
           }else{
@@ -382,7 +388,7 @@ angular.module('climbGame.controllers.calendar', [])
         }else{
           $scope.prev2Week=true;
           $scope.week = []
-          for (var i = 0; i < 5; i++) {
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
             $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
           }
         }
@@ -415,6 +421,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function setLabelWeek(weekArray) {
+        console.log("weekArray::",weekArray)
         $scope.labelWeek = $filter('date')(weekArray[0], 'dd') + ' - ' +
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy')
       }
@@ -455,9 +462,10 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function createWeekData(calendar) {
+        console.log("calendar::",calendar)
         $scope.weekData = []
         var k = 0
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < $scope.daysOfWeek; i++) {
           // get i-th day data and put baby with that object id with that setted mean
           $scope.weekData.push({})
             // if calendar[i] esiste vado avanti
@@ -491,6 +499,8 @@ angular.module('climbGame.controllers.calendar', [])
           }
         }
         $scope.isLoadingCalendar = false; 
+        console.log("calendar::",calendar)
+        console.log("$scope.weekData::",$scope.weekData)
       }
 
       /*
