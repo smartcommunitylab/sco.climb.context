@@ -27,7 +27,8 @@
     
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Classe:</b></p>
-        <input class="form-control" type="text" ng-model="selectedChild.classRoom" ng-required="true"/>
+        <select ng-options="class for class in currentSchool.classes" 
+        ng-model="selectedChild.classRoom" ng-required="true"></select>
     </div>
     
     <div class="col-lg-12 field">
