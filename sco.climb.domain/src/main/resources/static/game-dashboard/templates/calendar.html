@@ -36,7 +36,7 @@
     <div layout="column" flex="95">
       <div layout="row" class="state-row">
         <div layout="column" flex="25" class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
-        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header">
+        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header state-row-flex27">
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
@@ -53,11 +53,11 @@
             <md-button class="md-icon-button week-button" ng-click="nextWeek()"><i layout="column" flex="25" class="icon-arrow_right"></i></md-button>
           </div>
         </div>
-        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header" ng-class="{'cal-today-middle':today(dayIndex),'cal-header-future':isFuture(dayIndex)}">{{day |date:'EEEE dd-MM'}}</div>
+        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header days-row-flex27" ng-class="{'cal-today-middle':today(dayIndex),'cal-header-future':isFuture(dayIndex)}">{{day |date:'EEEE dd-MM'}}</div>
       </div>
       <div layout="row" class="weather-row">
         <div layout="column" flex="25" class="cal-header">{{'cal_header_clima'|translate| uppercase}}</div>
-        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header">
+        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header weather-row-flex27">
           <div layout="row" flex="100">
             <div ng-if="weekData[dayIndex].closed" layout="row" flex="100" ng-class="{'cal-today-middle':today(dayIndex)}">
               <md-button class="md-icon-button single-weather"><i layout="column" flex="100" class="weather-icon" ng-class="{'icon-sun':weekData[dayIndex].meteo=='sunny','icon-cloudy':weekData[dayIndex].meteo=='cloudy','icon-rain':weekData[dayIndex].meteo=='rain','icon-snow':weekData[dayIndex].meteo=='snow'}"></i></md-button>
