@@ -1027,3 +1027,12 @@ div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animation
 div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up.md-is-open>md-fab-actions{
   height: auto;
 }
+div.state-row > div.state-row-flex27{
+  flex: 1 1 27% !important;
+}
+div.days-row > div.days-row-flex27{
+  flex: 1 1 27% !important;
+}
+div.weather-row > div.weather-row-flex27{
+  flex: 1 1 27% !important;
+}
