@@ -58,6 +58,8 @@ function ($q, $http, $rootScope, $timeout) {
                     fetchUrl = baseUrl + "/api/volunteer/" + ownerId + "/" + instituteId + "/" + schoolId;
                 } else if(type == 'gamereports') {
                 		fetchUrl = baseUrl + "/api/game/report";
+                } else if(type == 'players') {
+                	fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/player";
                 }
                 return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
@@ -103,6 +105,9 @@ function ($q, $http, $rootScope, $timeout) {
                     sendUrl = baseUrl + "/api/volunteer/" + element.ownerId + "/" + element.objectId;
                 } else if (type == 'gameconfigdetail') {
                     sendUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
+                } else if (type == 'player') {
+                	sendUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.instituteId + "/" 
+                	+ element.schoolId + "/player";
                 }
                 return $http.put(sendUrl, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
@@ -139,6 +144,9 @@ function ($q, $http, $rootScope, $timeout) {
                     postUrl = baseUrl + "/api/volunteer/" + element.ownerId;
                 } else if (type == 'gameconfigdetail') {
                     postUrl = baseUrl + "/api/game/conf/" + element.ownerId + "/" + element.pedibusGameId;
+                } else if (type == 'player') {
+                	postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.instituteId + "/" 
+                	+ element.schoolId + "/player";
                 }
                 return $http.post(postUrl, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
             },
@@ -153,6 +161,8 @@ function ($q, $http, $rootScope, $timeout) {
                     deleteUrl = baseUrl + "/api/volunteer/" + element.ownerId + "/" + element.objectId;
                 } else if(type == 'institute') {
                     deleteUrl = baseUrl + "/api/institute/" + element.ownerId + "/" + element.objectId;
+                } else if(type == 'player') {
+                		deleteUrl = baseUrl + "/api/game/" + element.ownerId + "/player/" + element.objectId;
                 } else {
               	    deleteUrl = baseUrl + "/api/" + type + "/" + element.ownerId + "/" + element.objectId;
                 }

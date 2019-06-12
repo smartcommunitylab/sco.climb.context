@@ -332,12 +332,11 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 $scope.selectedChild = {
                     "name": '',
                     "surname": '',
+                    "nickname": '',
                     "parentName": '',
                     "phone": '',
                     "classRoom": '',
                     "wsnId": '',
-                    "activeForPedibus": false,
-                    "activeForGame": false,
                     "ownerId": $scope.currentSchool.ownerId,
                     "instituteId": $scope.currentSchool.instituteId,
                     "schoolId": $scope.currentSchool.objectId
@@ -588,6 +587,152 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             return 1;
         return 0;
     }
-});
+})
 
+.controller('PlayersCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
+  $scope.$parent.selectedTab = 'players-list';
+
+  $scope.initController = function() {
+      DataService.getData('players',
+              $stateParams.idDomain, 
+              $stateParams.idInstitute, 
+              $stateParams.idSchool).then(
+      function(response) {
+          $scope.currentSchool.players = response.data;
+          console.log('Caricamento dei giocatori andato a buon fine.');
+      }, function() {
+          $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
+          console.log("Errore nel caricamento dei giocatori.");
+      }
+      );
+  }
+
+
+  if (!$stateParams.idSchool) //new school
+  {
+      createDialog('templates/modals/newschool-err.html',{
+          id : 'newschoolerr-dialog',
+          title: 'Attenzione!',
+          success: { label: 'Torna indietro', fn: function() {
+              window.history.back();
+          } },
+          footerTemplate: '<button class="btn btn-danger" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>'
+      });
+  } else if ($scope.currentSchool) {
+      $scope.initController();
+  } else {
+      $scope.$on('schoolLoaded', function(e) {  
+          $scope.initController();        
+      });
+  }
+
+  $scope.remove = function (player) {
+      createDialog('templates/modals/delete-child.html',{
+          id : 'delete-child-dialog',
+          title: 'Attenzione!',
+          success: { 
+          	label: 'Conferma', 
+          	fn: function() {
+              DataService.removeData('player', player).then(
+                  function() {
+                      console.log('Cancellazione del giocatore andata a buon fine.');
+                      $scope.currentSchool.players.splice($scope.currentSchool.players.indexOf(player), 1);
+                  }, function(err) {
+                      $rootScope.networkProblemDetected('Errore nella cancellazione del giocatore! ' + err.data.errorMsg);
+                      console.log("Errore nella cancellazione del giocatore.");
+                  }
+              );
+          	} 
+          }
+      });
+  };
+      
+})
+
+.controller('PlayerCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
+	$scope.$parent.selectedTab = 'players-list';
+    
+    $scope.initController = function() {
+        DataService.getData('players',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            $scope.currentSchool.players = response.data;
+            console.log('Caricamento dei giocatori andato a buon fine.');
+            if ($stateParams.idPlayer) {
+                for (var i = 0; i < $scope.currentSchool.players.length && !$scope.selectedPlayer; i++) {
+                    if ($scope.currentSchool.players[i].objectId == $stateParams.idPlayer) {
+                        $scope.selectedPlayer = angular.copy($scope.currentSchool.players[i]);
+                    }
+                }	
+                $scope.saveData = DataService.editData;
+            } else {
+                $scope.selectedPlayer = {
+                    "nickname": '',
+                    "classRoom": '',
+                    "ownerId": $scope.currentSchool.ownerId,
+                    "instituteId": $scope.currentSchool.instituteId,
+                    "schoolId": $scope.currentSchool.objectId
+                };
+                $scope.saveData = DataService.saveData;
+            }
+        }, function() {
+            $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
+            console.log("Errore nel caricamento dei giocatori.");
+        }
+        );
+    }
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }    
+	
+  $scope.isNewPlayer = function() {
+  	return ($stateParams.idPlayer == null || $stateParams.idPlayer == '');
+  }
+  
+  // Exit without saving changes
+  $scope.back = function () {
+      createDialog('templates/modals/back.html',{
+          id : 'back-dialog',
+          title: 'Sei sicuro di voler uscire senza salvare?',
+          success: { label: 'Conferma', fn: function() {$state.go('root.school.players-list');} }
+      });
+  }
+  
+  $scope.save = function () {  
+  	if (checkFields()) {
+  		$scope.saveData('player', $scope.selectedPlayer).then(
+				function(response) {
+                    console.log('Giocatore salvato.');
+                    $state.go('root.school.players-list');
+				},
+				function(err) {
+                    $rootScope.networkProblemDetected('Errore nel salvataggio del giocatore! ' + err.data.errorMsg);
+                    console.log("Errore nel salvataggio del giocatore.");
+				}
+  		);
+  	}
+  }
+  
+  function checkFields() {
+    var allCompiled = true;
+    var invalidFields = $('.ng-invalid');
+    // Get all inputs
+    if (invalidFields.length > 0) {
+        $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+        $timeout(function () {
+            $rootScope.modelErrors = '';
+        }, 5000);
+        allCompiled = false;
+    }
+    return allCompiled;
+  }
+
+});
 

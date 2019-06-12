@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-8 header-path-category">
+        <h4 ng-show="isNewPlayer()">CREA NUOVO GIOCATORE</h4>
+        <h4 ng-hide="isNewPlayer()">MODIFICA GIOCATORE: {{selectedPlayer.nickname}}</h4>
+        <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+    </div>
+
+    <div class="col-md-4 right">
+        <a ng-click="save()" class="btn btn-save btn-margin" role="button">Salva scolaro</a>
+        <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
+    </div>
+
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Nickname:</b></p>
+        <input class="form-control" type="text" ng-model="selectedPlayer.nickname" ng-required="true"/>
+    </div>
+    
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Classe:</b></p>
+        <input class="form-control" type="text" ng-model="selectedPlayer.classRoom" ng-required="true"/>
+    </div>    
+</div>

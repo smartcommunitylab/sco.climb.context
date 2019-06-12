@@ -85,6 +85,13 @@ public class Utils {
 		return result;
 	}
 	
+	public static <T> T readJSONFromInputStream(InputStream in, Class<T> cls)
+			throws IOException {
+		Object object = Utils.fullMapper.readValue(in, new TypeReference<T>() {});
+		T result = Utils.fullMapper.convertValue(object, cls);
+		return result;
+	}
+	
 	public static <T> T toObject(Object in, Class<T> cls) {
 		return Utils.fullMapper.convertValue(in, cls);
 	}

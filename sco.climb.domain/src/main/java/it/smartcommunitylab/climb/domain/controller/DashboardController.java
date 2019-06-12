@@ -36,6 +36,7 @@ import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.ModalityMap;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
@@ -101,6 +102,11 @@ public class DashboardController extends AuthController {
 	@Autowired
 	@Value("${challenge.concept}")	
 	private String challengeConcept;
+	
+	@RequestMapping(value = "/api/game/modalitymap", method = RequestMethod.GET)
+	public @ResponseBody ModalityMap getModalityMap() throws Exception {
+		return storage.getModalityMap();
+	}
 
 	@RequestMapping(value = "/api/game/player/{ownerId}/{pedibusGameId}/{classRoom}", 
 			method = RequestMethod.GET)
@@ -167,15 +173,15 @@ public class DashboardController extends AuthController {
 					classRoom, result.toString()));
 		}
 		if(!result.get(Const.CLOSED)) {
-			for(String childId : calendarDay.getModeMap().keySet()) {
+			for(String playerId : calendarDay.getModeMap().keySet()) {
 				ExecutionDataDTO ed = new ExecutionDataDTO();
 				ed.setGameId(game.getGameId());
-				ed.setPlayerId(childId);
+				ed.setPlayerId(calendarDay.getClassRoom());
 				ed.setActionId(actionCalendar);
 				ed.setExecutionMoment(calendarDay.getDay());
 				
 				Map<String, Object> data = Maps.newTreeMap();
-				data.put(paramMode, calendarDay.getModeMap().get(childId));
+				data.put(paramMode, calendarDay.getModeMap().get(playerId));
 				data.put(paramDate, System.currentTimeMillis());
 				data.put(paramMeteo, calendarDay.getMeteo());
 				ed.setData(data);

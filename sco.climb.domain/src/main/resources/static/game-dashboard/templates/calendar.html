@@ -82,11 +82,11 @@
         <md-list class="cal-listbabies" ng-show="!isLoadingCalendar">
           <div layout="row" ng-repeat="baby in class track by $index" ng-init="babyIndex = $index" class="cal-baby">
             <div layout="column" flex="25" class="cal-name">
-              {{baby.name}} {{baby.surname}}
+              {{baby.nickname}}
               <!--              ******* *******-->
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
-              <md-button ng-if="(!today(dayIndex) || weekData[dayIndex].closed) && !isCurrentEditDay(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
+              <md-button ng-if="(!today(dayIndex) || weekData[dayIndex].closed) && !isCurrentEditDay(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.objectId].color"><span ng-if="weekData[dayIndex][baby.objectId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.objectId].mean=='absent'">A</span> </md-button>
               <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed || (isCurrentEditDay(dayIndex))" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
             </div>
           </div>

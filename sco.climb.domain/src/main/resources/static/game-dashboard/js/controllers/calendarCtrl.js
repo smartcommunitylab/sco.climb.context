@@ -47,12 +47,12 @@ angular.module('climbGame.controllers.calendar', [])
 	          $scope.class = players
 	          for (var i = 0; i < players.length; i++) {
 	            $scope.todayData.babies.push({
-	              name: players[i].name,
-	              surname: players[i].surname,
-	              childId: players[i].childId,
+	              name: players[i].nickname,
+	              surname: '',
+	              childId: players[i].objectId,
 	              color: ''
 	            })
-	            $scope.classMap[players[i].childId] = players[i]
+	            $scope.classMap[players[i].objectId] = players[i]
 	          }
 	
 	          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(

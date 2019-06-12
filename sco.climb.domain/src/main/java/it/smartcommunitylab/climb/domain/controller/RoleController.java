@@ -249,6 +249,7 @@ public class RoleController extends AuthController {
 		auth.getResources().add(Const.AUTH_RES_Volunteer);
 		auth.getResources().add(Const.AUTH_RES_Stop);
 		auth.getResources().add(Const.AUTH_RES_Route);
+		auth.getResources().add(Const.AUTH_RES_Player);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame);
 		auths.add(auth);
 		
