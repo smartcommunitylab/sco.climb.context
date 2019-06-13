@@ -805,7 +805,15 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .stats .table .mode-zeroImpact_wAdult .content {
   color: #ffee58;
 }
-.stats .table .mode-zeroImpact_wAdult .content >div>i.blackFoot {
+.stats .table .mode-zeroImpact_wAdult .content >div>i.blackFoot::before{
+  content: '\e90b';
+  color: #ffee58;
+  position: absolute;
+  width: 8px;
+  overflow: hidden;
+}
+.stats .table .mode-zeroImpact_wAdult .content >div>i.blackFoot::after {
+  content: '\e90b';
   color: rgba(0,0,0,0.87);
 }
 

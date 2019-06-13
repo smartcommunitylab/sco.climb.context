@@ -16,9 +16,11 @@ angular.module('climbGame.controllers.stats', [])
           'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
           'zeroImpact_wAdult_withoutFloor': data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT),
           'bus': Math.floor(data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT)),
+          'bus_withoutFloor': data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT),
           'pandr': Math.floor(data['scoreModeMap']['pandr'] / (1000 * KMS_PER_FOOT)),
           'bonus': Math.floor(data['scoreModeMap']['bonus'] / (1000 * KMS_PER_FOOT)),
-          'zeroImpact_solo': Math.floor(data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT))
+          'zeroImpact_solo': Math.floor(data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT)),
+          'zeroImpact_solo_withoutFloor':data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT)
         }
       }
     }
@@ -100,11 +102,31 @@ angular.module('climbGame.controllers.stats', [])
       }
     }
 
-    $scope.checkHalfFoot = function () {
-      if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
-        return true
-      }else{
-        return false
+    $scope.checkHalfFoot = function (status) {
+      if(status=="zeroImpact_solo"){
+        if ($scope.stats.scoreModeMap.zeroImpact_solo_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_solo >= 0.5) {
+          return true
+        }else{
+          return false
+        }
+      }else if(status=="zeroImpact_adult"){
+        if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+          return true
+        }else{
+          return false
+        }
+      }else if(status=="bus"){
+        if ($scope.stats.scoreModeMap.bus_withoutFloor - $scope.stats.scoreModeMap.bus >= 0.5) {
+          return true
+        }else{
+          return false
+        }
+      }else if(status=="pandr"){
+        if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+          return true
+        }else{
+          return false
+        }
       }
     }
 

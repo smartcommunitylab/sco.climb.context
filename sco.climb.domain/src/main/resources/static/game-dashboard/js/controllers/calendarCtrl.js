@@ -421,7 +421,6 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function setLabelWeek(weekArray) {
-        console.log("weekArray::",weekArray)
         $scope.labelWeek = $filter('date')(weekArray[0], 'dd') + ' - ' +
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy')
       }
