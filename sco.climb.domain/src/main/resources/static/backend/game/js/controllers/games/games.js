@@ -92,6 +92,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         // Variabili per selezione scuola, classi e linee corrispondenti
         $scope.classes = [];
+        $scope.modalities = [];
 
 
         $scope.initController = function () {
@@ -151,6 +152,26 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
                     }
                 );
+            DataService.getModalityMap().then(
+            		function(response) {
+            			if(response.data) {
+            				response.data.modalities.forEach(function(entry) {
+            					var modalityEntry = {
+            							selected: false,
+            							value: entry.value,
+            							active: entry.active
+            					}
+            					if($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value)) {
+            						modalityEntry.selected = true;
+            					}
+            					$scope.modalities.push(modalityEntry);
+            				});
+            			}
+            		},
+            		function(error) {
+            			alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
+            		}
+            );
         }
         $scope.toggleSelectionWeekDay= function toggleSelectionWeekDay(index){
             if($scope.currentGame.daysOfWeek[index]){
@@ -200,8 +221,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                         $scope.currentGame.classRooms.push(entry.name);
                     }
                 });
+                
+                $scope.currentGame.modalities = [];
+                $scope.modalities.forEach(function (entry) {
+                  if (entry.selected) {
+                      $scope.currentGame.modalities.push(entry.value);
+                  }
+              });                
 
-                $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
+              $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                   function (response) {
                       console.log('Salvataggio dati a buon fine.');
                       if ($scope.currentGame.objectId) { //edited
@@ -308,6 +336,15 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             })
 
             $scope.calculateStudenti($scope.selectedClasses);
+        }
+        
+        $scope.modalityToggled = function() {
+        	$scope.selectedModalities = [];
+        	$scope.$parent.modalities.forEach(function (cl) {
+            if (cl.selected) {
+                $scope.selectedModalities.push(cl.value);
+            }
+        	});
         }
 
         $scope.calculateStudenti = function (selectedClasses) {
