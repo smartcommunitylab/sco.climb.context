@@ -1,0 +1,36 @@
+{
+	"modalities": [
+		{
+			"value":"A piedi",
+			"active": true
+		},
+		{
+			"value":"In bici",
+			"active": true
+		},
+		{
+			"value":"Scuolabus o trasporto pubblico",
+			"active": true
+		},
+		{
+			"value":"Pedibus",
+			"active": true
+		},
+		{
+			"value":"In auto fino alla piazzola di sosta",
+			"active": true
+		},
+		{
+			"value":"Car pooling",
+			"active": true
+		},
+		{
+			"value":"In auto fino a scuola",
+			"active": true
+		},
+		{
+			"value":"Assente",
+			"active": true
+		}
+	]
+}

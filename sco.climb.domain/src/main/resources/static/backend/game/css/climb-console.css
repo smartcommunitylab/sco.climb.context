@@ -274,7 +274,8 @@ hr.border-paths {
     -webkit-border-radius: 6px;
     background: url(../img/arrow.png) calc(100% - 15px) center no-repeat;
     border-radius: 6px;
-    border: 1px solid #c1c1c1
+    border: 1px solid #c1c1c1;
+    min-width: 50px;
 }
 
 p.info-lang-text {

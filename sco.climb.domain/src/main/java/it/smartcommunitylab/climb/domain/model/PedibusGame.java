@@ -31,8 +31,7 @@ public class PedibusGame extends BaseObject {
 	private String confTemplateId;
 	private Map<String, String> params = new HashMap<>();
 	private String shortName;
-	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
-	private List<String> classes = new ArrayList<>();
+	private Map<String, Boolean> pollingFlagMap = new HashMap<>();
 	/**
 	 * from monday (index 0) to sunday (index 6)
 	 */
@@ -215,20 +214,12 @@ public class PedibusGame extends BaseObject {
 		this.interval = interval;
 	}
 
-	public void setClasses(List<String> classes) {
-		this.classes = classes;
-	}
-
 	public List<Boolean> getDaysOfWeek() {
 		return daysOfWeek;
 	}
 
 	public void setDaysOfWeek(List<Boolean> daysOfWeek) {
 		this.daysOfWeek = daysOfWeek;
-	}
-
-	public List<String> getClasses() {
-		return classes;
 	}
 
 	public List<String> getModalities() {

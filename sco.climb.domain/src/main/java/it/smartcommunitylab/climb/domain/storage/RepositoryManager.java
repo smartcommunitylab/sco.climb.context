@@ -261,6 +261,7 @@ public class RepositoryManager {
 		update.set("wsnId", child.getWsnId());
 		update.set("imageUrl", child.getImageUrl());
 		update.set("cf", child.getCf());
+		update.set("nickname", child.getNickname());
 		mongoTemplate.updateFirst(query, update, Child.class);
 	}
 
@@ -710,11 +711,6 @@ public class RepositoryManager {
 		return mongoTemplate.find(query, PedibusItinerary.class);
 	}
 	
-	public PedibusPlayer getPedibusPlayer(String id) {
-		Query query = new Query(new Criteria("objectId").is(id));
-		return mongoTemplate.findOne(query, PedibusPlayer.class);		
-	}
-
 	public PedibusPlayer getPedibusPlayer(String ownerId, String instituteId, String schoolId,
 			String nickname, String classRoom) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
@@ -743,6 +739,25 @@ public class RepositoryManager {
 		.with(new Sort(Sort.Direction.ASC, "nickname"));
 		return mongoTemplate.find(query, PedibusPlayer.class);		
 	}	
+	
+	public List<PedibusPlayer> getPedibusPlayersByClassRoom(String ownerId, String instituteId, 
+			String schoolId, String classRoom) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId)
+				.and("classRoom").is(classRoom))
+		.with(new Sort(Sort.Direction.ASC, "nickname"));
+		return mongoTemplate.find(query, PedibusPlayer.class);		
+	}
+	
+	public List<PedibusPlayer> getPedibusPlayersBySchool(String ownerId, String instituteId, 
+			String schoolId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(instituteId)
+				.and("schoolId").is(schoolId))
+		.with(new Sort(Sort.Direction.ASC, "nickname"));
+		return mongoTemplate.find(query, PedibusPlayer.class);		
+	}
 	
 	public CalendarDay getCalendarDay(String ownerId, String gameId, String classRoom,
 			Date day) {
@@ -813,17 +828,17 @@ public class RepositoryManager {
 			} else {
 				//merge pedibus data with calendar data
 				Map<String, String> oldModeMap = calendarDayDB.getModeMap();
-				for(String childId : calendarDay.getModeMap().keySet()) {
-					String mode = calendarDay.getModeMap().get(childId);
-					String oldMode = oldModeMap.get(childId);
+				for(String playerId : calendarDay.getModeMap().keySet()) {
+					String mode = calendarDay.getModeMap().get(playerId);
+					String oldMode = oldModeMap.get(playerId);
 					if(oldMode == null) {
 						continue;
 					} else if(mode.equals(Const.MODE_PEDIBUS) && oldMode.equals(Const.MODE_PEDIBUS)) {
 						continue;
 					}	else if(mode.equals(Const.MODE_PIEDI_ADULTO) && oldMode.equals(Const.MODE_PEDIBUS)) {
-						calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
+						calendarDay.getModeMap().put(playerId, Const.MODE_PEDIBUS);
 					} else if(oldMode.equals(Const.MODE_PEDIBUS)){
-						calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
+						calendarDay.getModeMap().put(playerId, Const.MODE_PEDIBUS);
 						merged = Boolean.TRUE;
 					}
 				}
@@ -909,7 +924,6 @@ public class RepositoryManager {
 			update.set("shortName", game.getShortName());
 			update.set("lastUpdate", now);
       update.set("daysOfWeek", game.getDaysOfWeek());
-      update.set("classes", game.getClasses());
       update.set("modalities", game.getModalities());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
@@ -1085,6 +1099,16 @@ public class RepositoryManager {
 	}	
 	
 	public boolean savePedibusPlayer(PedibusPlayer player, String ownerId, boolean canUpdate) throws StorageException {
+		//check nickname
+		Query queryNick = new Query(new Criteria("ownerId").is(ownerId)
+				.and("instituteId").is(player.getInstituteId())
+				.and("schoolId").is(player.getSchoolId())
+				.and("nickname").is(player.getNickname())
+				.and("classRoom").is(player.getClassRoom()));
+		PedibusPlayer otherPlayer = mongoTemplate.findOne(queryNick, PedibusPlayer.class);
+		if(otherPlayer != null) {
+			throw new StorageException("nickname already present");
+		}
 		Query query = new Query(new Criteria("objectId").is(player.getObjectId()).and("ownerId").is(ownerId));
 		PedibusPlayer playerDB = mongoTemplate.findOne(query, PedibusPlayer.class);
 		Date now = new Date();
@@ -1110,6 +1134,11 @@ public class RepositoryManager {
 		}
 	}
 	
+	public PedibusPlayer getPedibusPlayer(String ownerId, String objectId) {
+		Query query = new Query(new Criteria("objectId").is(objectId).and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, PedibusPlayer.class);
+	}
+	
 	public void removePedibusPlayerByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
 		mongoTemplate.remove(query, PedibusPlayer.class);
@@ -1120,31 +1149,6 @@ public class RepositoryManager {
 		return mongoTemplate.findAndRemove(query, PedibusPlayer.class);
 	}
 	
-	public void saveLastEvent(WsnEvent event) throws StorageException {
-		Query query = new Query(new Criteria("ownerId").is(event.getOwnerId()).and("routeId").is(event.getRouteId()));
-		WsnEvent eventDB = mongoTemplate.findOne(query, WsnEvent.class);
-		Date now = new Date();
-		if (eventDB == null) {
-			event.setCreationDate(now);
-			event.setLastUpdate(now);
-			mongoTemplate.save(event);
-		} else {
-			Update update = new Update();
-			update.set("timestamp", event.getTimestamp());
-			update.set("eventType", event.getEventType());
-			update.set("wsnNodeId", event.getWsnNodeId());
-			update.set("payload", event.getPayload());
-			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, WsnEvent.class);
-		}
-	}		
-
-	public WsnEvent getLastEvent(String ownerId, String routeId) throws StorageException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("routeId").is(routeId)); // .with(new Sort(Sort.Direction.ASC, "timestamp"));
-		WsnEvent event = mongoTemplate.findOne(query, WsnEvent.class);
-		return event;
-	}
-
 	public void savePedibusItinerary(PedibusItinerary itinerary) {
 		Query query = new Query(new Criteria("ownerId").is(itinerary.getOwnerId()).and("objectId").is(itinerary.getObjectId()));
 		PedibusItinerary itineraryDb = mongoTemplate.findOne(query, PedibusItinerary.class);
@@ -1175,6 +1179,13 @@ public class RepositoryManager {
 				.and("schoolId").is(schoolId)
 				.and("ownerId").is(ownerId));
 		return mongoTemplate.find(query, Route.class);		
+	}
+	
+	public School getSchool(String ownerId, String instituteId, String schoolId) {
+		Query query = new Query(Criteria.where("instituteId").is(instituteId)
+				.and("objectId").is(schoolId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, School.class);		
 	}
 	
 	public void addUser(User user) {
@@ -1445,5 +1456,9 @@ public class RepositoryManager {
 	
 	public ModalityMap getModalityMap() {
 		return mongoTemplate.findOne(new Query(), ModalityMap.class);
+	}
+	
+	public void saveModalityMap(ModalityMap modalityMap) {
+		mongoTemplate.save(modalityMap);
 	}
 }
