@@ -1096,35 +1096,38 @@ public class RepositoryManager {
 			logger.warn("Cannot update existing PedibusItineraryLeg with gameId " 
 			+ leg.getPedibusGameId() + " and id " + leg.getObjectId());
 		}
-	}	
+	}
 	
-	public boolean savePedibusPlayer(PedibusPlayer player, String ownerId, boolean canUpdate) throws StorageException {
-		//check nickname
-		Query queryNick = new Query(new Criteria("ownerId").is(ownerId)
+	public boolean existsPedibusPlayerByNickname(PedibusPlayer player) {
+		Query queryNick = new Query(new Criteria("ownerId").is(player.getOwnerId())
 				.and("instituteId").is(player.getInstituteId())
 				.and("schoolId").is(player.getSchoolId())
 				.and("nickname").is(player.getNickname())
 				.and("classRoom").is(player.getClassRoom()));
-		PedibusPlayer otherPlayer = mongoTemplate.findOne(queryNick, PedibusPlayer.class);
-		if(otherPlayer != null) {
-			throw new StorageException("nickname already present");
-		}
-		Query query = new Query(new Criteria("objectId").is(player.getObjectId()).and("ownerId").is(ownerId));
+		PedibusPlayer playerDb = mongoTemplate.findOne(queryNick, PedibusPlayer.class);
+		return (playerDb != null);
+		
+	}
+	
+	public boolean savePedibusPlayer(PedibusPlayer player, boolean canUpdate) throws StorageException {
+		Query query = new Query(new Criteria("objectId").is(player.getObjectId())
+				.and("ownerId").is(player.getOwnerId()));
 		PedibusPlayer playerDB = mongoTemplate.findOne(query, PedibusPlayer.class);
 		Date now = new Date();
 		if (playerDB == null) {
+			if(existsPedibusPlayerByNickname(player)) {
+				throw new StorageException("nickname already present");
+			}
 			player.setCreationDate(now);
 			player.setLastUpdate(now);
 			player.setObjectId(Utils.getUUID());
-			player.setOwnerId(ownerId);
+			player.setOwnerId(player.getOwnerId());
 			mongoTemplate.save(player);
 			return false;
 		} else if (canUpdate) {
 			Update update = new Update();
 			update.set("nickname", player.getNickname());
 			update.set("classRoom", player.getClassRoom());
-			update.set("schoolId", player.getSchoolId());
-			update.set("instituteId", player.getInstituteId());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusPlayer.class);
 			return true;

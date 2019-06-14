@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +43,7 @@ import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
 import it.smartcommunitylab.climb.domain.converter.ExcelError;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
@@ -126,23 +126,22 @@ public class AdminController extends AuthController {
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
-			@RequestParam(name="onlychilds", required=false) Boolean onlyChild,
+			@RequestParam(name="players", required=false) Boolean onlyPlayers,
 			@RequestParam("file") MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		List<ExcelError> errors = new ArrayList<ExcelError>();
-		if(onlyChild) {
-			Map<String, Stop> stopsMap = new HashMap<String, Stop>();
-			Map<String, Child> childrenMap = excelConverter.readChildren(file.getInputStream(), 
-					ownerId, instituteId, schoolId, stopsMap, onlyChild, errors);
+		if(onlyPlayers) {
+			Map<String, PedibusPlayer> playersMap = excelConverter.readPlayers(file.getInputStream(), 
+					ownerId, instituteId, schoolId, errors);
 			if(errors.size() == 0) {
-				for(Child child : childrenMap.values()) {
-					storeChild(child, onlyChild);
+				for(PedibusPlayer player : playersMap.values()) {
+					storePlayer(player);
 				}
 				if(logger.isInfoEnabled()) {
-					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
+					logger.info(String.format("uploadData[game]: %s %s %s", ownerId, instituteId, schoolId));
 				}
 			}
 		} else {
@@ -151,7 +150,7 @@ public class AdminController extends AuthController {
 			Map<String, Stop> stopsMap = excelConverter.readStops(file.getInputStream(), 
 					ownerId, instituteId, schoolId, routesMap, errors);
 			Map<String, Child> childrenMap = excelConverter.readChildren(file.getInputStream(), 
-					ownerId, instituteId, schoolId, stopsMap, onlyChild, errors);
+					ownerId, instituteId, schoolId, stopsMap, errors);
 			Map<String, Volunteer> volunteersMap = excelConverter.readVolunteers(file.getInputStream(), 
 					ownerId, instituteId, schoolId, routesMap, errors);
 			if(errors.size() == 0) {
@@ -162,19 +161,23 @@ public class AdminController extends AuthController {
 					storeStop(stop);
 				}
 				for(Child child : childrenMap.values()) {
-					storeChild(child, onlyChild);
+					storeChild(child);
 				}
 				for(Volunteer volunteer : volunteersMap.values()) {
 					storeVolunteer(volunteer);
 				}			
 				if(logger.isInfoEnabled()) {
-					logger.info(String.format("uploadData: %s %s %s %s", ownerId, instituteId, schoolId, onlyChild));
+					logger.info(String.format("uploadData[pedibus]: %s %s %s", ownerId, instituteId, schoolId));
 				}
 			}
 		}
 		return errors;
 	}
 	
+	private void storePlayer(PedibusPlayer player) throws Exception {
+		storage.savePedibusPlayer(player, true);
+	}
+
 	private void storeVolunteer(Volunteer volunteer) throws Exception {
 		if(Utils.isEmpty(volunteer.getCf())) {
 			if(logger.isInfoEnabled()) {
@@ -246,7 +249,7 @@ public class AdminController extends AuthController {
 		}
 	}
 
-	private void storeChild(Child child, Boolean onlyChild) throws Exception {
+	private void storeChild(Child child) throws Exception {
 		Criteria criteriaBase = Criteria.where("schoolId").is(child.getSchoolId())
 				.and("instituteId").is(child.getInstituteId());
 		if(Utils.isNotEmpty(child.getCf())) {
@@ -262,11 +265,9 @@ public class AdminController extends AuthController {
 				childDb.setSurname(child.getSurname());
 				childDb.setParentName(child.getParentName());
 				childDb.setPhone(child.getPhone());
+				childDb.setWsnId(child.getWsnId());
 				if(Utils.isNotEmpty(child.getClassRoom())) {
 					childDb.setClassRoom(child.getClassRoom());
-				}
-				if(!onlyChild) {
-					childDb.setWsnId(child.getWsnId());
 				}
 				storage.updateChild(childDb);
 			}

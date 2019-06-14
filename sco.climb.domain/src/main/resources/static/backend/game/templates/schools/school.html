@@ -9,14 +9,15 @@
     
     <fieldset class= "row" ng-disabled="!PermissionsService.permissionEnabledEditSchool()">
     	<div class="col-md-12 import-panel">
+    	
     		<div>Importazione dati scuola</div>
             <input type="file" id="upload-file" name="file" style="display:inline-block;"/>
-            <label><input type="checkbox" ng-model="uploadFileOnlyChilds"/>Importa solo i bambini</label>
-    		
+            <label><input type="checkbox" ng-model="uploadFileOnlyChilds"/>Importa solo i bambini per il gioco</label>
+    		<br/>
     		<input type="button" ng-click="uploadFile(uploadFileOnlyChilds)" value="Importa" />
         </div>
         <div class="import-errors-list col-md-12" ng-show="importErrors">
-            Errori importazione:
+            Errori importazione: <a data-ng-click="resetImportError()" class="close" role="button">x</a>
             <table class="table table-striped header-fixed">
                 <thead>
                     <tr>

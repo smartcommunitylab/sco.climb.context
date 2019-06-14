@@ -170,7 +170,7 @@ function ($q, $http, $rootScope, $timeout) {
             },
             uploadFile: function(element) 
             {
-                var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId + '?onlychilds=' + element.onlychilds;
+                var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId + '?players=' + element.players;
           	    return $http.post(postUrl, element.formdata, 
           			{
                         timeout: timeout,
@@ -292,6 +292,10 @@ function ($q, $http, $rootScope, $timeout) {
           },
           getGameById: function (ownerId, id) {
           	var fetchUrl = baseUrl + '/api/game/' + ownerId + "/" + id;
+          	return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+          },
+          getModalityMap: function() {
+          	var fetchUrl = baseUrl + '/api/game/modalitymap';
           	return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
           }
       };

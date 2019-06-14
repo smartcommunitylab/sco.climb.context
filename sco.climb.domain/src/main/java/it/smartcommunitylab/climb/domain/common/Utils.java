@@ -251,4 +251,8 @@ public class Utils {
 		return child.getClassRoom() + "-" + child.getNickname();
 	}
 	
+	public static String getPlayerKey(String classRoom, String nickname) {
+		return classRoom + "-" + nickname;
+	}
+	
 }

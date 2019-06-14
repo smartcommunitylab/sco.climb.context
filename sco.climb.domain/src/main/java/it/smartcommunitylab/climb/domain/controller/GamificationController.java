@@ -1219,7 +1219,7 @@ public class GamificationController extends AuthController {
 		player.setOwnerId(ownerId);
 		player.setInstituteId(instituteId);
 		player.setSchoolId(schoolId);
-		storage.savePedibusPlayer(player, ownerId, true);
+		storage.savePedibusPlayer(player, true);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("savePedibusPlayer[%s]: %s", ownerId, player.getObjectId()));
 		}
