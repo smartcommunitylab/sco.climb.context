@@ -114,8 +114,8 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     			"ownerId": $stateParams.idDomain,
     			"instituteId": $stateParams.idInstitute,
     			"schoolId": $stateParams.idSchool,
-                "formdata": formData,
-                "onlychilds": uploadFileOnlyChilds
+          "formdata": formData,
+          "players": uploadFileOnlyChilds
     	};
     	DataService.uploadFile(element).then(
             function(response) {
@@ -131,6 +131,10 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 }
           }
       );
+    };
+    
+    $scope.resetImportError = function() {
+    	$scope.importErrors = null;
     }
 
     // Save the changes made to the path

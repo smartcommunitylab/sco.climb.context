@@ -7,6 +7,7 @@ import it.smartcommunitylab.climb.contextstore.model.Volunteer;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -366,11 +367,11 @@ public class ExcelConverter {
 		return result;
 	}
 	
-	public Map<String, Child> readChildren(InputStream excel,
-			String ownerId, String instituteId, String schoolId,
-			Map<String, Stop> stopsMap, boolean onlyChild, 
+	public Map<String, Child> readChildren(InputStream excel,	
+			String ownerId, String instituteId, String schoolId, 
+			Map<String, Stop> stopsMap, 
 			List<ExcelError> errors) throws Exception {
-		Map<String, Child> result = new HashMap<String, Child>();
+		Map<String, Child> result = new HashMap<>();
 		XSSFWorkbook wb = new XSSFWorkbook(excel);
 		try {
 			XSSFSheet sheet = wb.getSheet("Bambini");
@@ -384,11 +385,12 @@ public class ExcelConverter {
 					
 					String cognome = fmt.formatCellValue(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
 					String nome = fmt.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
-					String genitore = fmt.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
-					String telefono = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
-					String classe = fmt.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
-					String fermata = fmt.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
-					String cf = fmt.formatCellValue(row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim().toUpperCase();
+					String nickname = fmt.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String genitore = fmt.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String telefono = fmt.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String classe = fmt.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String fermata = fmt.formatCellValue(row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String cf = fmt.formatCellValue(row.getCell(7, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim().toUpperCase();
 					String nodo = fmt.formatCellValue(row.getCell(8, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
 					
 					if(Utils.isEmpty(cf)) {
@@ -410,7 +412,7 @@ public class ExcelConverter {
 					}
 					
 					Stop stop = null;
-					if(!onlyChild && Utils.isNotEmpty(fermata)) {
+					if(Utils.isNotEmpty(fermata)) {
 						stop = stopsMap.get(fermata);
 						if(stop == null) {
 							ExcelError error = new ExcelError(sheet.getSheetName(), i, "fermata non trovata");
@@ -433,6 +435,7 @@ public class ExcelConverter {
 						child.setCf(cf);
 						child.setName(nome);
 						child.setSurname(cognome);
+						child.setNickname(nickname);
 						child.setParentName(genitore);
 						child.setPhone(telefono);
 						child.setClassRoom(classe);
@@ -446,13 +449,12 @@ public class ExcelConverter {
 					} else {
 						childDb.setName(nome);
 						childDb.setSurname(cognome);
+						childDb.setNickname(nickname);
 						childDb.setParentName(genitore);
 						childDb.setPhone(telefono);
+						childDb.setWsnId(nodo);
 						if(Utils.isNotEmpty(classe)) {
 							childDb.setClassRoom(classe);
-						}
-						if(!onlyChild) {
-							childDb.setWsnId(nodo);
 						}
 						if(stop != null) {
 							if(!stop.getPassengerList().contains(childDb.getObjectId())) {
@@ -460,6 +462,74 @@ public class ExcelConverter {
 							}
 						}
 						result.put(childDb.getObjectId(), childDb);
+					}
+				} catch (Exception e) {
+					ExcelError error = new ExcelError(sheet.getSheetName(), i, e.toString());
+					errors.add(error);
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			wb.close();
+		}
+		return result;
+	}
+	
+	public Map<String, PedibusPlayer> readPlayers(InputStream excel,
+			String ownerId, String instituteId, String schoolId, 
+			List<ExcelError> errors) throws Exception {
+		Map<String, PedibusPlayer> result = new HashMap<>();
+		List<String> playerKeys = new ArrayList<>();
+		XSSFWorkbook wb = new XSSFWorkbook(excel);
+		try {
+			XSSFSheet sheet = wb.getSheet("Bambini");
+			if(sheet == null) {
+				throw new InvalidParametersException("Bambini sheet not found");
+			}
+			DataFormatter fmt = new DataFormatter();
+			for(int i=1; i <= sheet.getLastRowNum(); i++) {
+				try {
+					Row row = sheet.getRow(i);
+					
+					String nickname = fmt.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					String classe = fmt.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)).trim();
+					
+					if(Utils.isEmpty(nickname)) {
+						ExcelError error = new ExcelError(sheet.getSheetName(), i, "nickname mancante");
+						errors.add(error);
+						continue;
+					}
+					
+					if(Utils.isEmpty(classe)) {
+						ExcelError error = new ExcelError(sheet.getSheetName(), i, "classe mancante");
+						errors.add(error);
+						continue;
+					}
+					
+					if(playerKeys.contains(Utils.getPlayerKey(classe, nickname))) {
+						ExcelError error = new ExcelError(sheet.getSheetName(), i, "nickname già presente in classe");
+						errors.add(error);
+						continue;
+					} else {
+						playerKeys.add(Utils.getPlayerKey(classe, nickname));
+					}
+					
+					PedibusPlayer playerDb = storage.getPedibusPlayer(ownerId, instituteId, schoolId, nickname, classe);
+					
+					if(playerDb == null) {
+						PedibusPlayer player = new PedibusPlayer();
+						player.setOwnerId(ownerId);
+						player.setInstituteId(instituteId);
+						player.setSchoolId(schoolId);
+						player.setObjectId(Utils.getUUID());
+						player.setNickname(nickname);
+						player.setClassRoom(classe);
+						result.put(player.getObjectId(), player);
+					} else {
+						playerDb.setNickname(nickname);
+						playerDb.setClassRoom(classe);
+						result.put(playerDb.getObjectId(), playerDb);
 					}
 				} catch (Exception e) {
 					ExcelError error = new ExcelError(sheet.getSheetName(), i, e.toString());
