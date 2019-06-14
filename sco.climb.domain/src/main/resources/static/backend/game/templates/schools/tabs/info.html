@@ -14,4 +14,11 @@
         <p><span class="required-sign">*</span> <b>Indirizzo:</b></p>
         <input class="form-control" type="text" ng-model="currentSchool.address" ng-required="true"/>
     </div>
+    <!-- Classes -->
+    <div class="col-lg-12 field">
+        <p><span class="required-sign">*</span> <b>Classes:</b></p>
+        <!-- <input class="form-control" type="text" ng-model="currentSchool.classes[0]" ng-required="true"/> -->
+        <select ng-options="class for class in currentSchool.classes" ng-model="class" ng-required="true"></select>
+        <a class="btn btn-icon btn-standard" ng-click="addClasses(currentSchool)"><i class="glyphicon glyphicon-plus"></i></a>
+    </div>
 </fieldset>

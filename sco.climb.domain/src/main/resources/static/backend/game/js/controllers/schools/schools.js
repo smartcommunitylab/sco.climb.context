@@ -29,6 +29,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
     $scope.initController = function() {
         if ($scope.currentSchool) { //edit school
+            console.log("currentSchool::",$scope.currentSchool)	
             $scope.saveData = DataService.editData;
             DataService.getData('route', 
                     $stateParams.idDomain, 
@@ -184,8 +185,23 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
     };
 })
 
-.controller('SchoolInfoCtrl', function ($scope) {
-    $scope.$parent.selectedTab = 'info';
+.controller('SchoolInfoCtrl', function ($scope, createDialog) {
+   
+    $scope.addClasses = function(currentSchool){
+        
+        createDialog('templates/modals/modifyClasses.html',{
+            id : 'addClass-dialog',
+            title: 'Add Class',
+            success: { label: 'Conferma', fn: 
+                function(value) {
+                    var id_addClass=document.getElementById("id_addClass").value;
+                    $scope.currentSchool.classes.push(id_addClass)
+                    console.log("pass currentSchool data::",currentSchool.classes)
+                    console.log("classes data::",id_addClass)
+                } 
+            }
+        });
+	}
 })
 
 .controller('LinesListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
