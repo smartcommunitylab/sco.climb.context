@@ -657,3 +657,8 @@ legend {
     height: 20px;
     margin: -1px 0px 0px -22px !important;
 }
+
+.classSelector{
+    min-width: 29% !important;
+    min-height: 29px;
+}

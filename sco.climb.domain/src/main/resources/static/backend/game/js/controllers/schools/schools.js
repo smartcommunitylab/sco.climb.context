@@ -54,7 +54,33 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             $scope.saveData = DataService.saveData;
         }
     }
-
+    $scope.addClasses = function(currentSchool){
+        
+        createDialog('templates/modals/addClasses.html',{
+            id : 'addClass-dialog',
+            title: 'Add Class',
+            success: { label: 'Conferma', fn: 
+                function(value) {
+                    var id_addClass=document.getElementById("id_addClass").value;
+                    if(id_addClass){
+                        $scope.currentSchool.classes.push(id_addClass)
+                    }
+                } 
+            }
+        });
+    }
+    $scope.removeClasses = function(currentSchool, classes){
+        createDialog('templates/modals/removeClasses.html',{
+            id : 'removeClass-dialog',
+            title: 'Add Class',
+            success: { label: 'Conferma', fn: 
+                function(value) {
+                    var index = $scope.currentSchool.classes.indexOf(classes);
+                    $scope.currentSchool.classes.splice(index, 1);
+                } 
+            }
+        });
+    }
     if ($stateParams.idSchool) {
         MainDataService.getDomains().then(function (response) {
             MainDataService.getInstitutes($stateParams.idDomain).then(function (response) {
@@ -191,21 +217,21 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
 .controller('SchoolInfoCtrl', function ($scope, createDialog) {
    
-    $scope.addClasses = function(currentSchool){
+    // $scope.addClasses = function(currentSchool){
         
-        createDialog('templates/modals/modifyClasses.html',{
-            id : 'addClass-dialog',
-            title: 'Add Class',
-            success: { label: 'Conferma', fn: 
-                function(value) {
-                    var id_addClass=document.getElementById("id_addClass").value;
-                    $scope.currentSchool.classes.push(id_addClass)
-                    console.log("pass currentSchool data::",currentSchool.classes)
-                    console.log("classes data::",id_addClass)
-                } 
-            }
-        });
-	}
+    //     createDialog('templates/modals/modifyClasses.html',{
+    //         id : 'addClass-dialog',
+    //         title: 'Add Class',
+    //         success: { label: 'Conferma', fn: 
+    //             function(value) {
+    //                 var id_addClass=document.getElementById("id_addClass").value;
+    //                 $scope.currentSchool.classes.push(id_addClass)
+    //                 console.log("pass currentSchool data::",currentSchool.classes)
+    //                 console.log("classes data::",id_addClass)
+    //             } 
+    //         }
+    //     });
+	// }
 })
 
 .controller('LinesListCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {

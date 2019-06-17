@@ -17,8 +17,9 @@
     <!-- Classes -->
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Classes:</b></p>
-        <!-- <input class="form-control" type="text" ng-model="currentSchool.classes[0]" ng-required="true"/> -->
-        <select ng-options="class for class in currentSchool.classes" ng-model="class" ng-required="true"></select>
+        <select ng-options="class for class in currentSchool.classes" ng-model="class" ng-required="true" class="classSelector">
+        </select>
         <a class="btn btn-icon btn-standard" ng-click="addClasses(currentSchool)"><i class="glyphicon glyphicon-plus"></i></a>
+        <a class="btn btn-icon btn-standard" ng-if="class" ng-click="removeClasses(currentSchool, class)"><i class="glyphicon glyphicon-trash"></i></a>
     </div>
 </fieldset>
