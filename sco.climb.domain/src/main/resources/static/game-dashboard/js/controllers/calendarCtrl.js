@@ -15,6 +15,7 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.classMap = {}
       $scope.weekData = []
       $scope.daysOfWeek = 5;
+      $scope.calHeaderFlex=25;
       $scope.todayData = {
         babies: [],
         means: {}
@@ -61,10 +62,12 @@ angular.module('climbGame.controllers.calendar', [])
 	      )
 	      dataService.getStatus().then(
 	      	function(data) {
-            console.log("Sabato::",data.game.daysOfWeek[5])
             if(data.game.daysOfWeek[5]){
-              $scope.daysOfWeek = 6
+              $scope.daysOfWeek = 6;
+              $scope.calHeaderFlex=10;
               $scope.week.push(new Date(getMonday(new Date()).getTime() + (5 * 24 * 60 * 60 * 1000)))
+            }else{
+              console.log("daysOfWeek[5] is::",data.game.daysOfWeek[5])
             }
             calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
 	            function (calendar) {
@@ -77,7 +80,9 @@ angular.module('climbGame.controllers.calendar', [])
 		      		var pos = data.legs.length - 1;
 		      		$scope.lastLeg = data.legs[pos]
 		      	}
-		      }, function (err) {}
+		      }, function (err) {
+            console.log("error::",err)
+          }
 	      )
 	    }, function (err) {
 	      console.log(err)

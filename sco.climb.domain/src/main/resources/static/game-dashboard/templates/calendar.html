@@ -35,8 +35,8 @@
     </div>
     <div layout="column" flex="95">
       <div layout="row" class="state-row">
-        <div layout="column" flex="25" class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
-        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header state-row-flex27">
+        <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
+      <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header state-row-flex27">
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div layout="row" class="days-row">
-        <div layout="column" flex="25" class="cal-header">
+        <div layout="column" flex={{calHeaderFlex}} class="cal-header">
           <div layout="row" class="cal-header">
             <!-- preweek limit should be last 2week -->
             <md-button class="md-icon-button week-button" ng-if="prev2Week" ng-click="prevWeek()"><i layout="column" flex="5" class="icon-arrow_left"></i></md-button>
@@ -56,7 +56,7 @@
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header days-row-flex27" ng-class="{'cal-today-middle':today(dayIndex),'cal-header-future':isFuture(dayIndex)}">{{day |date:'EEEE dd-MM'}}</div>
       </div>
       <div layout="row" class="weather-row">
-        <div layout="column" flex="25" class="cal-header">{{'cal_header_clima'|translate| uppercase}}</div>
+        <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_clima'|translate| uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header weather-row-flex27">
           <div layout="row" flex="100">
             <div ng-if="weekData[dayIndex].closed" layout="row" flex="100" ng-class="{'cal-today-middle':today(dayIndex)}">
@@ -81,7 +81,7 @@
         <md-progress-circular md-mode="indeterminate" ng-show="isLoadingCalendar" md-diameter="100" style="margin:auto;margin-top:20px;"></md-progress-circular>
         <md-list class="cal-listbabies" ng-show="!isLoadingCalendar">
           <div layout="row" ng-repeat="baby in class track by $index" ng-init="babyIndex = $index" class="cal-baby">
-            <div layout="column" flex="25" class="cal-name">
+            <div layout="column" flex={{calHeaderFlex}} class="cal-name">
               {{baby.nickname}}
               <!--              ******* *******-->
             </div>
