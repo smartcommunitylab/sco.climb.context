@@ -61,7 +61,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             title: 'Add Class',
             success: { label: 'Conferma', fn: 
                 function(value) {
-                    var id_addClass=document.getElementById("id_addClass").value;
+                    var id_addClass=document.getElementById("id_addClass").value.trim();
                     if(id_addClass && !$scope.currentSchool.classes.includes(id_addClass)){
                         $scope.currentSchool.classes.push(id_addClass)
                     }
