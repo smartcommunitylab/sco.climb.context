@@ -172,7 +172,7 @@ angular.module('MapsService', [])
     this.setTravelType = function(newTravelType)
     {
         travelType = newTravelType;
-        if((travelType === 'foot') || (travelType === 'car'))
+        if((travelType === 'foot') || (travelType === 'car') || (travelType === 'plane') || (travelType === 'boat'))
         {	
         	polyPath.setPath([]);  						// azzera la polyline della tratta in linea d'aria
         	directionsDisplay.setMap(map); 		// visualizza l'itinerario calcolato dal DirectionService
@@ -186,7 +186,7 @@ angular.module('MapsService', [])
     {
         if(prevPoiCoordinates !== null)     // se si tratta del 1° LEG ovviamente la polyline non viene disegnata
         {
-            if((travelType === 'foot') || (travelType === 'car'))       // calcola l'itinerario seguendo le strade
+            if((travelType === 'foot') || (travelType === 'car') || (travelType === 'plane') || (travelType === 'boat'))       // calcola l'itinerario seguendo le strade
             {
             		var mapTravelMode = (travelType === 'foot') ? 'WALKING' : 'DRIVING';
                 var getFormattedWaypoints = function() {
