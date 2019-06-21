@@ -24,7 +24,64 @@ angular.module('climbGame.controllers.calendar', [])
       
       $scope.lastLeg = {}
       $scope.isGameFinishedNotificationDisplaied = false;
-      
+      var modalitiesColor = [{
+        value: "A piedi",
+        color: 'bill'
+      }, {
+        value: "In bici",
+        color: 'ted'
+      }, {
+        value: "Scuolabus o trasporto pubblico",
+        color: 'ted'
+      }, {
+        value: "Pedibus",
+        color: 'ted'
+      }, {
+        value: "In auto fino alla piazzola di sosta",
+        color: 'ted'
+      }, {
+        value: "Car pooling",
+        color: 'ted'
+      }, {
+        value: "In auto fino a scuola",
+        color: 'ted'
+      }, {
+        value: "Assente",
+        color: 'ted'
+      }]
+      var returnModalitiesColor = function(type){
+        var color = ''
+        switch (type) {
+        case 'A piedi':
+          color = 'cal-foot-friend-col'
+          break
+        case "In bici":
+          color = 'cal-foot-adult-col'
+          break
+        case 'Scuolabus o trasporto pubblico':
+          color = 'cal-bus-col'
+          break
+        case 'In auto fino alla piazzola di sosta':
+          color = 'cal-car-square-col'
+          break
+        case 'Car pooling':
+          color = 'cal-car-school-col'
+          break
+        case 'In auto fino a scuola':
+          color = 'cal-car-school-col'
+          break
+        case 'Assente':
+          color = 'cal-away-col'
+          break
+        case 'Pedibus':
+          color = 'cal-pedibus-col'
+          break
+        default:
+          color = 'cal-away-col'
+          break
+        }
+        return color
+      }
       setTodayIndex()
       setClassSize()
       for (var i = 0; i < $scope.daysOfWeek; i++) {
@@ -62,6 +119,14 @@ angular.module('climbGame.controllers.calendar', [])
 	      )
 	      dataService.getStatus().then(
 	      	function(data) {
+            //check the number of modalities and set color
+            if(data.game.modalities.length > 0){
+              //create an array
+              console.log("modalities have and::",data.game.modalities)
+              $scope.mapModalities = data.game.modalities.map(val => ({ value: val, color: returnModalitiesColor(val) }));
+              console.log("mapResult::",$scope.mapModalities)
+            }
+            //check the Saturday
             if(data.game.daysOfWeek[5]){
               $scope.daysOfWeek = 6;
               $scope.calHeaderFlex=10;
@@ -129,8 +194,10 @@ angular.module('climbGame.controllers.calendar', [])
       */
 
       $scope.selectGeneralMean = function (mean) {
+        console.log("mean",mean)
         $scope.selectedMean = mean
-        $scope.selectedMeanColor = $scope.returnColorByType($scope.selectedMean)
+        $scope.selectedMeanColor = returnModalitiesColor($scope.selectedMean)
+        console.log("$scope.selectedMeanColor",$scope.selectedMeanColor)
       }
 
       $scope.selectBabyMean = function (index) {
@@ -149,7 +216,7 @@ angular.module('climbGame.controllers.calendar', [])
         if ($scope.todayData.babies[index].mean) {
           $scope.todayData.means[$scope.todayData.babies[index].mean]--
         }
-        $scope.todayData.babies[index].color = $scope.returnColorByType($scope.selectedMean)
+        $scope.todayData.babies[index].color = returnModalitiesColor($scope.selectedMean)
         $scope.todayData.babies[index].mean = $scope.selectedMean
         if (!$scope.todayData.means[$scope.todayData.babies[index].mean]) {
           $scope.todayData.means[$scope.todayData.babies[index].mean] = 0
@@ -503,8 +570,6 @@ angular.module('climbGame.controllers.calendar', [])
           }
         }
         $scope.isLoadingCalendar = false; 
-        console.log("calendar::",calendar)
-        console.log("$scope.weekData::",$scope.weekData)
       }
 
       /*
