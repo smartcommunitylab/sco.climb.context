@@ -56,7 +56,7 @@ angular.module('climbGame.controllers.calendar', [])
           color = 'cal-foot-friend-col'
           break
         case "In bici":
-          color = 'cal-foot-adult-col'
+          color = 'cal-bici-col'
           break
         case 'Scuolabus o trasporto pubblico':
           color = 'cal-bus-col'
@@ -65,7 +65,7 @@ angular.module('climbGame.controllers.calendar', [])
           color = 'cal-car-square-col'
           break
         case 'Car pooling':
-          color = 'cal-car-school-col'
+          color = 'cal-car-pooling-col'
           break
         case 'In auto fino a scuola':
           color = 'cal-car-school-col'
@@ -507,7 +507,7 @@ angular.module('climbGame.controllers.calendar', [])
             // merge it
             for (var k = 0; k < $scope.todayData.babies.length; k++) {
               if (calendar[i].modeMap[$scope.todayData.babies[k].childId]) {
-                $scope.todayData.babies[k].color = $scope.returnColorByType(calendar[i].modeMap[$scope.todayData.babies[k].childId])
+                $scope.todayData.babies[k].color = $scope.returnModalitiesColor(calendar[i].modeMap[$scope.todayData.babies[k].childId])
                 $scope.todayData.babies[k].mean = calendar[i].modeMap[$scope.todayData.babies[k].childId]
                 if (!$scope.todayData.means[$scope.todayData.babies[k].mean]) {
                   $scope.todayData.means[$scope.todayData.babies[k].mean] = 0
@@ -547,7 +547,7 @@ angular.module('climbGame.controllers.calendar', [])
                 $scope.weekData[i][property] = {
                   mean: calendar[k].modeMap[property]
                 }
-                $scope.weekData[i][property].color = $scope.returnColorByType(calendar[k].modeMap[property])
+                $scope.weekData[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMap[property])
                 if (!$scope.weekData[i][calendar[k].modeMap[property]]) {
                   $scope.weekData[i][calendar[k].modeMap[property]] = 0
                 }

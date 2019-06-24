@@ -460,7 +460,9 @@ md-tooltip.calendar-fab-tooltip  {
 .cal-foot-adult-col {
   background-color: #ffee58 !important;
 }
-
+.cal-bici-col{
+  background-color: #ff8800 !important;
+}
 .cal-bus-col {
   background-color: #66bb6a !important;
 }
@@ -473,6 +475,9 @@ md-tooltip.calendar-fab-tooltip  {
   background-color: #bdbdbd!important;
 }
 
+.cal-car-pooling-col{
+  background-color: #bdbdbd6c!important;
+}
 .cal-away-col {
   background-color: #f2f2f2 !important;
 }
