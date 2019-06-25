@@ -159,7 +159,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             					var modalityEntry = {
             							selected: false,
             							value: entry.value,
-            							active: entry.active
+            							active: entry.active,
+            							label: entry.label,
+            							category: entry.category,
+            							color: entry.color
             					}
             					if($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value)) {
             						modalityEntry.selected = true;
@@ -338,15 +341,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.calculateStudenti($scope.selectedClasses);
         }
         
-        $scope.modalityToggled = function() {
-        	$scope.selectedModalities = [];
-        	$scope.$parent.modalities.forEach(function (cl) {
-            if (cl.selected) {
-                $scope.selectedModalities.push(cl.value);
-            }
-        	});
-        }
-
         $scope.calculateStudenti = function (selectedClasses) {
             //call api and calculate nr.of studenti.
             DataService.getNrOfStudents($scope.currentGame.ownerId, $scope.currentGame.instituteId, $scope.currentGame.schoolId, selectedClasses).then(

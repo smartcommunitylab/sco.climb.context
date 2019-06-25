@@ -1,36 +1,60 @@
 {
 	"modalities": [
 		{
-			"value":"A piedi",
-			"active": true
+			"value":"foot",
+			"label": "A piedi",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"In bici",
-			"active": true
+			"value":"bicycle",
+			"label": "In bici",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"Scuolabus o trasporto pubblico",
-			"active": true
+			"value":"public-transport",
+			"label": "Scuolabus o trasporto pubblico",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"Pedibus",
-			"active": true
+			"value":"pedibus",
+			"label": "Pedibus",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"In auto fino alla piazzola di sosta",
-			"active": true
+			"value":"car-parking",
+			"label": "In auto fino alla piazzola di sosta",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"Car pooling",
-			"active": true
+			"value":"carpooling",
+			"label": "Car pooling",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"In auto fino a scuola",
-			"active": true
+			"value":"car-school",
+			"label": "In auto fino a scuola",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		},
 		{
-			"value":"Assente",
-			"active": true
+			"value":"absent",
+			"label": "Assente",
+			"active": true,
+			"category": "cat1",
+			"color": "#f48040"
 		}
 	]
 }
