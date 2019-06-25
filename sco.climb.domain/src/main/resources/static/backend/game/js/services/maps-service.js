@@ -112,7 +112,6 @@ angular.module('MapsService', [])
             },
             zoom: 13
         });
-
         var autocomplete = new google.maps.places.Autocomplete(document.getElementById(idHintField));        
         autocomplete.bindTo('bounds', map);
 
@@ -132,12 +131,11 @@ angular.module('MapsService', [])
 
         // Inizializza l'oggetto polyline per la tratta in linea d'aria, nel caso venga usata
         polyPath = new google.maps.Polyline({
-            geodesic: true,
+            // geodesic: true,
+            editable: true,
             strokeColor: '#2980b9',
             strokeOpacity: 1.0,
-            strokeWeight: 4,
-            map: map,
-            editable: false
+            strokeWeight: 4
         });
 
         // Inizializza il servizio per il rendering del percorso a piedi
@@ -172,7 +170,7 @@ angular.module('MapsService', [])
     this.setTravelType = function(newTravelType)
     {
         travelType = newTravelType;
-        if((travelType === 'foot') || (travelType === 'car') || (travelType === 'plane') || (travelType === 'boat'))
+        if((travelType === 'foot') || (travelType === 'car') )
         {	
         	polyPath.setPath([]);  						// azzera la polyline della tratta in linea d'aria
         	directionsDisplay.setMap(map); 		// visualizza l'itinerario calcolato dal DirectionService
@@ -186,9 +184,10 @@ angular.module('MapsService', [])
     {
         if(prevPoiCoordinates !== null)     // se si tratta del 1° LEG ovviamente la polyline non viene disegnata
         {
-            if((travelType === 'foot') || (travelType === 'car') || (travelType === 'plane') || (travelType === 'boat'))       // calcola l'itinerario seguendo le strade
+            // calcola l'itinerario seguendo le strade
+            if((travelType === 'foot') || (travelType === 'car') )
             {
-            		var mapTravelMode = (travelType === 'foot') ? 'WALKING' : 'DRIVING';
+            	var mapTravelMode = (travelType === 'foot') ? 'WALKING' : 'DRIVING';
                 var getFormattedWaypoints = function() {
                     var toRtn = [];
                     if (customWaypoints) {                        
@@ -220,8 +219,11 @@ angular.module('MapsService', [])
                         window.alert('Errore nella richiesta: ' + status);
                 });
             }
-            else        // calcolo della tratta in linea d'aria
+            else{        
+                // calcolo della tratta in linea d'aria
                 polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
+                polyPath.setMap(map);
+            }
         }
     };
     var computeTotalDistance = function(result) {
