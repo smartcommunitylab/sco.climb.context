@@ -221,8 +221,13 @@ angular.module('MapsService', [])
             }
             else{        
                 // calcolo della tratta in linea d'aria
-                polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
-                polyPath.setMap(map);
+                if(customWaypoints){
+                    polyPath.setPath(google.maps.geometry.encoding.decodePath(customWaypoints));
+                    polyPath.setMap(map);
+                }else{
+                    polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
+                    polyPath.setMap(map);
+                }
             }
         }
     };
@@ -263,17 +268,17 @@ angular.module('MapsService', [])
     };
     this.getCustomWayPoint = function() {
       	var customWayPoints = [];
-    		var directions = directionsDisplay.getDirections();
-    		if(directions) {
-    			var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
-          for (var i = 0; i < tmp.length; i++) {
-            var obj = {
-                latitude: tmp[i].location.lat(),
-                longitude: tmp[i].location.lng()
-            };
-            customWayPoints[i] = obj;
-          }
-    		}
+        var directions = directionsDisplay.getDirections();
+        if(directions) {
+            var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
+            for (var i = 0; i < tmp.length; i++) {
+                var obj = {
+                    latitude: tmp[i].location.lat(),
+                    longitude: tmp[i].location.lng()
+                };
+                customWayPoints[i] = obj;
+            }
+        }
         return customWayPoints;
     }
 
