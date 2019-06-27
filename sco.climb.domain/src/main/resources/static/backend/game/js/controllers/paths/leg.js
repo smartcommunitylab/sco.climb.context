@@ -74,7 +74,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
           } else {
           	drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
           			{lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
-                $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
+                $scope.leg.coordinates, $scope.leg.polyline, $scope.leg.transport);
           } 
         }
 
