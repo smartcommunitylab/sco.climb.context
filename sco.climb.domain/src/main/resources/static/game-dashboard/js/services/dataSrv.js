@@ -137,7 +137,26 @@ angular.module('climbGame.services.data', [])
       })
       return deferred.promise
     }
-
+    
+    //get modality map
+    dataService.getModalityMap = function () {
+      var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/modalitymap/',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
     // get calendar's days
     dataService.getCalendar = function (from, to) {
       var deferred = $q.defer()

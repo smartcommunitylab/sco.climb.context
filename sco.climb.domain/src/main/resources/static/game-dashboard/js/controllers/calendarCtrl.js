@@ -24,31 +24,7 @@ angular.module('climbGame.controllers.calendar', [])
       
       $scope.lastLeg = {}
       $scope.isGameFinishedNotificationDisplaied = false;
-      var modalitiesColor = [{
-        value: "A piedi",
-        color: 'bill'
-      }, {
-        value: "In bici",
-        color: 'ted'
-      }, {
-        value: "Scuolabus o trasporto pubblico",
-        color: 'ted'
-      }, {
-        value: "Pedibus",
-        color: 'ted'
-      }, {
-        value: "In auto fino alla piazzola di sosta",
-        color: 'ted'
-      }, {
-        value: "Car pooling",
-        color: 'ted'
-      }, {
-        value: "In auto fino a scuola",
-        color: 'ted'
-      }, {
-        value: "Assente",
-        color: 'ted'
-      }]
+      $scope.mapModalities=[];
       var returnModalitiesColor = function(type){
         var color = ''
         switch (type) {
@@ -121,10 +97,17 @@ angular.module('climbGame.controllers.calendar', [])
 	      	function(data) {
             //check the number of modalities and set color
             if(data.game.modalities.length > 0){
-              //create an array
-              console.log("modalities have and::",data.game.modalities)
-              $scope.mapModalities = data.game.modalities.map(val => ({ value: val, color: returnModalitiesColor(val) }));
-              console.log("mapResult::",$scope.mapModalities)
+              dataService.getModalityMap().then(function(modalityData){
+                //$scope.mapModalities = data.game.modalities.map(val => ({ value: val, color: returnModalitiesColor(val) }));
+                data.game.modalities.map(function(val){ 
+                  modalityData.modalities.find(function(currentValue){
+                    if(currentValue.value==val){
+                      $scope.mapModalities.push(currentValue)
+                    }
+                  })
+                });
+                console.log("mapResult::",$scope.mapModalities)
+              },function(er){console.log("error",er)});
             }
             //check the Saturday
             if(data.game.daysOfWeek[5]){
