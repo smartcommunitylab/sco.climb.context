@@ -17,7 +17,7 @@
     <!-- Classes -->
     <div class="col-lg-12 field">
         <p><b>Classes:</b></p>
-        <select ng-options="class for class in currentSchool.classes" ng-model="class" class="classSelector">
+        <select ng-options="class as class.name for class in currentSchool.classes" ng-model="class" class="classSelector">
         </select>
         <a class="btn btn-icon btn-standard" ng-click="addClasses(currentSchool)"><i class="glyphicon glyphicon-plus"></i></a>
         <a class="btn btn-icon btn-standard" ng-if="class" ng-click="removeClasses(currentSchool, class)"><i class="glyphicon glyphicon-trash"></i></a>

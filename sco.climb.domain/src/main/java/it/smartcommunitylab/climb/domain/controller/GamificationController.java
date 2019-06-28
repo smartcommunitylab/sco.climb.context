@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
+import it.smartcommunitylab.climb.contextstore.model.ClassRoom;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
@@ -447,7 +448,7 @@ public class GamificationController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/classes", method = RequestMethod.GET)
-	public @ResponseBody List<String> getClasses(
+	public @ResponseBody List<ClassRoom> getClasses(
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,

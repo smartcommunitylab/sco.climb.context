@@ -58,24 +58,29 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         
         createDialog('templates/modals/addClasses.html',{
             id : 'addClass-dialog',
-            title: 'Add Class',
+            title: 'Aggiungi una classe',
             success: { label: 'Conferma', fn: 
                 function(value) {
-                    var id_addClass=document.getElementById("id_addClass").value.trim();
-                    if(id_addClass && !$scope.currentSchool.classes.includes(id_addClass)){
-                        $scope.currentSchool.classes.push(id_addClass)
+                    var name_addClass=document.getElementById("name_addClass").value.trim();
+                    var yearOfStudy_addClass=document.getElementById("yearOfStudy_addClass").value.trim();
+                    if(name_addClass && !$scope.currentSchool.classes.some(item => item.name === name_addClass)) {
+                    	var newClass = {
+                    			name: name_addClass,
+                    			yearOfStudy: yearOfStudy_addClass
+                    	}
+                      $scope.currentSchool.classes.push(newClass)
                     }
                 } 
             }
         });
     }
-    $scope.removeClasses = function(currentSchool, classes){
+    $scope.removeClasses = function(currentSchool, classRoom){
         createDialog('templates/modals/removeClasses.html',{
             id : 'removeClass-dialog',
-            title: 'Add Class',
+            title: 'Rimuovi la classe',
             success: { label: 'Conferma', fn: 
                 function(value) {
-                    var index = $scope.currentSchool.classes.indexOf(classes);
+                    var index = $scope.currentSchool.classes.findIndex(item => item.name === classRoom.name);
                     $scope.currentSchool.classes.splice(index, 1);
                 } 
             }

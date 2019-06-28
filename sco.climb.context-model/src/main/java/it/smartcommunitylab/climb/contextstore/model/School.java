@@ -7,7 +7,8 @@ public class School extends BaseObject {
 	private String name;
 	private String address;
 	private String instituteId;
-	private List<String> classes = new ArrayList<>();
+	private List<ClassRoom> classes = new ArrayList<>();
+	private String type;
 	
 	public String getName() {
 		return name;
@@ -27,10 +28,16 @@ public class School extends BaseObject {
 	public void setInstituteId(String instituteId) {
 		this.instituteId = instituteId;
 	}
-	public List<String> getClasses() {
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public List<ClassRoom> getClasses() {
 		return classes;
 	}
-	public void setClasses(List<String> classes) {
+	public void setClasses(List<ClassRoom> classes) {
 		this.classes = classes;
 	}
 }
