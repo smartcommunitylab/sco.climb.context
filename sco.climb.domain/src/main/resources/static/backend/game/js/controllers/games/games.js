@@ -139,9 +139,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             classes.forEach(function (entry) {
                                 var classEntry = {
                                     value: false,
-                                    name: entry
+                                    name: entry.name
                                 };
-                                if ($scope.currentGame.classRooms && $scope.currentGame.classRooms.includes(entry)) {
+                                if ($scope.currentGame.classRooms && $scope.currentGame.classRooms.includes(entry.name)) {
                                     classEntry.value = true;
                                 }
                                 $scope.classes.push(classEntry);
