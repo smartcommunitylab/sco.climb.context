@@ -490,7 +490,8 @@ angular.module('climbGame.controllers.calendar', [])
             // merge it
             for (var k = 0; k < $scope.todayData.babies.length; k++) {
               if (calendar[i].modeMap[$scope.todayData.babies[k].childId]) {
-                $scope.todayData.babies[k].color = $scope.returnModalitiesColor(calendar[i].modeMap[$scope.todayData.babies[k].childId])
+                //$scope.todayData.babies[k].color = $scope.returnModalitiesColor(calendar[i].modeMap[$scope.todayData.babies[k].childId])
+                $scope.todayData.babies[k].color = $scope.mapModalities.find(val=>{return val.value==calendar[i].modeMap[$scope.todayData.babies[k].childId];}).color
                 $scope.todayData.babies[k].mean = calendar[i].modeMap[$scope.todayData.babies[k].childId]
                 if (!$scope.todayData.means[$scope.todayData.babies[k].mean]) {
                   $scope.todayData.means[$scope.todayData.babies[k].mean] = 0
@@ -516,7 +517,6 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function createWeekData(calendar) {
-        console.log("calendar::",calendar)
         $scope.weekData = []
         var k = 0
         for (var i = 0; i < $scope.daysOfWeek; i++) {
@@ -530,7 +530,8 @@ angular.module('climbGame.controllers.calendar', [])
                 $scope.weekData[i][property] = {
                   mean: calendar[k].modeMap[property]
                 }
-                $scope.weekData[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMap[property])
+                // $scope.weekData[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMap[property])
+                $scope.weekData[i][property].color = $scope.mapModalities.find(val=>{return val.value==calendar[k].modeMap[property];}).color
                 if (!$scope.weekData[i][calendar[k].modeMap[property]]) {
                   $scope.weekData[i][calendar[k].modeMap[property]] = 0
                 }
