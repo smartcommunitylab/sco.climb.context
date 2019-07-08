@@ -87,7 +87,11 @@
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
               <md-button ng-if="(!today(dayIndex) || weekData[dayIndex].closed) && !isCurrentEditDay(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.objectId].color"><span ng-if="weekData[dayIndex][baby.objectId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.objectId].mean=='absent'">A</span> </md-button>
-              <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed || (isCurrentEditDay(dayIndex))" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
+              <!-- <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed || (isCurrentEditDay(dayIndex))" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button> -->
+              <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed || (isCurrentEditDay(dayIndex))" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" style="background-color: {{isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : todayData.babies[babyIndex].color}}">
+                <span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span>
+                <span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span>
+              </md-button>
             </div>
           </div>
         </md-list>
@@ -147,7 +151,7 @@
 <div class="cal-fab">
   <md-fab-speed-dial md-open="cal.meanOpen" md-direction="up" class="md-scale">
     <md-fab-trigger>
-      <md-button aria-label="menu " class="md-fab " ng-class="selectedMeanColor">
+      <md-button aria-label="menu " class="md-fab "  style="background-color:{{selectedMeanColor}} !important;">
         <md-icon md-svg-src="img/ic_color.svg " class="menu-cal"></md-icon>
       </md-button>
     </md-fab-trigger>

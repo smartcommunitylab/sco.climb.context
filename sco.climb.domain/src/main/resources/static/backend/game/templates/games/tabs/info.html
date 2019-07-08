@@ -81,11 +81,13 @@
         </p>
         <div style="margin-left: 10px;" class="checkbox-inline">
             <label style="font-weight: normal">
-                <input type="checkbox" ng-click="toggleSelectedClasses()" ng-model="classesAllSelected">Seleziona tutto&ensp;|&ensp;</label>
+                <input type="checkbox" ng-click="toggleSelectedClasses()" ng-model="classesAllSelected">Seleziona tutto&ensp;|&ensp;
+            </label>
         </div>
         <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in classes">
             <label style="font-weight: normal">
-                <input type="checkbox" value="{{classe.value}}" ng-model="classe.value" ng-change="classToggled()">{{classe.name}}&ensp;</label>
+                <input type="checkbox" value="{{classe.value}}" ng-model="classe.value" ng-change="classToggled()">{{classe.name}}&ensp;
+            </label>
         </div>
     </div>
     <!-- Num studenti nelle classi -->

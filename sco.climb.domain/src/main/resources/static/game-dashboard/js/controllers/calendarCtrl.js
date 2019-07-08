@@ -89,7 +89,6 @@ angular.module('climbGame.controllers.calendar', [])
 	            $scope.classMap[players[i].objectId] = players[i]
 	          }
 	
-	          
 	        },
 	        function () {}
 	      )
@@ -177,10 +176,10 @@ angular.module('climbGame.controllers.calendar', [])
       */
 
       $scope.selectGeneralMean = function (mean) {
-        console.log("mean",mean)
-        $scope.selectedMean = mean
-        $scope.selectedMeanColor = returnModalitiesColor($scope.selectedMean)
-        console.log("$scope.selectedMeanColor",$scope.selectedMeanColor)
+        $scope.selectedMean = mean;
+        // $scope.selectedMeanColor = returnModalitiesColor($scope.selectedMean)
+        // $scope.selectedMeanColor = "'background-color':"+$scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color+" !important;";
+        $scope.selectedMeanColor = $scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color;
       }
 
       $scope.selectBabyMean = function (index) {
@@ -199,7 +198,8 @@ angular.module('climbGame.controllers.calendar', [])
         if ($scope.todayData.babies[index].mean) {
           $scope.todayData.means[$scope.todayData.babies[index].mean]--
         }
-        $scope.todayData.babies[index].color = returnModalitiesColor($scope.selectedMean)
+        // $scope.todayData.babies[index].color = returnModalitiesColor($scope.selectedMean)
+        $scope.todayData.babies[index].color = $scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color;
         $scope.todayData.babies[index].mean = $scope.selectedMean
         if (!$scope.todayData.means[$scope.todayData.babies[index].mean]) {
           $scope.todayData.means[$scope.todayData.babies[index].mean] = 0
