@@ -47,6 +47,16 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/header.html',
             controller: 'MainCtrl'
         })
+        .state('root.terms', {
+            url: '/terms',
+            templateUrl: 'templates/terms.html',
+            controller: 'MainCtrl'
+        })
+        .state('root.registration', {
+            url: '/registration',
+            templateUrl: 'templates/registration.html',
+            controller: 'MainCtrl'
+        })
         .state('root.paths-list', {
             url: '/paths-list',
             templateUrl: 'templates/paths/paths-list.html',

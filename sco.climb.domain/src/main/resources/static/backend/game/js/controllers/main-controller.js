@@ -1,6 +1,6 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $timeout, $location, DataService, $window, MainDataService, PermissionsService)
+.controller('MainCtrl', function ($scope, $rootScope, $timeout, $location, $state, DataService, $window, MainDataService, PermissionsService)
     {
         $rootScope.networkProblem = {
             status: false,
@@ -47,15 +47,46 @@ angular.module('consoleControllers.mainCtrl', [])
           $window.location.href = logoutUrl;
         }
 
-        MainDataService.getDomains().then(function (p) {
-            $scope.profile = p;
-            PermissionsService.setProfilePermissions($scope.profile.roles);
+        $scope.acceptTerms = function(){
+            console.log("Accept the terms")
+            //call api "/console/user/accept-terms" to accept
+            DataService.updateTerms();
+            MainDataService.getDomains().then(function (p) {
+                $scope.profile = p;
+                PermissionsService.setProfilePermissions($scope.profile.roles);
 
-            if ($scope.profile.ownerIds.length == 1) {
-                MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
-                $scope.selectedOwner = $scope.profile.ownerIds[0];
-                $scope.loadInstitutesList($scope.profile.ownerIds[0]);
+                if ($scope.profile.ownerIds.length == 1) {
+                    MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
+                    $scope.selectedOwner = $scope.profile.ownerIds[0];
+                    $scope.loadInstitutesList($scope.profile.ownerIds[0]);
+                }
+                $state.go('root.institutes-list');
+            });
+        }
+        $scope.goRegistration = function(){
+            console.log("go to the registration page")
+            $state.go('root.registration');
+        }
+        MainDataService.getDomains().then(function (p) {
+            //$scope.profile = p;
+            console.log("Profile:",p)
+            if(p.termUsage == null){
+                $state.go('root.registration');
+            }else if(p.termUsage.acceptance){
+                $scope.profile = p;
+                PermissionsService.setProfilePermissions($scope.profile.roles);
+
+                if ($scope.profile.ownerIds.length == 1) {
+                    MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
+                    $scope.selectedOwner = $scope.profile.ownerIds[0];
+                    $scope.loadInstitutesList($scope.profile.ownerIds[0]);
+                }
+            }else{
+                console.log("it's false and Profile:",p)
+                // window.location.href = '../game/templates/terms.html';
+                $state.go('root.terms');
             }
+            
         });
 
         $scope.loadInstitutesList = function(owner) {

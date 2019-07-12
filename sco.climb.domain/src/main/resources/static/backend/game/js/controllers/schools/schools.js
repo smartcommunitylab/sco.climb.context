@@ -29,7 +29,6 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
     $scope.initController = function() {
         if ($scope.currentSchool) { //edit school
-            console.log("currentSchool::",$scope.currentSchool)	
             $scope.saveData = DataService.editData;
             DataService.getData('route', 
                     $stateParams.idDomain, 
