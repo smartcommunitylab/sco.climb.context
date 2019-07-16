@@ -282,6 +282,10 @@ function ($q, $http, $rootScope, $timeout) {
             var url = baseUrl + "/console/user/accept-terms";
             return $http.post(url, null, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
           },           
+          registration: function (data) {
+            var url = baseUrl + "/public/api/registration";
+            return $http.post(url, data, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+          },
           updateTemplateToGame: function (template) {
               var url = baseUrl + '/api/game/conf/' + template.ownerId + '/' + template.pedibusGameId + '/template/' + template.objectId;
               return $http.put(url, null, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });

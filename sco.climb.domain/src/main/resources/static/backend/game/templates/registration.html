@@ -6,42 +6,46 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Please provide the information.</div>
                     <div class="panel-body">
+                        <!-- <form name="myForm"> -->
                         <div class="row">
-                                <form ng-app="myApp" ng-controller="validateCtrl" 
-                                name="myForm" novalidate>
-                                
-                                <p>Username:<br>
-                                <input type="text" name="user" ng-model="user" required>
-                                <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
-                                <span ng-show="myForm.user.$error.required">Username is required.</span>
-                                </span>
-                                </p>
-                                
-                                <p>Email:<br>
-                                <input type="email" name="email" ng-model="email" required>
-                                <span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
-                                <span ng-show="myForm.email.$error.required">Email is required.</span>
-                                <span ng-show="myForm.email.$error.email">Invalid email address.</span>
-                                </span>
-                                </p>
-                                
-                                <p>
-                                <input type="submit"
-                                ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||  
-                                myForm.email.$dirty && myForm.email.$invalid">
-                                </p>
-                                
-                                </form>
+                            <div class="col-md-2">
+                                <label>Name:</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" name="user" ng-model="normalProfile.name" required>
+                            </div>
                         </div>
+                        <div class="row"><div class="col-md-12"></div></div>
                         <div class="row">
-                            
+                            <div class="col-md-2">
+                                <label>Surname:</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" name="surname" ng-model="normalProfile.surname" required>
+                            </div>
                         </div>
+                        <div class="row"><div class="col-md-12"></div></div>
                         <div class="row">
-                            <!-- <div class="col-md-12 form-group"><button class="btn btn-primary">Accept</button></div> -->
+                            <div class="col-md-2">
+                                <label>Email:</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="email" name="email" ng-model="normalProfile.email" required>
+                            </div>
                         </div>
+                        <div class="row"><div class="col-md-12"></div></div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>Codice Fiscale:</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" name="cf" ng-model="normalProfile.cf" required>
+                            </div>
+                        </div>
+                        <!-- </form> -->
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-default" ng-click="goRegistration()">Registration</button>
+                        <button class="btn btn-primary" ng-disabled="(normalProfile.name && normalProfile.surname && normalProfile.email && normalProfile.cf) ?  false : true" ng-click="userRegistration()">Registration</button>
                     </div>
                 </div>
             </div>

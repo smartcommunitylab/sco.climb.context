@@ -47,6 +47,10 @@ angular.module('consoleControllers.mainCtrl', [])
           $window.location.href = logoutUrl;
         }
 
+        $scope.wantToRegistration=false;
+        $scope.$watch('wantToRegistration', function() {
+            console.log("wantToRegistration change")
+        });
         $scope.acceptTerms = function(){
             console.log("Accept the terms")
             //call api "/console/user/accept-terms" to accept
@@ -64,15 +68,33 @@ angular.module('consoleControllers.mainCtrl', [])
             });
         }
         $scope.goRegistration = function(){
-            console.log("go to the registration page")
+            $scope.wantToRegistration=true;
+            //$scope.$apply();
+            console.log("go to the registration page, and wantToRegistration",$scope.wantToRegistration)
+            
             $state.go('root.registration');
+        }
+        $scope.userRegistration = function(){
+            console.log("come in registration")
+            //call api "//public/api/registration" to registration
+            var data = {
+                "cf":"LBAMNR87L07Z249B",
+                "name":$scope.normalProfile.name,
+                "surname":$scope.normalProfile.surname,
+                "email":$scope.normalProfile.email
+            }
+            DataService.registration(data);
+            $scope.wantToRegistration=false;
+            //$scope.$apply();
         }
         MainDataService.getDomains().then(function (p) {
             //$scope.profile = p;
-            console.log("Profile:",p)
-            if(p.termUsage == null){
-                $state.go('root.registration');
-            }else if(p.termUsage.acceptance){
+            $scope.normalProfile = p;
+            console.log("Profile:",$scope.normalProfile,"wantToRegistration::",$scope.wantToRegistration)
+            // if(p.termUsage == null){
+            //     $state.go('root.registration');
+            // }else 
+            if(p.termUsage.acceptance){
                 $scope.profile = p;
                 PermissionsService.setProfilePermissions($scope.profile.roles);
 
@@ -81,10 +103,13 @@ angular.module('consoleControllers.mainCtrl', [])
                     $scope.selectedOwner = $scope.profile.ownerIds[0];
                     $scope.loadInstitutesList($scope.profile.ownerIds[0]);
                 }
-            }else{
+            }else if(!p.termUsage.acceptance && !$scope.wantToRegistration){
                 console.log("it's false and Profile:",p)
                 // window.location.href = '../game/templates/terms.html';
                 $state.go('root.terms');
+                // $state.go('root.registration');
+            }else{
+                $state.go('root.registration');
             }
             
         });
