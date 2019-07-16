@@ -301,6 +301,11 @@ function ($q, $http, $rootScope, $timeout) {
           getModalityMap: function() {
           	var fetchUrl = baseUrl + '/api/game/modalitymap';
           	return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+          },
+          getMultimediaContent: function(ownerId, pedibusGameId, itineraryId, legId) {
+          	var fetchUrl = baseUrl + '/api/game/' + ownerId + "/" + pedibusGameId + "/itinerary/" 
+          	+ itineraryId + "/leg/" + legId + "/content";
+          	return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
           }
       };
   }

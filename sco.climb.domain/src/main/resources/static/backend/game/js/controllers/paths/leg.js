@@ -31,12 +31,24 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
             
-            $scope.leg.externalUrls.forEach(element => {
-                if (element.type == 'video') {
-                    element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
-                }
-            });
-
+            //get multimedia content
+            DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, 
+            		$stateParams.idPath, $stateParams.idLeg).then(
+            		function(response) {
+            			if(response.data) {
+            				$scope.leg.externalUrls = response.data;
+            				$scope.leg.externalUrls.forEach(function(entry) {
+            					if (element.type == 'video') {
+                        element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+            					}
+            				});
+            			}
+            		},
+            		function(error) {
+            			alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
+            		}
+            );            
+            
             $scope.viewIconsModels.forEach(function(element) {
                 element.ticked = (element.value == $scope.leg.icon); 
             }, this);
@@ -57,7 +69,6 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 score: '',
                 polyline: '',         // NEW: stringa contenente il percorso compreso tra la tappa e la sua precedente (nel 1° LEG sarà vuota, ovviamente)
                 transport: 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
-                externalUrls: [],        // NEW: array di oggetti contenente gli elementi multimediali
                 position: $scope.legs.length
             };
             $scope.saveData = DataService.saveData;
