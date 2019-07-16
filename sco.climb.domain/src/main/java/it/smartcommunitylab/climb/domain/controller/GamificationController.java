@@ -44,16 +44,17 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
 import it.smartcommunitylab.climb.contextstore.model.ClassRoom;
+import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
-import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -72,7 +73,9 @@ import it.smartcommunitylab.climb.domain.model.gamification.PointConcept.PeriodI
 import it.smartcommunitylab.climb.domain.model.gamification.RuleDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 import it.smartcommunitylab.climb.domain.model.gamification.TeamDTO;
+import it.smartcommunitylab.climb.domain.model.multimedia.ContentOwner;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaResult;
 import it.smartcommunitylab.climb.domain.scheduled.SchedulerManager;
 import it.smartcommunitylab.climb.domain.storage.DocumentManager;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
@@ -475,13 +478,14 @@ public class GamificationController extends AuthController {
 		List<PedibusGameReport> result = new ArrayList<>();
 		List<PedibusGame> games = storage.getPedibusGames();
 		for(PedibusGame game : games) {
-			PedibusGameReport report = new PedibusGameReport(game);
 			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
 			if(itineraryList.size() > 0) {
 				PedibusItinerary pedibusItinerary = itineraryList.get(0);
 				List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
 						pedibusItinerary.getObjectId());
 				if(legs.size() > 0) {
+					PedibusGameReport report = new PedibusGameReport(game);
+					report.setItineraryId(pedibusItinerary.getObjectId());
 					report.setLegs(legs.size());
 					report.setFirstLeg(legs.get(0).getName());
 					report.setFinalLeg(legs.get(legs.size() - 1).getName());
@@ -635,19 +639,20 @@ public class GamificationController extends AuthController {
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
 		storage.savePedibusItineraryLeg(leg, ownerId, false);
-		for (Link link : leg.getExternalUrls()) {
-			MultimediaContent content = new MultimediaContent();
-			content.setOwnerId(ownerId);
-			content.setInstituteId(game.getInstituteId());
-			content.setSchoolId(game.getSchoolId());
-			content.setItineraryId(itineraryId);
-			content.setName(link.getName());
-			content.setLegName(leg.getName());
-			content.setType(link.getType());
-			content.setLink(link.getLink());
-			content.setGeocoding(leg.getGeocoding());
-			storage.saveMultimediaContent(content);
-		}
+		//TODO manage multimedia content
+//		for (Link link : leg.getExternalUrls()) {
+//			MultimediaContent content = new MultimediaContent();
+//			content.setOwnerId(ownerId);
+//			content.setInstituteId(game.getInstituteId());
+//			content.setSchoolId(game.getSchoolId());
+//			content.setItineraryId(itineraryId);
+//			content.setName(link.getName());
+//			content.setLegName(leg.getName());
+//			content.setType(link.getType());
+//			content.setLink(link.getLink());
+//			content.setGeocoding(leg.getGeocoding());
+//			storage.saveMultimediaContent(content);
+//		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
 		}
@@ -679,19 +684,6 @@ public class GamificationController extends AuthController {
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
 		storage.savePedibusItineraryLeg(leg, ownerId, true);
-		for (Link link : leg.getExternalUrls()) {
-			MultimediaContent content = new MultimediaContent();
-			content.setOwnerId(ownerId);
-			content.setInstituteId(game.getInstituteId());
-			content.setSchoolId(game.getSchoolId());
-			content.setItineraryId(itineraryId);
-			content.setName(link.getName());
-			content.setLegName(leg.getName());
-			content.setType(link.getType());
-			content.setLink(link.getLink());
-			content.setGeocoding(leg.getGeocoding());
-			storage.saveMultimediaContent(content);
-		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
 		}
@@ -769,19 +761,20 @@ public class GamificationController extends AuthController {
 					leg.setScore(sumValue);
 				}
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
-				for (Link link : leg.getExternalUrls()) {
-					MultimediaContent content = new MultimediaContent();
-					content.setOwnerId(ownerId);
-					content.setInstituteId(game.getInstituteId());
-					content.setSchoolId(game.getSchoolId());
-					content.setItineraryId(itineraryId);
-					content.setName(link.getName());
-					content.setLegName(leg.getName());
-					content.setType(link.getType());
-					content.setLink(link.getLink());
-					content.setGeocoding(leg.getGeocoding());
-					storage.saveMultimediaContent(content);
-				}
+				//TODO manage multimedia content
+//				for (Link link : leg.getExternalUrls()) {
+//					MultimediaContent content = new MultimediaContent();
+//					content.setOwnerId(ownerId);
+//					content.setInstituteId(game.getInstituteId());
+//					content.setSchoolId(game.getSchoolId());
+//					content.setItineraryId(itineraryId);
+//					content.setName(link.getName());
+//					content.setLegName(leg.getName());
+//					content.setType(link.getType());
+//					content.setLink(link.getLink());
+//					content.setGeocoding(leg.getGeocoding());
+//					storage.saveMultimediaContent(content);
+//				}
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
@@ -792,49 +785,119 @@ public class GamificationController extends AuthController {
 		return legs;
 	}
 
-	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/links", method = RequestMethod.PUT)
-	public @ResponseBody List<Link> updatePedibusItineraryLegLinks(
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content", 
+			method = RequestMethod.POST)
+	public @ResponseBody MultimediaContent addMultimediaContent(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
 			@PathVariable String itineraryId,
 			@PathVariable String legId,
-			@RequestBody List<Link> links, 
+			@RequestBody MultimediaContent content, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_ADD, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
 		PedibusItineraryLeg leg = storage.getPedibusItineraryLeg(ownerId, legId);
 		if(leg == null) {
 			throw new EntityNotFoundException("pedibus itinerary leg not found");
-		}		
+		}
+		Institute institute = storage.getInstitute(ownerId, game.getInstituteId());
+		School school = storage.getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+		PedibusItinerary itinerary = storage.getPedibusItinerary(ownerId, pedibusGameId, itineraryId);
+		User user = getUserByEmail(request);
+		ContentOwner contentOwner = new ContentOwner();
+		contentOwner.setName(user.getName() + " " + user.getSurname());
+		contentOwner.setUserId(user.getObjectId());
+		
+		content.setObjectId(null);
+		content.setOwnerId(ownerId);
+		content.setInstituteId(institute.getObjectId());
+		content.setInstituteName(institute.getName());
+		content.setSchoolId(school.getObjectId());
+		content.setSchoolName(school.getName());
+		content.setItineraryId(itineraryId);
+		content.setItineraryName(itinerary.getName());
+		content.setLegId(legId);
+		content.setLegName(leg.getName());
+		content.setPublished(game.isDeployed());
+		content.setContentOwner(contentOwner);
+		storage.saveMultimediaContent(content);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("addMultimediaContent[%s]: %s", ownerId, itineraryId));
+		}
+		return content;
+	}
+
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content/{contentId}", 
+			method = RequestMethod.PUT)
+	public @ResponseBody MultimediaContent updateMultimediaContent(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			@PathVariable String contentId,
+			@RequestBody MultimediaContent content, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
 				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		storage.updatePedibusItineraryLegLink(ownerId, legId, links);
-		for (Link link : links) {
-			MultimediaContent content = new MultimediaContent();
-			content.setOwnerId(ownerId);
-			content.setInstituteId(game.getInstituteId());
-			content.setSchoolId(game.getSchoolId());
-			content.setItineraryId(itineraryId);
-			content.setName(link.getName());
-			content.setLegName(leg.getName());
-			content.setType(link.getType());
-			content.setLink(link.getLink());
-			content.setGeocoding(leg.getGeocoding());
-			storage.saveMultimediaContent(content);
-		}
+		MultimediaContent contentDb = storage.getMultimediaContent(ownerId, contentId);
+		if(contentDb == null) {
+			throw new EntityNotFoundException("multimedia content not found");
+		}	
+		content.setObjectId(contentId);
+		storage.saveMultimediaContent(content);
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("updatePedibusItineraryLegLinks[%s]: %s", ownerId, itineraryId));
+			logger.info(String.format("updateMultimediaContent[%s]: %s", ownerId, itineraryId));
 		}
-		return links;
+		return content;
 	}
 	
-	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/link/file", method = RequestMethod.POST)
-	public @ResponseBody Link uploadPedibusItineraryLegLinkFile(
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content/{contentId}", 
+			method = RequestMethod.DELETE)
+	public @ResponseBody MultimediaContent deleteMultimediaContent(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			@PathVariable String contentId,
+			@RequestBody MultimediaContent content, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_DELETE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		MultimediaContent contentDb = storage.getMultimediaContent(ownerId, contentId);
+		if(contentDb == null) {
+			throw new EntityNotFoundException("multimedia content not found");
+		}
+		storage.removeMultimediaContent(ownerId, contentId);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("deleteMultimediaContent[%s]: %s", ownerId, contentId));
+		}
+		return contentDb;
+	}
+
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/file", 
+			method = RequestMethod.POST)
+	public @ResponseBody String uploadPedibusItineraryLegLinkFile(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
 			@PathVariable String itineraryId,
@@ -858,12 +921,9 @@ public class GamificationController extends AuthController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("uploadPedibusItineraryLegLinkFile: %s - %s - %s", ownerId, legId, url));
 		}
-		Link link = new Link();
-		link.setLink(url);
-		return link;
+		return url;
 	}
 
-	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(
 			@PathVariable String ownerId, 
@@ -919,6 +979,73 @@ public class GamificationController extends AuthController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 			return null;
 		}
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content", 
+			method = RequestMethod.GET)
+	public @ResponseBody List<MultimediaContent> getMultimediaContent(
+			@PathVariable String ownerId,
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		List<MultimediaContent> result = storage.getMultimediaContentByLeg(ownerId, legId);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getMultimediaContent[%s]: %s", ownerId, result.size()));
+		}		
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/multimedia", method = RequestMethod.GET)
+	public @ResponseBody List<MultimediaResult> searchContent(
+			@RequestParam (required=false) String text,
+			@RequestParam (required=false) Double lat,
+			@RequestParam (required=false) Double lng,
+			@RequestParam (required=false) Double distance,
+			@RequestParam (required=false) String schoolId,
+			@RequestParam (required=false) String type,
+			@RequestParam (required=false) List<String> tags,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		List<MultimediaResult> result = new ArrayList<MultimediaResult>();
+		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, distance, schoolId, type, tags);
+		Map<String, MultimediaContent> contentMap = new HashMap<>();
+		Map<String, List<MultimediaContent>> contentMapRef = new HashMap<>();
+		for(MultimediaContent content : list) {
+			if(!contentMap.containsKey(content.getObjectId())) {
+				contentMap.put(content.getObjectId(), content);
+			}
+			if(content.getContentReferenceId() != null) {
+				if(!contentMapRef.containsKey(content.getContentReferenceId())) {
+					contentMapRef.put(content.getContentReferenceId(), 
+							new ArrayList<MultimediaContent>());
+				}
+				contentMapRef.get(content.getContentReferenceId()).add(content);
+			}
+		}
+		for(String contentId : contentMapRef.keySet()) {
+			MultimediaContent content = contentMap.get(contentId);
+			if(content == null) {
+				content = storage.getMultimediaContent(contentId);
+			}
+			MultimediaResult multimediaResult = new MultimediaResult();
+			multimediaResult.setReferenceContent(content);
+			multimediaResult.setContents(contentMapRef.get(contentId));
+			result.add(multimediaResult);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchContent:%s", result.size()));
+		}
+		return result;
 	}
 
 	@RequestMapping(value = "/api/game/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/status", 
@@ -1077,72 +1204,63 @@ public class GamificationController extends AuthController {
 		return game;
 	}
 	
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/clone/{pedibusGameId}", method = RequestMethod.GET)
-	public @ResponseBody PedibusGame cloneGame(			
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/{pedibusGameId}/clone/{itineraryId}", 
+			method = RequestMethod.GET)
+	public @ResponseBody PedibusItinerary cloneItinerary(			
 			@PathVariable String ownerId, 
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
 			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, 
-				null, null, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_ADD, request)) {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		PedibusGame gameToClone = storage.getPedibusGame(pedibusGameId);
-		if(gameToClone == null) {
-			throw new EntityNotFoundException("game to clone not found");
+		PedibusGame game = storage.getPedibusGame(pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
 		}
-		List<PedibusItineraryLeg> legsToClone = new ArrayList<>();
-		PedibusItinerary itineraryToClone = null;
-		List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(gameToClone.getOwnerId(), 
-				gameToClone.getObjectId());
-		if(itineraryList.size() > 0) {
-			itineraryToClone = itineraryList.get(0);
-			legsToClone = storage.getPedibusItineraryLegsByGameId(gameToClone.getOwnerId(), 
-					gameToClone.getObjectId(), itineraryToClone.getObjectId());
+		long count = storage.getPedibusItineraryNumByGameId(ownerId, pedibusGameId);
+		if(count > 0) {
+			throw new InvalidParametersException("game itinerary already exists");
 		}
-		//create game
-		PedibusGame game = new PedibusGame();
-		game.setOwnerId(ownerId);
-		game.setInstituteId(instituteId);
-		game.setSchoolId(schoolId);
-		game.setGameName(gameToClone.getGameName() + " - clone");
-		storage.savePedibusGame(game, ownerId, false);
-		if(itineraryToClone!= null) {
-			//create itinerary
-			PedibusItinerary itinerary = new PedibusItinerary();
-			itinerary.setOwnerId(ownerId);
-			itinerary.setPedibusGameId(game.getObjectId());
-			itinerary.setObjectId(Utils.getUUID());
-			itinerary.setName(itineraryToClone.getName() + " - clone");
-			itinerary.setDescription(itineraryToClone.getDescription());
-			storage.savePedibusItinerary(itinerary);
-			//create legs
-			for(PedibusItineraryLeg legToClone : legsToClone) {
-				PedibusItineraryLeg leg = new PedibusItineraryLeg();
-				leg.setOwnerId(ownerId);
-				leg.setPedibusGameId(game.getObjectId());
-				leg.setItineraryId(itinerary.getObjectId());
-				leg.setName(legToClone.getName());
-				leg.setDescription(legToClone.getDescription());
-				leg.setBadgeId(legToClone.getBadgeId());
-				leg.setPosition(legToClone.getPosition());
-				leg.setGeocoding(legToClone.getGeocoding());
-				leg.setExternalUrls(legToClone.getExternalUrls());
-				leg.setImageUrl(legToClone.getImageUrl());
-				leg.setPolyline(legToClone.getPolyline());
-				leg.setScore(legToClone.getScore());
-				leg.setTransport(legToClone.getTransport());
-				leg.setIcon(legToClone.getIcon());
-				leg.setAdditionalPoints(legToClone.getAdditionalPoints());
-				storage.savePedibusItineraryLeg(leg, ownerId, false);
-			}
+		PedibusItinerary itineraryToClone = storage.getPedibusItinerary(itineraryId);
+		if(itineraryToClone == null) {
+			throw new EntityNotFoundException("itinerary to clone not found");
+		}
+		List<PedibusItineraryLeg> legsToClone = storage.getPedibusItineraryLegsByItineraryId(itineraryId);
+		//create itinerary
+		PedibusItinerary itinerary = new PedibusItinerary();
+		itinerary.setOwnerId(ownerId);
+		itinerary.setPedibusGameId(game.getObjectId());
+		itinerary.setObjectId(Utils.getUUID());
+		itinerary.setName(itineraryToClone.getName() + " - clone");
+		itinerary.setDescription(itineraryToClone.getDescription());
+		storage.savePedibusItinerary(itinerary);
+		//create legs
+		for(PedibusItineraryLeg legToClone : legsToClone) {
+			PedibusItineraryLeg leg = new PedibusItineraryLeg();
+			leg.setOwnerId(ownerId);
+			leg.setPedibusGameId(game.getObjectId());
+			leg.setItineraryId(itinerary.getObjectId());
+			leg.setName(legToClone.getName());
+			leg.setDescription(legToClone.getDescription());
+			leg.setPosition(legToClone.getPosition());
+			leg.setGeocoding(legToClone.getGeocoding());
+			leg.setImageUrl(legToClone.getImageUrl());
+			leg.setPolyline(legToClone.getPolyline());
+			leg.setScore(legToClone.getScore());
+			leg.setTransport(legToClone.getTransport());
+			leg.setIcon(legToClone.getIcon());
+			leg.setAdditionalPoints(legToClone.getAdditionalPoints());
+			storage.savePedibusItineraryLeg(leg, ownerId, false);
 		}
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("cloneGame[%s]: %s", ownerId, pedibusGameId));
+			logger.info(String.format("cloneItinerary[%s]: %s - %s", ownerId, pedibusGameId, itineraryId));
 		}
-		return game;
+		return itinerary;
 	}
 	
 	@RequestMapping(value = "/api/game/{shortName}", method = RequestMethod.GET)
@@ -1281,7 +1399,7 @@ public class GamificationController extends AuthController {
 		**/
 	}
 	
-	@ExceptionHandler(EntityNotFoundException.class)
+	@ExceptionHandler({EntityNotFoundException.class, InvalidParametersException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {

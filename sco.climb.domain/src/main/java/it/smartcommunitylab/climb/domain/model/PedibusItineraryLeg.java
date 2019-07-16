@@ -8,12 +8,10 @@ import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 public class PedibusItineraryLeg extends BaseObject implements Comparable<PedibusItineraryLeg> {
 	private String pedibusGameId;
 	private String itineraryId;
-	private String badgeId;
 	private String name;
 	private String description;
 	private int position;
 	private double[] geocoding; // lon/lat (for mongodb)
-	private List<Link> externalUrls = new ArrayList<Link>();
 	private String imageUrl;
 	private String polyline;
 	private int score;
@@ -57,12 +55,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	public void setScore(int points) {
 		this.score = points;
 	}
-	public String getBadgeId() {
-		return badgeId;
-	}
-	public void setBadgeId(String badgeId) {
-		this.badgeId = badgeId;
-	}
 	
 	@Override
 	public int compareTo(PedibusItineraryLeg o) {
@@ -79,12 +71,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setTransport(String transport) {
 		this.transport = transport;
-	}
-	public List<Link> getExternalUrls() {
-		return externalUrls;
-	}
-	public void setExternalUrls(List<Link> externalUrls) {
-		this.externalUrls = externalUrls;
 	}
 	public String getItineraryId() {
 		return itineraryId;

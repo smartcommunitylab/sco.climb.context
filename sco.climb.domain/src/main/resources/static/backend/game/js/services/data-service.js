@@ -205,9 +205,9 @@ function ($q, $http, $rootScope, $timeout) {
                   {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
             	);
             },
-            cloneGame: function(ownerId, instituteId, schoolId, pedibusGameId) {
+            cloneGame: function(ownerId, instituteId, schoolId, pedibusGameId, itineraryId) {
             	return $http.get(baseUrl + "/api/game/" + ownerId + "/" + instituteId 
-            			+ "/" + schoolId + "/clone/" + pedibusGameId, 
+            			+ "/" + schoolId + "/" + pedibusGameId + "/clone/" + itineraryId, 
                   {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
             	);
             },

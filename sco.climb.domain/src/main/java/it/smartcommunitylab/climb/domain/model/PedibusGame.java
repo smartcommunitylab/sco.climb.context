@@ -17,7 +17,6 @@ public class PedibusGame extends BaseObject {
 	private String gameId;
 	private String gameName;
 	private String gameDescription;
-	private String gameOwner;
 	private Date from;
 	private Date to;
 	private String globalTeam;
@@ -68,14 +67,6 @@ public class PedibusGame extends BaseObject {
 
 	public void setGameName(String gameName) {
 		this.gameName = gameName;
-	}
-
-	public String getGameOwner() {
-		return gameOwner;
-	}
-
-	public void setGameOwner(String gameOwner) {
-		this.gameOwner = gameOwner;
 	}
 
 	public Date getFrom() {

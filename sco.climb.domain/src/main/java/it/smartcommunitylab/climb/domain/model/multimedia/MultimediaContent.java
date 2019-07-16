@@ -1,16 +1,31 @@
 package it.smartcommunitylab.climb.domain.model.multimedia;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 public class MultimediaContent extends BaseObject {
 	private String instituteId;
+	private String instituteName;
 	private String schoolId;
+	private String schoolName;
 	private String itineraryId;
-	private String name;
+	private String itineraryName;
+	private String legId;
 	private String legName;
+	private String name;
 	private String link;
 	private String type;
 	private double[] geocoding; // lon/lat (for mongodb)
+	private List<String> tags = new ArrayList<>();
+	private boolean sharable = true;
+	private boolean disabled = false;
+	private boolean published = false;
+	private String previewUrl;
+	private ContentOwner contentOwner;
+	private String contentReferenceId;
+	private int position;
 	
 	public String getInstituteId() {
 		return instituteId;
@@ -59,6 +74,78 @@ public class MultimediaContent extends BaseObject {
 	}
 	public void setLegName(String legName) {
 		this.legName = legName;
+	}
+	public List<String> getTags() {
+		return tags;
+	}
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+	public boolean isSharable() {
+		return sharable;
+	}
+	public void setSharable(boolean sharable) {
+		this.sharable = sharable;
+	}
+	public boolean isDisabled() {
+		return disabled;
+	}
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	public boolean isPublished() {
+		return published;
+	}
+	public void setPublished(boolean published) {
+		this.published = published;
+	}
+	public String getPreviewUrl() {
+		return previewUrl;
+	}
+	public void setPreviewUrl(String previewUrl) {
+		this.previewUrl = previewUrl;
+	}
+	public ContentOwner getContentOwner() {
+		return contentOwner;
+	}
+	public void setContentOwner(ContentOwner contentOwner) {
+		this.contentOwner = contentOwner;
+	}
+	public String getContentReferenceId() {
+		return contentReferenceId;
+	}
+	public void setContentReferenceId(String contentReferenceId) {
+		this.contentReferenceId = contentReferenceId;
+	}
+	public String getInstituteName() {
+		return instituteName;
+	}
+	public void setInstituteName(String instituteName) {
+		this.instituteName = instituteName;
+	}
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+	public String getItineraryName() {
+		return itineraryName;
+	}
+	public void setItineraryName(String itineraryName) {
+		this.itineraryName = itineraryName;
+	}
+	public String getLegId() {
+		return legId;
+	}
+	public void setLegId(String legId) {
+		this.legId = legId;
+	}
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
 }

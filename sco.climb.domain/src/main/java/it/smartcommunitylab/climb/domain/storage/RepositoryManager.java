@@ -42,8 +42,8 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.Avatar;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
-import it.smartcommunitylab.climb.domain.model.Link;
 import it.smartcommunitylab.climb.domain.model.ModalityMap;
+import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.NodeState;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -699,6 +699,17 @@ public class RepositoryManager {
 		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
 	}		
 	
+	public List<PedibusItineraryLeg> getPedibusItineraryLegsByItineraryId(String itineraryId) {
+		Query query = new Query(new Criteria("itineraryId").is(itineraryId))
+				.with(new Sort(Sort.Direction.ASC, "position"));
+		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
+	}
+	
+	public PedibusItinerary getPedibusItinerary(String itineraryId) {
+		Query query = new Query(new Criteria("objectId").is(itineraryId));
+		return mongoTemplate.findOne(query, PedibusItinerary.class);		
+	}
+	
 	public PedibusItinerary getPedibusItinerary(String ownerId, String pedibusGameId, String itineraryId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
 				.and("pedibusGameId").is(pedibusGameId)
@@ -709,6 +720,11 @@ public class RepositoryManager {
 	public List<PedibusItinerary> getPedibusItineraryByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId));
 		return mongoTemplate.find(query, PedibusItinerary.class);
+	}
+	
+	public long getPedibusItineraryNumByGameId(String ownerId, String pedibusGameId) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId));
+		return mongoTemplate.count(query, PedibusItinerary.class);
 	}
 	
 	public PedibusPlayer getPedibusPlayer(String ownerId, String instituteId, String schoolId,
@@ -911,7 +927,6 @@ public class RepositoryManager {
 			update.set("gameId", game.getGameId());
 			update.set("gameName", game.getGameName());
 			update.set("gameDescription", game.getGameDescription());
-			update.set("gameOwner", game.getGameOwner());
 			update.set("from", game.getFrom());
 			update.set("to", game.getTo());
 			update.set("globalTeam", game.getGlobalTeam());
@@ -1079,12 +1094,10 @@ public class RepositoryManager {
 			mongoTemplate.save(leg);
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("badgeId", leg.getBadgeId());
 			update.set("name", leg.getName());
 			update.set("description", leg.getDescription());
 			update.set("position", leg.getPosition());
 			update.set("geocoding", leg.getGeocoding());
-			update.set("externalUrls", leg.getExternalUrls());
 			update.set("imageUrl", leg.getImageUrl());
 			update.set("polyline", leg.getPolyline());
 			update.set("score", leg.getScore());
@@ -1189,6 +1202,12 @@ public class RepositoryManager {
 				.and("objectId").is(schoolId)
 				.and("ownerId").is(ownerId));
 		return mongoTemplate.findOne(query, School.class);		
+	}
+	
+	public Institute getInstitute(String ownerId, String instituteId) {
+		Query query = new Query(Criteria.where("objectId").is(instituteId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, Institute.class);		
 	}
 	
 	public void addUser(User user) {
@@ -1337,16 +1356,50 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("lastUpdate", now);
 			update.set("name", content.getName());
-			update.set("legName", content.getLegName());
+			update.set("link", content.getLegName());
 			update.set("type", content.getType());
 			update.set("geocoding", content.getGeocoding());
+			update.set("tags", content.getTags());
+			update.set("sharable", content.isSharable());
+			update.set("previewUrl", content.getPreviewUrl());
+			update.set("position", content.getPosition());
 			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
 		}
-		
+	}
+	
+	public void removeMultimediaContent(String ownerId, String contentId) {
+		Query query = new Query(new Criteria("objectId").is(contentId)
+				.and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, MultimediaContent.class);
+	}
+	
+	public MultimediaContent getMultimediaContent(String ownerId, String contentId) {
+		Query query = new Query(new Criteria("objectId").is(contentId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, MultimediaContent.class);
 	}
 
+	public MultimediaContent getMultimediaContent(String contentId) {
+		Query query = new Query(new Criteria("objectId").is(contentId));
+		return mongoTemplate.findOne(query, MultimediaContent.class);
+	}
+	
+	public List<MultimediaContent> getMultimediaContentByLeg(String ownerId, String itineraryLegId) {
+		Query query = new Query(Criteria.where("itineraryLegId").is(itineraryLegId)
+				.and("ownerId").is(ownerId));
+		query.with(new Sort(Sort.Direction.ASC, "position"));
+		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
+		return result;
+	}
+
+	public List<MultimediaContent> getMultimediaContentByReferenceId(String contentId) {
+		Query query = new Query(Criteria.where("contentReferenceId").is(contentId));
+		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
+		return result;
+	}
+	
 	public List<MultimediaContent> searchMultimediaContent(String text, Double lat, Double lng,
-			Double distance, String schoolId, String type) {
+			Double distance, String schoolId, String type, List<String> tags) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if(Utils.isNotEmpty(text)) {
@@ -1368,23 +1421,15 @@ public class RepositoryManager {
 		if(Utils.isNotEmpty(type)) {
 			criteria = criteria.and("type").is(type);
 		}
+		if((tags != null) && (tags.size() > 0)) {
+			criteria = criteria.and("tags").in(tags);
+		}
+		criteria = criteria.and("sharable").is(true);
+		criteria = criteria.and("disabled").is(false);
 		query.addCriteria(criteria);
-		query.limit(200);
+		query.limit(500);
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
-	}
-	
-	public void updatePedibusItineraryLegLink(String ownerId, String legId, List<Link> links) 
-			throws EntityNotFoundException {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("objectId").is(legId));
-		PedibusItineraryLeg entityDB = mongoTemplate.findOne(query, PedibusItineraryLeg.class);
-		if(entityDB == null) {
-			throw new EntityNotFoundException(String.format("PedibusItineraryLeg with id %s not found", legId));
-		}
-		Update update = new Update();
-		update.set("lastUpdate", new Date());
-		update.set("externalUrls", links);
-		mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 	}
 	
 	public Map<String, MonitoringPlay> getMonitoringPlayByGameId(String ownerId, String pedibusGameId) {
@@ -1463,5 +1508,13 @@ public class RepositoryManager {
 	
 	public void saveModalityMap(ModalityMap modalityMap) {
 		mongoTemplate.save(modalityMap);
+	}
+	
+	public MultimediaContentTags getMultimediaContentTags() {
+		return mongoTemplate.findOne(new Query(), MultimediaContentTags.class);
+	}
+	
+	public void saveMultimediaContentTags(MultimediaContentTags mct) {
+		mongoTemplate.save(mct);
 	}
 }

@@ -1,6 +1,6 @@
-angular.module('consoleControllers.gameclone', ['ngSanitize'])
+angular.module('consoleControllers.pathclone', ['ngSanitize'])
 
-    .controller('GameCloneCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService, createDialog) {
+    .controller('PathCloneCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService, createDialog) {
 
         $scope.initController = function () {
             DataService.getData('gamereports').then(function (response) {
@@ -16,10 +16,10 @@ angular.module('consoleControllers.gameclone', ['ngSanitize'])
               success: {
                   label: 'Conferma', fn: function () {
                       DataService.cloneGame($stateParams.idDomain, $stateParams.idInstitute,
-                      		$stateParams.idSchool, game.objectId).then(
+                      		$stateParams.idSchool, $stateParams.idGame, game.itineraryId).then(
                           function (response) {
                               alert("clone gioco effettuato con successo.");
-                              $scope.$parent.games.push(response.data);
+                              $scope.$parent.paths.push(response.data);
                               $scope.back();
                           }, function (error) {
                               alert("Errore nella richiesta:" + error.data.errorMsg);
@@ -33,7 +33,7 @@ angular.module('consoleControllers.gameclone', ['ngSanitize'])
         
         // Exit without saving changes
         $scope.back = function () {
-            $state.go('root.games-list'); //$window.history.back();
+            $state.go('root.paths-list'); //$window.history.back();
         };
 
     });

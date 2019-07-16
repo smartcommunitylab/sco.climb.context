@@ -15,7 +15,7 @@ public class User {
 	private String email;
 	private String cf;
 	private Map<String, List<Authorization>> roles = new HashMap<String, List<Authorization>>();
-    private TermUsage termUsage = new TermUsage();
+  private TermUsage termUsage = new TermUsage();
 	
 	public String getObjectId() {
 		return objectId;

@@ -3,7 +3,6 @@
 <div ng-if="$parent.selectedOwner && $parent.selectedInstitute && $parent.selectedSchool">
     <div class="col-lg-12 buttons-tab">
         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditGame()">Crea nuovo</a>
-        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//gameclone" class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditGame()">Clona gioco</a>
     </div>
 
     <div class="col-md-10 col-md-offset-1 search-container">

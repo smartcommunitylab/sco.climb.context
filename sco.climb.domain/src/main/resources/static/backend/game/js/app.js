@@ -3,10 +3,10 @@ var consoleApp = angular.module('console', ['ui.bootstrap',
 'ui.sortable',
 'consoleControllers.mainCtrl',
 'consoleControllers.paths',
+'consoleControllers.pathclone',
 'consoleControllers.leg',
 'consoleControllers.games',
 'consoleControllers.gameconfig',
-'consoleControllers.gameclone',
 'consoleControllers.institutes',
 'consoleControllers.schools',
 'consoleControllers.line',
@@ -67,6 +67,11 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/paths/path.html',
             controller: 'PathCtrl'
         })
+        .state('root.pathclone', {
+            url: '/paths-list/:idDomain/:idInstitute/:idSchool/:idGame/pathclone',
+            templateUrl: 'templates/paths/pathclone.html',
+            controller: 'PathCloneCtrl'
+        })
         .state('root.path.info', {
             url: '/info',
             templateUrl: 'templates/paths/tabs/info.html',
@@ -101,11 +106,6 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/gameconfig',
             templateUrl: 'templates/games/gameconfig.html',
             controller: 'GameConfigCtrl'
-        })
-        .state('root.gameclone', {
-            url: '/game/:idDomain/:idInstitute/:idSchool/:idGame/gameclone',
-            templateUrl: 'templates/games/gameclone.html',
-            controller: 'GameCloneCtrl'
         })
         .state('root.game.info', {
             url: '/info',
