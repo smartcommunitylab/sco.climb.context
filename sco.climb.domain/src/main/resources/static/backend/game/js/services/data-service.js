@@ -280,7 +280,7 @@ function ($q, $http, $rootScope, $timeout) {
           }, 
           updateTerms: function () {
             var url = baseUrl + "/console/user/accept-terms";
-            return $http.post(url, null, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+            return $http.post(url, new Date(), { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
           },           
           registration: function (data) {
             var url = baseUrl + "/public/api/registration";

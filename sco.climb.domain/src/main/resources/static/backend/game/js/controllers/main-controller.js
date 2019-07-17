@@ -53,6 +53,7 @@ angular.module('consoleControllers.mainCtrl', [])
             //call api "/console/user/accept-terms" to accept
             DataService.updateTerms();
             MainDataService.getDomains().then(function (p) {
+                console.log("Profice:after regi:",p)
                 $scope.profile = p;
                 PermissionsService.setProfilePermissions($scope.profile.roles);
 
@@ -63,12 +64,6 @@ angular.module('consoleControllers.mainCtrl', [])
                 }
                 $state.go('root.institutes-list');
             });
-        }
-        $scope.goRegistration = function(){
-            if(!$scope.showRegi){
-                $scope.showRegi = !$scope.showRegi;
-            }
-            
         }
         $scope.userRegistration = function(){
             console.log("come in registration")
@@ -81,11 +76,23 @@ angular.module('consoleControllers.mainCtrl', [])
             }
             console.log("Data Change::",data)
             DataService.registration(data);
+            setTimeout(function(){
+                // DataService.updateTerms();
+                // $state.go('root.institutes-list');
+                $scope.acceptTerms();
+            }, 500);
         }
         MainDataService.getDomains().then(function (p) {
             //$scope.profile = p;
             $scope.normalProfile = p;
-            if(p.termUsage.acceptance){
+            console.log("Profice::",p)
+            if(p.termUsage == null){
+                $state.go('root.registration');
+            }
+            else if(!p.termUsage.acceptance){
+                // window.location.href = '../game/templates/terms.html';
+                $state.go('root.terms');
+            }else if(p.termUsage.acceptance){
                 $scope.profile = p;
                 PermissionsService.setProfilePermissions($scope.profile.roles);
 
@@ -94,9 +101,7 @@ angular.module('consoleControllers.mainCtrl', [])
                     $scope.selectedOwner = $scope.profile.ownerIds[0];
                     $scope.loadInstitutesList($scope.profile.ownerIds[0]);
                 }
-            }else if(!p.termUsage.acceptance || p.termUsage == null){
-                // window.location.href = '../game/templates/terms.html';
-                $state.go('root.terms');
+                
             }
             // else{
             //     $state.go('root.registration');

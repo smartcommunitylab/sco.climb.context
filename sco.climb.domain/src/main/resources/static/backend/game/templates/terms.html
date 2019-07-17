@@ -4,48 +4,8 @@
         <div class="col-md-1"></div>
         <div class="col-md-10">
             <div class="panel panel-primary">
-                <div class="panel-heading" ng-show="!showRegi">You have to accept the terms.</div>
-                <div class="panel-heading" ng-show="showRegi">You have to fillup the form and accept the terms.</div>
+                <div class="panel-heading" >You have to accept the terms.</div>
                 <div class="panel-body">
-                    <div class="row" ng-show="showRegi">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Name:</label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="text" name="user" ng-model="normalProfile.name" required>
-                                </div>
-                            </div>
-                            <div class="row"><div class="col-md-12"></div></div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Surname:</label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="text" name="surname" ng-model="normalProfile.surname" required>
-                                </div>
-                            </div>
-                            <div class="row"><div class="col-md-12"></div></div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Email:</label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="email" name="email" ng-model="normalProfile.email" required>
-                                </div>
-                            </div>
-                            <div class="row"><div class="col-md-12"></div></div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Codice Fiscale:</label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="text" name="cf" ng-model="normalProfile.cf" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
@@ -64,9 +24,7 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary" ng-show="!showRegi" ng-disabled="!checked" ng-click="acceptTerms()">Accept</button>
-                    <button class="btn btn-default" ng-show="!showRegi" ng-click="goRegistration()">Registration</button>
-                    <button class="btn btn-primary" ng-show="showRegi" ng-disabled="(checked && normalProfile.name && normalProfile.surname && normalProfile.email && normalProfile.cf) ?  false : true" ng-click="userRegistration()">Registration</button>
+                    <button class="btn btn-primary" ng-disabled="!checked" ng-click="acceptTerms()">Accept</button>
                 </div>
             </div>
         </div>
