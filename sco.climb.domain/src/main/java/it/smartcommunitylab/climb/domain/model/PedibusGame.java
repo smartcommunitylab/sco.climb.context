@@ -12,7 +12,6 @@ public class PedibusGame extends BaseObject {
 
 	private String instituteId;
 	private String schoolId;
-	private String schoolName;
 	private List<String> classRooms;
 	private String gameId;
 	private String gameName;
@@ -43,14 +42,6 @@ public class PedibusGame extends BaseObject {
 
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
-	}
-
-	public String getSchoolName() {
-		return schoolName;
-	}
-
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
 	}
 
 	public String getGameId() {

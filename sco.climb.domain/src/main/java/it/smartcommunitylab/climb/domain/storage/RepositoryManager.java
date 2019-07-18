@@ -915,14 +915,15 @@ public class RepositoryManager {
 		if (gameDB == null) {
 			game.setCreationDate(now);
 			game.setLastUpdate(now);
-			game.setObjectId(Utils.getUUID());
+			if(Utils.isEmpty(game.getObjectId())) {
+				game.setObjectId(Utils.getUUID());
+			}
 			game.setOwnerId(ownerId);
 			mongoTemplate.save(game);
 		} else if (canUpdate) {
 			Update update = new Update();
 			update.set("instituteId", game.getInstituteId());
 			update.set("schoolId", game.getSchoolId());
-			update.set("schoolName", game.getSchoolName());
 			update.set("classRooms", game.getClassRooms());
 			update.set("gameId", game.getGameId());
 			update.set("gameName", game.getGameName());
@@ -942,7 +943,7 @@ public class RepositoryManager {
       update.set("modalities", game.getModalities());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
-			logger.warn("Cannot update existing PedibusGame with gameId " + game.getGameId());
+			logger.warn("Cannot update existing PedibusGame with id " + game.getObjectId());
 		}
 		return game;
 	}
@@ -1089,7 +1090,9 @@ public class RepositoryManager {
 		if (legDB == null) {
 			leg.setCreationDate(now);
 			leg.setLastUpdate(now);
-			leg.setObjectId(Utils.getUUID());
+			if(Utils.isEmpty(leg.getObjectId())) {
+				leg.setObjectId(Utils.getUUID());
+			}
 			leg.setOwnerId(ownerId);
 			mongoTemplate.save(leg);
 		} else if (canUpdate) {
@@ -1350,7 +1353,9 @@ public class RepositoryManager {
 		if(contentDB == null) {
 			content.setCreationDate(now);
 			content.setLastUpdate(now);
-			content.setObjectId(Utils.getUUID());
+			if(Utils.isEmpty(content.getObjectId())) {
+				content.setObjectId(Utils.getUUID());
+			}
 			mongoTemplate.save(content);
 		} else {
 			Update update = new Update();
@@ -1427,7 +1432,7 @@ public class RepositoryManager {
 		criteria = criteria.and("sharable").is(true);
 		criteria = criteria.and("disabled").is(false);
 		query.addCriteria(criteria);
-		query.limit(500);
+		query.limit(200);
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
 	}
@@ -1517,4 +1522,15 @@ public class RepositoryManager {
 	public void saveMultimediaContentTags(MultimediaContentTags mct) {
 		mongoTemplate.save(mct);
 	}
+	
+	public boolean existsPedibusGame(String id) {
+		Query query = new Query(new Criteria("objectId").is(id));
+		return mongoTemplate.exists(query, PedibusGame.class);
+	}
+	
+	public boolean existsPedibusItinerary(String id) {
+		Query query = new Query(new Criteria("objectId").is(id));
+		return mongoTemplate.exists(query, PedibusItinerary.class);
+	}
+
 }

@@ -41,6 +41,7 @@ import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.converter.ExcelConverter;
 import it.smartcommunitylab.climb.domain.converter.ExcelError;
+import it.smartcommunitylab.climb.domain.converter.JsonConverter;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
@@ -55,6 +56,9 @@ public class AdminController extends AuthController {
 	
 	@Autowired
 	private ExcelConverter excelConverter;
+	
+	@Autowired
+	private JsonConverter jsonConverter;
 
 	@RequestMapping(value = "/admin/user/csv", method = RequestMethod.POST)
 	public @ResponseBody void uploadOwnerUserCsv(
@@ -172,6 +176,26 @@ public class AdminController extends AuthController {
 			}
 		}
 		return errors;
+	}
+	
+	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}/json", method = RequestMethod.GET)
+	public @ResponseBody void convertJsonData(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestParam String path) {
+		try {
+			FileReader gameReader = new FileReader(path + "/pedibusGame.json");
+			if(jsonConverter.storePedibusGame(ownerId, instituteId, schoolId, gameReader)) {
+				FileReader itineraryReader = new FileReader(path + "/pedibusItinerary.json");
+				if(jsonConverter.storePedibusItinerary(ownerId, instituteId, schoolId, itineraryReader)) {
+					FileReader legReader = new FileReader(path + "/pedibusItineraryLeg.json");
+					jsonConverter.storePedibusItineraryLeg(ownerId, instituteId, schoolId, legReader);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("convertJsonData error:{}", e.getMessage());
+		}
 	}
 	
 	private void storePlayer(PedibusPlayer player) throws Exception {

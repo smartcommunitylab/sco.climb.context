@@ -1256,6 +1256,7 @@ public class GamificationController extends AuthController {
 			leg.setIcon(legToClone.getIcon());
 			leg.setAdditionalPoints(legToClone.getAdditionalPoints());
 			storage.savePedibusItineraryLeg(leg, ownerId, false);
+			//TODO clone multimedia content
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("cloneItinerary[%s]: %s - %s", ownerId, pedibusGameId, itineraryId));
