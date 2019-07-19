@@ -825,6 +825,7 @@ public class GamificationController extends AuthController {
 		content.setItineraryName(itinerary.getName());
 		content.setLegId(legId);
 		content.setLegName(leg.getName());
+		content.setGeocoding(leg.getGeocoding());
 		content.setPublished(game.isDeployed());
 		content.setContentOwner(contentOwner);
 		storage.saveMultimediaContent(content);
