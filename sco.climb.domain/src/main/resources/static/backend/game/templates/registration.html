@@ -7,6 +7,13 @@
                     <div class="panel-heading">Please provide the information.</div>
                     <div class="panel-body">
                         <!-- <form name="myForm"> -->
+                        <div class="row" ng-show="showNoti">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    <strong>{{errorMsg}}</strong> 
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-2">
                                 <label>Name:</label>

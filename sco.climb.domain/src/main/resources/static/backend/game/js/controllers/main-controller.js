@@ -48,12 +48,11 @@ angular.module('consoleControllers.mainCtrl', [])
         }
 
         $scope.showRegi = false;
+        $scope.showNoti = false;
         $scope.acceptTerms = function(){
-            console.log("Accept the terms")
             //call api "/console/user/accept-terms" to accept
             DataService.updateTerms();
             MainDataService.getDomains().then(function (p) {
-                console.log("Profice:after regi:",p)
                 $scope.profile = p;
                 PermissionsService.setProfilePermissions($scope.profile.roles);
 
@@ -66,7 +65,6 @@ angular.module('consoleControllers.mainCtrl', [])
             });
         }
         $scope.userRegistration = function(){
-            console.log("come in registration")
             //call api "//public/api/registration" to registration
             var data = {
                 "cf":$scope.normalProfile.cf,
@@ -74,18 +72,21 @@ angular.module('consoleControllers.mainCtrl', [])
                 "surname":$scope.normalProfile.surname,
                 "email":$scope.normalProfile.email
             }
-            console.log("Data Change::",data)
-            DataService.registration(data);
-            setTimeout(function(){
-                // DataService.updateTerms();
-                // $state.go('root.institutes-list');
-                $scope.acceptTerms();
-            }, 500);
+            DataService.registration(data).success(function (data){
+                //registration successfully
+                setTimeout(function(){
+                    // DataService.updateTerms();
+                    // $state.go('root.institutes-list');
+                    $scope.acceptTerms();
+                }, 500);
+            }).error(function(error){
+                $scope.showNoti = true;
+                $scope.errorMsg = error.errorMsg;
+            });
         }
         MainDataService.getDomains().then(function (p) {
             //$scope.profile = p;
             $scope.normalProfile = p;
-            console.log("Profice::",p)
             if(p.termUsage == null){
                 $state.go('root.registration');
             }
