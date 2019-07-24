@@ -60,6 +60,7 @@ public class UserManager {
         toSave.setEmail(user.getEmail());
         toSave.setName(user.getName());
         toSave.setSurname(user.getSurname());
+        toSave.getCustomData().put("plessoScolastico", user.getCustomData().get("plessoScolastico"));
 
         repoManager.addUser(toSave);
 

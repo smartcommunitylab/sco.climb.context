@@ -16,6 +16,7 @@ public class User {
 	private String cf;
 	private Map<String, List<Authorization>> roles = new HashMap<String, List<Authorization>>();
   private TermUsage termUsage = new TermUsage();
+  private Map<String, String> customData = new HashMap<String, String>();
 	
 	public String getObjectId() {
 		return objectId;
@@ -106,4 +107,10 @@ public class User {
     public void setTermUsage(TermUsage termUsage) {
         this.termUsage = termUsage;
     }
+		public Map<String, String> getCustomData() {
+			return customData;
+		}
+		public void setCustomData(Map<String, String> customData) {
+			this.customData = customData;
+		}
 }
