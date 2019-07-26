@@ -16,7 +16,8 @@ angular.module('consoleControllers.leg')
         }
         else {
             if ($scope.newMedia.type) {
-                addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type);
+				console.log("come $modalSuccess")
+                addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, $scope.newMedia.tags);
                 $scope.$modalClose();
                 saveFunction();
             }

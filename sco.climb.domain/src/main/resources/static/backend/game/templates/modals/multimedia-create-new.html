@@ -24,7 +24,10 @@
             <p><b>URL:</b> <span class="required-sign">*</span></p>
             <input type="url" class="form-control" ng-model="newMedia.link" required/>
         </div>
-
+        <div class="add-media field">
+            <p><b>Tags:</b></p>
+            <input class="form-control" type="text" ng-model="newMedia.tags" />
+        </div>
         <!-- Upload pic on imgur -->
         <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
             <div class="field add-media">

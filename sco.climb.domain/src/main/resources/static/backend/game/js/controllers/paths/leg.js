@@ -36,10 +36,11 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             		$stateParams.idPath, $stateParams.idLeg).then(
             		function(response) {
             			if(response.data) {
+                            console.log("multimedia content::",response)
             				$scope.leg.externalUrls = response.data;
-            				$scope.leg.externalUrls.forEach(function(entry) {
+            				$scope.leg.externalUrls.forEach(function(element) {
             					if (element.type == 'video') {
-                        element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+                                    element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
             					}
             				});
             			}
@@ -407,19 +408,49 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.enableOrder = true;
         }
     };
-
-    var addMultimediaElement = function(name, link, type) {
+    $scope.saveMultimediaData = function () {
+        var toSend = {
+            ownerId: $stateParams.idDomain,
+            pedibusGameId: $stateParams.idGame,
+            itineraryId: $stateParams.idPath,
+            legId: $stateParams.idLeg,
+            externalUrls: $scope.leg.externalUrls
+        };
+        DataService.setMultimediaContent(toSend).then(
+            function(response){
+                console.log("Data save:",response)
+            },function(errorMsg){
+                console.log("Data not save:",errorMsg)
+            }
+        );
+    }
+    var addMultimediaElement = function(name, link, type, tags) {
         var element = {
             name: name,
             link: link,
-            type: type            
+            type: type,
+            tags: [tags],
+            position: $scope.leg.externalUrls.length
         };
         if (type == 'video') {
-            element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+            element.previewUrl = $scope.getYoutubeImageFromLink(element.link);
         }
         $scope.leg.externalUrls.push(element);
     };
-
+    var addMultimediaData = function(name, link, type, tags) {
+        var element = {
+            name: name,
+            link: link,
+            type: type,
+            tags: [tags],
+            position: $scope.leg.externalUrls.length
+        };
+        if (type == 'video') {
+            element.previewUrl = $scope.getYoutubeImageFromLink(element.link);
+        }
+        console.log("data come in form",element)
+        $scope.leg.externalUrls.push(angular.toJson(element));
+    };
 
 
     $scope.createNewMultimediaElement = function() {
@@ -438,8 +469,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 } 
             },
             {
-                addElementsFunction: addMultimediaElement,
-                saveFunction: $scope.saveLegLinks,
+                addElementsFunction: addMultimediaData,
+                saveFunction: $scope.saveMultimediaData,
                 dataService: DataService,
                 leg: $scope.leg
             }
