@@ -366,6 +366,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     };
 
     $scope.deleteLink = function (element) {
+        console.log("element objectId:",element.objectId)
         createDialog('templates/modals/delete-media.html',{
             id : 'delete-media-dialog',
             title: 'Attenzione!',
@@ -373,12 +374,30 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             	label: 'Conferma', 
             	fn: function() {
             		$scope.leg.externalUrls.splice($scope.leg.externalUrls.indexOf(element), 1);
-            		$scope.saveLegLinks();
+                    // $scope.saveLegLinks();
+                    $scope.deleteMultimediaContents(element);
             	} 
             }
         });
     };
-    
+    $scope.deleteMultimediaContents = function(element){
+        var toSend = {
+            ownerId: $stateParams.idDomain,
+            pedibusGameId: $stateParams.idGame,
+            itineraryId: $stateParams.idPath,
+            legId: $stateParams.idLeg,
+            objectId: element.objectId,
+            element: angular.toJson(element)
+        };
+        DataService.deleteMultimediaContent(toSend).then(
+            function(response){
+                console.log("Delete data:",response)
+                console.log("lag after delete",$scope.leg.externalUrls)
+            },function(errorMsg){
+                console.log(" Data not Deleted:",errorMsg)
+            }
+        );
+    }
     $scope.updateLink = function(index, newTitle, newUrl, newType) {
     	$scope.updateElementData(index, newTitle, newUrl, newType);
     	$scope.saveLegLinks();
@@ -402,6 +421,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 //                success: { label: 'OK', fn: function() {} },
 //                noCancelBtn: true
 //            });
+            console.log("$$scope.legs:",$scope.leg.externalUrls)
             $scope.saveLegLinks();
             $scope.enableOrder = false;
         } else {

@@ -315,6 +315,10 @@ function ($q, $http, $rootScope, $timeout) {
               console.log("comein setMultimediaContent with:",element," and send data:",element.externalUrls[element.externalUrls.length-1])
             var postUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content";
             return $http.post(postUrl, element.externalUrls[element.externalUrls.length-1], {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+          },
+          deleteMultimediaContent: function(element){
+            var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
+            return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
           }
       };
   }
