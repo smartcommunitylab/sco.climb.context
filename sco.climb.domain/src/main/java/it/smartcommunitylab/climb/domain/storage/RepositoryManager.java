@@ -1400,7 +1400,7 @@ public class RepositoryManager {
 	}
 	
 	public List<MultimediaContent> getMultimediaContentByLeg(String ownerId, String itineraryLegId) {
-		Query query = new Query(Criteria.where("itineraryLegId").is(itineraryLegId)
+		Query query = new Query(Criteria.where("legId").is(itineraryLegId)
 				.and("ownerId").is(ownerId));
 		query.with(new Sort(Sort.Direction.ASC, "position"));
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);

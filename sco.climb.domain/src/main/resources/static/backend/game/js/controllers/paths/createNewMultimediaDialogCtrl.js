@@ -1,11 +1,25 @@
 angular.module('consoleControllers.leg')
 
-.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, addElementsFunction, 
-		saveFunction, dataService, leg) {
-		$scope.errorMsg;
+.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, addElementsFunction, saveFunction, dataService, leg) {
+	$scope.errorMsg;
     $scope.newMedia = {type: 'image'};
-    $scope.loading = false;
-    
+	$scope.loading = false;
+
+	$scope.tagListToggle = function(){
+		console.log("click here: tagListToggle")
+        $('.wrapper .list').slideToggle('fast');
+	}
+    $scope.tags = [
+		{name:'tag1'},
+		{name:'tag2'},
+		{name:'tag3'},
+		{name:'tag4'},
+		{name:'tag5'}
+	];
+	$scope.getSelectedtags = function(tag){
+        return tag.selected;
+	};
+	
     $scope.resetError = function() {
     	$scope.errorMsg = undefined;
     }
@@ -16,7 +30,9 @@ angular.module('consoleControllers.leg')
         }
         else {
             if ($scope.newMedia.type) {
-                addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type);
+				$scope.newMedia.tags=$scope.getSelectedtags($scope.tags);
+				console.log("come $modalSuccess and tags:",$scope.newMedia.tags)
+                addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, $scope.newMedia.tags);
                 $scope.$modalClose();
                 saveFunction();
             }

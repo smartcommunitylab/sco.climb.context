@@ -24,7 +24,26 @@
             <p><b>URL:</b> <span class="required-sign">*</span></p>
             <input type="url" class="form-control" ng-model="newMedia.link" required/>
         </div>
-
+        <div class="wrapper">
+            <p>
+                <b>Tags:</b>
+                <b ng-repeat="tag in tags | filter: getSelectedtags" >
+                    {{tag.name}}
+                </b>
+            </p>
+            <div class="selected-items-box" ng-click="tagListToggle()">
+                --- Select tags ---
+                <span class="dropdown-icon"></span>
+            </div>
+            <div class="list">
+                <ul class="items-list">
+                  <li ng-repeat="tag in tags">
+                    <input type="checkbox" class='' ng-model="tag.selected" />
+                    <span>{{tag.name}}</span>
+                  </li>
+                </ul>
+            </div>
+        </div>
         <!-- Upload pic on imgur -->
         <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
             <div class="field add-media">

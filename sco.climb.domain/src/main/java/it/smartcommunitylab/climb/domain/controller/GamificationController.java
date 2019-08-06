@@ -903,7 +903,7 @@ public class GamificationController extends AuthController {
 			@PathVariable String itineraryId,
 			@PathVariable String legId,
 			@PathVariable String contentId,
-			@RequestBody MultimediaContent content, 
+			//@RequestBody MultimediaContent content, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
