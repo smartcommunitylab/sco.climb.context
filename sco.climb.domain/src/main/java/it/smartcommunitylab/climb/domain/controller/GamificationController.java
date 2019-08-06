@@ -55,6 +55,7 @@ import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
+import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -1396,7 +1397,31 @@ public class GamificationController extends AuthController {
 		}
 		return player;		
 	}
-	
+
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/mctags", method = RequestMethod.GET)
+	public @ResponseBody MultimediaContentTags getMultimediaContentTags(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			HttpServletRequest request) throws Exception {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
+				Const.AUTH_RES_School, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		MultimediaContentTags contentTags = storage.getMultimediaContentTags();
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		if(school != null) {
+			for(ClassRoom classRoom : school.getClasses()) {
+				String yearOfStudy = classRoom.getYearOfStudy();
+				if(Utils.isNotEmpty(yearOfStudy) && 
+						!contentTags.getTags().contains(yearOfStudy)) {
+					contentTags.getTags().add(yearOfStudy);
+				}
+			}
+		}
+		return contentTags;
+	}
+
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String pedibusGameId, String gameId, String id) throws Exception {
 		

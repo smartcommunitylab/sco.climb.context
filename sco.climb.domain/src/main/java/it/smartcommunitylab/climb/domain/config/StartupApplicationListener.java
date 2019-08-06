@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.ModalityMap;
+import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Component
@@ -32,6 +33,17 @@ public class StartupApplicationListener {
 				storage.saveModalityMap(map);
 			} catch (Exception e) {
 				logger.warn("error in init madalitymap:{}", e.getMessage());
+			}
+		}
+		MultimediaContentTags tags = storage.getMultimediaContentTags();
+		if(tags == null) {
+			try {
+				Resource resource = new ClassPathResource("json/mctags.json", 
+						this.getClass().getClassLoader());
+				tags = Utils.readJSONFromInputStream(resource.getInputStream(), MultimediaContentTags.class);
+				storage.saveMultimediaContentTags(tags);
+			} catch (Exception e) {
+				logger.warn("error in init mctags:{}", e.getMessage());
 			}
 		}
   }
