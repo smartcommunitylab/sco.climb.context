@@ -400,7 +400,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     }
     $scope.updateLink = function(index, newTitle, newUrl, newType) {
     	$scope.updateElementData(index, newTitle, newUrl, newType);
-    	$scope.saveLegLinks();
+        // $scope.saveLegLinks();
+        $scope.updateMultimediaData(index);
     }
 
     $scope.updateElementData = function(index, newTitle, newUrl, newType) {
@@ -411,7 +412,23 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         	$scope.leg.externalUrls[index].youtubeThumbnail = $scope.getYoutubeImageFromLink(newUrl);
         }
     }
-
+    $scope.updateMultimediaData = function (index) {
+        var toSend = {
+            ownerId: $stateParams.idDomain,
+            pedibusGameId: $stateParams.idGame,
+            itineraryId: $stateParams.idPath,
+            legId: $stateParams.idLeg,
+            objectId:  $scope.leg.externalUrls[index].objectId,
+            content: $scope.leg.externalUrls[index]
+        };
+        DataService.updateMultimediaContent(toSend).then(
+            function(response){
+                console.log("Data save:",response)
+            },function(errorMsg){
+                console.log("Data not save:",errorMsg)
+            }
+        );
+    }
     $scope.saveOrder = function() {
         if ($scope.enableOrder) {            
             $scope.currentPath.legs = $scope.legs;
@@ -444,12 +461,11 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }
         );
     }
-    var addMultimediaElement = function(name, link, type, tags) {
+    var addMultimediaElement = function(name, link, type) {
         var element = {
             name: name,
             link: link,
             type: type,
-            tags: [tags],
             position: $scope.leg.externalUrls.length
         };
         if (type == 'video') {
@@ -462,7 +478,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             name: name,
             link: link,
             type: type,
-            tags: [tags],
+            tags: tags,
             position: $scope.leg.externalUrls.length
         };
         if (type == 'video') {

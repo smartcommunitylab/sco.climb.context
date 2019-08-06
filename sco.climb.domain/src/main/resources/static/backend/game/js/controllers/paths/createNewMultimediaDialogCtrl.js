@@ -30,7 +30,13 @@ angular.module('consoleControllers.leg')
         }
         else {
             if ($scope.newMedia.type) {
-				$scope.newMedia.tags=$scope.getSelectedtags($scope.tags);
+				// $scope.newMedia.tags=$scope.getSelectedtags($scope.tags);
+				$scope.newMedia.tags=[];
+				$scope.tags.forEach(element => {
+					if(element.selected){
+						$scope.newMedia.tags.push(element.name)
+					}
+				});
 				console.log("come $modalSuccess and tags:",$scope.newMedia.tags)
                 addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, $scope.newMedia.tags);
                 $scope.$modalClose();
