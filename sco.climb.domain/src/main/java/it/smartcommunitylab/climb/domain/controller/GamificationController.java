@@ -830,7 +830,7 @@ public class GamificationController extends AuthController {
 		content.setContentOwner(contentOwner);
 		storage.saveMultimediaContent(content);
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("addMultimediaContent[%s]: %s", ownerId, itineraryId));
+			logger.info(String.format("addMultimediaContent[%s]: %s", ownerId, legId));
 		}
 		return content;
 	}
@@ -861,9 +861,38 @@ public class GamificationController extends AuthController {
 		content.setObjectId(contentId);
 		storage.saveMultimediaContent(content);
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("updateMultimediaContent[%s]: %s", ownerId, itineraryId));
+			logger.info(String.format("updateMultimediaContent[%s]: %s", ownerId, contentId));
 		}
 		return content;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content/positions", 
+			method = RequestMethod.PUT)
+	public @ResponseBody List<MultimediaContent> updateMultimediaContentPositions(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			@RequestBody List<MultimediaContent> contents, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Link, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		for(int position = 0; position < contents.size(); position++) {
+			MultimediaContent content = contents.get(position);
+			content.setPosition(position);
+			storage.updateMultimediaContentPosition(content);
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updateMultimediaContentPositions[%s]: %s", ownerId, legId));
+		}
+		return contents;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content/{contentId}", 

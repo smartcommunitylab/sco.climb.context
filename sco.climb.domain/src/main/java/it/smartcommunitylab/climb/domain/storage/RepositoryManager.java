@@ -1344,10 +1344,7 @@ public class RepositoryManager {
 	
 	public void saveMultimediaContent(MultimediaContent content) {
 		Query query = new Query(new Criteria("ownerId").is(content.getOwnerId())
-				.and("instituteId").is(content.getInstituteId())
-				.and("schoolId").is(content.getSchoolId())
-				.and("itineraryId").is(content.getItineraryId())
-				.and("link").is(content.getLink()));
+				.and("objectId").is(content.getObjectId()));
 		MultimediaContent contentDB = mongoTemplate.findOne(query, MultimediaContent.class);
 		Date now = new Date();
 		if(contentDB == null) {
@@ -1367,6 +1364,19 @@ public class RepositoryManager {
 			update.set("tags", content.getTags());
 			update.set("sharable", content.isSharable());
 			update.set("previewUrl", content.getPreviewUrl());
+			update.set("position", content.getPosition());
+			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
+		}
+	}
+	
+	public void updateMultimediaContentPosition(MultimediaContent content) {
+		Query query = new Query(new Criteria("ownerId").is(content.getOwnerId())
+				.and("objectId").is(content.getObjectId()));
+		MultimediaContent contentDB = mongoTemplate.findOne(query, MultimediaContent.class);
+		Date now = new Date();
+		if(contentDB != null) {
+			Update update = new Update();
+			update.set("lastUpdate", now);
 			update.set("position", content.getPosition());
 			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
 		}
