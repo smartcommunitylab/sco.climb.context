@@ -320,6 +320,10 @@ function ($q, $http, $rootScope, $timeout) {
         var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
         return $http.put(url, element.content, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
+        updateMultimediaContentPosition: function(element){
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/positions";
+            return $http.put(url, element.contents, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
         deleteMultimediaContent: function(element){
         var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
         return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});

@@ -438,13 +438,29 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 //                success: { label: 'OK', fn: function() {} },
 //                noCancelBtn: true
 //            });
-            console.log("$$scope.legs:",$scope.leg.externalUrls)
-            $scope.saveLegLinks();
+            // $scope.saveLegLinks();
+            $scope.updateMultimediaDataPosition();
             $scope.enableOrder = false;
         } else {
             $scope.enableOrder = true;
         }
     };
+    $scope.updateMultimediaDataPosition = function(){
+        var toSend = {
+            ownerId: $stateParams.idDomain,
+            pedibusGameId: $stateParams.idGame,
+            itineraryId: $stateParams.idPath,
+            legId: $stateParams.idLeg,
+            contents: $scope.leg.externalUrls
+        };
+        DataService.updateMultimediaContentPosition(toSend).then(
+            function(response){
+                console.log("Data save:",response)
+            },function(errorMsg){
+                console.log("Data not save:",errorMsg)
+            }
+        );
+    }
     $scope.saveMultimediaData = function () {
         var toSend = {
             ownerId: $stateParams.idDomain,
