@@ -1175,6 +1175,9 @@ public class RepositoryManager {
 		if(itineraryDb == null) {
 			itinerary.setCreationDate(actualDate);
 			itinerary.setLastUpdate(actualDate);
+			if(Utils.isEmpty(itinerary.getObjectId())) {
+				itinerary.setObjectId(Utils.getUUID());
+			}			
 			mongoTemplate.save(itinerary);
 		} else {
 			Update update = new Update();

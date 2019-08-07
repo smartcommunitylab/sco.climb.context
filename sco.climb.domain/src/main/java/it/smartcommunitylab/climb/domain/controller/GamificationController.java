@@ -640,20 +640,6 @@ public class GamificationController extends AuthController {
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
 		storage.savePedibusItineraryLeg(leg, ownerId, false);
-		//TODO manage multimedia content
-//		for (Link link : leg.getExternalUrls()) {
-//			MultimediaContent content = new MultimediaContent();
-//			content.setOwnerId(ownerId);
-//			content.setInstituteId(game.getInstituteId());
-//			content.setSchoolId(game.getSchoolId());
-//			content.setItineraryId(itineraryId);
-//			content.setName(link.getName());
-//			content.setLegName(leg.getName());
-//			content.setType(link.getType());
-//			content.setLink(link.getLink());
-//			content.setGeocoding(leg.getGeocoding());
-//			storage.saveMultimediaContent(content);
-//		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
 		}
@@ -762,20 +748,6 @@ public class GamificationController extends AuthController {
 					leg.setScore(sumValue);
 				}
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
-				//TODO manage multimedia content
-//				for (Link link : leg.getExternalUrls()) {
-//					MultimediaContent content = new MultimediaContent();
-//					content.setOwnerId(ownerId);
-//					content.setInstituteId(game.getInstituteId());
-//					content.setSchoolId(game.getSchoolId());
-//					content.setItineraryId(itineraryId);
-//					content.setName(link.getName());
-//					content.setLegName(leg.getName());
-//					content.setType(link.getType());
-//					content.setLink(link.getLink());
-//					content.setGeocoding(leg.getGeocoding());
-//					storage.saveMultimediaContent(content);
-//				}
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
@@ -1261,12 +1233,17 @@ public class GamificationController extends AuthController {
 		if(itineraryToClone == null) {
 			throw new EntityNotFoundException("itinerary to clone not found");
 		}
+		Institute institute = storage.getInstitute(ownerId, game.getInstituteId());
+		School school = storage.getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+		User user = getUserByEmail(request);
+		ContentOwner contentOwner = new ContentOwner();
+		contentOwner.setName(user.getName() + " " + user.getSurname());
+		contentOwner.setUserId(user.getObjectId());
 		List<PedibusItineraryLeg> legsToClone = storage.getPedibusItineraryLegsByItineraryId(itineraryId);
 		//create itinerary
 		PedibusItinerary itinerary = new PedibusItinerary();
 		itinerary.setOwnerId(ownerId);
 		itinerary.setPedibusGameId(game.getObjectId());
-		itinerary.setObjectId(Utils.getUUID());
 		itinerary.setName(itineraryToClone.getName() + " - clone");
 		itinerary.setDescription(itineraryToClone.getDescription());
 		storage.savePedibusItinerary(itinerary);
@@ -1287,7 +1264,33 @@ public class GamificationController extends AuthController {
 			leg.setIcon(legToClone.getIcon());
 			leg.setAdditionalPoints(legToClone.getAdditionalPoints());
 			storage.savePedibusItineraryLeg(leg, ownerId, false);
-			//TODO clone multimedia content
+			//clone multimedia content
+			List<MultimediaContent> mcListToClone = storage.getMultimediaContentByLeg(
+					legToClone.getOwnerId(), legToClone.getObjectId());
+			for(MultimediaContent mcToClone : mcListToClone) {
+				MultimediaContent content = new MultimediaContent();
+				content.setOwnerId(ownerId);
+				content.setInstituteId(instituteId);
+				content.setInstituteName(institute.getName());
+				content.setSchoolId(schoolId);
+				content.setSchoolName(school.getName());
+				content.setItineraryId(itineraryId);
+				content.setItineraryName(itinerary.getName());
+				content.setLegId(leg.getObjectId());
+				content.setLegName(leg.getName());
+				content.setName(mcToClone.getName());
+				content.setType(mcToClone.getType());
+				content.setLink(mcToClone.getLink());
+				content.setGeocoding(mcToClone.getGeocoding());
+				content.setTags(mcToClone.getTags());
+				content.setPreviewUrl(mcToClone.getPreviewUrl());
+				content.setPosition(mcToClone.getPosition());
+				content.setContentOwner(contentOwner);
+				if(Utils.isNotEmpty(mcToClone.getContentReferenceId())) {
+					content.setContentReferenceId(mcToClone.getContentReferenceId());
+				}
+				storage.saveMultimediaContent(content);
+			}
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("cloneItinerary[%s]: %s - %s", ownerId, pedibusGameId, itineraryId));
