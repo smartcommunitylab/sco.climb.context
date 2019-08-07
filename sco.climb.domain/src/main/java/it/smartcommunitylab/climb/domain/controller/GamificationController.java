@@ -1288,6 +1288,8 @@ public class GamificationController extends AuthController {
 				content.setContentOwner(contentOwner);
 				if(Utils.isNotEmpty(mcToClone.getContentReferenceId())) {
 					content.setContentReferenceId(mcToClone.getContentReferenceId());
+				} else {
+					content.setContentReferenceId(mcToClone.getObjectId());
 				}
 				storage.saveMultimediaContent(content);
 			}

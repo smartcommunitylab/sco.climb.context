@@ -973,7 +973,7 @@ public class RepositoryManager {
 	public void removePedibusItineraryLegByItineraryId(String ownerId, String pedibusGameId,
 			String itineraryId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId)
-				.and("itineraryId").is(itineraryId).and("ownerId").is(ownerId));
+				.and("itineraryId").is(itineraryId).and("ownerId").is(ownerId));		
 		mongoTemplate.remove(query, PedibusItineraryLeg.class);
 	}
 	
@@ -983,7 +983,7 @@ public class RepositoryManager {
 		mongoTemplate.findAndRemove(query, PedibusItinerary.class);
 		removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, objectId);
 	}
-		
+	
 	public void updatePedibusGameLastDaySeen(String ownerId, String pedibusGameId, String lastDaySeen) {
 		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
