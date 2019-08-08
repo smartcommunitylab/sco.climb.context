@@ -603,7 +603,7 @@ public class ExcelConverter {
 						volunteer.setObjectId(Utils.getUUID());
 						volunteer.setName(cognome + " " + nome);
 						volunteer.setPhone(telefono);
-						volunteer.setPassword(email);
+						volunteer.setEmail(email);
 						volunteer.setCf(cf);
 						if(route != null) {
 							if(!route.getVolunteerList().contains(volunteer.getObjectId())) {
@@ -614,7 +614,7 @@ public class ExcelConverter {
 					} else {
 						volunteerDb.setName(cognome + " " + nome);
 						volunteerDb.setPhone(telefono);
-						volunteerDb.setPassword(email);
+						volunteerDb.setEmail(email);
 						if(route != null) {
 							if(!route.getVolunteerList().contains(volunteerDb.getObjectId())) {
 								route.getVolunteerList().add(volunteerDb.getObjectId());
