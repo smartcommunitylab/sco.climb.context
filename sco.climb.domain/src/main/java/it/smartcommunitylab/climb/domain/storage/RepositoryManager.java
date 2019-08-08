@@ -1235,7 +1235,7 @@ public class RepositoryManager {
 		update.set("name", user.getName());
 		update.set("surname", user.getSurname());
 		//update.set("email", user.getEmail());
-        update.set("termUsage", user.getTermUsage());
+    update.set("termUsage", user.getTermUsage());
 		update.set("cf", user.getCf());
 		update.set("subject", user.getSubject());
 		update.set("lastUpdate", actualDate);

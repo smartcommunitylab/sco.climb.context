@@ -96,7 +96,7 @@ public class AdminController extends AuthController {
 	    	user.setSurname(surname);
 	    	user.setSubject(subject);
 	    	
-		    User userDb = storage.getUserByCf(cf);
+		    User userDb = storage.getUserByEmail(email);
 		    if(userDb == null) {
 		    	user.setObjectId(Utils.getUUID());
 		    	storage.addUser(user);
@@ -122,9 +122,137 @@ public class AdminController extends AuthController {
 	  		storage.addUserRole(email, 
 	  				Utils.getAuthKey(ownerId, Const.ROLE_OWNER), auths);
 			}
+			outputFileCSV.delete();
 		}
 	}
-	
+
+	@RequestMapping(value = "/admin/volunteer/csv/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.POST)
+	public @ResponseBody List<ExcelError> uploadVolunteerUserCsv(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,
+			@RequestParam("file") MultipartFile file,
+			@RequestParam(name="update", required=false) Boolean update,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		List<ExcelError> errors = new ArrayList<ExcelError>();
+		if (!file.isEmpty()) {
+			Path tempFile = Files.createTempFile("climb-volunteer", ".csv");
+			tempFile.toFile().deleteOnExit();
+			File outputFileCSV = tempFile.toFile();
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(outputFileCSV));
+			FileCopyUtils.copy(file.getInputStream(), stream);
+			stream.close();
+			
+			Reader in = new FileReader(outputFileCSV);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
+			List<User> users = new ArrayList<User>();
+			int count = 1;
+			for (CSVRecord record : records) {
+				//extract fields
+				try {
+			    String name = record.get("name");
+			    String surname = record.get("surname");
+			    String email = record.get("email");
+			    String cf = record.get("cf");
+			    
+			    //check data
+			    if(Utils.isEmpty(name)) {
+						ExcelError error = new ExcelError("Volunteers", count, "name mancante");
+						errors.add(error);
+			    }
+			    if(Utils.isEmpty(surname)) {
+						ExcelError error = new ExcelError("Volunteers", count, "surname mancante");
+						errors.add(error);
+			    }
+			    if(Utils.isEmpty(email)) {
+						ExcelError error = new ExcelError("Volunteers", count, "email mancante");
+						errors.add(error);
+			    }
+			    if(Utils.isEmpty(cf)) {
+						ExcelError error = new ExcelError("Volunteers", count, "cf mancante");
+						errors.add(error);
+			    }
+			    
+			    User user = new User();
+		    	user.setCf(cf);
+		    	user.setEmail(email);
+		    	user.setName(name);
+		    	user.setSurname(surname);
+		    	users.add(user);					
+				} catch (Exception e) {
+					ExcelError error = new ExcelError("Volunteers", count, "errore parsing:" + e.getMessage());
+					errors.add(error);
+				}
+		    count++;
+			}
+			outputFileCSV.delete();
+			
+			if(errors.size() == 0) {
+				for(User user : users) {
+					try {
+						User userDb = storage.getUserByEmail(user.getEmail());
+				    //create user
+				    if(userDb == null) {
+				    	user.setObjectId(Utils.getUUID());
+				    	storage.addUser(user);
+				    } else {
+				    	String authKey = Utils.getAuthKey(ownerId, Const.ROLE_VOLUNTEER, instituteId, schoolId);
+				    	if(userDb.getRoles().containsKey(authKey)) {
+				    		continue;
+				    	}
+				    }
+				    
+				    //add auths
+						List<Authorization> auths = new ArrayList<Authorization>();
+						
+						Authorization auth = new Authorization();
+						auth.getActions().add(Const.AUTH_ACTION_READ);
+						auth.setRole(Const.ROLE_VOLUNTEER);
+						auth.setOwnerId(ownerId);
+						auth.setInstituteId(instituteId);
+						auth.setSchoolId(schoolId);
+						auth.setRouteId("*");
+						auth.setGameId("*");
+						auth.getResources().add(Const.AUTH_RES_Institute);
+						auth.getResources().add(Const.AUTH_RES_School);
+						auth.getResources().add(Const.AUTH_RES_Child);
+						auth.getResources().add(Const.AUTH_RES_Volunteer);
+						auth.getResources().add(Const.AUTH_RES_Stop);
+						auth.getResources().add(Const.AUTH_RES_Route);
+						auth.getResources().add(Const.AUTH_RES_Attendance);
+						auth.getResources().add(Const.AUTH_RES_NodeState);
+						auths.add(auth);
+						
+						auth = new Authorization();
+						auth.getActions().add(Const.AUTH_ACTION_READ);
+						auth.getActions().add(Const.AUTH_ACTION_ADD);
+						auth.setRole(Const.ROLE_VOLUNTEER);
+						auth.setOwnerId(ownerId);
+						auth.setInstituteId(instituteId);
+						auth.setSchoolId(schoolId);
+						auth.setRouteId("*");
+						auth.setGameId("*");
+						auth.getResources().add(Const.AUTH_RES_WsnEvent);
+						auth.getResources().add(Const.AUTH_RES_EventLogFile);
+						auth.getResources().add(Const.AUTH_RES_Image);
+						auths.add(auth);
+					
+						storage.addUserRole(user.getEmail(), 
+								Utils.getAuthKey(ownerId, Const.ROLE_VOLUNTEER, instituteId, schoolId), auths);					
+					} catch (Exception e) {
+						ExcelError error = new ExcelError("Volunteers", count, 
+								"errore assegbnazo e ruolo a " + user.getEmail());
+						errors.add(error);					
+					}					
+				}
+			}
+		}
+		return errors;
+	}
+
 	@RequestMapping(value = "/admin/import/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.POST)
 	public @ResponseBody List<ExcelError> uploadData(
 			@PathVariable String ownerId,
