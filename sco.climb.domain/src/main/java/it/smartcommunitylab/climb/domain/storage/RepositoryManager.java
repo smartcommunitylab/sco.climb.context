@@ -1362,7 +1362,7 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("lastUpdate", now);
 			update.set("name", content.getName());
-			update.set("link", content.getLegName());
+			update.set("link", content.getLink());
 			update.set("type", content.getType());
 			update.set("geocoding", content.getGeocoding());
 			update.set("tags", content.getTags());
