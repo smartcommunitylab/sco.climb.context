@@ -327,6 +327,7 @@ public class RepositoryManager {
 		update.set("password", volunteer.getPassword());
 		update.set("wsnId", volunteer.getWsnId());
 		update.set("cf", volunteer.getCf());
+		update.set("email", volunteer.getEmail());
 		mongoTemplate.updateFirst(query, update, Volunteer.class);
 	}
 
