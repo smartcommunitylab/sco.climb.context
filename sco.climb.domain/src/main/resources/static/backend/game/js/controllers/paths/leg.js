@@ -387,12 +387,19 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             itineraryId: $stateParams.idPath,
             legId: $stateParams.idLeg,
             objectId: element.objectId,
-            element: angular.toJson(element)
+            element: angular.toJson(element),
+            contents: $scope.leg.externalUrls
         };
         DataService.deleteMultimediaContent(toSend).then(
             function(response){
                 console.log("Delete data:",response)
-                console.log("lag after delete",$scope.leg.externalUrls)
+                DataService.updateMultimediaContentPosition(toSend).then(
+                    function(response){
+                        console.log("Data save:",response)
+                    },function(errorMsg){
+                        console.log("Data not save:",errorMsg)
+                    }
+                );
             },function(errorMsg){
                 console.log(" Data not Deleted:",errorMsg)
             }
@@ -423,9 +430,9 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         };
         DataService.updateMultimediaContent(toSend).then(
             function(response){
-                console.log("Data save:",response)
+                console.log("Update data:",response)
             },function(errorMsg){
-                console.log("Data not save:",errorMsg)
+                console.log("Data not update:",errorMsg)
             }
         );
     }
@@ -495,12 +502,11 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             link: link,
             type: type,
             tags: tags,
-            position: $scope.leg.externalUrls.length
+            position: $scope.leg.externalUrls.length+1
         };
         if (type == 'video') {
             element.previewUrl = $scope.getYoutubeImageFromLink(element.link);
         }
-        console.log("data come in form",element)
         $scope.leg.externalUrls.push(angular.toJson(element));
     };
 

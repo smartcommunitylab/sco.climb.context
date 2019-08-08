@@ -6,7 +6,6 @@ angular.module('consoleControllers.leg')
 	$scope.loading = false;
 
 	$scope.tagListToggle = function(){
-		console.log("click here: tagListToggle")
         $('.wrapper .list').slideToggle('fast');
 	}
     $scope.tags = [
@@ -37,7 +36,6 @@ angular.module('consoleControllers.leg')
 						$scope.newMedia.tags.push(element.name)
 					}
 				});
-				console.log("come $modalSuccess and tags:",$scope.newMedia.tags)
                 addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, $scope.newMedia.tags);
                 $scope.$modalClose();
                 saveFunction();
