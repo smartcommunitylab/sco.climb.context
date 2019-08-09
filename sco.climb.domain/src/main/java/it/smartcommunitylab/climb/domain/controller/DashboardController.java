@@ -52,6 +52,7 @@ import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringChallenge;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringItinerary;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringStats;
+import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
@@ -108,6 +109,69 @@ public class DashboardController extends AuthController {
 		return storage.getModalityMap();
 	}
 
+	@RequestMapping(value = "/api/game/mc/{ownerId}/{pedibusGameId}/{itineraryId}/{classRoom}", 
+			method = RequestMethod.GET)
+	public @ResponseBody Map<String, List<MultimediaContent>> getMultimediaContentsByClassRoom(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId, 
+			@PathVariable String itineraryId, 
+			@PathVariable String classRoom, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), 
+				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Map<String, List<MultimediaContent>> result = new HashMap<>();
+		List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
+				pedibusGameId, itineraryId);
+		for(PedibusItineraryLeg leg : legs) {
+			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
+			for(MultimediaContent content : mcByLeg) {
+				if(!content.getTags().contains(classRoom)) {
+					mcByLeg.remove(content);
+				}
+			}
+			result.put(leg.getObjectId(), mcByLeg);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getMultimediaContentsByClassRoom[%s]: %s - %s - %s", ownerId, 
+					pedibusGameId, itineraryId, classRoom));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/mc/{ownerId}/{pedibusGameId}/{itineraryId}", 
+			method = RequestMethod.GET)
+	public @ResponseBody Map<String, List<MultimediaContent>> getPublicMultimediaContents(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId, 
+			@PathVariable String itineraryId, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		Map<String, List<MultimediaContent>> result = new HashMap<>();
+		List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
+				pedibusGameId, itineraryId);
+		for(PedibusItineraryLeg leg : legs) {
+			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
+			for(MultimediaContent content : mcByLeg) {
+				if(!content.isSharable()) {
+					mcByLeg.remove(content);
+				}
+			}
+			result.put(leg.getObjectId(), mcByLeg);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getPublicMultimediaContents[%s]: %s - %s", ownerId, 
+					pedibusGameId, itineraryId));
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/api/game/player/{ownerId}/{pedibusGameId}/{classRoom}", 
 			method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(
