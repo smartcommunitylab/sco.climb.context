@@ -479,6 +479,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         DataService.setMultimediaContent(toSend).then(
             function(response){
                 console.log("Data save:",response)
+                if(response.data.type=='video'){
+                    $scope.leg.externalUrls[$scope.leg.externalUrls.length-1].youtubeThumbnail = response.data.previewUrl;
+                }
+                
             },function(errorMsg){
                 console.log("Data not save:",errorMsg)
             }
@@ -507,7 +511,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         if (type == 'video') {
             element.previewUrl = $scope.getYoutubeImageFromLink(element.link);
         }
-        $scope.leg.externalUrls.push(angular.toJson(element));
+        // $scope.leg.externalUrls.push(angular.toJson(element));
+        $scope.leg.externalUrls.push(element);
     };
 
 

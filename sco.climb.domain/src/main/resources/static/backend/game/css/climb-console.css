@@ -718,3 +718,63 @@ body{
     background-color: #fff;
   }
 /* end muulti selected*/
+/*model*/
+/* #create-new-multimedia-dialog {
+    text-align: center;
+    padding: 0!important;
+  }
+  
+  #create-new-multimedia-dialog:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle !important;
+    margin-right: -4px;
+  }
+  
+  #create-new-multimedia-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle !important;
+  } */
+  /**/
+  /* .modal {
+    text-align: center;
+  }
+  
+  @media screen and (min-width: 768px) { 
+    .modal:before {
+      display: inline-block;
+      vertical-align: middle;
+      content: " ";
+      height: 100%;
+    }
+  }
+  
+  .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+  } */
+
+  /****************/
+  .vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; 
+}
+.vertical-align-center {
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}
