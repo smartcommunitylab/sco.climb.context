@@ -272,6 +272,27 @@ angular.module('climbGameUser.services.data', [])
       return deferred.promise
     }
     
+    dataService.uploadVolunteerFile = function(element) {
+    	var deferred = $q.defer()
+      var postUrl = configService.getURL() + '/admin/volunteer/csv/' + currentDomain + '/' 
+    		+ element.instituteId + '/' + element.schoolId;
+      $http.post(postUrl, element.formdata, 
+      {
+          timeout: configService.httpTimout(),
+          headers: {
+              'Authorization': 'Bearer ' + loginService.getUserToken(),
+              'Content-Type': undefined 
+          },
+          transformRequest: angular.identity
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise    	
+    }   
+    
     dataService.getAuthText = function (user, authKey) {
     	var deferred = $q.defer();
     	var authText = "";

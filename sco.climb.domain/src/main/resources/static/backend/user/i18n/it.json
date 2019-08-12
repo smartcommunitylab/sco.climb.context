@@ -6,6 +6,7 @@
   "login_enter": "Seleziona",  
   "action_back": "Indietro",
   "action_save": "Salva",
+  "action_upload": "Invia",
   "roles": "Ruoli",
   "role": "Ruolo",
   "add": "Nuovo",
@@ -17,6 +18,7 @@
   "title_user_creation": "Nuovo utente",
   "title_user_edit": "Modifica utente",
   "title_user_role_edit": "Modifica ruolo",
+  "title_user_role_csv": "Upload csv",
   "user_list_all": "Tutti",
   "user_list_owner": "Owner dominio",
   "user_list_school": "Owner scuola",
@@ -26,6 +28,7 @@
   "user_list_editor": "Game Editor Contenuti",
   "user_list_volunteer": "Volontario",
   "user_list_norole": "Nessun ruolo",
+  "user_list_csvrole": "Upload csv",
   "user_delete_error_msg": "Errore nella rimozione!",
   "user_creation_name": "Nome",
   "user_creation_surname": "Cognome",
@@ -53,5 +56,9 @@
   "role_remove_error_msg": "Errore nella rimozione del ruolo!",
   "role_editor_institute_id": "Institute Id",
   "role_editor_school_id": "School Id",
-  "role_editor_game_id": "Game Id"
+  "role_editor_game_id": "Game Id",
+  "role_csv_choose_file": "Scegli il file csv da caricare",
+  "role_csv_file_missing": "Scegliere un file da caricare",
+  "role_csv_upload_ok": "Caricamento file andato a buon fine",
+  "role_csv_upload_error": "Errore nel caricamento del file!"
 }

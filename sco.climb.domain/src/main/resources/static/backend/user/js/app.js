@@ -13,6 +13,7 @@ angular.module('climbGameUser', [
   'climbGameUser.controllers.users.lists.list',
   'climbGameUser.controllers.users.edit',
   'climbGameUser.controllers.users.editRole',
+  'climbGameUser.controllers.users.csvRole',
   'climbGameUser.services.data',
   'climbGameUser.services.conf',
   'climbGameUser.services.login',
@@ -104,6 +105,15 @@ angular.module('climbGameUser', [
           }
         }
       })
+      .state('home.user-role-csv', {
+        url: 'user-role-csv/',
+        views: {
+          'content@home': {
+            templateUrl: 'templates/user_role_csv.html',
+            controller: 'userRoleCsvCtrl'
+          }
+        }
+      })      
     }
   ])
 

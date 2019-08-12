@@ -250,6 +250,9 @@ public class AdminController extends AuthController {
 				}
 			}
 		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("uploadVolunteerUserCsv[%s]: %s %s", ownerId, instituteId, schoolId));
+		}
 		return errors;
 	}
 
