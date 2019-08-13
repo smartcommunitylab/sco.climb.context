@@ -1,3 +1,4 @@
 {
-	"tags": ["matematica","geografia","storia"]
+	"subjects": ["Geografia","Storia","Arte","Inglese","Tedesco"],
+	"schoolYears": ["1° elementare", "2° elementare", "3° elementare", "4° elementare", "5° elementare", "1° media", "2° media", "3° media"]
 }
