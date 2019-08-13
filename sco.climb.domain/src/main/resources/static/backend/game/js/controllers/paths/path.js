@@ -30,29 +30,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
     .controller('PathCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
         $scope.$parent.mainView = 'itinerary';
 
-        $scope.classes = [];
-
         $scope.initController = function () {
-
-            if ($scope.currentGame.classRooms != null) {
-                $scope.currentGame.classRooms.forEach(function (entry) {
-                    var classEntry = {
-                        value: false,
-                        name: entry
-                    };
-                    $scope.classes.push(classEntry);
-                });
-            }
 
             if ($scope.currentPath) { //edit path
                 $scope.saveData = DataService.editData;
-                $scope.classes.forEach(function (entry) {
-                    if ($scope.currentPath.classRooms != null) {
-                        if ($scope.currentPath.classRooms.includes(entry.name)) {
-                            entry.value = true;
-                        }
-                    }
-                });
                 $scope.$broadcast('pathLoaded');
                 DataService.getData('legs',
                     $stateParams.idDomain,
@@ -115,13 +96,6 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         // Save the changes made to the path
         $scope.save = function () {
             if (checkFields()) {
-                $scope.currentPath.classRooms = [];
-                $scope.classes.forEach(function (entry) {
-                    if (entry.value) {
-                        $scope.currentPath.classRooms.push(entry.name);
-                    }
-                });
-
                 $scope.saveData('itinerary', $scope.currentPath).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                     function (response) {
                         console.log('Salvataggio del percorso a buon fine.');
@@ -181,21 +155,6 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
     .controller('InfoCtrl', function ($scope, $rootScope) {
         $scope.$parent.selectedTab = 'info';
-
-        $scope.$on('pathLoaded', function (e) {
-            $scope.classToggled();
-        });
-
-        $scope.toggleSelectedClasses = function () {
-            $scope.classes.forEach(function (currentClass) {
-                currentClass.value = $scope.classesAllSelected;
-            });
-        }
-        $scope.classToggled = function () {
-            $scope.classesAllSelected = $scope.classes.every(function (cl) { return cl.value; })
-        }
-
-        $scope.classToggled();
     })
 
     .controller('LegsListCtrl', function ($scope, $state, $stateParams, $rootScope, $q, createDialog, DataService, drawMapLine) {
