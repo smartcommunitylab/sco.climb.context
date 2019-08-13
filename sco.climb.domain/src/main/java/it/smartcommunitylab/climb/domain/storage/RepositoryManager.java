@@ -1184,7 +1184,6 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("name", itinerary.getName());
 			update.set("description", itinerary.getDescription());
-			update.set("classRooms", itinerary.getClassRooms());
 			update.set("lastUpdate", actualDate);
 			mongoTemplate.updateFirst(query, update, PedibusItinerary.class);
 		}
@@ -1365,8 +1364,11 @@ public class RepositoryManager {
 			update.set("link", content.getLink());
 			update.set("type", content.getType());
 			update.set("geocoding", content.getGeocoding());
-			update.set("tags", content.getTags());
+			update.set("subjects", content.getSubjects());
+			update.set("schoolYears", content.getSchoolYears());
+			update.set("classes", content.getClasses());
 			update.set("sharable", content.isSharable());
+			update.set("publicLink", content.isPublicLink());
 			update.set("previewUrl", content.getPreviewUrl());
 			update.set("position", content.getPosition());
 			mongoTemplate.updateFirst(query, update, MultimediaContent.class);
@@ -1418,7 +1420,7 @@ public class RepositoryManager {
 	}
 	
 	public List<MultimediaContent> searchMultimediaContent(String text, Double lat, Double lng,
-			Double distance, String schoolId, String type, List<String> tags) {
+			Double distance, List<String> types, List<String> subjects, List<String> schoolYears) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if(Utils.isNotEmpty(text)) {
@@ -1434,14 +1436,14 @@ public class RepositoryManager {
 			Circle circle = new Circle(center, geoDistance);
 			criteria = criteria.and("geocoding").withinSphere(circle);
 		}
-		if(Utils.isNotEmpty(schoolId)) {
-			criteria = criteria.and("schoolId").is(schoolId);
+		if((types != null) && (types.size() > 0)) {
+			criteria = criteria.and("type").in(types);
 		}
-		if(Utils.isNotEmpty(type)) {
-			criteria = criteria.and("type").is(type);
+		if((subjects != null) && (subjects.size() > 0)) {
+			criteria = criteria.and("subjects").in(subjects);
 		}
-		if((tags != null) && (tags.size() > 0)) {
-			criteria = criteria.and("tags").in(tags);
+		if((schoolYears != null) && (schoolYears.size() > 0)) {
+			criteria = criteria.and("schoolYears").in(schoolYears);
 		}
 		criteria = criteria.and("sharable").is(true);
 		criteria = criteria.and("disabled").is(false);

@@ -132,7 +132,7 @@ public class DashboardController extends AuthController {
 		for(PedibusItineraryLeg leg : legs) {
 			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
 			for(MultimediaContent content : mcByLeg) {
-				if(!content.getTags().contains(classRoom)) {
+				if(!content.getClasses().contains(classRoom)) {
 					mcByLeg.remove(content);
 				}
 			}

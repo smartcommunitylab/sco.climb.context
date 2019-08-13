@@ -1009,18 +1009,19 @@ public class GamificationController extends AuthController {
 	}
 	
 	@RequestMapping(value = "/api/game/multimedia", method = RequestMethod.GET)
-	public @ResponseBody List<MultimediaResult> searchContent(
+	public @ResponseBody List<MultimediaResult> searchMultimediaContent(
 			@RequestParam (required=false) String text,
 			@RequestParam (required=false) Double lat,
 			@RequestParam (required=false) Double lng,
 			@RequestParam (required=false) Double distance,
-			@RequestParam (required=false) String schoolId,
-			@RequestParam (required=false) String type,
-			@RequestParam (required=false) List<String> tags,
+			@RequestParam (required=false) List<String> types,
+			@RequestParam (required=false) List<String> subjects,
+			@RequestParam (required=false) List<String> schoolYears,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		List<MultimediaResult> result = new ArrayList<MultimediaResult>();
-		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, distance, schoolId, type, tags);
+		List<MultimediaContent> list = storage.searchMultimediaContent(text, lat, lng, distance, 
+				types, subjects, schoolYears);
 		Map<String, MultimediaContent> contentMap = new HashMap<>();
 		Map<String, List<MultimediaContent>> contentMapRef = new HashMap<>();
 		for(MultimediaContent content : list) {
@@ -1046,7 +1047,7 @@ public class GamificationController extends AuthController {
 			result.add(multimediaResult);
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("searchContent:%s", result.size()));
+			logger.info(String.format("searchMultimediaContent:%s", result.size()));
 		}
 		return result;
 	}
@@ -1282,7 +1283,9 @@ public class GamificationController extends AuthController {
 				content.setType(mcToClone.getType());
 				content.setLink(mcToClone.getLink());
 				content.setGeocoding(mcToClone.getGeocoding());
-				content.setTags(mcToClone.getTags());
+				content.setClasses(mcToClone.getClasses());
+				content.setSubjects(mcToClone.getSubjects());
+				content.setSchoolYears(mcToClone.getSchoolYears());
 				content.setPreviewUrl(mcToClone.getPreviewUrl());
 				content.setPosition(mcToClone.getPosition());
 				content.setContentOwner(contentOwner);
@@ -1403,27 +1406,31 @@ public class GamificationController extends AuthController {
 		return player;		
 	}
 
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/mctags", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/mctags", method = RequestMethod.GET)
 	public @ResponseBody MultimediaContentTags getMultimediaContentTags(
 			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
+			@PathVariable String pedibusGameId,
 			HttpServletRequest request) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
-				Const.AUTH_RES_School, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		MultimediaContentTags contentTags = storage.getMultimediaContentTags();
-		School school = storage.getSchool(ownerId, instituteId, schoolId);
-		if(school != null) {
-			for(ClassRoom classRoom : school.getClasses()) {
-				String yearOfStudy = classRoom.getYearOfStudy();
-				if(Utils.isNotEmpty(yearOfStudy) && 
-						!contentTags.getTags().contains(yearOfStudy)) {
-					contentTags.getTags().add(yearOfStudy);
-				}
-			}
-		}
+		contentTags.setClasses(game.getClassRooms());
+//		School school = storage.getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+//		if(school != null) {
+//			for(ClassRoom classRoom : school.getClasses()) {
+//				String schoolYear = classRoom.getSchoolYear();
+//				if(Utils.isNotEmpty(schoolYear) && 
+//						!contentTags.getSchoolYears().contains(schoolYear)) {
+//					contentTags.getSchoolYears().add(schoolYear);
+//				}
+//			}
+//		}
 		return contentTags;
 	}
 

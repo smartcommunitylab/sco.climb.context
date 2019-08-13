@@ -18,8 +18,11 @@ public class MultimediaContent extends BaseObject {
 	private String link;
 	private String type;
 	private double[] geocoding; // lon/lat (for mongodb)
-	private List<String> tags = new ArrayList<>();
+	private List<String> subjects = new ArrayList<>();
+	private List<String> schoolYears = new ArrayList<>();
+	private List<String> classes = new ArrayList<>();
 	private boolean sharable = true;
+	private boolean publicLink = true; 
 	private boolean disabled = false;
 	private boolean published = false;
 	private String previewUrl;
@@ -74,12 +77,6 @@ public class MultimediaContent extends BaseObject {
 	}
 	public void setLegName(String legName) {
 		this.legName = legName;
-	}
-	public List<String> getTags() {
-		return tags;
-	}
-	public void setTags(List<String> tags) {
-		this.tags = tags;
 	}
 	public boolean isSharable() {
 		return sharable;
@@ -146,6 +143,30 @@ public class MultimediaContent extends BaseObject {
 	}
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	public boolean isPublicLink() {
+		return publicLink;
+	}
+	public void setPublicLink(boolean publicLink) {
+		this.publicLink = publicLink;
+	}
+	public List<String> getClasses() {
+		return classes;
+	}
+	public void setClasses(List<String> classes) {
+		this.classes = classes;
+	}
+	public List<String> getSubjects() {
+		return subjects;
+	}
+	public void setSubjects(List<String> subjects) {
+		this.subjects = subjects;
+	}
+	public List<String> getSchoolYears() {
+		return schoolYears;
+	}
+	public void setSchoolYears(List<String> schoolYears) {
+		this.schoolYears = schoolYears;
 	}
 	
 }

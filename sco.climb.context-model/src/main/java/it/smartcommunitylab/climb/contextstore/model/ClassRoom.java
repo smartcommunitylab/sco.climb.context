@@ -2,7 +2,7 @@ package it.smartcommunitylab.climb.contextstore.model;
 
 public class ClassRoom {
 	private String name;
-	private String yearOfStudy;
+	private String schoolYear;
 	
 	public String getName() {
 		return name;
@@ -10,15 +10,15 @@ public class ClassRoom {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getYearOfStudy() {
-		return yearOfStudy;
-	}
-	public void setYearOfStudy(String yearOfStudy) {
-		this.yearOfStudy = yearOfStudy;
-	}
 	
 	@Override
 	public String toString() {
 		return name;
+	}
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
 	}
 }
