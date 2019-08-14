@@ -1033,15 +1033,33 @@ public class GamificationController extends AuthController {
 							new ArrayList<MultimediaContent>());
 				}
 				contentMapRef.get(content.getContentReferenceId()).add(content);
+			} else {
+				if(!contentMapRef.containsKey(content.getObjectId())) {
+					contentMapRef.put(content.getObjectId(), 
+							new ArrayList<MultimediaContent>());
+				}
 			}
 		}
 		for(String contentId : contentMapRef.keySet()) {
-			MultimediaContent content = contentMap.get(contentId);
-			if(content == null) {
-				content = storage.getMultimediaContent(contentId);
+			MultimediaContent contentRef = contentMap.get(contentId);
+			if(contentRef == null) {
+				contentRef = storage.getMultimediaContent(contentId);
+			}
+			//union of subjects and schoolYears
+			for(MultimediaContent content : contentMapRef.get(contentId)) {
+				for(String subject : content.getSubjects()) {
+					if(!contentRef.getSubjects().contains(subject)) {
+						contentRef.getSubjects().add(subject);
+					}
+				}
+				for(String schoolYear : content.getSchoolYears()) {
+					if(!contentRef.getSchoolYears().contains(schoolYear)) {
+						contentRef.getSchoolYears().add(schoolYear);
+					}
+				}
 			}
 			MultimediaResult multimediaResult = new MultimediaResult();
-			multimediaResult.setReferenceContent(content);
+			multimediaResult.setReferenceContent(contentRef);
 			multimediaResult.setContents(contentMapRef.get(contentId));
 			result.add(multimediaResult);
 		}
