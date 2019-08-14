@@ -799,7 +799,6 @@ public class GamificationController extends AuthController {
 		content.setLegId(legId);
 		content.setLegName(leg.getName());
 		content.setGeocoding(leg.getGeocoding());
-		content.setPublished(game.isDeployed());
 		content.setContentOwner(contentOwner);
 		storage.saveMultimediaContent(content);
 		if (logger.isInfoEnabled()) {
@@ -1269,6 +1268,9 @@ public class GamificationController extends AuthController {
 			List<MultimediaContent> mcListToClone = storage.getMultimediaContentByLeg(
 					legToClone.getOwnerId(), legToClone.getObjectId());
 			for(MultimediaContent mcToClone : mcListToClone) {
+				if(mcToClone.isDisabled()) {
+					continue;
+				}
 				MultimediaContent content = new MultimediaContent();
 				content.setOwnerId(ownerId);
 				content.setInstituteId(instituteId);
@@ -1283,12 +1285,13 @@ public class GamificationController extends AuthController {
 				content.setType(mcToClone.getType());
 				content.setLink(mcToClone.getLink());
 				content.setGeocoding(mcToClone.getGeocoding());
-				content.setClasses(mcToClone.getClasses());
 				content.setSubjects(mcToClone.getSubjects());
 				content.setSchoolYears(mcToClone.getSchoolYears());
 				content.setPreviewUrl(mcToClone.getPreviewUrl());
 				content.setPosition(mcToClone.getPosition());
 				content.setContentOwner(contentOwner);
+				content.setSharable(mcToClone.isSharable());
+				content.setPublicLink(mcToClone.isPublicLink());
 				if(Utils.isNotEmpty(mcToClone.getContentReferenceId())) {
 					content.setContentReferenceId(mcToClone.getContentReferenceId());
 				} else {

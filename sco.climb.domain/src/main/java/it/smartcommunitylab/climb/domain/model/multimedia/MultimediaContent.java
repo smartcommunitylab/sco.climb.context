@@ -24,7 +24,6 @@ public class MultimediaContent extends BaseObject {
 	private boolean sharable = true;
 	private boolean publicLink = true; 
 	private boolean disabled = false;
-	private boolean published = false;
 	private String previewUrl;
 	private ContentOwner contentOwner;
 	private String contentReferenceId;
@@ -89,12 +88,6 @@ public class MultimediaContent extends BaseObject {
 	}
 	public void setDisabled(boolean disabled) {
 		this.disabled = disabled;
-	}
-	public boolean isPublished() {
-		return published;
-	}
-	public void setPublished(boolean published) {
-		this.published = published;
 	}
 	public String getPreviewUrl() {
 		return previewUrl;
