@@ -34,7 +34,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
@@ -51,10 +50,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableScheduling
 public class AppConfig extends WebMvcConfigurerAdapter {
 
-	@Autowired
-	@Value("${db.name}")
-	private String dbName;
-	
 	@Autowired
 	@Value("${defaultLang}")
 	private String defaultLang;
@@ -87,17 +82,14 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Value("${swagger.license.url}")
 	private String swaggerLicenseUrl;
 	
+	@Autowired
+	MongoTemplate mongoTemplate;
+	
 	public AppConfig() {
 	}
 
 	@Bean
-	public MongoTemplate getMongo() throws UnknownHostException, MongoException {
-		return new MongoTemplate(new MongoClient(), dbName);
-	}
-
-	@Bean
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
-		MongoTemplate mongoTemplate = getMongo();
 		mongoTemplate.indexOps(WsnEvent.class).ensureIndex(new Index().on("eventType", Direction.ASC));
 		mongoTemplate.indexOps(WsnEvent.class).ensureIndex(new Index().on("timestamp", Direction.ASC));
 		TextIndexDefinition textIndex = new TextIndexDefinitionBuilder().withDefaultLanguage("it")
