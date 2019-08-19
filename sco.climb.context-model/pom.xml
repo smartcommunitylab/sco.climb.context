@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.smartcommunitylab</groupId>
 	<artifactId>sco.climb.context-model</artifactId>
-	<version>1.0</version>
+	<version>1.3</version>
 	<packaging>jar</packaging>
 
 	<build>
