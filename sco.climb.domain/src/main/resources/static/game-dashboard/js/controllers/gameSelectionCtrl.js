@@ -16,6 +16,7 @@ angular.module('climbGame.controllers.gameSelection', [])
                 loginService.setSingleGame($scope.games.length == 1);
             		if($scope.games.length == 1) {
             			loginService.setGameId($scope.games[0].objectId)
+            			loginService.setAllClasses($scope.games[0].classRooms);
             			$state.go('itinerarySelection')
             		}          			
           		}
@@ -39,6 +40,7 @@ angular.module('climbGame.controllers.gameSelection', [])
       $scope.select = function () {
         if ($scope.selectedGame) {
           loginService.setGameId($scope.selectedGame.objectId);
+          loginService.setAllClasses($scope.selectedGame.classRooms);
           $state.go('itinerarySelection')
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_game')))
