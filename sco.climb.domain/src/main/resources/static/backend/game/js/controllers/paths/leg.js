@@ -26,7 +26,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 
     $scope.initController = function() {
         if ($stateParams.idLeg) { //edit path
-        		$scope.newLeg = false;
+        	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
@@ -36,7 +36,6 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             		$stateParams.idPath, $stateParams.idLeg).then(
             		function(response) {
             			if(response.data) {
-                            console.log("multimedia content::",response)
             				$scope.leg.externalUrls = response.data;
             				$scope.leg.externalUrls.forEach(function(element) {
             					if (element.type == 'video') {
@@ -84,9 +83,16 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
           			{lat: $scope.legs[$scope.leg.position-1].geocoding[1] + 0.05, lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
                 $scope.leg.additionalPoints, $scope.leg.transport);
           } else {
-          	drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
+              if($scope.leg.transport=='foot' || $scope.leg.transport=='car'){
+                drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
           			{lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
-                $scope.leg.coordinates, $scope.leg.polyline, $scope.leg.transport);
+                    $scope.leg.coordinates, $scope.leg.additionalPoints, $scope.leg.transport);
+              }else{
+                drawMapLeg.createMap('map-leg', 'geocodeHintInput', 
+                    {lat: $scope.legs[$scope.leg.position-1].geocoding[1], lng: $scope.legs[$scope.leg.position-1].geocoding[0]}, 
+                    $scope.leg.coordinates, $scope.leg.polyline, $scope.leg.transport);
+              }
+          	
           } 
         }
 
