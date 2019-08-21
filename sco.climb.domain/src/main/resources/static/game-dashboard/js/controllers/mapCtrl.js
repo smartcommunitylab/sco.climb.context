@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService) {
+  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", "dataService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService, dataService) {
     $scope.IMAGES_PREFIX_URL = configService.IMAGES_PREFIX_URL;
     $scope.demoUpdateTimeout = $location.search().demoupdatetimeout; 
     $scope.demoCenterLat = $location.search().demolat; 
@@ -348,58 +348,11 @@ angular.module("climbGame.controllers.map", [])
               weight: 5,
               latlngs: mapService.decode(data.legs[i].polyline)
             }
-            //create div of external url
-          var externalUrl = '<div class="external-urls-viewer" id="external-urls-viewer">';
-          for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
-            switch (data.legs[i].externalUrls[k].type) {
-              case 'image':
-                externalUrl = externalUrl + '<div class="url-view-col url-view-col-image"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="' + data.legs[i].externalUrls[k].link + '"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
-                break;
-              case 'video':
-                //try to find thumbnail from youtube
-                var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                var match = data.legs[i].externalUrls[k].link.match(regExp);
-                if (match && match[2].length == 11) {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="'+configService.IMAGES_PREFIX_URL+'img/ic_play.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
-                } else {
-                  externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_video.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
-                }
-                break;
-              case 'link':
-                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_link.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
-                break;
-              case 'file':
-                externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_file.png"/><p>' + data.legs[i].externalUrls[k].name + '</p></a></div>';
-                break;
-            }
-          }
-          externalUrl += '</div>'
-          if (data.legs[i].externalUrls.length > 2) {
-            externalUrl += '<div class="controls">'
-              +'<md-button class="md-icon-button" ng-click="scroll(\'up\')">'
-              +'<md-icon class="icon-arrow_up"></md-icon>'
-              +'</md-button>'
-              +'<md-button class="md-icon-button" ng-click="scroll(\'down\')">'
-              +'<md-icon class="icon-arrow_down"></md-icon>'
-              +'</md-button>'
-              +'</div>';
-          }
-          var icon = getMarkerIcon(data.legs[i]);
-          if ((data.legs[i].position < $scope.currentLeg.position) || $scope.endReached) {
-            $scope.pathMarkers.push(getMarker(data.legs[i], externalUrl, icon, i));
-            //marker with message
-          } else {
-            //marker without message
-            $scope.pathMarkers.push(getMarker(data.legs[i], null, icon, i));
-          }
-
           if (data.legs[i].position - $scope.currentLeg.position <= 1 && data.legs[i].position - $scope.currentLeg.position >= -2) {       
               $scope.myInitialBounds.extend(L.latLng(data.legs[i].geocoding[1], data.legs[i].geocoding[0]));
           }
-
         }
 
-        addPlayerPosition();
         //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
         setGallerySize();
         setMapSize();
@@ -412,12 +365,69 @@ angular.module("climbGame.controllers.map", [])
         }, function (err) {
 
         });
+        
+        //get multimedia content
+        dataService.getMultimediaContent().then(
+        	function(data) {
+        		var legMCMap = data;
+        		for (var i = 0; i < $scope.legs.length; i++) {
+        			var icon = getMarkerIcon($scope.legs[i]);
+        			if (($scope.legs[i].position < $scope.currentLeg.position) || $scope.endReached) {
+                 //create div of external url
+                 var externalUrl = '<div class="external-urls-viewer" id="external-urls-viewer">';
+                 var externalUrls = legMCMap[$scope.legs[i].objectId];
+                 if(!externalUrls) {
+                	 externalUrls = [];
+                 }
+                 for (var k = 0; k < externalUrls.length; k++) {
+                   switch (externalUrls[k].type) {
+                     case 'image':
+                       externalUrl = externalUrl + '<div class="url-view-col url-view-col-image"> ' + ' <a href="' + externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="' + externalUrls[k].link + '"/><p>' + externalUrls[k].name + '</p></a></div>';
+                       break;
+                     case 'video':
+                       //try to find thumbnail from youtube
+                       var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                       var match = externalUrls[k].link.match(regExp);
+                       if (match && match[2].length == 11) {
+                         externalUrl = externalUrl + '<div class="url-view-col url-view-col-video-yt"> ' + ' <a href="' + externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="https://img.youtube.com/vi/' + match[2] + '/0.jpg"/><img class="url-view-play" src="'+configService.IMAGES_PREFIX_URL+'img/ic_play.png"/><p>' + externalUrls[k].name + '</p></a></div>';
+                       } else {
+                         externalUrl = externalUrl + '<div class="url-view-col url-view-col-video"> ' + ' <a href="' + externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_video.png"/><p>' + externalUrls[k].name + '</p></a></div>';
+                       }
+                       break;
+                     case 'link':
+                       externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_link.png"/><p>' + externalUrls[k].name + '</p></a></div>';
+                       break;
+                     case 'file':
+                       externalUrl = externalUrl + '<div class="url-view-col url-view-col-link"> ' + ' <a href="' + externalUrls[k].link + '" target="_blank"><img class="map-gallery" src="'+configService.IMAGES_PREFIX_URL+'img/ic_file.png"/><p>' + externalUrls[k].name + '</p></a></div>';
+                       break;
+                   }
+                 }
+                 externalUrl += '</div>'
+                 if (externalUrls.length > 2) {
+                   externalUrl += '<div class="controls">'
+                     +'<md-button class="md-icon-button" ng-click="scroll(\'up\')">'
+                     +'<md-icon class="icon-arrow_up"></md-icon>'
+                     +'</md-button>'
+                     +'<md-button class="md-icon-button" ng-click="scroll(\'down\')">'
+                     +'<md-icon class="icon-arrow_down"></md-icon>'
+                     +'</md-button>'
+                     +'</div>';
+                 }
+                 $scope.pathMarkers.push(getMarker($scope.legs[i], externalUrl, icon, i));
+        			 } else {
+        				 $scope.pathMarkers.push(getMarker($scope.legs[i], null, icon, i));
+        			}
+        		}
+            addPlayerPosition();
+        	}, 
+        	function (err) {
+        		
+        	}
+        );
       },
       function (err) {
         //error with status
       });
-
-      
     }
 
     init();

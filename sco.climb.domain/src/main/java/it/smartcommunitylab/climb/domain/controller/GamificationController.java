@@ -670,9 +670,10 @@ public class GamificationController extends AuthController {
 		leg.setPedibusGameId(pedibusGameId);
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
+		leg.setObjectId(legId);
 		storage.savePedibusItineraryLeg(leg, ownerId, true);
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("updatePedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
+			logger.info(String.format("updatePedibusItineraryLeg[%s]: %s", ownerId, legId));
 		}
 		return leg;
 	}
