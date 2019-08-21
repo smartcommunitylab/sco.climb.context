@@ -8,13 +8,16 @@ angular.module('consoleControllers.leg')
 	$scope.tagListToggle = function(){
         $('.wrapper .list').slideToggle('fast');
 	}
-    $scope.tags = [
-		{name:'tag1'},
-		{name:'tag2'},
-		{name:'tag3'},
-		{name:'tag4'},
-		{name:'tag5'}
-	];
+	$scope.tags= [];
+	dataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
+		function(response) {
+			angular.forEach(response.data.classes, function(value, key){
+				$scope.tags.push({name:value});
+			});
+		},function(error) {
+			console.log('Errore :' , error.data.errorMsg);
+		}
+	);
 	$scope.getSelectedtags = function(tag){
         return tag.selected;
 	};
@@ -57,21 +60,22 @@ angular.module('consoleControllers.leg')
     	var formData = new FormData();
     	formData.append('file', file);
     	var element = {
-    			"ownerId": leg.ownerId,
-    			"pedibusGameId": leg.pedibusGameId,
-    			"itineraryId": leg.itineraryId,
-    			"legId": leg.objectId,
-          "formdata": formData,
+			"ownerId": leg.ownerId,
+			"pedibusGameId": leg.pedibusGameId,
+			"itineraryId": leg.itineraryId,
+			"legId": leg.objectId,
+			"formdata": formData,
     	};
     	dataService.uploadFileContent(element).then(
-    			function (response) {
-            $scope.newMedia.link = response.data.link;
-            $scope.file = null;
-            $scope.loading = false;
-    			},
-    			function (error) {
-    				$scope.errorMsg = "Errore di comunicazione con il sistema";
-    				$scope.loading = false;
-    			});
+			function (response) {
+				$scope.newMedia.link = response.data.link;
+            	$scope.file = null;
+            	$scope.loading = false;
+			},
+			function (error) {
+				$scope.errorMsg = "Errore di comunicazione con il sistema";
+				$scope.loading = false;
+			}
+		);
     };
 });

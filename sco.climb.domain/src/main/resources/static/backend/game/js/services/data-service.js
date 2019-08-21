@@ -306,6 +306,10 @@ function ($q, $http, $rootScope, $timeout) {
         var fetchUrl = baseUrl + '/api/game/modalitymap';
         return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
         },
+        getMultimediaContentTags: function(ownerId, pedibusGameId) {
+            var fetchUrl = baseUrl + '/api/game/' + ownerId + "/" + pedibusGameId + "/mctags";
+            return $http.get(fetchUrl, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+        },
         getMultimediaContent: function(ownerId, pedibusGameId, itineraryId, legId) {
         var fetchUrl = baseUrl + '/api/game/' + ownerId + "/" + pedibusGameId + "/itinerary/" 
         + itineraryId + "/leg/" + legId + "/content";
