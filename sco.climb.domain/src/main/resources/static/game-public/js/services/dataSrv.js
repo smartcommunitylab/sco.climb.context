@@ -27,6 +27,27 @@ angular.module('climbGame.services.data', [])
       })
       return deferred.promise
     }
-
+    
+    dataService.getMultimediaContent = function () {
+    	var deferred = $q.defer()
+      $http({
+        method: 'GET',
+        url: configService.getURL() + '/api/game/mc/' 
+        + $stateParams.idDomain 
+        + '/' + $stateParams.idGame
+        + '/' + $stateParams.idItinerary,
+        headers: {
+          'Accept': 'application/json'
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise   	
+    }
+    
     return dataService
   })

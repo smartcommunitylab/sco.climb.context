@@ -132,7 +132,7 @@ public class DashboardController extends AuthController {
 		for(PedibusItineraryLeg leg : legs) {
 			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
 			for(MultimediaContent content : mcByLeg) {
-				if(!content.getClasses().contains(classRoom)) {
+				if(content.isDisabled() || !content.getClasses().contains(classRoom)) {
 					mcByLeg.remove(content);
 				}
 			}
@@ -159,7 +159,7 @@ public class DashboardController extends AuthController {
 		for(PedibusItineraryLeg leg : legs) {
 			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
 			for(MultimediaContent content : mcByLeg) {
-				if(!content.isSharable()) {
+				if(content.isDisabled() || !content.isPublicLink()) {
 					mcByLeg.remove(content);
 				}
 			}
