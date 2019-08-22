@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.School;
-import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.Marker;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
@@ -97,7 +96,10 @@ public class JsonConverter {
 					PedibusItinerary itinerary = parseItinerary(ownerId, instituteId, schoolId, rootNode);
 					if(storage.existsPedibusGame(itinerary.getPedibusGameId())) {
 						storage.savePedibusItinerary(itinerary);
-					}					
+					}	else {
+						logger.warn("storePedibusItinerary skip:{}/{}", itinerary.getObjectId(), 
+								itinerary.getPedibusGameId());
+					}
 				} catch (Exception e) {
 					logger.warn("storePedibusItinerary error:{}/{}", count, e.getMessage());
 				}
@@ -154,7 +156,10 @@ public class JsonConverter {
 		if(rootNode.hasNonNull("gameDescription")) {
 			game.setGameDescription(rootNode.get("gameDescription").asText());
 		}
-		if(rootNode.hasNonNull("from") && rootNode.hasNonNull("from")) {
+		if(rootNode.hasNonNull("globalTeam")) {
+			game.setGlobalTeam(rootNode.get("globalTeam").asText());
+		}
+		if(rootNode.hasNonNull("from") && rootNode.hasNonNull("to")) {
 			Date from = sdf.parse(rootNode.get("from").get("$date").asText());
 	    game.setFrom(from);
 	    Date to = sdf.parse(rootNode.get("to").get("$date").asText());
@@ -232,7 +237,6 @@ public class JsonConverter {
 		for(JsonNode node : rootNode.get("externalUrls")) {
 			MultimediaContent content = new MultimediaContent();
 			content.setOwnerId(ownerId);
-			content.setObjectId(Utils.getUUID());
 			content.setInstituteId(instituteId);
 			content.setInstituteName(institute.getName());
 			content.setSchoolId(schoolId);

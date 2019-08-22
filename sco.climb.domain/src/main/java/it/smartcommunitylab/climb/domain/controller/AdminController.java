@@ -314,7 +314,11 @@ public class AdminController extends AuthController {
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
-			@RequestParam String path) {
+			@RequestParam String path,
+			HttpServletRequest request) throws Exception{
+		if(!validateRole(Const.ROLE_ADMIN, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		try {
 			FileReader gameReader = new FileReader(path + "/pedibusGame.json");
 			if(jsonConverter.storePedibusGame(ownerId, instituteId, schoolId, gameReader)) {
