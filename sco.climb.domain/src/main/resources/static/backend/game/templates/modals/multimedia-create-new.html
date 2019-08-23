@@ -1,12 +1,16 @@
-<div>
+<!-- <div>
     <div class="modal-body">
     		
-				<div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
-					<a class="close" data-hide="alert" aria-label="close"
-					data-ng-click="resetError()">&times;</a>
-					{{errorMsg}}
-				</div>
-        <p><b>Aggiungi un nuovo elemento multimediale</b></p>
+        <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
+            <a class="close" data-hide="alert" aria-label="close"
+            data-ng-click="resetError()">&times;</a>
+            {{errorMsg}}
+        </div>
+        
+        <div class="add-media field">
+            <p><b>Titolo:</b></p>
+            <input class="form-control" type="text" ng-model="newMedia.name" />
+        </div>
         <div class="add-media field">
             <p><b>Tipologia:</b></p>
             <select class="form-control" ng-model="newMedia.type">
@@ -15,10 +19,6 @@
                 <option value="link">Collegamento a pagina web</option>
                 <option value="file">File</option>
             </select>
-        </div>
-        <div class="add-media field">
-            <p><b>Titolo:</b></p>
-            <input class="form-control" type="text" ng-model="newMedia.name" />
         </div>
         <div class="add-media field">
             <p><b>URL:</b> <span class="required-sign">*</span></p>
@@ -44,7 +44,7 @@
                 </ul>
             </div>
         </div>
-        <!-- Upload pic on imgur -->
+
         <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
             <div class="field add-media">
                 <p>oppure scegli e carica un file. I file saranno ad accesso pubblico; devono essere privi di copyright e rispettare...:<p> 
@@ -60,4 +60,51 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+<div class="container container-dialog"> 
+    <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
+        <a class="close" data-hide="alert" aria-label="close"
+        data-ng-click="resetError()">&times;</a>
+        {{errorMsg}}
+    </div>          
+    <table class="table table-striped ">
+      <tbody>
+        <tr class="info">
+          <td>
+            <div class="add-media field">
+                <p><span class="required-sign">*</span> 1. Iserisci il titolo del materiale</p>
+            </div>
+          </td>
+          <td>
+            <input class="form-control" type="text" ng-model="newMedia.name" required/>
+          </td>
+        </tr>
+        <tr class="info">
+          <td>
+            <div class="add-media field">
+                <p><span class="required-sign">*</span> 2. Seleziona la tipologia del materiale</p>
+            </div>
+          </td>
+          <td>
+            <div class="add-media field">
+                <select class="form-control" ng-model="newMedia.type">
+                    <option value="image">Immagine</option>
+                    <option value="video">Video</option>
+                    <option value="link">Collegamento a pagina web</option>
+                    <option value="file">File</option>
+                </select>
+            </div>
+          </td>
+        </tr>
+        <tr class="info">
+          <td>
+            <div class="add-media field">
+                <p><span class="required-sign">*</span> 3.a Inserisci I'indirizzo web (URL)</p>
+            </div>
+          </td>
+          <td>
+            <input type="url" class="form-control" ng-model="newMedia.link" required/></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

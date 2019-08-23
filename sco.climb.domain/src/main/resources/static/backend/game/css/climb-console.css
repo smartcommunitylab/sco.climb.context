@@ -758,23 +758,24 @@ body{
   } */
 
   /****************/
-  .vertical-alignment-helper {
-    display:table;
-    height: 100%;
-    width: 100%;
-    pointer-events:none; 
+
+.container-dialog {
+      width: inherit !important;
+  }
+
+.modal-body {
+    max-height: calc(100vh - 210px);
+    /* max-height: 100%; */
+    overflow-y: auto;
 }
-.vertical-align-center {
-    display: table-cell;
-    vertical-align: middle;
-    pointer-events:none;
+
+.table-striped{
+    border-collapse:separate; 
+    -webkit-border-vertical-spacing: 2px;
 }
-.modal-content {
-    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-    width:inherit;
-    max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
-    height:inherit;
-    /* To center horizontally */
-    margin: 0 auto;
-    pointer-events: all;
+.table-striped td:first-child {
+    border-radius: 5px 0 0 5px;
+}
+.table-striped td:last-child {
+    border-radius: 0 5px 5px 0;
 }
