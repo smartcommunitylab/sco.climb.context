@@ -774,8 +774,39 @@ body{
     -webkit-border-vertical-spacing: 2px;
 }
 .table-striped td:first-child {
-    border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px !important;
 }
 .table-striped td:last-child {
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0 !important;
+}
+.table-striped td.round-td {
+    border-radius: 5px 5px 5px 5px !important;
+}
+hr.cBlue{
+    /* color: #5996d1;
+    background-color: #5996d1; */
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-top: 1px solid #5996d1;
+}
+.cBlue-text{
+    color:#5996d1;
+}
+.tableFullWith{
+    min-width: 100%;
+}
+
+.tab { 
+    display:inline-block; 
+    margin-left: 5px; 
+}
+.dropdownPublicLink{
+    width: 15%;
+    height: 30px; 
+    display: inline-block;
+}
+.dropdownCondiviso{
+    width: 22%;
+    height: 30px; 
+    display: inline-block;
 }

@@ -2,9 +2,10 @@ angular.module('consoleControllers.leg')
 
 .controller('CreateNewMultimediaElementDialogCtrl', function ($scope, addElementsFunction, saveFunction, dataService, leg) {
 	$scope.errorMsg;
-    $scope.newMedia = {type: 'image'};
+    $scope.newMedia = {type: ''};
 	$scope.loading = false;
-
+	$scope.newMedia = {publicLink: 'si'};
+	// $scope.newMedia = {sharable: 'sharable'};
 	$scope.tagListToggle = function(){
         $('.wrapper .list').slideToggle('fast');
 	}

@@ -71,23 +71,24 @@
       <tbody>
         <tr class="info">
           <td>
-            <div class="add-media field">
-                <p><span class="required-sign">*</span> 1. Iserisci il titolo del materiale</p>
+            <div>
+                <p><span class="required-sign">*</span><span class="tab"></span> 1. Iserisci il titolo del materiale</p>
             </div>
           </td>
           <td>
-            <input class="form-control" type="text" ng-model="newMedia.name" required/>
+            <input class="form-control" type="text" ng-model="newMedia.name" placeholder="Titolo" required/>
           </td>
         </tr>
         <tr class="info">
           <td>
-            <div class="add-media field">
-                <p><span class="required-sign">*</span> 2. Seleziona la tipologia del materiale</p>
+            <div>
+                <p><span class="required-sign">*</span><span class="tab"></span> 2. Seleziona la tipologia del materiale</p>
             </div>
           </td>
           <td>
-            <div class="add-media field">
+            <div>
                 <select class="form-control" ng-model="newMedia.type">
+                    <option value="" selected disabled style="display: none;">Tipologia</option>
                     <option value="image">Immagine</option>
                     <option value="video">Video</option>
                     <option value="link">Collegamento a pagina web</option>
@@ -97,13 +98,121 @@
           </td>
         </tr>
         <tr class="info">
-          <td>
-            <div class="add-media field">
-                <p><span class="required-sign">*</span> 3.a Inserisci I'indirizzo web (URL)</p>
-            </div>
-          </td>
-          <td>
-            <input type="url" class="form-control" ng-model="newMedia.link" required/></td>
+            <td colspan="2" class="round-td">
+                <table class="tableFullWith">
+                    <tbody >
+                        <tr class="info">
+                            <td colspan="2">
+                                <div>
+                                    <p><span class="required-sign">*</span> <span class="tab"></span> 3.a) Inserisci I'indirizzo web (URL)</p>
+                                </div>
+                            </td>
+                            <td >
+                                <input type="url" class="form-control" ng-model="newMedia.link" placeholder="URL" required/>
+                            </td>
+                        </tr>
+                        <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')"> <td colspan="3"><hr class="cBlue"></td> </tr>
+                        <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
+                            <td>
+                                <p>  <span class="tab"></span><span class="tab"></span> 3.b) Seleziona un file dal computer</p>
+                            </td>
+                            <td colspan="2">
+                                <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
+                                    <div >
+                                        <p>{{file.filename ? file.filename : 'Nessun file selezionato'}}</p>
+                                        <span ng-disabled="loading" class="btn btn-info btn-file btn-margin">
+                                            Scegli<input type="file" id="upload-content-file" base-sixty-four-input ng-model="file" />
+                                        </span>
+                                        <button ng-disabled="!file" ng-click="uploadFile()" class="btn btn-info">
+                                            <span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                            Carica
+                                        </button>
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
+                            <td colspan="3"><p class="cBlue-text"> <span class="tab"></span><span class="tab"></span> <b>Attenzione!</b> I file devono essere privi de copyright e rispattare la legge sul trattamento dei dati personali.</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr class="info">
+            <td colspan="2" class="round-td">
+                <p><span class="tab"></span> 4. <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                 
+                <div> 
+                    <span class="tab"></span>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 1
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 2
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 3
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr class="info">
+            <td colspan="2" class="round-td">
+                <p>
+                    <span class="tab"></span> 5. Visibile con il <b> link pubblico del gioco</b>
+                    <select class="form-control dropdownPublicLink"  ng-model="newMedia.publicLink">
+                        <option value="si" >Si</option>
+                        <option value="no">No</option>
+                    </select>
+                </p>
+                <div>
+                    <p> <span class="tab"></span> Il materiale sara ad accesso pubblico. Chiunque in possesso del link pubblico del gioco lo potra vedere.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="info">
+            <td colspan="2" class="round-td">
+                <p>
+                    <span class="tab"></span> 6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca gia utilizzati."
+                    <select class="form-control dropdownCondiviso"  ng-model="newMedia.publicLink">
+                        <option value="si" >Condiviso</option>
+                        <option value="no">No</option>
+                    </select>
+                </p>
+            </td>
+        </tr>
+        <tr class="info">
+            <td colspan="2" class="round-td">
+                <p><span class="tab"></span> 7. <b> Elicchetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca gia utilizzati."</p>
+                
+                <div> 
+                    <span class="tab"><u>Materia:</u></span> 
+                    <span class="tab"></span> 
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 1
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 2
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 3
+                    </label>
+                </div>
+                <div> 
+                    <span class="tab"><u>Classi:</u></span> 
+                    <span class="tab"></span> 
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 1
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 2
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="checkBoxStyle" value=""> 3
+                    </label>
+                </div>
+            </td>
         </tr>
       </tbody>
     </table>
