@@ -273,8 +273,8 @@ public class ExcelConverter {
 					double[] geocoding = new double[2];
 					String[] split = posizione.split(",");
 					try {
-						geocoding[0] = Double.valueOf(split[0]);
-						geocoding[1] = Double.valueOf(split[1]);
+						geocoding[0] = Double.valueOf(split[1]);
+						geocoding[1] = Double.valueOf(split[0]);
 					} catch (Exception e) {
 						ExcelError error = new ExcelError(sheet.getSheetName(), i, "posizione non valida");
 						errors.add(error);
