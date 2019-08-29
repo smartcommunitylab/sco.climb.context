@@ -40,9 +40,10 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
 
             var key;
             var idAttr = options.id ? ' id="' + options.id + '" ' : '';
-            var defaultFooter = '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
+            var defaultFooter = '<span style="float:left;">I campi contrassegnati con simbolo <span class="required-sign">*</span> sono obbligatori</span>';
+            defaultFooter +='<button class="btn btn-success" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
             if (!options.noCancelBtn) {
-                defaultFooter += '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
+                //defaultFooter += '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
             }
             var footerTemplate = '<div class="modal-footer">' +
                 (options.footerTemplate || defaultFooter) +
@@ -68,7 +69,7 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
                 '    <div class="modal-content">' +
                 '      <div class="modal-header">' +
                 '        <button type="button" class="close" ng-click="$modalCancel()">&times;</button>' +
-                '        <h2>{{$title}}</h2>' +
+                '        <h2 style="text-align: center;">{{$title}}</h2>' +
                 '      </div>' +
                 modalBody +
                 footerTemplate +

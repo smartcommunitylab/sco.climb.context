@@ -506,12 +506,16 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         $scope.leg.externalUrls.push(element);
     };
-    var addMultimediaData = function(name, link, type, tags) {
+    var addMultimediaData = function(name, link, type, classes, subjects, schoolYears, publicLink, sharable) {
         var element = {
             name: name,
             link: link,
             type: type,
-            tags: tags,
+            classes: classes,
+            subjects: subjects,
+            schoolYears: schoolYears,
+            publicLink: publicLink,
+            sharable: sharable,
             position: $scope.leg.externalUrls.length+1
         };
         if (type == 'video') {
@@ -519,6 +523,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         // $scope.leg.externalUrls.push(angular.toJson(element));
         $scope.leg.externalUrls.push(element);
+        console.log("Give Data:",element)
     };
 
 
@@ -526,7 +531,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         createDialog('templates/modals/multimedia-create-new.html',
             {
                 id : 'create-new-multimedia-dialog',
-                title: 'Crea nuovo elemento multimediale',
+                title: '+ Crea nuovo',
                 controller: 'CreateNewMultimediaElementDialogCtrl',
                 success: {
                     label: "Aggiungi elemento",

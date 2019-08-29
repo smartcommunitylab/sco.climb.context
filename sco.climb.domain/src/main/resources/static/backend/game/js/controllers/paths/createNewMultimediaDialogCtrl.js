@@ -4,16 +4,29 @@ angular.module('consoleControllers.leg')
 	$scope.errorMsg;
     $scope.newMedia = {type: ''};
 	$scope.loading = false;
-	$scope.newMedia = {publicLink: 'si'};
-	// $scope.newMedia = {sharable: 'sharable'};
+	$scope.publicLink = true;
+	$scope.sharable =  true;
 	$scope.tagListToggle = function(){
         $('.wrapper .list').slideToggle('fast');
 	}
 	$scope.tags= [];
+	$scope.classes=[];
+	$scope.schoolYears=[];
+	$scope.subjects=[];
 	dataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
+			console.log("tags::",response)
+			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
-				$scope.tags.push({name:value});
+				$scope.classes.push({class:value,selected:false});
+			});
+			// $scope.schoolYears=response.data.schoolYears;
+			angular.forEach(response.data.schoolYears, function(value, key){
+				$scope.schoolYears.push({schoolYear:value,selected:false});
+			});
+			// $scope.subjects=response.data.subjects;
+			angular.forEach(response.data.subjects, function(value, key){
+				$scope.subjects.push({subject:value,selected:false});
 			});
 		},function(error) {
 			console.log('Errore :' , error.data.errorMsg);
@@ -22,12 +35,20 @@ angular.module('consoleControllers.leg')
 	$scope.getSelectedtags = function(tag){
         return tag.selected;
 	};
-	
+	$scope.changePublicLink = function(publicLink){
+		$scope.publicLink = publicLink;
+		console.log("publicLink",$scope.publicLink)
+	}
+	$scope.changeSharable = function(sharable){
+		$scope.sharable = sharable;
+		console.log("sharable",$scope.sharable)
+	}
     $scope.resetError = function() {
     	$scope.errorMsg = undefined;
     }
     
     $scope.$modalSuccess = function() {
+		console.log("class after success::",$scope.classes)
         if(!$scope.newMedia.link) {     // controlla che sia stato inserito un URL
             $scope.errorMsg = "Non è stato inserito un indirizzo valido.";
         }
@@ -40,7 +61,24 @@ angular.module('consoleControllers.leg')
 						$scope.newMedia.tags.push(element.name)
 					}
 				});
-                addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, $scope.newMedia.tags);
+				var classes=[],subjects=[],schoolYears=[];
+				$scope.classes.forEach(element => {
+					if(element.selected){
+						classes.push(element.class)
+					}
+				});
+				$scope.subjects.forEach(element => {
+					if(element.selected){
+						subjects.push(element.subject)
+					}
+				});
+				$scope.schoolYears.forEach(element => {
+					if(element.selected){
+						schoolYears.push(element.schoolYear)
+					}
+				});
+				addElementsFunction($scope.newMedia.name, $scope.newMedia.link, $scope.newMedia.type, 
+					classes, subjects, schoolYears, $scope.publicLink, $scope.sharable);
                 $scope.$modalClose();
                 saveFunction();
             }

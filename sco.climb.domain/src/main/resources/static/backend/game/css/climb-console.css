@@ -657,7 +657,11 @@ legend {
     height: 20px;
     margin: -1px 0px 0px -22px !important;
 }
-
+.cbStyle{
+    width: 20px;
+    height: 20px;
+    margin: 0px 5px 0px 5px !important;
+}
 .classSelector{
     min-width: 29% !important;
     min-height: 29px;
@@ -766,9 +770,14 @@ body{
 .modal-body {
     max-height: calc(100vh - 210px);
     /* max-height: 100%; */
-    overflow-y: auto;
+    overflow: auto !important;
+    padding: 10px;
 }
-
+.modal-header{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #d9edf7;
+}
 .table-striped{
     border-collapse:separate; 
     -webkit-border-vertical-spacing: 2px;
@@ -801,7 +810,7 @@ hr.cBlue{
     margin-left: 5px; 
 }
 .dropdownPublicLink{
-    width: 15%;
+    width: 23%;
     height: 30px; 
     display: inline-block;
 }

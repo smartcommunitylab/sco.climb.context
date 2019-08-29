@@ -114,7 +114,7 @@
                         <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')"> <td colspan="3"><hr class="cBlue"></td> </tr>
                         <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
                             <td>
-                                <p>  <span class="tab"></span><span class="tab"></span> 3.b) Seleziona un file dal computer</p>
+                                <p class="tab">  <span class="tab"></span> 3.b) Seleziona un file dal computer</p>
                             </td>
                             <td colspan="2">
                                 <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
@@ -133,7 +133,7 @@
                             </td>
                         </tr>
                         <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
-                            <td colspan="3"><p class="cBlue-text"> <span class="tab"></span><span class="tab"></span> <b>Attenzione!</b> I file devono essere privi de copyright e rispattare la legge sul trattamento dei dati personali.</p></td>
+                            <td colspan="3"><p class="cBlue-text tab"> <b>Attenzione!</b> I file devono essere privi de copyright e rispattare la legge sul trattamento dei dati personali.</p></td>
                         </tr>
                     </tbody>
                 </table>
@@ -141,55 +141,63 @@
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p><span class="tab"></span> 4. <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                <p class="tab"> 4. <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
                  
-                <div> 
-                    <span class="tab"></span>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 1
+                <div class="tab"> 
+                    <label class="checkbox-inline" ng-repeat="c in classes">
+                        {{c.class}}<input type="checkbox" class="cbStyle" ng-model="c.selected">
                     </label>
-                    <label class="checkbox-inline">
+                    <!-- <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 2
                     </label>
                     <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label>
+                    </label> -->
                 </div>
             </td>
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p>
-                    <span class="tab"></span> 5. Visibile con il <b> link pubblico del gioco</b>
-                    <select class="form-control dropdownPublicLink"  ng-model="newMedia.publicLink">
-                        <option value="si" >Si</option>
-                        <option value="no">No</option>
+                <p class="tab">
+                    5. Visibile con il <b> link pubblico del gioco</b>
+                    <select class="form-control dropdownPublicLink" 
+                        ng-model="publicLink"
+                        ng-options="o.v as o.n for o in [{ n: 'Si', v: true }, { n: 'No', v: false }]"
+                        ng-change="changePublicLink(publicLink)">
                     </select>
                 </p>
                 <div>
-                    <p> <span class="tab"></span> Il materiale sara ad accesso pubblico. Chiunque in possesso del link pubblico del gioco lo potra vedere.</p>
+                    <p class="tab">  Il materiale sara ad accesso pubblico. Chiunque in possesso del link pubblico del gioco lo potra vedere.</p>
                 </div>
             </td>
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p>
-                    <span class="tab"></span> 6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca gia utilizzati."
-                    <select class="form-control dropdownCondiviso"  ng-model="newMedia.publicLink">
+                <p class="tab">
+                    6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca gia utilizzati."
+                    <!-- <select class="form-control dropdownCondiviso"  ng-model="sharable">
                         <option value="si" >Condiviso</option>
                         <option value="no">No</option>
+                    </select> -->
+                    <select class="form-control dropdownCondiviso" 
+                        ng-model="sharable"
+                        ng-options="o.v as o.n for o in [{ n: 'Condiviso', v: true }, { n: 'No', v: false }]"
+                        ng-change="changeSharable(sharable)">
                     </select>
                 </p>
             </td>
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p><span class="tab"></span> 7. <b> Elicchetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca gia utilizzati."</p>
-                
-                <div> 
-                    <span class="tab"><u>Materia:</u></span> 
+                <p class="tab"> 7. <b> Elicchetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca gia utilizzati."</p>
+                <br>
+                <div class="tab"> 
+                    <span ><u>Materia:</u></span> 
                     <span class="tab"></span> 
-                    <label class="checkbox-inline">
+                    <label class="checkbox-inline" ng-repeat="s in subjects">
+                        {{s.subject}}<input type="checkbox" class="cbStyle" ng-model="s.selected">
+                    </label>
+                    <!-- <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 1
                     </label>
                     <label class="checkbox-inline">
@@ -197,12 +205,16 @@
                     </label>
                     <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label>
+                    </label> -->
                 </div>
-                <div> 
-                    <span class="tab"><u>Classi:</u></span> 
+                <br>
+                <div class="tab"> 
+                    <span ><u>Classi:</u></span> 
                     <span class="tab"></span> 
-                    <label class="checkbox-inline">
+                    <label class="checkbox-inline" ng-repeat="sy in schoolYears">
+                        {{sy.schoolYear}}<input type="checkbox" class="cbStyle" ng-model="sy.selected">
+                    </label>
+                    <!-- <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 1
                     </label>
                     <label class="checkbox-inline">
@@ -210,7 +222,7 @@
                     </label>
                     <label class="checkbox-inline">
                         <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label>
+                    </label> -->
                 </div>
             </td>
         </tr>
