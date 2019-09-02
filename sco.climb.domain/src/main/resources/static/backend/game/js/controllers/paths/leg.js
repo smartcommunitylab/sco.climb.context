@@ -554,7 +554,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         createDialog('templates/modals/multimedia-on-search-engines.html',
             {
                 id : 'search-on-search-engines-dialog',
-                title: 'Cerca elemento multimediale',
+                title: 'Cerca su motori di ricerca',
                 controller: 'SearchOnSearchEnginesDialogCtrl',
                 success: {
                     label: "Aggiungi 0 elementi",
@@ -567,7 +567,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             },
             {
                 addElementsFunction: addMultimediaElement,
-                saveFunction: $scope.saveLegLinks
+                saveFunction: $scope.saveLegLinks,
+                leg: $scope.leg
             }
         );
     }

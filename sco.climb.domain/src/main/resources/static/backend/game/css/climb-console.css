@@ -662,6 +662,11 @@ legend {
     height: 20px;
     margin: 0px 5px 0px 5px !important;
 }
+.cbStyleSearch{
+    width: 16px;
+    height: 16px;
+    margin: 0px 5px 0px 5px !important;
+}
 .classSelector{
     min-width: 29% !important;
     min-height: 29px;
@@ -808,6 +813,7 @@ hr.cBlue{
 .tab { 
     display:inline-block; 
     margin-left: 5px; 
+    margin: 5px;
 }
 .dropdownPublicLink{
     width: 23%;
@@ -818,4 +824,12 @@ hr.cBlue{
     width: 22%;
     height: 30px; 
     display: inline-block;
+}
+.row{
+    margin-right: 0;
+    margin-left: 0;
+}
+.searchResultSelectedRow{
+    background-color: #d9edf7;
+    border-radius: 5px;
 }

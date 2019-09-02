@@ -1,5 +1,5 @@
 <div>
-	<div class="modal-body">
+	<div class="container-dialog">
 		<div class="row">
             <form novalidate style="text-align:center;margin-bottom:8px;">    
                 <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
@@ -11,19 +11,34 @@
                 <input type="submit" ng-click="searchOnEngine()" value="Cerca" class="btn btn-primary btn-sm" />
             </form>
         </div>
-        <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;">
+        <!-- <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;"> -->
+        <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
                     <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
                     <a ng-href="{{image.link}}" target="_blank" class="col-md-4">
                         <img ng-src="{{image.image.thumbnailLink}}">
-                        <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div>
+                        <!-- <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div> -->
                     </a>
-                    <div class="col-md-7">
+                    <div class="col-md-7" ng-if="!image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
-                            <h4>{{image.title}}</h4>
+                            <h5>{{image.title}}</h5>
                         </a>
-                        <p>Sito di riferimento: <a ng-href="{{image.image.contextLink}}">{{image.image.contextLink}}</a><p>
+                        <p>Sito di riferimento: <a ng-href="{{image.image.contextLink}}">{{image.displayLink}}/...</a><p>
+                        <p>Dimensione: <a ng-href="{{image.image.contextLink}}">{{image.image.width}}x{{image.image.height}}</a><p>
+                    </div>
+                    <div class="col-md-7" ng-if="image.selectedToAdd">
+                        <a ng-href="{{image.link}}" target="_blank">
+                            <h5>{{image.title}}</h5>
+                        </a>
+                        <div class="searchResultSelectedRow">
+                            <p class="tab"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                            <label class="checkbox-inline" ng-repeat="c in classes">
+                                {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                            </label>
+                            <br>
+                            <p class="tab"> <b> Elicchetta il materiale. </b> </p>
+                        </div>
                     </div>
                 </li>                
             </ul>

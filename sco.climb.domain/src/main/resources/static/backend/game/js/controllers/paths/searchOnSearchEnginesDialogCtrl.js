@@ -1,11 +1,32 @@
 angular.module('consoleControllers.leg')
 
-.controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, addElementsFunction, saveFunction) {
+.controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, leg, addElementsFunction, saveFunction) {
     
 
     $scope.searchtype = 'image';
     $scope.totalCounter = 0;
-
+    $scope.classes=[];
+	$scope.schoolYears=[];
+	$scope.subjects=[];
+	DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
+		function(response) {
+			console.log("tags::",response)
+			//$scope.classes=response.data.classes;
+			angular.forEach(response.data.classes, function(value, key){
+				$scope.classes.push({class:value,selected:false});
+			});
+			// $scope.schoolYears=response.data.schoolYears;
+			angular.forEach(response.data.schoolYears, function(value, key){
+				$scope.schoolYears.push({schoolYear:value,selected:false});
+			});
+			// $scope.subjects=response.data.subjects;
+			angular.forEach(response.data.subjects, function(value, key){
+				$scope.subjects.push({subject:value,selected:false});
+			});
+		},function(error) {
+			console.log('Errore :' , error.data.errorMsg);
+		}
+	);
     $scope.searchOnEngine = function() {
         if (!$scope.searchtext) return;
         $scope.resetResults();
