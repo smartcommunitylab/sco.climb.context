@@ -1,15 +1,69 @@
 <div>
 	<div class="container-dialog">
+        <div class="row" ng-if="!imageResults && !ytResults && !wikiResults">
+            <p class="tab cBlue-text">Ricerca del materiale multimediale sul motore di ricerca senza uscire dalla console.</p>
+        </div>
 		<div class="row">
-            <form novalidate style="text-align:center;margin-bottom:8px;">    
-                <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
-                <select ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+            <!-- <form novalidate style="text-align:center;margin-bottom:8px;">    
+                <input class="form-control" type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
+                <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
                     <option value="image">Immagini</option>
                     <option value="video">Video</option>
                     <option value="wikipedia">Wikipedia</option>
                 </select>
                 <input type="submit" ng-click="searchOnEngine()" value="Cerca" class="btn btn-primary btn-sm" />
-            </form>
+            </form> -->
+            <table class="table tableSearchEngines" ng-if="!imageResults && !ytResults && !wikiResults" >
+                <tbody>
+                    <tr class="info" >
+                        <td style="border-radius: 5px 0 0 0;">
+                            <input class="form-control" type="text" placeholder="Cerca"  ng-model="$parent.searchtext" ng-change="resetResults()" />
+                        </td>
+                        <td colspan="2" style="border-radius: 0 5px 0 0;">Inserisci uno o piu <p class="cBlue-text tab"><b>parole chiave</b></p></td>
+                    </tr>
+                    <tr class="info">
+                        <td>
+                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                                <option value="image">Immagini</option>
+                                <option value="video">Video</option>
+                                <option value="wikipedia">Wikipedia</option>
+                            </select>
+                        </td>
+                        <td colspan="2">Seleziona <p class="cBlue-text tab"><b>la tipologia</b></p> del materiale</td>
+                    </tr>
+                    <tr class="info">
+                        <td style="border-radius: 0 0 0 5px;"></td>
+                        <td>
+                            <form>
+                                <input type="submit" ng-click="searchOnEngine($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary btn-sm" />
+                            </form>
+                        </td>
+                        <td style="border-radius: 0 0 5px 0;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table tableSearchEngines" ng-if="imageResults || ytResults || wikiResults">
+                <tbody>
+                    <tr class="info" >
+                        <td style="border-radius: 5px 0 0 5px;">
+                            <input class="form-control" type="text" ng-model="$parent.searchtext"  placeholder="Cerca" />
+                            <p class="belowTextSearchEngines">parole chiave</p>
+                        </td>
+                        <td>
+                            <select class="form-control" ng-model="$parent.searchtype" >
+                                <option value="image">Immagini</option>
+                                <option value="video">Video</option>
+                                <option value="wikipedia">Wikipedia</option>
+                            </select>
+                            <p class="belowTextSearchEngines">tipologia</p>
+                        </td>
+                        <td style="border-radius: 0 5px 5px 0; text-align: center;">
+                            <input type="submit" ng-click="searchOnEngine($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary" />
+                            <p class="belowTextSearchEngines">cambia la ricerca</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <!-- <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;"> -->
         <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'">
@@ -22,28 +76,40 @@
                     </a>
                     <div class="col-md-7" ng-if="!image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
-                            <h5>{{image.title}}</h5>
+                            <u><h5>{{image.title}}</h5></u>
                         </a>
-                        <p>Sito di riferimento: <a ng-href="{{image.image.contextLink}}">{{image.displayLink}}/...</a><p>
-                        <p>Dimensione: <a ng-href="{{image.image.contextLink}}">{{image.image.width}}x{{image.image.height}}</a><p>
+                        <p class="notSelectedText">Sito di riferimento:<u><a ng-href="{{image.image.contextLink}}">{{image.displayLink}}/...</a></u> <p>
+                        <p class="notSelectedText">Dimensione:<u><a ng-href="{{image.image.contextLink}}">{{image.image.width}}x{{image.image.height}}</a></u> <p>
                     </div>
                     <div class="col-md-7" ng-if="image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
                             <h5>{{image.title}}</h5>
                         </a>
                         <div class="searchResultSelectedRow">
-                            <p class="tab"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
-                            <label class="checkbox-inline" ng-repeat="c in classes">
-                                {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
-                            </label>
-                            <br>
-                            <p class="tab"> <b> Elicchetta il materiale. </b> </p>
+                            <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.
+                                <label class="checkbox-inline" ng-repeat="c in classes">
+                                    {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                </label>
+                            </p>
+                            <!-- <br> -->
+                            <p class="tab selectedText"> <b> Elicchetta il materiale </b>
+                                <select class="form-control dropdownSelectedMateriale"  >
+                                    <option value="" selected disabled style="display: none;">materiale</option>
+                                    <option ng-repeat="s in subjects" value="{{s.subject}}">{{s.subject}}</option>
+                                </select>
+                                <select class="form-control dropdownSelectedClass"  >
+                                    <option value="" selected disabled style="display: none;">classe</option>
+                                    <option ng-repeat="sy in schoolYears" value="{{sy.schoolYear}}">{{sy.schoolYear}}</option>
+                                </select>
+                            </p>
+                            
                         </div>
                     </div>
                 </li>                
             </ul>
         </div>
-        <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;">
+        <!-- <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;"> -->
+        <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
                     <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
@@ -61,7 +127,8 @@
                 </li>                
             </ul>
         </div>
-        <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;">
+        <!-- <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;"> -->
+        <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
                     <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
@@ -72,7 +139,7 @@
                 </li>                
             </ul>
         </div>
-        <div class="multimedia-pagination-navigation">
+        <div class="multimedia-pagination-navigation" ng-if="imageResults || ytResults || wikiResults">
             <div class="btn btn-primary" ng-click="changePage(prevPageToken)" ng-disabled="prevPageToken < 0">Pagina precedente</div>
             <div class="btn btn-primary" ng-click="changePage(nextPageToken)" ng-disabled="!nextPageToken">Pagina successiva</div>
         </div>

@@ -796,6 +796,9 @@ body{
 .table-striped td.round-td {
     border-radius: 5px 5px 5px 5px !important;
 }
+.tableSearchEngines td{
+    border-top: none !important;
+}
 hr.cBlue{
     /* color: #5996d1;
     background-color: #5996d1; */
@@ -811,8 +814,7 @@ hr.cBlue{
 }
 
 .tab { 
-    display:inline-block; 
-    margin-left: 5px; 
+    display: inline-block; 
     margin: 5px;
 }
 .dropdownPublicLink{
@@ -832,4 +834,30 @@ hr.cBlue{
 .searchResultSelectedRow{
     background-color: #d9edf7;
     border-radius: 5px;
+}
+.belowTextSearchEngines{
+    text-align: center;
+    margin: 0px;
+    color: darkgray;
+}
+
+.notSelectedText{
+    color: darkgray;
+}
+.selectedText{
+    font-size: 10px;
+}
+.dropdownSelectedMateriale{
+    width: 32%;
+    height: 30px; 
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 5px;
+}
+.dropdownSelectedClass{
+    width: 26%;
+    height: 30px; 
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 5px;
 }

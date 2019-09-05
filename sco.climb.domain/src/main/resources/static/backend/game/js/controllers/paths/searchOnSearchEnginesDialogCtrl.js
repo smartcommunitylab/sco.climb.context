@@ -7,7 +7,8 @@ angular.module('consoleControllers.leg')
     $scope.totalCounter = 0;
     $scope.classes=[];
 	$scope.schoolYears=[];
-	$scope.subjects=[];
+    $scope.subjects=[];
+    // $scope.searchtext = "";
 	DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
 			console.log("tags::",response)
@@ -27,7 +28,10 @@ angular.module('consoleControllers.leg')
 			console.log('Errore :' , error.data.errorMsg);
 		}
 	);
-    $scope.searchOnEngine = function() {
+    $scope.searchOnEngine = function(searchtext,searchtype) {
+        $scope.searchtext=searchtext;
+        $scope.searchtype=searchtype;
+        console.log("searchtext::",$scope.searchtext)
         if (!$scope.searchtext) return;
         $scope.resetResults();
         if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {            
@@ -112,7 +116,13 @@ angular.module('consoleControllers.leg')
         } else if ($scope.searchtype == 'image') {            
             $scope.imageResults.forEach(element => {
                 if (element.selectedToAdd) {
-                    addElementsFunction(element.title, element.link, 'image');
+                    var classes=[];
+                    // element.classes.forEach(e => {
+                    //     if(e.selected){
+                    //         classes.push(e.class)
+                    //     }
+                    // });
+                    addElementsFunction(element.title, element.link, 'image',classes);
                 }
             });
         }

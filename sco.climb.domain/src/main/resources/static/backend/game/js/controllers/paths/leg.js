@@ -531,7 +531,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         createDialog('templates/modals/multimedia-create-new.html',
             {
                 id : 'create-new-multimedia-dialog',
-                title: '+ Crea nuovo',
+                title: 'Crea nuovo',
                 controller: 'CreateNewMultimediaElementDialogCtrl',
                 success: {
                     label: "Aggiungi elemento",
@@ -566,8 +566,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 } 
             },
             {
-                addElementsFunction: addMultimediaElement,
-                saveFunction: $scope.saveLegLinks,
+                addElementsFunction: addMultimediaData,
+                saveFunction: $scope.saveMultimediaData,
                 leg: $scope.leg
             }
         );

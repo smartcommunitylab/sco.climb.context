@@ -40,14 +40,28 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
 
             var key;
             var idAttr = options.id ? ' id="' + options.id + '" ' : '';
-            var defaultFooter = '<span style="float:left;">I campi contrassegnati con simbolo <span class="required-sign">*</span> sono obbligatori</span>';
-            defaultFooter +='<button class="btn btn-success" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
-            if (!options.noCancelBtn) {
-                //defaultFooter += '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
+            if(options.id=="search-on-search-engines-dialog"){
+                var titleIcon='<span class="glyphicon glyphicon-search"></span>';
+                var defaultFooter ='<button class="btn btn-success" ng-click="$modalSuccess()" >{{$modalSuccessLabel}}</button>';
+                var footerTemplate = '<div class="modal-footer" ng-if="imageResults || ytResults || wikiResults">' +
+                    (options.footerTemplate || defaultFooter) +
+                    '</div>';             
+            }else{
+                var titleIcon="";
+                if(options.id== "create-new-multimedia-dialog"){
+                    var defaultFooter = '<span style="float:left;">I campi contrassegnati con simbolo <span class="required-sign">*</span> sono obbligatori</span>';
+                    titleIcon='<span class="glyphicon glyphicon-plus"></span>';
+                }else{var defaultFooter ="";}
+                
+                defaultFooter +='<button class="btn btn-success" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
+                if (!options.noCancelBtn) {
+                    //defaultFooter += '<button class="btn btn-danger" ng-click="$modalCancel()">{{$modalCancelLabel}}</button>';
+                }
+                var footerTemplate = '<div class="modal-footer">' +
+                    (options.footerTemplate || defaultFooter) +
+                    '</div>';
             }
-            var footerTemplate = '<div class="modal-footer">' +
-                (options.footerTemplate || defaultFooter) +
-                '</div>';
+            
             var modalBody = (function(){
                 if(options.template){
                     if(angular.isString(options.template)){
@@ -69,7 +83,7 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
                 '    <div class="modal-content">' +
                 '      <div class="modal-header">' +
                 '        <button type="button" class="close" ng-click="$modalCancel()">&times;</button>' +
-                '        <h2 style="text-align: center;">{{$title}}</h2>' +
+                '        <h2 style="text-align: center;">'+titleIcon+'  {{$title}}</h2>' +
                 '      </div>' +
                 modalBody +
                 footerTemplate +
