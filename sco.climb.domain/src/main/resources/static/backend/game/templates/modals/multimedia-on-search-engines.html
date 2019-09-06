@@ -81,25 +81,25 @@
                         <p class="notSelectedText">Sito di riferimento:<u><a ng-href="{{image.image.contextLink}}">{{image.displayLink}}/...</a></u> <p>
                         <p class="notSelectedText">Dimensione:<u><a ng-href="{{image.image.contextLink}}">{{image.image.width}}x{{image.image.height}}</a></u> <p>
                     </div>
+                    <!-- if user selected rows from imageResults -->
                     <div class="col-md-7" ng-if="image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
                             <h5>{{image.title}}</h5>
                         </a>
                         <div class="searchResultSelectedRow">
                             <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.
-                                <label class="checkbox-inline" ng-repeat="c in classes">
+                                <label class="checkbox-inline" ng-repeat="c in image.classes">
                                     {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
                                 </label>
                             </p>
-                            <!-- <br> -->
                             <p class="tab selectedText"> <b> Elicchetta il materiale </b>
                                 <select class="form-control dropdownSelectedMateriale"  >
                                     <option value="" selected disabled style="display: none;">materiale</option>
-                                    <option ng-repeat="s in subjects" value="{{s.subject}}">{{s.subject}}</option>
+                                    <option ng-repeat="s in image.subjects" value="{{s.subject}}">{{s.subject}}</option>
                                 </select>
                                 <select class="form-control dropdownSelectedClass"  >
                                     <option value="" selected disabled style="display: none;">classe</option>
-                                    <option ng-repeat="sy in schoolYears" value="{{sy.schoolYear}}">{{sy.schoolYear}}</option>
+                                    <option ng-repeat="sy in image.schoolYears" value="{{sy.schoolYear}}">{{sy.schoolYear}}</option>
                                 </select>
                             </p>
                             

@@ -91,8 +91,23 @@ angular.module('consoleControllers.leg')
                         $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
                     }
                     console.log(response);
-                		var el = document.getElementById('imageContentList');
-                		el.scrollTop = 0;
+                    var el = document.getElementById('imageContentList');
+                    el.scrollTop = 0;
+                    if($scope.classes){
+                        $scope.imageResults.forEach(e=>{
+                            e.classes=angular.copy($scope.classes);
+                        })
+                    }
+                    if($scope.schoolYears){
+                        $scope.imageResults.forEach(e=>{
+                            e.schoolYears=angular.copy($scope.schoolYears);
+                        })
+                    }
+                    if($scope.schoolYears){
+                        $scope.imageResults.forEach(e=>{
+                            e.subjects=angular.copy($scope.subjects);
+                        })
+                    }
                 }, function() {
                 }
             );
@@ -117,17 +132,17 @@ angular.module('consoleControllers.leg')
             $scope.imageResults.forEach(element => {
                 if (element.selectedToAdd) {
                     var classes=[];
-                    // element.classes.forEach(e => {
-                    //     if(e.selected){
-                    //         classes.push(e.class)
-                    //     }
-                    // });
+                    element.classes.forEach(e => {
+                        if(e.selected){
+                            classes.push(e.class)
+                        }
+                    });
                     addElementsFunction(element.title, element.link, 'image',classes);
+                    saveFunction();
                 }
             });
         }
         $scope.$modalClose();
-        saveFunction();
     }
     $scope.resetResults = function() {
         $scope.wikiResults = undefined;
