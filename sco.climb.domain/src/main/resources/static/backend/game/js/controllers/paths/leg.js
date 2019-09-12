@@ -576,7 +576,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         createDialog('templates/modals/multimedia-on-content-repository.html',
             {
                 id : 'search-on-search-engines-dialog',
-                title: 'Cerca elementi multimediali già utilizzati',
+                title: 'Cerca già utilizzati',
                 controller: 'SearchOnContentRepositoryDialogCtrl',
                 success: {
                     label: "Aggiungi 0 elementi",

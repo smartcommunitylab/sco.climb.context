@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
 	<div class="modal-body container-dialog">
         <form novalidate style="text-align:center;margin-bottom:8px;">    
             <div class="row">
@@ -49,4 +49,72 @@
             </div>
         </div>
 	</div>
+</div> -->
+
+<div>
+    <div class="modal-body container-dialog">
+        <div class="row">
+            <p class="tab cBlue-text">Ricerca del materiale multimediale utilizzato in precedenza in altri percorsi.</p>
+            <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
+        </div>
+        <div class="row">
+            <table class="table tableSearchEngines" ng-if="!imageResults && !ytResults && !wikiResults" >
+                <tbody>
+                    <tr class="info" >
+                        <td style="border-radius: 5px 0 0 0;">
+                            <input class="form-control" type="text" placeholder="Cerca"  ng-model="$parent.searchtext" ng-change="resetResults()" />
+                        </td>
+                        <td colspan="2" style="border-radius: 0 5px 0 0;">Inserisci uno o piu <p class="cBlue-text tab"><b>parole chiave</b></p></td>
+                    </tr>
+                    <tr class="info">
+                        <td>
+                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                                <option value="all">Tutti</option>
+                                <option value="image">Immagini</option>
+                                <option value="video">Video</option>
+                                <option value="wikipedia">Wikipedia</option>
+                            </select>
+                        </td>
+                        <td colspan="2">Seleziona una o piu<p class="cBlue-text tab"><b>tipologia</b></p> del materiale</td>
+                    </tr>
+                    <tr class="info">
+                        <td>
+                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                                <option value="all">Tutti</option>
+                                <option value="image">Immagini</option>
+                                <option value="video">Video</option>
+                                <option value="wikipedia">Wikipedia</option>
+                            </select>
+                        </td>
+                        <td colspan="2">Seleziona una o piu<p class="cBlue-text tab"><b>discipiline</b></p> </td>
+                    </tr>
+                    <tr class="info">
+                        <td>
+                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                                <option value="all">Tutti</option>
+                                <option value="image">Immagini</option>
+                                <option value="video">Video</option>
+                                <option value="wikipedia">Wikipedia</option>
+                            </select>
+                        </td>
+                        <td colspan="2">Seleziona il target di eta (una o piu <p class="cBlue-text tab"><b>classi</b></p>) </td>
+                    </tr>
+                    <tr class="info">
+                        <td colspan="3">
+                            <p>Ricerca nel <span class="cBlue-text tab">raggio</span> di <input type="number" min="0" max="999" placeholder="Km" ng-model="$parent.searchdistance"/> chilometri dalla tappa corrente</p>
+                        </td>
+                    </tr>
+                    <tr class="info">
+                        <td style="border-radius: 0 0 0 5px;"></td>
+                        <td>
+                            <form>
+                                <input type="submit" ng-click="searchOnEngine($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary btn-sm" />
+                            </form>
+                        </td>
+                        <td style="border-radius: 0 0 5px 0;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
