@@ -87,7 +87,52 @@
                             <h5>{{image.title}}</h5>
                         </a>
                         <div class="searchResultSelectedRow">
-                            <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.
+                            <div class="container searchResultSelectedContainer"  >
+                                <div class="row">
+                                    <div class="col-sm-12 selectedRowCol">
+                                        <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 selectedRowCol">
+                                        <label class="checkbox-inline" ng-repeat="c in image.classes">
+                                            {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                    </div>
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <div class="wrapper dropdownSelectedClass">
+                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">materiale</div>
+                                            <div class="list" id="materiale{{$index}}">
+                                                <ul class="items-list">
+                                                    <li ng-repeat="s in image.subjects">
+                                                        <input type="checkbox" class='' ng-model="s.selected" />
+                                                        <span>{{s.subject}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <div class="wrapper dropdownSelectedClass">
+                                            <div class="selected-items-box" ng-click="classListToggle($index)">classe</div>
+                                            <div class="list" id="classe{{$index}}">
+                                                <ul class="items-list">
+                                                    <li ng-repeat="sy in image.schoolYears">
+                                                        <input type="checkbox" class='' ng-model="sy.selected" />
+                                                        <span>{{sy.schoolYear}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.
                                 <label class="checkbox-inline" ng-repeat="c in image.classes">
                                     {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
                                 </label>
@@ -97,11 +142,26 @@
                                     <option value="" selected disabled style="display: none;">materiale</option>
                                     <option ng-repeat="s in image.subjects" value="{{s.subject}}">{{s.subject}}</option>
                                 </select>
-                                <select class="form-control dropdownSelectedClass"  >
+                                <select id="schoolYearsMultiselect" class="form-control dropdownSelectedClass"  >
                                     <option value="" selected disabled style="display: none;">classe</option>
-                                    <option ng-repeat="sy in image.schoolYears" value="{{sy.schoolYear}}">{{sy.schoolYear}}</option>
-                                </select>
-                            </p>
+                                    <option ng-repeat="sy in image.schoolYears" value="{{sy.schoolYear}}">
+                                        {{sy.schoolYear}}
+                                    </option>
+                                </select> 
+                                <div class="wrapper">
+                                    <div class="selected-items-box" ng-click="tagListToggle($index)">classe</div>
+                                    <div class="list" id="{{$index}}">
+                                        <ul class="items-list">
+                                            <li ng-repeat="sy in image.schoolYears">
+                                                <input type="checkbox" class='' ng-model="sy.selected" />
+                                                <span>{{sy.schoolYear}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                            </p> -->
+                            
                             
                         </div>
                     </div>

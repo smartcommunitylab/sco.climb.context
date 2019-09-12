@@ -8,22 +8,32 @@ angular.module('consoleControllers.leg')
     $scope.classes=[];
 	$scope.schoolYears=[];
     $scope.subjects=[];
-    // $scope.searchtext = "";
+    $scope.selected;
+    $scope.materialeListToggle = function(dropdownID){
+        // $('.wrapper .list').slideToggle('fast');
+        $('#materiale'+dropdownID).slideToggle('fast');
+    }
+    $scope.classListToggle = function(dropdownID){
+        // $('.wrapper .list').slideToggle('fast');
+        $('#classe'+dropdownID).slideToggle('fast');
+	}
 	DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
-			console.log("tags::",response)
+			console.log("tags:",response)
 			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
 				$scope.classes.push({class:value,selected:false});
-			});
-			// $scope.schoolYears=response.data.schoolYears;
+            });
+            
+            // $scope.schoolYears=response.data.schoolYears;
 			angular.forEach(response.data.schoolYears, function(value, key){
 				$scope.schoolYears.push({schoolYear:value,selected:false});
-			});
+            });
+
 			// $scope.subjects=response.data.subjects;
 			angular.forEach(response.data.subjects, function(value, key){
 				$scope.subjects.push({subject:value,selected:false});
-			});
+            });
 		},function(error) {
 			console.log('Errore :' , error.data.errorMsg);
 		}
@@ -103,7 +113,7 @@ angular.module('consoleControllers.leg')
                             e.schoolYears=angular.copy($scope.schoolYears);
                         })
                     }
-                    if($scope.schoolYears){
+                    if($scope.subjects){
                         $scope.imageResults.forEach(e=>{
                             e.subjects=angular.copy($scope.subjects);
                         })
@@ -131,13 +141,27 @@ angular.module('consoleControllers.leg')
         } else if ($scope.searchtype == 'image') {            
             $scope.imageResults.forEach(element => {
                 if (element.selectedToAdd) {
-                    var classes=[];
+                    var selectedClasses=[];
                     element.classes.forEach(e => {
                         if(e.selected){
-                            classes.push(e.class)
+                            selectedClasses.push(e.class)
                         }
                     });
-                    addElementsFunction(element.title, element.link, 'image',classes);
+
+                    var selectedSchoolYears=[];
+                    element.schoolYears.forEach(e=>{
+                        if(e.selected){
+                            selectedSchoolYears.push(e.schoolYear)
+                        }
+                    });
+
+                    var selectedSubjects=[];
+                    element.subjects.forEach(e => {
+                        if(e.selected){
+                            selectedSubjects.push(e.subject);
+                        }
+                    });
+                    addElementsFunction(element.title, element.link, 'image', selectedClasses, selectedSubjects, selectedSchoolYears);
                     saveFunction();
                 }
             });
