@@ -710,7 +710,7 @@ legend {
     border-bottom: solid 1px #C7C6C7;
     z-index: 100;
     position: absolute;
-    width: 90%;
+    width: 95%;
     max-height: 100%;
   }
   .list .items-list {
@@ -870,4 +870,8 @@ hr.cBlue{
     display: inline-block;
     font-size: 12px;
     padding: 3px 5px;
+}
+.searchdistance{
+    display: inline;
+    width: 15%;
 }

@@ -41,7 +41,6 @@ angular.module('consoleControllers.leg')
     $scope.searchOnEngine = function(searchtext,searchtype) {
         $scope.searchtext=searchtext;
         $scope.searchtype=searchtype;
-        console.log("searchtext::",$scope.searchtext)
         if (!$scope.searchtext) return;
         $scope.resetResults();
         if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {            

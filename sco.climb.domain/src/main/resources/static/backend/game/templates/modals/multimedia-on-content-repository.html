@@ -53,11 +53,11 @@
 
 <div>
     <div class="modal-body container-dialog">
-        <div class="row">
+        <div class="row" ng-if="!contentResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale utilizzato in precedenza in altri percorsi.</p>
             <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
         </div>
-        <div class="row">
+        <div class="row" ng-if="!contentResults">
             <table class="table tableSearchEngines" ng-if="!imageResults && !ytResults && !wikiResults" >
                 <tbody>
                     <tr class="info" >
@@ -79,42 +79,81 @@
                     </tr>
                     <tr class="info">
                         <td>
-                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
-                                <option value="all">Tutti</option>
-                                <option value="image">Immagini</option>
-                                <option value="video">Video</option>
-                                <option value="wikipedia">Wikipedia</option>
-                            </select>
+                            <div class="wrapper dropdownSelectedClass">
+                                <div class="selected-items-box" ng-click="subjectsListToggle('beforeSearchSubjects')">Tutti</div>
+                                <div class="list" id="beforeSearchSubjects">
+                                    <ul class="items-list">
+                                        <li ng-repeat="s in subjects">
+                                            <input type="checkbox" class='' ng-model="s.selected" />
+                                            <span>{{s.subject}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                         <td colspan="2">Seleziona una o piu<p class="cBlue-text tab"><b>discipiline</b></p> </td>
                     </tr>
                     <tr class="info">
                         <td>
-                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
-                                <option value="all">Tutti</option>
-                                <option value="image">Immagini</option>
-                                <option value="video">Video</option>
-                                <option value="wikipedia">Wikipedia</option>
-                            </select>
+                            <div class="wrapper dropdownSelectedClass">
+                                <div class="selected-items-box" ng-click="schoolYearsListToggle('beforeSearchSchoolYears')">Tutti</div>
+                                <div class="list" id="beforeSearchSchoolYears">
+                                    <ul class="items-list">
+                                        <li ng-repeat="sy in schoolYears">
+                                            <input type="checkbox" class='' ng-model="sy.selected" />
+                                            <span>{{sy.schoolYear}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                         <td colspan="2">Seleziona il target di eta (una o piu <p class="cBlue-text tab"><b>classi</b></p>) </td>
                     </tr>
                     <tr class="info">
                         <td colspan="3">
-                            <p>Ricerca nel <span class="cBlue-text tab">raggio</span> di <input type="number" min="0" max="999" placeholder="Km" ng-model="$parent.searchdistance"/> chilometri dalla tappa corrente</p>
+                            <p>Ricerca nel <span class="cBlue-text tab">raggio</span> di <input class="form-control searchdistance" type="number" min="0" max="999" placeholder="Km" ng-model="$parent.searchdistance"/> chilometri dalla tappa corrente</p>
                         </td>
                     </tr>
                     <tr class="info">
                         <td style="border-radius: 0 0 0 5px;"></td>
                         <td>
                             <form>
-                                <input type="submit" ng-click="searchOnEngine($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary btn-sm" />
+                                <input type="submit" ng-click="searchOnContentRepository($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary btn-sm" />
                             </form>
                         </td>
                         <td style="border-radius: 0 0 5px 0;"></td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="row" style="overflow: auto;height: 350px;" id="contentList" ng-if="contentResults">
+            <ul class="list-group">
+                <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
+                    <input type="checkbox" ng-model="content.referenceContent.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.referenceContent.selectedToAdd)">
+                    <div class="col-md-11">
+                        <a href="{{content.referenceContent.link}}" target="_blank" ng-class='content.referenceContent.type == "video" && content.referenceContent.isYoutubeVideo ? "multimedia-yt-video" : ""' style="float:left;margin-right: 8px;margin-bottom: 8px;">
+                            <img class="search-multimedia-image" ng-src="{{content.referenceContent.referenceImg}}">
+                        </a>
+                        <div>
+                            <a href="{{content.referenceContent.link}}" target="_blank">
+                                <h4>{{content.referenceContent.name}}</h4>
+                            </a>
+                            <p>{{content.referenceContent.legName}}</p>
+                        </div>
+                    </div>
+                </li>                
+            </ul>
+            <div ng-show="noResults" style="text-align: center;">
+                Nessun risultato corrisponde alla tua ricerca.
+            </div>
+            <div style="width:100%;text-align:center;">
+                <dir-pagination-controls
+                    max-size="5"
+                    direction-links="true"
+                    boundary-links="true"
+                    on-page-change="changePage(newPageNumber, oldPageNumber)" >
+                </dir-pagination-controls>
+            </div>
         </div>
     </div>
 </div>

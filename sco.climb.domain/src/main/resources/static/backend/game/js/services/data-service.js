@@ -273,7 +273,7 @@ function ($q, $http, $rootScope, $timeout) {
             if (type) {
                 config.params.type = type;
             }
-            $http.get(baseUrl + '/api/multimedia', config).then(function(data){
+            $http.get(baseUrl + '/api/game/multimedia', config).then(function(data){
                 deferred.resolve(data);
             })
             return deferred.promise;

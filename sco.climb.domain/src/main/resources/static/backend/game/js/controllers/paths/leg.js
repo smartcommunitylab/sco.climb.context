@@ -588,11 +588,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             },
             {
-            		schoolId: $scope.$parent.currentGame.schoolId,
-            		addElementsFunction: addMultimediaElement,
-            		saveFunction: $scope.saveLegLinks,
+            	schoolId: $scope.$parent.currentGame.schoolId,
+            	addElementsFunction: addMultimediaElement,
+            	saveFunction: $scope.saveLegLinks,
                 position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng],
-                getYoutubeImageFromLink: $scope.getYoutubeImageFromLink
+                getYoutubeImageFromLink: $scope.getYoutubeImageFromLink,
+                leg: $scope.leg
             }
         );
     }
