@@ -55,7 +55,37 @@
 				{{'action_upload' | translate}}
       </md-button>
 		</div>
-		    
+		
+		<md-divider></md-divider>
+		
+		<div ng-show="importErrors">
+			<div class="md-toolbar-tools">
+		    <h3>Errori importazione:</h3>
+		    <span flex="" class="flex"></span> 
+		    <md-button class="md-fab md-mini md-primary md-button md-ink-ripple" ng-click="resetImportError()">
+	       	<md-icon>close</md-icon>
+	     	</md-button>
+	     </div>
+	     <div>
+		    <table>
+		        <thead>
+		            <tr>
+		                <th class="foglio">Foglio</th>
+		                <th class="riga">Riga</th>
+		                <th class="errore">Errore</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr ng-repeat="error in importErrors">
+		                <td class="foglio">{{error.sheet}}</td>
+		                <td class="riga">{{error.row}}</td>
+		                <td class="errore">{{error.error}}</td>
+		            </tr>
+		        </tbody>
+		    </table>
+			</div>
+		</div>
+		 		    
     <div layout="row" layout-sm="column" layout-align="space-around" ng-show="saving">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>

@@ -4,6 +4,7 @@ angular.module('climbGameUser.controllers.users.csvRole', [])
   function ($scope, $rootScope, $filter, $window, $interval, $mdDialog, $mdToast, $state, $stateParams, dataService, configService) {
 		$scope.user = {};
 		$scope.saving = false;
+		$scope.importErrors = null;
 		
     $scope.loadInstitutesList = function() {
       dataService.getInstitutesList().then(
@@ -52,13 +53,17 @@ angular.module('climbGameUser.controllers.users.csvRole', [])
 	  	dataService.uploadVolunteerFile(element).then(
           function (response) {
           	$scope.saving = false;
-            $mdToast.show(
-              $mdToast.simple()
-                .textContent($filter('translate')('role_csv_upload_ok'))
-                .position("bottom")
-                .hideDelay(3000)
-            );
-            $state.reload();
+          	if(!response || (Object.keys(response).length == 0)) {
+              $mdToast.show(
+                  $mdToast.simple()
+                    .textContent($filter('translate')('role_csv_upload_ok'))
+                    .position("bottom")
+                    .hideDelay(3000)
+                );
+              $state.reload();
+          	} else {
+          		$scope.importErrors = response;
+          	}
           },
           function () {
             $scope.saving = false;
@@ -71,7 +76,11 @@ angular.module('climbGameUser.controllers.users.csvRole', [])
           }	  			
 	    );
 	  }
-
+    
+    $scope.resetImportError = function() {
+    	$scope.importErrors = null;
+    }
+    
     function initParentNavigation() {
       $rootScope.title = "title_user_role_csv";
       $rootScope.backStateToGo = "home.users-lists.list";

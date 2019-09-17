@@ -200,3 +200,12 @@ md-sidenav {
   margin-bottom: 0px;
   max-width: 400px;
 }
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+	padding: 5px;
+}
