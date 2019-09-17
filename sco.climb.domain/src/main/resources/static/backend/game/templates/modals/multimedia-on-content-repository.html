@@ -58,7 +58,7 @@
             <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
         </div>
         <div class="row" ng-if="!contentResults">
-            <table class="table tableSearchEngines" ng-if="!imageResults && !ytResults && !wikiResults" >
+            <table class="table tableSearchEngines" >
                 <tbody>
                     <tr class="info" >
                         <td style="border-radius: 5px 0 0 0;">
@@ -129,16 +129,78 @@
         <div class="row" style="overflow: auto;height: 350px;" id="contentList" ng-if="contentResults">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
-                    <input type="checkbox" ng-model="content.referenceContent.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.referenceContent.selectedToAdd)">
-                    <div class="col-md-11">
-                        <a href="{{content.referenceContent.link}}" target="_blank" ng-class='content.referenceContent.type == "video" && content.referenceContent.isYoutubeVideo ? "multimedia-yt-video" : ""' style="float:left;margin-right: 8px;margin-bottom: 8px;">
-                            <img class="search-multimedia-image" ng-src="{{content.referenceContent.referenceImg}}">
+                    <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
+                    <div class="col-md-4">
+                        <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="content.referenceContent.previewUrl">
+                            <img ng-src="content.referenceContent.previewUrl">
                         </a>
+                        <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="!content.referenceContent.previewUrl">
+                            <div class="defaultImage" ng-if="!content.referenceContent.previewUrl"></div>
+                        </a>
+                    </div>
+                    <!-- no selected rows from contentResults -->
+                    <div class="col-md-7" ng-if="!content.selectedToAdd">
                         <div>
                             <a href="{{content.referenceContent.link}}" target="_blank">
-                                <h4>{{content.referenceContent.name}}</h4>
+                                <h5>{{content.referenceContent.name}}</h5>
                             </a>
-                            <p>{{content.referenceContent.legName}}</p>
+                            <span class="notSelectedText">Tipologia: </span> <span>{{content.referenceContent.type}}</span><br>
+                            <span class="notSelectedText">Materia: </span><br>
+                            <span class="notSelectedText">Classe: </span><br>
+                            <span class="notSelectedText">Citazione: </span>
+                        </div>
+                    </div>
+                    <!-- selected rows from contentResults -->
+                    <div class="col-md-7" ng-if="content.selectedToAdd">
+                        <div>
+                            <a href="{{content.referenceContent.link}}" target="_blank">
+                                <h5>{{content.referenceContent.name}}</h5>
+                            </a>
+                            <div class="container searchResultSelectedContainer"  >
+                                <div class="row">
+                                    <div class="col-sm-12 selectedRowCol">
+                                        <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 selectedRowCol">
+                                        <label class="checkbox-inline" ng-repeat="c in content.referenceContent.classes">
+                                            {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                    </div>
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <div class="wrapper dropdownSelectedClass">
+                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">materiale</div>
+                                            <div class="list" id="materiale{{$index}}">
+                                                <ul class="items-list">
+                                                    <li ng-repeat="s in content.referenceContent.subjects">
+                                                        <input type="checkbox" class='' ng-model="s.selected" />
+                                                        <span>{{s.subject}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 selectedRowCol">
+                                        <div class="wrapper dropdownSelectedClass">
+                                            <div class="selected-items-box" ng-click="classListToggle($index)">classe</div>
+                                            <div class="list" id="classe{{$index}}">
+                                                <ul class="items-list">
+                                                    <li ng-repeat="sy in content.referenceContent.schoolYears">
+                                                        <input type="checkbox" class='' ng-model="sy.selected" />
+                                                        <span>{{sy.schoolYear}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
                         </div>
                     </div>
                 </li>                

@@ -46,6 +46,12 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
                 var footerTemplate = '<div class="modal-footer" ng-if="imageResults || ytResults || wikiResults">' +
                     (options.footerTemplate || defaultFooter) +
                     '</div>';             
+            }else if(options.id=="search-on-content-dialog"){
+                var titleIcon='<span class="glyphicon glyphicon-search"></span>';
+                var defaultFooter ='<button class="btn btn-success" ng-click="$modalSuccess()" >{{$modalSuccessLabel}}</button>';
+                var footerTemplate = '<div class="modal-footer" ng-if="contentResults">' +
+                    (options.footerTemplate || defaultFooter) +
+                    '</div>';
             }else{
                 var titleIcon="";
                 if(options.id== "create-new-multimedia-dialog"){

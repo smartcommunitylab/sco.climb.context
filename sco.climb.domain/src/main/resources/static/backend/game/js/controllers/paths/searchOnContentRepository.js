@@ -26,17 +26,13 @@ angular.module('consoleControllers.leg')
 				$scope.classes.push({class:value,selected:true});
             });
             
-			// angular.forEach(response.data.schoolYears, function(value, key){
-			// 	$scope.schoolYears.push({schoolYear:value,selected:true});
-            // });
-            $scope.schoolYears.push({schoolYear:'123',selected:true});
-            $scope.schoolYears.push({schoolYear:'456',selected:true});
+			angular.forEach(response.data.schoolYears, function(value, key){
+				$scope.schoolYears.push({schoolYear:value,selected:true});
+            });
 
-			// angular.forEach(response.data.subjects, function(value, key){
-			// 	$scope.subjects.push({subject:value,selected:true});
-            // });
-            $scope.subjects.push({subject:'Geo',selected:true});
-            $scope.subjects.push({subject:'Ing',selected:true});
+			angular.forEach(response.data.subjects, function(value, key){
+				$scope.subjects.push({subject:value,selected:true});
+            });
 		},function(error) {
 			console.log('Errore :' , error.data.errorMsg);
 		}
@@ -79,6 +75,7 @@ angular.module('consoleControllers.leg')
                     $scope.contentResults = response.data;
                     $scope.noResults = response.data.length == 0
                     console.log("search result:",response); 
+                    console.log("contentResults:",$scope.contentResults); 
                 }, function() {
                 }
         );
@@ -110,5 +107,5 @@ angular.module('consoleControllers.leg')
     	var el = document.getElementById('contentList');
     	el.scrollTop = 0;
     }
-
+    
 });
