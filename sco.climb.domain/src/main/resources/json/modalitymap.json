@@ -1,21 +1,21 @@
 {
 	"modalities": [
 		{
-			"value":"foot",
+			"value":"walk",
 			"label": "A piedi",
 			"active": true,
 			"category": "cat1",
 			"color": "#f48040"
 		},
 		{
-			"value":"bicycle",
+			"value":"bike",
 			"label": "In bici",
 			"active": true,
 			"category": "cat1",
 			"color": "#f48040"
 		},
 		{
-			"value":"public-transport",
+			"value":"bus",
 			"label": "Scuolabus o trasporto pubblico",
 			"active": true,
 			"category": "cat1",
@@ -29,7 +29,7 @@
 			"color": "#f48040"
 		},
 		{
-			"value":"car-parking",
+			"value":"pandr",
 			"label": "In auto fino alla piazzola di sosta",
 			"active": true,
 			"category": "cat1",
@@ -43,7 +43,7 @@
 			"color": "#f48040"
 		},
 		{
-			"value":"car-school",
+			"value":"car",
 			"label": "In auto fino a scuola",
 			"active": true,
 			"category": "cat1",
