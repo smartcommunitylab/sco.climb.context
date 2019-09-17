@@ -423,6 +423,7 @@ public class AdminController extends AuthController {
 				childDb.setName(child.getName());
 				childDb.setSurname(child.getSurname());
 				childDb.setParentName(child.getParentName());
+				childDb.setNickname(child.getNickname());
 				childDb.setPhone(child.getPhone());
 				childDb.setWsnId(child.getWsnId());
 				if(Utils.isNotEmpty(child.getClassRoom())) {
