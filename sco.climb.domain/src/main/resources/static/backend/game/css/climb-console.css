@@ -875,3 +875,11 @@ hr.cBlue{
     display: inline;
     width: 15%;
 }
+.defaultImage{
+    width: 100%;
+    height: 84px;
+    background-color: gray;
+    background-image: radial-gradient(gray, white);
+    border-radius: 5px;
+    cursor: pointer; 
+}

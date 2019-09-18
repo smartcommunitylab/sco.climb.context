@@ -575,7 +575,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.searchMultimediaOnRepository = function() {
         createDialog('templates/modals/multimedia-on-content-repository.html',
             {
-                id : 'search-on-search-engines-dialog',
+                id : 'search-on-content-dialog',
                 title: 'Cerca già utilizzati',
                 controller: 'SearchOnContentRepositoryDialogCtrl',
                 success: {
