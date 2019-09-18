@@ -366,21 +366,24 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.initParamController = function () {
         	if((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
             $scope.currentGame.params = {
-                piedi_o_bici_in_autonomia_studenti: 0,
-                piedi_o_bici_in_autonomia_distanza: 0,
-                piedi_o_bici_con_adulti_studenti: 0,
-                piedi_o_bici_con_adulti_distanza: 0,
-                scuolabus_o_autobus_studenti: 0,
-                scuolabus_o_autobus_distanza: 0,
-                parcheggio_attestamento_studenti: 0,
-                parcheggio_attestamento_distanza: 0,
-                auto_fine_a_scuola_studenti: 0,
-                auto_fine_a_scuola_distanza: 0,
+            		walk_studenti: 0,
+            		walk_distanza: 0,
+            		bike_studenti: 0,
+            		bike_distanza: 0,
+                bus_studenti: 0,
+                bus_distanza: 0,
+                pedibus_studenti: 0,
+                pedibus_distanza: 0,
+                pandr_studenti: 0,
+                pandr_distanza: 0,
+                carpooling_studenti: 0,
+                carpooling_distanza: 0,
+                car_studenti: 0,
+                car_distanza: 0,
                 const_daily_nominal_distance: 0,
                 const_zeroimpact_distance: 0,
                 const_bus_distance: 0,
                 const_pandr_distance: 0,
-                const_zi_solo_bonus: 0,
                 giorni_chiusi: 0,
                 const_cloudy_bonus: 0,
                 const_rain_bonus: 0,
@@ -413,35 +416,38 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             $scope.initParamController();
         });
         
-        $scope.calculateBonusAutonomia = function() {
-        	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
-        	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
-        	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-        	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-        	return $scope.currentGame.params.const_zi_solo_bonus;
-        }
+//        $scope.calculateBonusAutonomia = function() {
+//        	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
+//        	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
+//        	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+//        	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+//        	return $scope.currentGame.params.const_zi_solo_bonus;
+//        }
 
         $scope.calculateCDND = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 $scope.currentGame.params.const_daily_nominal_distance = (
-                    ($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti * $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza) +
-                    ($scope.currentGame.params.piedi_o_bici_con_adulti_studenti * $scope.currentGame.params.piedi_o_bici_con_adulti_distanza) +
-                    ($scope.currentGame.params.scuolabus_o_autobus_studenti * $scope.currentGame.params.scuolabus_o_autobus_distanza) +
-                    ($scope.currentGame.params.parcheggio_attestamento_studenti * $scope.currentGame.params.parcheggio_attestamento_distanza) +
-                    ($scope.currentGame.params.auto_fine_a_scuola_studenti * $scope.currentGame.params.auto_fine_a_scuola_distanza)
+                    ($scope.currentGame.params.walk_studenti * $scope.currentGame.params.walk_distanza) +
+                    ($scope.currentGame.params.bike_studenti * $scope.currentGame.params.bike_distanza) +
+                    ($scope.currentGame.params.bus_studenti * $scope.currentGame.params.bus_distanza) +
+                    ($scope.currentGame.params.pedibus_studenti * $scope.currentGame.params.pedibus_distanza) +
+                    ($scope.currentGame.params.pandr_studenti * $scope.currentGame.params.pandr_distanza) +
+                    ($scope.currentGame.params.carpooling_studenti * $scope.currentGame.params.carpooling_distanza) +
+                    ($scope.currentGame.params.car_studenti * $scope.currentGame.params.car_distanza)
                 );
-
                 return $scope.currentGame.params.const_daily_nominal_distance;
             }
         };
 
         $scope.calculateSS = function () { 
             if ($scope.currentGame && $scope.currentGame.params) {
-                return ($scope.currentGame.params.piedi_o_bici_in_autonomia_studenti +
-                    $scope.currentGame.params.piedi_o_bici_con_adulti_studenti +
-                    $scope.currentGame.params.scuolabus_o_autobus_studenti +
-                    $scope.currentGame.params.parcheggio_attestamento_studenti +
-                    $scope.currentGame.params.auto_fine_a_scuola_studenti);
+                return ($scope.currentGame.params.walk_studenti +
+                    $scope.currentGame.params.bike_studenti +
+                    $scope.currentGame.params.bus_studenti +
+                    $scope.currentGame.params.pedibus_studenti + 
+                    $scope.currentGame.params.pandr_studenti +
+                    $scope.currentGame.params.carpooling_studenti +
+                    $scope.currentGame.params.car_studenti);
             }            
         }
 
