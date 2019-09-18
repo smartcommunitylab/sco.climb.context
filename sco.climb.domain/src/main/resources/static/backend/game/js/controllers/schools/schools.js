@@ -47,6 +47,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
             $scope.currentSchool = {
                 name: '',
                 address: '',
+                classes: [],
                 instituteId: $stateParams.idInstitute,
                 ownerId: $stateParams.idDomain,
             }
