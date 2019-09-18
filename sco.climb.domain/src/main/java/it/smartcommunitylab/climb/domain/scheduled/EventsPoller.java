@@ -221,6 +221,8 @@ public class EventsPoller {
 		if(childrenStatus == null) { 
 			return;
 		}
+		// <class, total distance>
+		Map<String, Double> actionParams = new HashMap<String, Double>();
 		for (ChildStatus childStatus: childrenStatus) {
 			if(childStatus.isArrived()) {
 				//check if is a right classroom
@@ -238,38 +240,44 @@ public class EventsPoller {
 					logger.warn("sendScores:" + e.getMessage());
 					continue;
 				}
-				
 				String playerId = childStatus.getClassRoom();
 				Double score = childStatus.getScore();
-						
-				ExecutionDataDTO ed = new ExecutionDataDTO();
-				ed.setGameId(game.getGameId());
-				ed.setPlayerId(playerId);
-				ed.setActionId(actionPedibus);
-				
-				Map<String, Object> data = Maps.newTreeMap();
-				data.put(paramDistance, score);
-				Date date = new Date();
-				try {
-					date = Utils.getStartOfTheDay(sdf.parse(game.getLastDaySeen()));
-				} catch (ParseException e) {
-					logger.warn("sendScores:" + e.getMessage());
-					continue;
+				if(actionParams.containsKey(playerId)) {
+					actionParams.put(playerId, actionParams.get(playerId) + score);
+				} else {
+					actionParams.put(playerId, score);
 				}
-				data.put(paramDate, date.getTime());
-				ed.setData(data);
-				
-				try {
-					if(logger.isInfoEnabled()) {
-						logger.info(String.format("increased game[%s] player[%s] score[%s]", game.getGameId(), playerId, score));
-					}
-					HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
-				} catch (Exception e) {
-					logger.warn("sendScores error:" + e.getMessage());
-					continue;
-				}				
 			}
 		}
+		Date date = new Date();
+		try {
+			date = Utils.getStartOfTheDay(sdf.parse(game.getLastDaySeen()));
+		} catch (ParseException e) {
+			logger.warn("sendScores:" + e.getMessage());
+			return;
+		}		
+		for(String playerId : actionParams.keySet()) {
+			ExecutionDataDTO ed = new ExecutionDataDTO();
+			ed.setGameId(game.getGameId());
+			ed.setPlayerId(playerId);
+			ed.setActionId(actionPedibus);
+			ed.setExecutionMoment(date);
+			
+			Map<String, Object> data = Maps.newTreeMap();
+			data.put(paramDistance, actionParams.get(playerId));
+			ed.setData(data);
+			
+			try {
+				if(logger.isInfoEnabled()) {
+					logger.info(String.format("increased game[%s] player[%s] score[%s]", game.getGameId(), 
+							playerId, actionParams.get(playerId)));
+				}
+				HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
+			} catch (Exception e) {
+				logger.warn("sendScores error:" + e.getMessage());
+				continue;
+			}									
+		}		
 	}
 	
 	private Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 

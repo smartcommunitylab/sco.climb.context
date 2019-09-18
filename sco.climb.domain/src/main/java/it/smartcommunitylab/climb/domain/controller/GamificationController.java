@@ -1163,8 +1163,6 @@ public class GamificationController extends AuthController {
 
 		Map<String, Object> data = Maps.newTreeMap();
 		data.put(paramDistance, score);
-		Date date = new Date();
-		data.put(paramDate, date.getTime());
 		ed.setData(data);
 		
 		gengineUtils.executeAction(ed);

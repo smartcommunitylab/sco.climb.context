@@ -237,37 +237,50 @@ public class DashboardController extends AuthController {
 					classRoom, result.toString()));
 		}
 		if(!result.get(Const.CLOSED)) {
+			Map<String, Integer> actionParams = new HashMap<String, Integer>();
+			actionParams.put("walk", 0);
+			actionParams.put("bike", 0);
+			actionParams.put("bus", 0);
+			actionParams.put("pedibus", 0);
+			actionParams.put("pandr", 0);
+			actionParams.put("carpooling", 0);
+			actionParams.put("car", 0);
+			actionParams.put("absent", 0);
 			for(String playerId : calendarDay.getModeMap().keySet()) {
-				ExecutionDataDTO ed = new ExecutionDataDTO();
-				ed.setGameId(game.getGameId());
-				ed.setPlayerId(calendarDay.getClassRoom());
-				ed.setActionId(actionCalendar);
-				ed.setExecutionMoment(calendarDay.getDay());
-				
-				Map<String, Object> data = Maps.newTreeMap();
-				data.put(paramMode, calendarDay.getModeMap().get(playerId));
-				data.put(paramDate, System.currentTimeMillis());
-				data.put(paramMeteo, calendarDay.getMeteo());
-				ed.setData(data);
-				
-				try {
-					gengineUtils.executeAction(ed);
-				} catch (Exception e) {
-					logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
-							ownerId, game.getGameId(), classRoom));
-				}
-			}			
+				String mode = calendarDay.getModeMap().get(playerId);
+				actionParams.put(mode, actionParams.get(mode) + 1);
+			}
 			ExecutionDataDTO ed = new ExecutionDataDTO();
 			ed.setGameId(game.getGameId());
-			ed.setPlayerId(classRoom);
-			ed.setActionId(actionCalendarDayFilled);
-			//ed.setExecutionMoment(calendarDay.getDay());
+			ed.setPlayerId(calendarDay.getClassRoom());
+			ed.setActionId(actionCalendar);
+			ed.setExecutionMoment(calendarDay.getDay());
+			
+			Map<String, Object> data = Maps.newTreeMap();
+			data.put(paramMeteo, calendarDay.getMeteo());
+			for(String mode : actionParams.keySet()) {
+				data.put(paramMode, actionParams.get(mode));
+			}
+			ed.setData(data);
+			
 			try {
 				gengineUtils.executeAction(ed);
 			} catch (Exception e) {
 				logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
 						ownerId, game.getGameId(), classRoom));
-			}		
+			}
+			
+//			ExecutionDataDTO ed = new ExecutionDataDTO();
+//			ed.setGameId(game.getGameId());
+//			ed.setPlayerId(classRoom);
+//			ed.setActionId(actionCalendarDayFilled);
+//			//ed.setExecutionMoment(calendarDay.getDay());
+//			try {
+//				gengineUtils.executeAction(ed);
+//			} catch (Exception e) {
+//				logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
+//						ownerId, game.getGameId(), classRoom));
+//			}		
 		}
 		return result.get(Const.MERGED);
 	}
