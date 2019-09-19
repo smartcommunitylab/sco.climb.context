@@ -254,24 +254,32 @@ function ($q, $http, $rootScope, $timeout) {
         },
         searchOnContentRepository: function (query, position, distance, schoolId, type) {
             var deferred = $q.defer();
+            // var config = {
+            //     params: {
+            //         text: query
+            //     },
+            //     timeout: timeout
+            // }
+            // if (position) {
+            //     config.params.lat = position[0];
+            //     config.params.lng = position[1];
+            // }
+            // if (distance) {
+            //     config.params.distance = distance;
+            // }
+            // if (schoolId) {
+            //     config.params.schoolId = schoolId;
+            // }
+            // if (type) {
+            //     config.params.type = type;
+            // }
             var config = {
-                params: {
-                    text: query
-                },
-                timeout: timeout
-            }
-            if (position) {
-                config.params.lat = position[0];
-                config.params.lng = position[1];
-            }
-            if (distance) {
-                config.params.distance = distance;
-            }
-            if (schoolId) {
-                config.params.schoolId = schoolId;
-            }
-            if (type) {
-                config.params.type = type;
+                text: query,
+                lat: "",
+                lng: "",
+                types: type,
+                subjects: '',
+                schoolYears: ''
             }
             $http.get(baseUrl + '/api/game/multimedia', config).then(function(data){
                 deferred.resolve(data);

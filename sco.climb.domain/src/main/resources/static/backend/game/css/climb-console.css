@@ -841,6 +841,14 @@ hr.cBlue{
     padding-right: 5px;
     padding-left: 5px;
 }
+.contentSearchResultContainer{
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.contentRowPadding{
+    padding: 0 5px 0 5px;
+}
 .selectedRowCol{
     padding-right: 5px;
     padding-left: 5px;
@@ -882,4 +890,8 @@ hr.cBlue{
     background-image: radial-gradient(gray, white);
     border-radius: 5px;
     cursor: pointer; 
+}
+.imageSizeRow{
+    max-width: 100px;
+    max-height: 80px;
 }

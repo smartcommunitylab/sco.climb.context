@@ -506,7 +506,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         $scope.leg.externalUrls.push(element);
     };
-    var addMultimediaData = function(name, link, type, classes, subjects, schoolYears, publicLink, sharable) {
+    var addMultimediaData = function(name, link, type, classes, subjects, schoolYears, publicLink=true, sharable=true, contentReferenceId) {
         var element = {
             name: name,
             link: link,
@@ -516,7 +516,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             schoolYears: schoolYears,
             publicLink: publicLink,
             sharable: sharable,
-            position: $scope.leg.externalUrls.length+1
+            position: $scope.leg.externalUrls.length+1,
+            contentReferenceId: contentReferenceId
         };
         if (type == 'video') {
             element.previewUrl = $scope.getYoutubeImageFromLink(element.link);
@@ -589,8 +590,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             },
             {
             	schoolId: $scope.$parent.currentGame.schoolId,
-            	addElementsFunction: addMultimediaElement,
-            	saveFunction: $scope.saveLegLinks,
+            	addElementsFunction: addMultimediaData,
+            	saveFunction: $scope.saveMultimediaData,
                 position: [$scope.leg.coordinates.lat, $scope.leg.coordinates.lng],
                 getYoutubeImageFromLink: $scope.getYoutubeImageFromLink,
                 leg: $scope.leg

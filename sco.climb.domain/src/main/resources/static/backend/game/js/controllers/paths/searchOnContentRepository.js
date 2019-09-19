@@ -10,13 +10,19 @@ angular.module('consoleControllers.leg')
 	$scope.schoolYears=[];
     $scope.subjects=[];
 
-    $scope.subjectsListToggle = function(dropdownID){
-        // $('.wrapper .list').slideToggle('fast');
-        $('#'+dropdownID).slideToggle('fast');
+    $scope.subjectsListToggle = function(dropdownID, searchTime){
+        if(searchTime == "before"){
+            $('#'+dropdownID).slideToggle('fast');
+        }else if(searchTime == 'after'){
+            $('#subject'+dropdownID).slideToggle('fast');
+        }
     }
-    $scope.schoolYearsListToggle = function(dropdownID){
-        // $('.wrapper .list').slideToggle('fast');
-        $('#'+dropdownID).slideToggle('fast');
+    $scope.schoolYearsListToggle = function(dropdownID, searchTime){
+        if(searchTime == "before"){
+            $('#'+dropdownID).slideToggle('fast');
+        }else if(searchTime == 'after'){
+            $('#schoolYear'+dropdownID).slideToggle('fast');
+        }
 	}
     DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
@@ -73,8 +79,19 @@ angular.module('consoleControllers.leg')
                         }
                     });          
                     $scope.contentResults = response.data;
-                    $scope.noResults = response.data.length == 0
-                    console.log("search result:",response); 
+                    $scope.noResults = response.data.length == 0;
+                    //change the formet of array classes, schoolYears, subjects. because of the selection option
+                    $scope.contentResults.forEach(e=>{
+                        angular.forEach(e.referenceContent.classes, function(value, key){
+                            e.referenceContent.classes[key]={class:value,selected:false};
+                        });
+                        angular.forEach(e.referenceContent.schoolYears, function(value, key){
+                            e.referenceContent.schoolYears[key]={schoolYear:value,selected:false};
+                        });
+                        angular.forEach(e.referenceContent.subjects, function(value, key){
+                            e.referenceContent.subjects[key]={subject:value,selected:false};
+                        })
+                    });
                     console.log("contentResults:",$scope.contentResults); 
                 }, function() {
                 }
@@ -83,7 +100,29 @@ angular.module('consoleControllers.leg')
     $scope.$modalSuccess = function() {
         $scope.contentResults.forEach(element => {
             if (element.selectedToAdd) {
-                addElementsFunction(element.info[0].name, element.link, element.type);
+                var selectedClasses=[];
+                element.referenceContent.classes.forEach(e => {
+                    if(e.selected){
+                        selectedClasses.push(e.class)
+                    }
+                });
+
+                var selectedSchoolYears=[];
+                element.referenceContent.schoolYears.forEach(e=>{
+                    if(e.selected){
+                        selectedSchoolYears.push(e.schoolYear)
+                    }
+                });
+
+                var selectedSubjects=[];
+                element.referenceContent.subjects.forEach(e => {
+                    if(e.selected){
+                        selectedSubjects.push(e.subject);
+                    }
+                });
+                addElementsFunction(element.referenceContent.name, element.referenceContent.link, element.referenceContent.type, 
+                    selectedClasses, selectedSubjects, selectedSchoolYears, true, true, element.referenceContent.objectId);
+                // addElementsFunction(element.info[0].name, element.link, element.type);
             }
         });
         $scope.$modalClose();
