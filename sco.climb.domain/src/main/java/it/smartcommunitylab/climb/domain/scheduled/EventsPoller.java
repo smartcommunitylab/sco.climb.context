@@ -222,7 +222,9 @@ public class EventsPoller {
 			return;
 		}
 		// <class, total distance>
-		Map<String, Double> actionParams = new HashMap<String, Double>();
+		Map<String, Double> actionParamsDistance = new HashMap<String, Double>();
+		// <class, total number>
+		Map<String, Integer> actionParamsNumber = new HashMap<String, Integer>();
 		for (ChildStatus childStatus: childrenStatus) {
 			if(childStatus.isArrived()) {
 				//check if is a right classroom
@@ -242,10 +244,12 @@ public class EventsPoller {
 				}
 				String playerId = childStatus.getClassRoom();
 				Double score = childStatus.getScore();
-				if(actionParams.containsKey(playerId)) {
-					actionParams.put(playerId, actionParams.get(playerId) + score);
+				if(actionParamsDistance.containsKey(playerId)) {
+					actionParamsDistance.put(playerId, actionParamsDistance.get(playerId) + score);
+					actionParamsNumber.put(playerId, actionParamsNumber.get(playerId) + 1);
 				} else {
-					actionParams.put(playerId, score);
+					actionParamsDistance.put(playerId, score);
+					actionParamsNumber.put(playerId, 1);
 				}
 			}
 		}
@@ -256,7 +260,7 @@ public class EventsPoller {
 			logger.warn("sendScores:" + e.getMessage());
 			return;
 		}		
-		for(String playerId : actionParams.keySet()) {
+		for(String playerId : actionParamsDistance.keySet()) {
 			ExecutionDataDTO ed = new ExecutionDataDTO();
 			ed.setGameId(game.getGameId());
 			ed.setPlayerId(playerId);
@@ -264,13 +268,14 @@ public class EventsPoller {
 			ed.setExecutionMoment(date);
 			
 			Map<String, Object> data = Maps.newTreeMap();
-			data.put(paramDistance, actionParams.get(playerId));
+			data.put(paramDistance, actionParamsDistance.get(playerId));
+			data.put("kids", actionParamsNumber.get(playerId));
 			ed.setData(data);
 			
 			try {
 				if(logger.isInfoEnabled()) {
 					logger.info(String.format("increased game[%s] player[%s] score[%s]", game.getGameId(), 
-							playerId, actionParams.get(playerId)));
+							playerId, actionParamsDistance.get(playerId)));
 				}
 				HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
 			} catch (Exception e) {
