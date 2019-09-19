@@ -20,10 +20,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.walk_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.walk_studenti" 
+                ng-disabled="!isModalityPresent('walk')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.walk_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.walk_distanza" 
+                ng-disabled="!isModalityPresent('walk')"/>
             </div>
         </div>
         <div class="row">
@@ -33,10 +35,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bike_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.bike_studenti" 
+                ng-disabled="!isModalityPresent('bike')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bike_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.bike_distanza" 
+                ng-disabled="!isModalityPresent('bike')"/>
             </div>
         </div>
         <div class="row">
@@ -46,10 +50,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bus_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.bus_studenti" 
+                ng-disabled="!isModalityPresent('bus')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bus_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.bus_distanza" 
+                ng-disabled="!isModalityPresent('bus')"/>
             </div>
         </div>
         <div class="row">
@@ -59,10 +65,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pedibus_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.pedibus_studenti" 
+                ng-disabled="!isModalityPresent('pedibus')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pedibus_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.pedibus_distanza" 
+                ng-disabled="!isModalityPresent('pedibus')"/>
             </div>
         </div>
         <div class="row">
@@ -72,10 +80,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pandr_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.pandr_studenti" 
+                ng-disabled="!isModalityPresent('pandr')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pandr_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.pandr_distanza" 
+                ng-disabled="!isModalityPresent('pandr')"/>
             </div>
         </div>
         <div class="row">
@@ -85,10 +95,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.carpooling_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.carpooling_studenti" 
+                ng-disabled="!isModalityPresent('carpooling')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.carpooling_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.carpooling_distanza" 
+                ng-disabled="!isModalityPresent('carpooling')"/>
             </div>
         </div>
         <div class="row">
@@ -98,10 +110,12 @@
                 </p>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.car_studenti" />
+                <input class="form-control" type="number" ng-model="currentGame.params.car_studenti" 
+                ng-disabled="!isModalityPresent('car')"/>
             </div>
             <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.car_distanza" />
+                <input class="form-control" type="number" ng-model="currentGame.params.car_distanza" 
+                ng-disabled="!isModalityPresent('car')"/>
             </div>
         </div>
         <div class="row">

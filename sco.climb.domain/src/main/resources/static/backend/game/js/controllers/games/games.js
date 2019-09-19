@@ -482,6 +482,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             }
             return numWorkDays;
         }
+        
+        $scope.isModalityPresent = function(mode) {
+        	return $scope.currentGame.modalities.includes(mode);
+        }
 
         if ($scope.currentGame) {
             $scope.initParamController();
