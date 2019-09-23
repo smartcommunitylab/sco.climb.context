@@ -9,15 +9,7 @@
             <p class="tab cBlue-text">Ricerca del materiale multimediale sul motore di ricerca senza uscire dalla console.</p>
         </div>
 		<div class="row">
-            <!-- <form novalidate style="text-align:center;margin-bottom:8px;">    
-                <input class="form-control" type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
-                <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
-                    <option value="image">Immagini</option>
-                    <option value="video">Video</option>
-                    <option value="wikipedia">Wikipedia</option>
-                </select>
-                <input type="submit" ng-click="searchOnEngine()" value="Cerca" class="btn btn-primary btn-sm" />
-            </form> -->
+            <!-- before search -->
             <table class="table tableSearchEngines" ng-if="!imageResults && !ytResults && !wikiResults" >
                 <tbody>
                     <tr class="info" >
@@ -47,6 +39,7 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- after search -->
             <table class="table tableSearchEngines" ng-if="imageResults || ytResults || wikiResults">
                 <tbody>
                     <tr class="info" >

@@ -58,7 +58,7 @@
             data-ng-click="resetError()">&times;</a>
             {{errorMsg}}
         </div>
-        <!-- before search  -->
+        <!-- ***before search***  -->
         <div class="row" ng-if="!contentResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale utilizzato in precedenza in altri percorsi.</p>
             <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
@@ -74,12 +74,6 @@
                     </tr>
                     <tr class="info">
                         <td>
-                            <!-- <select class="form-control" ng-model="$parent.searchtype" >
-                                <option value="all">Tutti</option>
-                                <option value="image">Immagini</option>
-                                <option value="video">Video</option>
-                                <option value="wikipedia">Wikipedia</option>
-                            </select> -->
                             <div class="wrapper dropdownSearchEngines">
                                 <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti</div>
                                 <div class="list" id="searchtypeID">
@@ -143,7 +137,77 @@
                 </tbody>
             </table>
         </div>
-        <!-- after search result -->
+        <!-- ***after search result*** -->
+        <!-- table for search again -->
+        <div ng-if="contentResults">
+            <div class="row" >
+                <div class="col-md-2">
+                    <div class="row" ><input class="form-control" type="text" ng-model="$parent.searchtext"  placeholder="Cerca" /></div>
+                    <div class="row" ><p class="belowTextSearchEngines">parole chiave</p></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row" >
+                        <div class="wrapper dropdownSearchEngines">
+                            <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti</div>
+                            <div class="list" id="searchtypeID">
+                                <ul class="items-list">
+                                    <li ng-repeat="st in searchtype">
+                                        <input type="checkbox" class='' ng-model="st.selected" />
+                                        <span>{{st.searchtype}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ><p class="belowTextSearchEngines">tipologia</p></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row" >
+                        <div class="wrapper dropdownSearchEngines">
+                            <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti</div>
+                            <div class="list" id="subjectID">
+                                <ul class="items-list">
+                                    <li ng-repeat="s in subjects">
+                                        <input type="checkbox" class='' ng-model="s.selected" />
+                                        <span>{{s.subject}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ><p class="belowTextSearchEngines">materia</p></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row" >
+                        <div class="wrapper dropdownSearchEngines">
+                            <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti</div>
+                            <div class="list" id="schoolYearID">
+                                <ul class="items-list">
+                                    <li ng-repeat="sy in schoolYears">
+                                        <input type="checkbox" class='' ng-model="sy.selected" />
+                                        <span>{{sy.schoolYear}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ><p class="belowTextSearchEngines">classe</p></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row" >
+                        <input class="form-control" type="number" min="0" max="999" placeholder="Km" ng-model="$parent.searchdistance"/>
+                    </div>
+                    <div class="row" ><p class="belowTextSearchEngines">km</p></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row" >
+                        <input type="submit" ng-click="searchOnContentRepository($parent.searchtext,$parent.searchtype,$parent.searchdistance)" value="Cerca" class="btn btn-primary" />
+                    </div>
+                    <div class="row" ><p class="belowTextSearchEngines">cambia la ricerca</p></div>
+                </div>
+            </div>
+        </div>
+        <!-- data show -->
         <div class="row" style="overflow: auto;height: 350px;" id="contentList" ng-if="contentResults">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">

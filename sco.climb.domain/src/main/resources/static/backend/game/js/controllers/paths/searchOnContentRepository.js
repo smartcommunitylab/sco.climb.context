@@ -159,7 +159,7 @@ angular.module('consoleControllers.leg')
         if(countSeletedItem > 0){
             $scope.$modalClose();
         }else{
-            $scope.errorMsg = "Errore: seleziona prima la riga.";
+            $scope.errorMsg = "Errore: selezionare prima l'elemento.";
         }
         
     }
