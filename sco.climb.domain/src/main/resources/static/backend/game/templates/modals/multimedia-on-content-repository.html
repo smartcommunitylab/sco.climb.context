@@ -53,6 +53,12 @@
 
 <div>
     <div class="modal-body container-dialog">
+        <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
+            <a class="close" data-hide="alert" aria-label="close"
+            data-ng-click="resetError()">&times;</a>
+            {{errorMsg}}
+        </div>
+        <!-- before search  -->
         <div class="row" ng-if="!contentResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale utilizzato in precedenza in altri percorsi.</p>
             <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
@@ -68,18 +74,29 @@
                     </tr>
                     <tr class="info">
                         <td>
-                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                            <!-- <select class="form-control" ng-model="$parent.searchtype" >
                                 <option value="all">Tutti</option>
                                 <option value="image">Immagini</option>
                                 <option value="video">Video</option>
                                 <option value="wikipedia">Wikipedia</option>
-                            </select>
+                            </select> -->
+                            <div class="wrapper dropdownSearchEngines">
+                                <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti</div>
+                                <div class="list" id="searchtypeID">
+                                    <ul class="items-list">
+                                        <li ng-repeat="st in searchtype">
+                                            <input type="checkbox" class='' ng-model="st.selected" />
+                                            <span>{{st.searchtype}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                         <td colspan="2">Seleziona una o piu<p class="cBlue-text tab"><b>tipologia</b></p> del materiale</td>
                     </tr>
                     <tr class="info">
                         <td>
-                            <div class="wrapper dropdownSelectedClass">
+                            <div class="wrapper dropdownSearchEngines">
                                 <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti</div>
                                 <div class="list" id="subjectID">
                                     <ul class="items-list">
@@ -95,7 +112,7 @@
                     </tr>
                     <tr class="info">
                         <td>
-                            <div class="wrapper dropdownSelectedClass">
+                            <div class="wrapper dropdownSearchEngines">
                                 <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti</div>
                                 <div class="list" id="schoolYearID">
                                     <ul class="items-list">
@@ -118,7 +135,7 @@
                         <td style="border-radius: 0 0 0 5px;"></td>
                         <td>
                             <form>
-                                <input type="submit" ng-click="searchOnContentRepository($parent.searchtext,$parent.searchtype)" value="Cerca" class="btn btn-primary btn-sm" />
+                                <input type="submit" ng-click="searchOnContentRepository($parent.searchtext,$parent.searchtype,$parent.searchdistance)" value="Cerca" class="btn btn-primary btn-sm" />
                             </form>
                         </td>
                         <td style="border-radius: 0 0 5px 0;"></td>
@@ -209,7 +226,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">materiale</div>
+                                            <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">Materia</div>
                                             <div class="list" id="subject{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="s in content.referenceContent.subjects">
@@ -222,7 +239,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">classe</div>
+                                            <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">Classe</div>
                                             <div class="list" id="schoolYear{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="sy in content.referenceContent.schoolYears">

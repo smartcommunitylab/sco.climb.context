@@ -2,14 +2,15 @@ angular.module('consoleControllers.leg')
 
 .controller('SearchOnContentRepositoryDialogCtrl', function ($scope, $state, DataService, schoolId, addElementsFunction, saveFunction, position, getYoutubeImageFromLink, leg) {
     
+    $scope.errorMsg;
     $scope.totalCounter = 0;
-    $scope.searchtype = 'all';
+    $scope.searchtype = [];
     $scope.searchdistance = null;
     $scope.searchlocalschool = false;
     $scope.classes=[];
 	$scope.schoolYears=[];
     $scope.subjects=[];
-
+    // $scope.searchtext='';
     $scope.subjectsListToggle = function(dropdownID, searchTime){
         if(searchTime == "before"){
             $('#'+dropdownID).slideToggle('fast');
@@ -26,7 +27,11 @@ angular.module('consoleControllers.leg')
 	}
     DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
-			console.log("tags:",response)
+            console.log("tags:",response)
+            $scope.searchtype.push(
+                {searchtype:'Immagini',value:'image',selected:true},
+                {searchtype:'Video',value:'video',selected:true},
+                {searchtype:'Wikipedia',value:'wikipedia',selected:true});
 			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
 				$scope.classes.push({class:value,selected:true});
@@ -43,18 +48,41 @@ angular.module('consoleControllers.leg')
 			console.log('Errore :' , error.data.errorMsg);
 		}
 	);
-    $scope.searchOnContentRepository = function() {
+    $scope.searchOnContentRepository = function(searchText, searchtype, searchdistance) {
         //if (!$scope.searchtext) return;
+        $scope.searchtext = searchText;
+        // $scope.searchtype = searchtype;
+        $scope.searchdistance = searchdistance
         $scope.resetResults();
         var searchposition = undefined;
         var searchdistance = undefined;
         if($scope.searchdistance) {
-        	searchposition = position;
+            if(position){searchposition = position;}
         	searchdistance = $scope.searchdistance;
         }
+        var selectedSearchtype=[];
+        $scope.searchtype.forEach(e => {
+            if(e.selected){
+                selectedSearchtype.push(e.value);
+            }
+        });
+        var selectedSubjects=[];
+        $scope.subjects.forEach(e => {
+            if(e.selected){
+                selectedSubjects.push(e.subject);
+            }
+        });
+        var selectedSchoolYears=[];
+        $scope.schoolYears.forEach(e=>{
+            if(e.selected){
+                selectedSchoolYears.push(e.schoolYear);
+            }
+        });
+        console.log("$scope.searchtext",$scope.searchtext)
         DataService.searchOnContentRepository($scope.searchtext, searchposition, searchdistance,
         		$scope.searchlocalschool ? schoolId : undefined, 
-        		$scope.searchtype != 'all' ? $scope.searchtype : '').then(
+                selectedSearchtype,
+                selectedSubjects, selectedSchoolYears).then(
                 function(response) {
                     response.data.forEach(element => {
                         switch (element.type) {
@@ -98,9 +126,11 @@ angular.module('consoleControllers.leg')
         );
     }
     $scope.$modalSuccess = function() {
+        var countSeletedItem=0;
         $scope.contentResults.forEach(element => {
             if (element.selectedToAdd) {
                 var selectedClasses=[];
+                countSeletedItem++;
                 element.referenceContent.classes.forEach(e => {
                     if(e.selected){
                         selectedClasses.push(e.class)
@@ -123,10 +153,18 @@ angular.module('consoleControllers.leg')
                 addElementsFunction(element.referenceContent.name, element.referenceContent.link, element.referenceContent.type, 
                     selectedClasses, selectedSubjects, selectedSchoolYears, true, true, element.referenceContent.objectId);
                 // addElementsFunction(element.info[0].name, element.link, element.type);
+                saveFunction();
             }
         });
-        $scope.$modalClose();
-        saveFunction();
+        if(countSeletedItem > 0){
+            $scope.$modalClose();
+        }else{
+            $scope.errorMsg = "Errore: seleziona prima la riga.";
+        }
+        
+    }
+    $scope.resetError = function() {
+    	$scope.errorMsg = undefined;
     }
     $scope.resetResults = function() {
         $scope.contentResults = undefined;

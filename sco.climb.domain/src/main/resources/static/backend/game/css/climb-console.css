@@ -867,14 +867,21 @@ hr.cBlue{
 }
 .dropdownSelectedMateriale{
     width: 100%;
-    height: 30px; 
+    height: 50px; 
     display: inline-block;
     font-size: 12px;
     padding: 3px 5px;
 }
 .dropdownSelectedClass{
+    width: 110%;
+    height: 50px; 
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 5px;
+}
+.dropdownSearchEngines{
     width: 100%;
-    height: 30px; 
+    height: 50px; 
     display: inline-block;
     font-size: 12px;
     padding: 3px 5px;

@@ -2,7 +2,7 @@ angular.module('consoleControllers.leg')
 
 .controller('SearchOnSearchEnginesDialogCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, leg, addElementsFunction, saveFunction) {
     
-
+    $scope.errorMsg;
     $scope.searchtype = 'image';
     $scope.totalCounter = 0;
     $scope.classes=[];
@@ -124,6 +124,7 @@ angular.module('consoleControllers.leg')
     }
 
     $scope.$modalSuccess = function() {
+        var countSeletedItem=0;
         if ($scope.searchtype == 'wikipedia') {
             for(key in $scope.wikiResults){
                 var element = $scope.wikiResults[key];
@@ -141,6 +142,7 @@ angular.module('consoleControllers.leg')
             $scope.imageResults.forEach(element => {
                 if (element.selectedToAdd) {
                     var selectedClasses=[];
+                    countSeletedItem++;
                     element.classes.forEach(e => {
                         if(e.selected){
                             selectedClasses.push(e.class)
@@ -165,7 +167,14 @@ angular.module('consoleControllers.leg')
                 }
             });
         }
-        $scope.$modalClose();
+        if(countSeletedItem > 0){
+            $scope.$modalClose();
+        }else{
+            $scope.errorMsg = "Errore: seleziona prima la riga.";
+        }
+    }
+    $scope.resetError = function() {
+    	$scope.errorMsg = undefined;
     }
     $scope.resetResults = function() {
         $scope.wikiResults = undefined;

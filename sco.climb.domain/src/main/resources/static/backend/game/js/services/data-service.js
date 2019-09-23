@@ -252,7 +252,7 @@ function ($q, $http, $rootScope, $timeout) {
             })
             return deferred.promise;
         },
-        searchOnContentRepository: function (query, position, distance, schoolId, type) {
+        searchOnContentRepository: function (query, position, distance, schoolId, type, subjects, schoolYears) {
             var deferred = $q.defer();
             // var config = {
             //     params: {
@@ -275,11 +275,15 @@ function ($q, $http, $rootScope, $timeout) {
             // }
             var config = {
                 text: query,
-                lat: "",
-                lng: "",
+                distance: distance,
                 types: type,
-                subjects: '',
-                schoolYears: ''
+                subjects: subjects,
+                schoolYears: schoolYears
+            }
+            console.log("config::",config);
+            if (position) {
+                config.lat = position[0];
+                config.lng = position[1];
             }
             $http.get(baseUrl + '/api/game/multimedia', config).then(function(data){
                 deferred.resolve(data);

@@ -1,5 +1,10 @@
 <div>
 	<div class="container-dialog">
+        <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
+            <a class="close" data-hide="alert" aria-label="close"
+            data-ng-click="resetError()">&times;</a>
+            {{errorMsg}}
+        </div>
         <div class="row" ng-if="!imageResults && !ytResults && !wikiResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale sul motore di ricerca senza uscire dalla console.</p>
         </div>

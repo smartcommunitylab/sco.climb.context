@@ -53,7 +53,7 @@ angular.module('consoleControllers.leg')
             $scope.errorMsg = "Non è stato inserito un indirizzo valido.";
         }
         else {
-            if ($scope.newMedia.type) {
+            if ($scope.newMedia.type && $scope.newMedia.name) {
 				// $scope.newMedia.tags=$scope.getSelectedtags($scope.tags);
 				$scope.newMedia.tags=[];
 				$scope.tags.forEach(element => {
