@@ -63,17 +63,17 @@
                 </tbody>
             </table>
         </div>
-        <!-- <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'" style="overflow: auto;height: 350px;"> -->
+        <!-- search type image -->
         <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
                     <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
-                    <a ng-href="{{image.link}}" target="_blank" class="col-md-4">
-                        <img ng-src="{{image.image.thumbnailLink}}">
+                    <a ng-href="{{image.link}}" target="_blank" class="col-md-3" style="max-width: 98%; max-height: 98%;">
+                        <img ng-src="{{image.image.thumbnailLink}}" style="max-width: 98%; max-height: 98%;">
                         <!-- <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div> -->
                     </a>
                     <!-- no selected rows from imageResults -->
-                    <div class="col-md-7" ng-if="!image.selectedToAdd">
+                    <div class="col-md-8" ng-if="!image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
                             <u><h5>{{image.title}}</h5></u>
                         </a>
@@ -81,7 +81,7 @@
                         <p class="notSelectedText">Dimensione: <u><a ng-href="{{image.image.contextLink}}">{{image.image.width}}x{{image.image.height}}</a></u> <p>
                     </div>
                     <!-- if user selected rows from imageResults -->
-                    <div class="col-md-7" ng-if="image.selectedToAdd">
+                    <div class="col-md-8" ng-if="image.selectedToAdd">
                         <a ng-href="{{image.link}}" target="_blank">
                             <h5>{{image.title}}</h5>
                         </a>
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">materiale</div>
+                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
                                             <div class="list" id="materiale{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="s in image.subjects">
@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="classListToggle($index)">classe</div>
+                                            <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
                                             <div class="list" id="classe{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="sy in image.schoolYears">
@@ -136,33 +136,141 @@
                 </li>                
             </ul>
         </div>
-        <!-- <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'" style="overflow: auto;height: 350px;"> -->
+        <!-- search type video -->
         <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
                     <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
-                    <div class="col-md-11">
-                        <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" class="multimedia-yt-video" style="float:left;margin-right: 8px;margin-bottom: 8px;">
-                            <img ng-src="{{video.snippet.thumbnails.default.url}}">
+                    <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" class="col-md-3 contentRowPadding multimedia-yt-video" style="max-width: 98%; max-height: 98%;">
+                        <img ng-src="{{video.snippet.thumbnails.default.url}}" style="max-width: 98%; max-height: 98%;">
+                    </a>
+                    
+                    <div class="col-md-8 contentRowPadding" >
+                        <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank">
+                            <h4>{{video.snippet.title}}</h4>
                         </a>
-                        <div>
-                            <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank">
-                                <h4>{{video.snippet.title}}</h4>
-                            </a>
-                            <p>{{video.snippet.description}}<p>
+                        <!-- no selected rows from ytResults -->
+                        <div ng-if="!video.selectedToAdd">
+                            <p class="notSelectedText">Descrizione: {{video.snippet.description}}<p>
+                        </div>
+                        <!-- if user selected rows from imageResults -->
+                        <div ng-if="video.selectedToAdd">
+                            <div class="searchResultSelectedRow">
+                                <div class="container searchResultSelectedContainer"  >
+                                    <div class="row">
+                                        <div class="col-sm-12 selectedRowCol">
+                                            <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 selectedRowCol">
+                                            <label class="checkbox-inline" ng-repeat="c in video.classes">
+                                                {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                        </div>
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <div class="wrapper dropdownSelectedClass">
+                                                <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
+                                                <div class="list" id="materiale{{$index}}">
+                                                    <ul class="items-list">
+                                                        <li ng-repeat="s in video.subjects">
+                                                            <input type="checkbox" class='' ng-model="s.selected" />
+                                                            <span>{{s.subject}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <div class="wrapper dropdownSelectedClass">
+                                                <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
+                                                <div class="list" id="classe{{$index}}">
+                                                    <ul class="items-list">
+                                                        <li ng-repeat="sy in video.schoolYears">
+                                                            <input type="checkbox" class='' ng-model="sy.selected" />
+                                                            <span>{{sy.schoolYear}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
                         </div>
                     </div>
                 </li>                
             </ul>
         </div>
-        <!-- <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'" style="overflow: auto;height: 350px;"> -->
+        <!-- search type wikipedia -->
         <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'">
             <ul class="list-group">
                 <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
                     <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
-                    <div class="col-md-11">
-                        <h3><a href="{{result.link}}" target="_blank">{{result.title}}</a></h3>
-                        <p>{{result.extract}}<p>
+                    <a ng-href="{{result.link}}" target="_blank" class="col-md-3 contentRowPadding">
+                        <div class="defaultImage" ></div>
+                    </a>
+                    <div class="col-md-8 contentRowPadding">
+                        <h5><a href="{{result.link}}" target="_blank">{{result.title}}</a></h5>
+                        <!-- no selected rows from wikiResults -->
+                        <div ng-if="!result.selectedToAdd">
+                            <p class="notSelectedText">Descrizione: {{result.extract}}<p>
+                        </div>
+                        <!-- if user selected rows from wikiResults -->
+                        <div ng-if="result.selectedToAdd">
+                            <div class="searchResultSelectedRow">
+                                <div class="container searchResultSelectedContainer"  >
+                                    <div class="row">
+                                        <div class="col-sm-12 selectedRowCol">
+                                            <p class="tab selectedText"> <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 selectedRowCol">
+                                            <label class="checkbox-inline" ng-repeat="c in result.classes">
+                                                {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                        </div>
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <div class="wrapper dropdownSelectedClass">
+                                                <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
+                                                <div class="list" id="materiale{{$index}}">
+                                                    <ul class="items-list">
+                                                        <li ng-repeat="s in result.subjects">
+                                                            <input type="checkbox" class='' ng-model="s.selected" />
+                                                            <span>{{s.subject}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 selectedRowCol">
+                                            <div class="wrapper dropdownSelectedClass">
+                                                <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
+                                                <div class="list" id="classe{{$index}}">
+                                                    <ul class="items-list">
+                                                        <li ng-repeat="sy in result.schoolYears">
+                                                            <input type="checkbox" class='' ng-model="sy.selected" />
+                                                            <span>{{sy.schoolYear}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
                     </div>
                 </li>                
             </ul>

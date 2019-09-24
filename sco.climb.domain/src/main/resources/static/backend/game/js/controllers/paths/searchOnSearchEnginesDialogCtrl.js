@@ -57,7 +57,7 @@ angular.module('consoleControllers.leg')
             //in this case pageToken is an offset of search results
             DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
                 function(response) {
-                		$scope.resetResults();
+                	$scope.resetResults();
                     $scope.wikiResults = response.data.query.pages;
                     for(var page in $scope.wikiResults){
                         $scope.wikiResults[page].link = 'https://it.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
@@ -66,8 +66,23 @@ angular.module('consoleControllers.leg')
                     if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
                     $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
                     console.log(response);
-                		var el = document.getElementById('wikiContentList');
-                		el.scrollTop = 0;
+                    var el = document.getElementById('wikiContentList');
+                    el.scrollTop = 0;
+                    if($scope.classes){
+                        for(var page in $scope.wikiResults){
+                            $scope.wikiResults[page].classes=angular.copy($scope.classes);
+                        }
+                    }
+                    if($scope.schoolYears){
+                        for(var page in $scope.wikiResults){
+                            $scope.wikiResults[page].schoolYears=angular.copy($scope.schoolYears);
+                        }
+                    }
+                    if($scope.subjects){
+                        for(var page in $scope.wikiResults){
+                            $scope.wikiResults[page].subjects=angular.copy($scope.subjects);
+                        }
+                    }
                 }, function() {
                 }
             );
@@ -80,8 +95,23 @@ angular.module('consoleControllers.leg')
                     if (!$scope.prevPageToken) $scope.prevPageToken = -1; //used to generalize pagination controls
                     $scope.nextPageToken = response.data.nextPageToken;
                     console.log(response);
-              			var el = document.getElementById('videoContentList');
-              			el.scrollTop = 0;
+                    var el = document.getElementById('videoContentList');
+                    el.scrollTop = 0;
+                    if($scope.classes){
+                        $scope.ytResults.forEach(e=>{
+                            e.classes=angular.copy($scope.classes);
+                        })
+                    }
+                    if($scope.schoolYears){
+                        $scope.ytResults.forEach(e=>{
+                            e.schoolYears=angular.copy($scope.schoolYears);
+                        })
+                    }
+                    if($scope.subjects){
+                        $scope.ytResults.forEach(e=>{
+                            e.subjects=angular.copy($scope.subjects);
+                        })
+                    }
                 }, function() {
                 }
             );
@@ -129,30 +159,11 @@ angular.module('consoleControllers.leg')
             for(key in $scope.wikiResults){
                 var element = $scope.wikiResults[key];
                 if (element.selectedToAdd) {
-                    addElementsFunction(element.title, element.link, 'link');
-                }
-            }
-        } else if ($scope.searchtype == 'video') {
-            $scope.ytResults.forEach(element => {
-                if (element.selectedToAdd) {
-                    addElementsFunction(element.snippet.title, 'https://www.youtube.com/watch?v=' + element.id.videoId, 'video');
-                }
-            });
-        } else if ($scope.searchtype == 'image') {            
-            $scope.imageResults.forEach(element => {
-                if (element.selectedToAdd) {
-                    var selectedClasses=[];
                     countSeletedItem++;
+                    var selectedClasses=[];
                     element.classes.forEach(e => {
                         if(e.selected){
-                            selectedClasses.push(e.class)
-                        }
-                    });
-
-                    var selectedSchoolYears=[];
-                    element.schoolYears.forEach(e=>{
-                        if(e.selected){
-                            selectedSchoolYears.push(e.schoolYear)
+                            selectedClasses.push(e.class);
                         }
                     });
 
@@ -162,6 +173,71 @@ angular.module('consoleControllers.leg')
                             selectedSubjects.push(e.subject);
                         }
                     });
+
+                    var selectedSchoolYears=[];
+                    element.schoolYears.forEach(e=>{
+                        if(e.selected){
+                            selectedSchoolYears.push(e.schoolYear);
+                        }
+                    });
+                    addElementsFunction(element.title, element.link, 'link', selectedClasses, selectedSubjects, selectedSchoolYears);
+                    saveFunction();
+                }
+            }
+        } else if ($scope.searchtype == 'video') {
+            $scope.ytResults.forEach(element => {
+                if (element.selectedToAdd) {
+                    countSeletedItem++;
+                    var selectedClasses=[];
+                    element.classes.forEach(e => {
+                        if(e.selected){
+                            selectedClasses.push(e.class);
+                        }
+                    });
+
+                    var selectedSubjects=[];
+                    element.subjects.forEach(e => {
+                        if(e.selected){
+                            selectedSubjects.push(e.subject);
+                        }
+                    });
+
+                    var selectedSchoolYears=[];
+                    element.schoolYears.forEach(e=>{
+                        if(e.selected){
+                            selectedSchoolYears.push(e.schoolYear);
+                        }
+                    });
+
+                    addElementsFunction(element.snippet.title, 'https://www.youtube.com/watch?v=' + element.id.videoId, 'video', selectedClasses, selectedSubjects, selectedSchoolYears);
+                    saveFunction();
+                }
+            });
+        } else if ($scope.searchtype == 'image') {            
+            $scope.imageResults.forEach(element => {
+                if (element.selectedToAdd) {
+                    countSeletedItem++;
+                    var selectedClasses=[];
+                    element.classes.forEach(e => {
+                        if(e.selected){
+                            selectedClasses.push(e.class);
+                        }
+                    });
+
+                    var selectedSubjects=[];
+                    element.subjects.forEach(e => {
+                        if(e.selected){
+                            selectedSubjects.push(e.subject);
+                        }
+                    });
+
+                    var selectedSchoolYears=[];
+                    element.schoolYears.forEach(e=>{
+                        if(e.selected){
+                            selectedSchoolYears.push(e.schoolYear);
+                        }
+                    });
+
                     addElementsFunction(element.title, element.link, 'image', selectedClasses, selectedSubjects, selectedSchoolYears);
                     saveFunction();
                 }

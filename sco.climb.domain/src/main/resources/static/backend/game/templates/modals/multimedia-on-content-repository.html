@@ -1,56 +1,3 @@
-<!-- <div>
-	<div class="modal-body container-dialog">
-        <form novalidate style="text-align:center;margin-bottom:8px;">    
-            <div class="row">
-	            <input type="text" ng-model="$parent.searchtext" ng-change="resetResults()" />
-	            <select ng-model="$parent.searchtype">
-	                <option value="all">Tutti</option>
-	                <option value="image">Immagini</option>
-	                <option value="video">Video</option>
-	                <option value="link">Link</option>
-	                <option value="file">File</option>
-	            </select>
-	            <label><input type="checkbox" ng-model="$parent.searchlocalschool"/> Solo da questa scuola</label>
-            </div>
-            <div class="row">
-	            <label>Ricerca nel raggio di </label>
-	            <input type="number" min="0" max="999" placeholder="inserisci i Km" ng-model="$parent.searchdistance" />
-	            <label> kilometri dalla tappa</label>                
-	            <input type="submit" ng-click="searchOnContentRepository()" value="Cerca" class="btn btn-primary btn-sm" />
-            </div>
-        </form>
-        <div class="row"style="overflow: auto;height: 350px;" id="contentList">
-            <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
-                    <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
-                    <div class="col-md-11">
-                        <a href="{{content.link}}" target="_blank" ng-class='content.type == "video" && content.isYoutubeVideo ? "multimedia-yt-video" : ""' style="float:left;margin-right: 8px;margin-bottom: 8px;">
-                            <img class="search-multimedia-image" ng-src="{{content.referenceImg}}">
-                        </a>
-                        <div>
-                            <a href="{{content.link}}" target="_blank">
-                                <h4>{{content.info[0].name}}</h4>
-                            </a>
-                            <p>{{content.info[0].legName}}</p>
-                        </div>
-                    </div>
-                </li>                
-            </ul>
-            <div ng-show="noResults" style="text-align: center;">
-                Nessun risultato corrisponde alla tua ricerca.
-            </div>
-            <div style="width:100%;text-align:center;">
-                <dir-pagination-controls
-                    max-size="5"
-                    direction-links="true"
-                    boundary-links="true"
-                    on-page-change="changePage(newPageNumber, oldPageNumber)" >
-                </dir-pagination-controls>
-            </div>
-        </div>
-	</div>
-</div> -->
-
 <div>
     <div class="modal-body container-dialog">
         <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
@@ -75,7 +22,7 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti</div>
+                                <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti <span class="downArrow"></span></div>
                                 <div class="list" id="searchtypeID">
                                     <ul class="items-list">
                                         <li ng-repeat="st in searchtype">
@@ -91,7 +38,7 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti</div>
+                                <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti <span class="downArrow"></span></div>
                                 <div class="list" id="subjectID">
                                     <ul class="items-list">
                                         <li ng-repeat="s in subjects">
@@ -107,7 +54,7 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti</div>
+                                <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti <span class="downArrow"></span></div>
                                 <div class="list" id="schoolYearID">
                                     <ul class="items-list">
                                         <li ng-repeat="sy in schoolYears">
@@ -148,7 +95,7 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti</div>
+                            <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti <span class="downArrow"></span></div>
                             <div class="list" id="searchtypeID">
                                 <ul class="items-list">
                                     <li ng-repeat="st in searchtype">
@@ -164,7 +111,7 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti</div>
+                            <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti <span class="downArrow"></span></div>
                             <div class="list" id="subjectID">
                                 <ul class="items-list">
                                     <li ng-repeat="s in subjects">
@@ -180,7 +127,7 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti</div>
+                            <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti <span class="downArrow"></span></div>
                             <div class="list" id="schoolYearID">
                                 <ul class="items-list">
                                     <li ng-repeat="sy in schoolYears">
@@ -290,7 +237,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">Materia</div>
+                                            <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">Materia <span class="downArrow"></span></div>
                                             <div class="list" id="subject{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="s in content.referenceContent.subjects">
@@ -303,7 +250,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">Classe</div>
+                                            <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">Classe <span class="downArrow"></span></div>
                                             <div class="list" id="schoolYear{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="sy in content.referenceContent.schoolYears">

@@ -902,3 +902,14 @@ hr.cBlue{
     max-width: 100px;
     max-height: 80px;
 }
+
+.downArrow {
+    float: right;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    margin: 3px;
+  }
