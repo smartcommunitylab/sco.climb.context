@@ -75,6 +75,9 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
         		if((auth.role == "user") || (auth.role == "admin")) {
         			return false
         		}
+        		if(auth.ownerId != $scope.selectedDomain) {
+        			return false;
+        		}
         	}
         	return true;
       	}
@@ -239,8 +242,53 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
           $scope.delete = function() {
             $mdDialog.hide('confirm');
           }
-        }
+        } 
      }
+      
+    $scope.deleteFromDomain = function(event, user) {
+      $mdDialog.show({
+        controller: DeleteFromDomainControllerDialog,
+        templateUrl: 'templates/role_domain_delete_confirm_dialog.users_list.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true,
+        locals: {
+          currentUser: user
+        }
+      })
+      .then(function(answer) {
+        if (answer == 'confirm') {
+          $scope.loading = true;
+          dataService.removeUserFromDomain(user.email).then(
+            function (data) {
+            	$scope.users.splice($scope.users.indexOf(user), 1);
+              $scope.loading = false;
+              $state.go("home.users-lists.list", {'role':'all'});
+            },
+            function (reason) {
+            	console.log('[deleteFromDomain]' + JSON.stringify(reason));
+              $mdToast.show(
+                $mdToast.simple()
+                  .textContent($translate.instant('user_delete_error_msg'))
+                  .position("bottom")
+                  .hideDelay(3000)
+              );
+              $scope.loading = false;
+            }
+          );
+        }
+      });
+
+      function DeleteFromDomainControllerDialog($scope, $mdDialog, locals) {
+        $scope.currentUser = locals.currentUser;
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
+        $scope.delete = function() {
+          $mdDialog.hide('confirm');
+        }
+      }      	
+    }
     
     $scope.hasRoles = function(user) {
     	if(user.roles) {

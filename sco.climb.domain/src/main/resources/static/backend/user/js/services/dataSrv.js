@@ -195,7 +195,6 @@ angular.module('climbGameUser.services.data', [])
       return deferred.promise
     }
 
-
     dataService.getInstitutesList = function () {
       var deferred = $q.defer()
       $http({
@@ -357,6 +356,28 @@ angular.module('climbGameUser.services.data', [])
     		deferred.resolve(authText);
     	}
     	return deferred.promise
+    }
+    
+    dataService.removeUserFromDomain = function (email) {
+      var deferred = $q.defer()
+      $http({
+        method: 'DELETE',
+        url: configService.getURL() + '/api/role/' + currentDomain + '/domain', 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + loginService.getUserToken()
+        },
+        timeout: configService.httpTimout(),
+        params: {
+          email: email
+        }
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
     }
     
     return dataService

@@ -33,17 +33,21 @@
         <md-icon>keyboard_arrow_down</md-icon>
       </md-button>
       <md-button class="md-icon-button md-primary" ui-sref="home.user-role-edit({userEmail:user.email})">
+      	<md-tooltip md-direction="top">Add role</md-tooltip>
         <md-icon>person_add</md-icon>
       </md-button>
       <md-button class="md-icon-button md-primary" ui-sref="home.user-edit({userEmail:user.email})">
+      	<md-tooltip md-direction="top">Edit user</md-tooltip>
         <md-icon>mode_edit</md-icon>
       </md-button>
+      <md-button class="md-icon-button md-primary" ng-show="!roleToShow" ng-click="deleteFromDomain($event, user)">
+      	<md-tooltip md-direction="top">Delete roles from domain</md-tooltip>
+        <md-icon>remove_circle</md-icon>
+      </md-button>
       <md-button class="md-icon-button md-primary" ng-show="!roleToShow" ng-click="deleteUser($event, user)">
+      	<md-tooltip md-direction="top">Delete user</md-tooltip>
         <md-icon>delete</md-icon>
       </md-button>
-      <!--<md-button class="md-icon-button md-primary" ng-show="roleToShow" ng-click="deleteRole($event, user, roleToShow)">
-        <md-icon>delete</md-icon>
-      </md-button>-->
     </md-list-item>
 </md-list>
 <div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">

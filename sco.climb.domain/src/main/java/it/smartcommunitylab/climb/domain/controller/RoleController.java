@@ -452,6 +452,28 @@ public class RoleController extends AuthController {
 			logger.info(String.format("removeUser: %s - %s", ownerId, email));
 		}
 	}
+	
+	@RequestMapping(value = "/api/role/{ownerId}/domain", method = RequestMethod.DELETE)
+	public @ResponseBody void removeUserFromDomain(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		User user = storage.getUserByEmail(email);
+		if(user == null) {
+			throw new EntityNotFoundException(String.format("user %s not found", email));
+		}
+		for(String authKey : user.getRoles().keySet()) {
+			if(authKey.startsWith(ownerId)) {
+				storage.removeUserAuthKey(email, authKey);
+			}
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("removeUserFromDomain: %s - %s", ownerId, email));
+		}
+	}
 
 	@ExceptionHandler({EntityNotFoundException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
