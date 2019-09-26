@@ -1,0 +1,46 @@
+image: docker:latest
+services:
+  - docker:dind
+variables:
+  DOCKER_DRIVER: overlay
+
+stages:
+  - build
+  - deploy
+
+variables:
+  CONTAINER_PROD_IMAGE: smartcommunitylab/climb:$CI_COMMIT_SHORT_SHA
+  CONTAINER_IMAGE: smartcommunitylab/climb:latest
+before_script:
+  - docker info
+build:
+  stage: build
+  script:
+    - docker login -u $DHUB_USER -p $DHUB_PASS
+    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_PROD_IMAGE
+    - docker push $CONTAINER_IMAGE
+  only:
+    - prod
+    - dev
+
+deploy_prod:
+  stage: deploy
+  image: smartcommunitylab/kubectl-alpine:latest
+  environment:
+    name: develop
+  script:
+    - echo "deploy"
+    - kubectl -n default set image deployments/climb climb=$CONTAINER_DEV_IMAGE --record=true
+    - kubectl -n default rollout status deployment climb
+  only:
+    - prod
+
+deploy_dev:
+  stage: deploy
+  environment:
+    name: develop
+  script:
+    - ssh -i $DEV_KEY $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
+  only:
+    - dev
