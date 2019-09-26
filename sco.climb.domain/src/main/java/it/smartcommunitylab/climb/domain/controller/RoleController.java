@@ -40,7 +40,8 @@ public class RoleController extends AuthController {
 			@PathVariable String ownerId,
 			@RequestParam String email,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request)) {
+		if(!validateRole(Const.ROLE_ADMIN, request) && 
+				!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		List<Authorization> auths = new ArrayList<Authorization>();
