@@ -1,0 +1,70 @@
+#[[
+package eu.trentorise.game.model
+
+import eu.trentorise.game.core.Utility;
+
+global Utility utils;
+
+
+rule "class trip update"
+when
+    Action(id == "ClassWalkTrip")
+    Player($playerId : id, team == true) // this actions is valid only for classes/teams
+    InputData( 
+    	$distance : data["class-distance"] != null, 
+    	$participants : data["participants"] != null, 
+    	$meteo : data["meteo"] != null)
+    $tot_dist : PointConcept(name == "total_distance")
+    $walk_distance : PointConcept(name == "walk_distance")
+    $bonus_dist : PointConcept(name == "bonus_distance")
+    $trips : PointConcept(name == "group_trips")
+then
+	utils.log("apply class trip with " + $participants + " participants");
+	Double meteoBonus = meteoBonus((String) $meteo);
+	if (meteoBonus > 0d) {
+		utils.log("apply weather bonus");
+		meteoBonus = meteoBonus * (Double)$participants;
+		$bonus_dist.setScore($bonus_dist.getScore() + meteoBonus);
+	}
+	Double tripDistance = (Double)$participants * (Double) $distance + meteoBonus;
+	$walk_distance.setScore($walk_distance.getScore() + tripDistance);
+	$trips.setScore($trips.getScore() + (Double) $participants);
+	$tot_dist.setScore($tot_dist.getScore() + tripDistance);
+
+    update($walk_distance);
+    update($tot_dist);
+    update($bonus_dist);
+    update($trips);
+    insert(new UpdateTeams());	
+end
+
+rule "class trip propagation"
+when
+    Member( 
+    	$distance : inputData["class-distance"] != null, 
+    	$participants : inputData["participants"] != null, 
+    	$meteo : inputData["meteo"] != null)
+    Player($playerId : id, team == true)
+    $tot_dist : PointConcept(name == "total_distance")
+    $walk_distance : PointConcept(name == "walk_distance")
+    $bonus_dist : PointConcept(name == "bonus_distance")
+    $trips : PointConcept(name == "group_trips")
+then
+	utils.log("apply class trip with " + $participants + " participants update propagation");
+	Double meteoBonus = meteoBonus((String) $meteo);
+	if (meteoBonus > 0d) {
+		utils.log("apply weather bonus");
+		meteoBonus = meteoBonus * (Double)$participants;
+		$bonus_dist.setScore($bonus_dist.getScore() + meteoBonus);
+	}	
+	Double tripDistance = (Double)$participants * (Double) $distance + meteoBonus;
+	$walk_distance.setScore($walk_distance.getScore() + tripDistance);
+	$tot_dist.setScore($tot_dist.getScore() + tripDistance);
+	$trips.setScore($trips.getScore() + (Double) $participants);
+
+    update($walk_distance);
+    update($tot_dist);
+    update($bonus_dist);
+    update($trips);
+end
+]]#

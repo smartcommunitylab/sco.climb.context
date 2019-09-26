@@ -1,0 +1,77 @@
+#set( $H = '#' )
+package eu.trentorise.game.model
+
+function Double distanceByMode(String mode) {
+	//constants for mode distances
+  Double const_pandr_distance = $params.const_pandr_distance#[[.0]]#;
+	Double const_bus_distance = $params.const_bus_distance#[[.0]]#;
+	double const_walk_distance = $params.const_walk_distance#[[.0]]#;
+	double const_bike_distance = $params.const_bike_distance#[[.0]]#;
+	double const_carpooling_distance = $params.const_carpooling_distance#[[.0]]#;
+	double const_pedibus_distance = $params.const_pedibus_distance#[[.0]]#;
+	double const_car_distance = $params.const_car_distance#[[.0]]#;
+	
+	double distance = 0.0;
+	
+	switch(mode) {
+		case "walk":
+			distance = const_walk_distance;
+		break;
+		case "bike":
+			distance = const_bike_distance;
+		break;
+		case "pandr":
+			distance = const_pandr_distance;
+		break;
+		case "bus":
+			distance = const_bus_distance;
+		break;
+		case "carpooling":
+			distance = const_carpooling_distance;
+		break;
+		case "pedibus":
+			distance = const_pedibus_distance;
+		break;
+		case "car":
+			distance = const_car_distance;
+		break;
+		
+		default: // absent 
+			distance = 0.0; 
+		break;
+	}
+	 
+	return distance;
+}
+
+function Double meteoBonus(String meteo) {
+	//constants for meteo bonuses
+	Double const_cloudy_bonus = $params.const_cloudy_bonus#[[.0]]#;
+	Double const_rain_bonus = $params.const_rain_bonus#[[.0]]#;
+	Double const_snow_bonus = $params.const_snow_bonus#[[.0]]#;
+	
+	double bonus = 0.0;
+	
+	switch(meteo) {
+		case "cloudy":
+			bonus = const_cloudy_bonus;
+		break;
+		case "rain":
+			bonus = const_rain_bonus;
+		break;
+		case "snow":
+			bonus = const_snow_bonus;
+		break;
+			
+		default: // sunny
+			bonus = 0.0; 
+		break;
+	}
+	
+	return bonus;
+}
+
+
+function increase(PointConcept score, double value) {
+	score.setScore(score.getScore() + value);
+}
