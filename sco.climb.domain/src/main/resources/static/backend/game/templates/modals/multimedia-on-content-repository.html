@@ -165,7 +165,9 @@
                             <img ng-src="{{content.referenceContent.previewUrl}}" class="imageSizeRow">
                         </a>
                         <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="!content.referenceContent.previewUrl">
-                            <div class="defaultImage" ng-if="!content.referenceContent.previewUrl"></div>
+                            <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'image'">
+                            <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'link'">
+                            <img ng-src="img/video.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'video'">
                         </a>
                     </div>
                     <!-- no selected rows from contentResults -->
