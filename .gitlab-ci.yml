@@ -40,10 +40,9 @@ deploy_dev:
   image: smartcommunitylab/kubectl-alpine:latest
   environment:
     name: develop
-  before_script:
+  script:
     - eval $(ssh-agent -s)
     - echo "$DEV_KEY" | tr -d '\r' | ssh-add -
-  script:
     - ssh -o "StrictHostKeyChecking no" $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
   only:
     - dev
