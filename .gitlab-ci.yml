@@ -41,9 +41,8 @@ deploy_dev:
   environment:
     name: develop
   script:
-    - echo $DEV_KEY > key
-    - chmod 600 key
-    - ssh -o "StrictHostKeyChecking no" -i key $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
-    - rm key
+    - eval $(ssh-agent -s)
+    - echo "$DEV_KEY" | tr -d '\r' | ssh-add -
+    - ssh -o "StrictHostKeyChecking no" $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
   only:
     - dev
