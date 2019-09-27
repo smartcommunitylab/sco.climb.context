@@ -5,49 +5,49 @@
 			"label": "A piedi",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#A8E206"
 		},
 		{
 			"value":"bike",
 			"label": "In bici",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#01C86E"
 		},
 		{
 			"value":"bus",
 			"label": "Scuolabus o trasporto pubblico",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#FFE600"
 		},
 		{
 			"value":"pedibus",
 			"label": "Pedibus",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#A8E206"
 		},
 		{
 			"value":"pandr",
 			"label": "In auto fino alla piazzola di sosta",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#0074FF"
 		},
 		{
 			"value":"carpooling",
 			"label": "Car pooling",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#FF7F00"
 		},
 		{
 			"value":"car",
 			"label": "In auto fino a scuola",
 			"active": true,
 			"category": "cat1",
-			"color": "#f48040"
+			"color": "#FF0020"
 		},
 		{
 			"value":"absent",

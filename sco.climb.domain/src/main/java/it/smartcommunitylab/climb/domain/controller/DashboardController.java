@@ -258,9 +258,7 @@ public class DashboardController extends AuthController {
 			
 			Map<String, Object> data = Maps.newTreeMap();
 			data.put(paramMeteo, calendarDay.getMeteo());
-			for(String mode : actionParams.keySet()) {
-				data.put(paramMode, actionParams.get(mode));
-			}
+			data.putAll(actionParams);
 			ed.setData(data);
 			
 			try {

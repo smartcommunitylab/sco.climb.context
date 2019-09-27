@@ -213,7 +213,8 @@
                 <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
                     <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
                     <a ng-href="{{result.link}}" target="_blank" class="col-md-3 contentRowPadding">
-                        <div class="defaultImage" ></div>
+                        <!-- <div class="defaultImage" ></div> -->
+                        <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;">
                     </a>
                     <div class="col-md-8 contentRowPadding">
                         <h5><a href="{{result.link}}" target="_blank">{{result.title}}</a></h5>
