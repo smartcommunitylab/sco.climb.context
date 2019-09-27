@@ -11,8 +11,7 @@ stages:
 variables:
   CONTAINER_PROD_IMAGE: smartcommunitylab/climb:$CI_COMMIT_SHORT_SHA
   CONTAINER_IMAGE: smartcommunitylab/climb:latest
-before_script:
-  - docker info
+
 build:
   stage: build
   script:
