@@ -38,6 +38,7 @@ deploy_prod:
 
 deploy_dev:
   stage: deploy
+  image: smartcommunitylab/kubectl-alpine:latest
   environment:
     name: develop
   script:
