@@ -41,6 +41,6 @@ deploy_dev:
   environment:
     name: develop
   script:
-    - ssh -i $DEV_KEY $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
+    - ssh -o "StrictHostKeyChecking no" -i $DEV_KEY $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
   only:
     - dev
