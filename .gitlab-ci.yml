@@ -42,7 +42,7 @@ deploy_dev:
     name: develop
   before_script:
     - eval $(ssh-agent -s)
-    - cat "$DEV_KEY" | tr -d '\r' | ssh-add -
+    - echo "$DEV_KEY" | tr -d '\r' | ssh-add -
   script:
     - ssh -o "StrictHostKeyChecking no" $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
   only:
