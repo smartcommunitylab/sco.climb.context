@@ -22,11 +22,14 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti <span class="downArrow"></span></div>
+                                <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">
+                                    <span>{{selectedSearchtype}} </span>
+                                    <span class="downArrow"></span>
+                                </div>
                                 <div class="list" id="searchtypeID">
                                     <ul class="items-list">
                                         <li ng-repeat="st in searchtype">
-                                            <input type="checkbox" class='' ng-model="st.selected" />
+                                            <input type="checkbox" class='' ng-model="st.selected" ng-click="checkSearchtype()"/>
                                             <span>{{st.searchtype}}</span>
                                         </li>
                                     </ul>
@@ -38,11 +41,14 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti <span class="downArrow"></span></div>
+                                <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">
+                                    {{selectedSubject}} 
+                                    <span class="downArrow"></span>
+                                </div>
                                 <div class="list" id="subjectID">
                                     <ul class="items-list">
                                         <li ng-repeat="s in subjects">
-                                            <input type="checkbox" class='' ng-model="s.selected" />
+                                            <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
                                             <span>{{s.subject}}</span>
                                         </li>
                                     </ul>
@@ -54,11 +60,14 @@
                     <tr class="info">
                         <td>
                             <div class="wrapper dropdownSearchEngines">
-                                <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti <span class="downArrow"></span></div>
+                                <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">
+                                    {{selectedSchoolYear}} 
+                                    <span class="downArrow"></span>
+                                </div>
                                 <div class="list" id="schoolYearID">
                                     <ul class="items-list">
                                         <li ng-repeat="sy in schoolYears">
-                                            <input type="checkbox" class='' ng-model="sy.selected" />
+                                            <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
                                             <span>{{sy.schoolYear}}</span>
                                         </li>
                                     </ul>
@@ -95,11 +104,13 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">Tutti <span class="downArrow"></span></div>
+                            <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">
+                                <span >{{selectedSearchtype}} </span>
+                                <span class="downArrow"></span></div>
                             <div class="list" id="searchtypeID">
                                 <ul class="items-list">
                                     <li ng-repeat="st in searchtype">
-                                        <input type="checkbox" class='' ng-model="st.selected" />
+                                        <input type="checkbox" class='' ng-model="st.selected" ng-click="checkSearchtype()"/>
                                         <span>{{st.searchtype}}</span>
                                     </li>
                                 </ul>
@@ -111,11 +122,13 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">Tutti <span class="downArrow"></span></div>
+                            <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">
+                                {{selectedSubject}} 
+                                <span class="downArrow"></span></div>
                             <div class="list" id="subjectID">
                                 <ul class="items-list">
                                     <li ng-repeat="s in subjects">
-                                        <input type="checkbox" class='' ng-model="s.selected" />
+                                        <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
                                         <span>{{s.subject}}</span>
                                     </li>
                                 </ul>
@@ -127,11 +140,13 @@
                 <div class="col-md-2">
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
-                            <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">Tutti <span class="downArrow"></span></div>
+                            <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">
+                                {{selectedSchoolYear}}
+                                <span class="downArrow"></span></div>
                             <div class="list" id="schoolYearID">
                                 <ul class="items-list">
                                     <li ng-repeat="sy in schoolYears">
-                                        <input type="checkbox" class='' ng-model="sy.selected" />
+                                        <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
                                         <span>{{sy.schoolYear}}</span>
                                     </li>
                                 </ul>

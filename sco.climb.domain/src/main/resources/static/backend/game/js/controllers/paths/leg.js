@@ -222,6 +222,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 }
                                 nextLeg.polyline = google.maps.geometry.encoding.encodePath(points);
                                 // encode polyline 
+                                var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
                                 $scope.saveData('leg', nextLeg).then(
                                     function (response) {
                                         console.log('Salvataggio dati a buon fine.');
