@@ -3,148 +3,138 @@
     subjects=legsAllTags[num].subjects; publicLink=legsAllTags[num].publicLink; sharable=legsAllTags[num].sharable;">
     <div class="col-md-10 bootstrapColRowPadding">
         <div class="row">
-            <div class="col-lg-12 bootstrapColRowPadding">
-                <div class="row">
-                    <!-- Media name -->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding">
-                                <p><b>Titolo</b></p>
-                            </div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <input class="form-control" type="text" ng-model="tmpTitle" />
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Media link -->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding">
-                                <p><b>URL</b></p>
-                            </div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <input class="form-control" type="text" ng-model="tmpUrl" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-12 bootstrapColRowPadding">
-                <div class="row">
-                    <!-- Media type -->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Tipologia</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <select class="form-control" ng-model="tmpType">
-                                    <option value="image">Immagine</option>
-                                    <option value="video">Video</option>
-                                    <option value="link">Collegamento a pagina web</option>
-                                    <option value="file">File</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Media Classes -->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Visibile a</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <div class="wrapper dropdownSearchEngines">
-                                    <div class="selected-items-box" ng-click="classListToggle(num)">
-                                        <div class="textDropdown"><p class="pTextDropdown">{{selectedClasses[num]}} </p></div>
-                                        <div class="arrowDropdown"><p class="downArrow"></p></div>
-                                    </div>
-                                    <div class="list" id="classID{{num}}">
-                                        <ul class="items-list">
-                                            <li ng-repeat="c in classes">
-                                                <input type="checkbox" class='' ng-model="c.selected" ng-click="checkClasses(num)"/>
-                                                <span>{{c.class}}</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-12 bootstrapColRowPadding">
-                <div class="row">
-                    <!-- Media  subjects-->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Discipline</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <div class="wrapper dropdownSearchEngines">
-                                    <div class="selected-items-box" ng-click="subjectsListToggle(num)">
-                                        <div class="textDropdown"><p class="pTextDropdown">{{selectedSubject[num]}} </p></div>
-                                        <div class="arrowDropdown"><p class="downArrow"></p></div>
-                                    </div>
-                                    <div class="list" id="subjectID{{num}}">
-                                        <ul class="items-list">
-                                            <li ng-repeat="s in subjects">
-                                                <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects(num)"/>
-                                                <span>{{s.subject}}</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Media  schoolYears-->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Classi</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <div class="wrapper dropdownSearchEngines">
-                                    <div class="selected-items-box" ng-click="schoolYearsListToggle(num)">
-                                        <div class="textDropdown"><p class="pTextDropdown">{{selectedSchoolYear[num]}} </p></div>
-                                        <div class="arrowDropdown"><p class="downArrow"></p></div>
-                                    </div>
-                                    <div class="list" id="schoolYearID{{num}}">
-                                        <ul class="items-list">
-                                            <li ng-repeat="sy in schoolYears">
-                                                <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears(num)"/>
-                                                <span>{{sy.schoolYear}}</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-12 bootstrapColRowPadding">
-                <div class="row">
-                    <!-- Media publicLink -->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Link pubblico</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <label class="radio-inline"><input ng-model="legsAllTags[num].publicLink" type="radio" name="publicLink{{num}}" ng-value="true" >Si</label>
-                                <label class="radio-inline"><input ng-model="legsAllTags[num].publicLink" type="radio" name="publicLink{{num}}" ng-value="false" >No</label>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Media  sharable-->
-                    <div class="col-lg-6 bootstrapColRowPadding">
-                        <div class="row">
-                            <div class="col-lg-4 bootstrapColRowPadding"><p><b>Condiviso</b></p></div>
-                            <div class="col-lg-8 bootstrapColRowPadding">
-                                <label class="radio-inline"><input ng-model="legsAllTags[num].sharable" type="radio" name="sharable{{num}}" ng-value="true" >Si</label>
-                                <label class="radio-inline"><input ng-model="legsAllTags[num].sharable" type="radio" name="sharable{{num}}" ng-value="false" >No</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	        <!-- Media name -->
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding">
+	                    <p><b>Titolo</b></p>
+	                </div>
+	                <div class="col-lg-8 bootstrapColRowPadding">
+	                    <input class="form-control" type="text" ng-model="tmpTitle" />
+	                </div>
+	            </div>
+	        </div>
+				</div>
+				<div class="row">                    
+          <!-- Media link -->
+          <div class="col-lg-12 bootstrapColRowPadding">
+              <div class="row">
+                  <div class="col-lg-4 bootstrapColRowPadding">
+                      <p><b>URL</b></p>
+                  </div>
+                  <div class="col-lg-8 bootstrapColRowPadding">
+                      <input class="form-control" type="text" ng-model="tmpUrl" />
+                  </div>
+              </div>
+          </div>
+	      </div>
+	      <div class="row">
+	        <!-- Media type -->
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Tipologia</b></p></div>
+	                <div class="col-lg-8 bootstrapColRowPadding">
+	                    <select class="form-control" ng-model="tmpType">
+	                        <option value="image">Immagine</option>
+	                        <option value="video">Video</option>
+	                        <option value="link">Collegamento a pagina web</option>
+	                        <option value="file">File</option>
+	                    </select>
+	                </div>
+	            </div>
+	        </div>
+	      </div>
+	      <div class="row">
+	        <!-- Media Classes -->
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Visibile a</b></p></div>
+	                <div class="col-lg-8 bootstrapColRowPadding">
+	                    <div class="wrapper dropdownSearchEngines">
+	                        <div class="selected-items-box" ng-click="classListToggle(num)">
+	                            <div class="textDropdown"><p class="pTextDropdown">{{selectedClasses[num]}} </p></div>
+	                            <div class="arrowDropdown"><p class="downArrow"></p></div>
+	                        </div>
+	                        <div class="list" id="classID{{num}}">
+	                            <ul class="items-list">
+	                                <li ng-repeat="c in classes">
+	                                    <input type="checkbox" class='' ng-model="c.selected" ng-click="checkClasses(num)"/>
+	                                    <span>{{c.class}}</span>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	      </div>
+	      <div class="row">
+	        <!-- Media publicLink -->
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Link pubblico</b></p></div>
+	                <div class="col-lg-8 bootstrapColRowPadding">
+	                    <label class="radio-inline"><input ng-model="legsAllTags[num].publicLink" type="radio" name="publicLink{{num}}" ng-value="true" >Si</label>
+	                    <label class="radio-inline"><input ng-model="legsAllTags[num].publicLink" type="radio" name="publicLink{{num}}" ng-value="false" >No</label>
+	                </div>
+	            </div>
+	        </div>	      	
+	      </div>
+	      <div class="row">
+	        <!-- Media  sharable-->
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Condiviso</b></p></div>
+	                <div class="col-lg-8 bootstrapColRowPadding">
+	                    <label class="radio-inline"><input ng-model="legsAllTags[num].sharable" type="radio" name="sharable{{num}}" ng-value="true" >Si</label>
+	                    <label class="radio-inline"><input ng-model="legsAllTags[num].sharable" type="radio" name="sharable{{num}}" ng-value="false" >No</label>
+	                </div>
+	            </div>
+	        </div>
+				</div>
+				<div class="row">
+	        <div class="col-lg-12 bootstrapColRowPadding">
+	            <div class="row">
+	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Adatto per</b></p></div>
+	                <div class="col-lg-4 bootstrapColRowPadding">
+							        <!-- Media  subjects-->
+							        <div class="bootstrapColRowPadding">Discipline</div>
+	                    <div class="wrapper dropdownSearchEngines">
+	                        <div class="selected-items-box" ng-click="subjectsListToggle(num)">
+	                            <div class="textDropdown"><p class="pTextDropdown">{{selectedSubject[num]}} </p></div>
+	                            <div class="arrowDropdown"><p class="downArrow"></p></div>
+	                        </div>
+	                        <div class="list" id="subjectID{{num}}">
+	                            <ul class="items-list">
+	                                <li ng-repeat="s in subjects">
+	                                    <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects(num)"/>
+	                                    <span>{{s.subject}}</span>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="col-lg-4 bootstrapColRowPadding">
+	                		<!-- Media  schoolYears-->
+	                		<div class="bootstrapColRowPadding">Classi</div>
+	                    <div class="wrapper dropdownSearchEngines">
+	                        <div class="selected-items-box" ng-click="schoolYearsListToggle(num)">
+	                            <div class="textDropdown"><p class="pTextDropdown">{{selectedSchoolYear[num]}} </p></div>
+	                            <div class="arrowDropdown"><p class="downArrow"></p></div>
+	                        </div>
+	                        <div class="list" id="schoolYearID{{num}}">
+	                            <ul class="items-list">
+	                                <li ng-repeat="sy in schoolYears">
+	                                    <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears(num)"/>
+	                                    <span>{{sy.schoolYear}}</span>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>	                
+	            </div>
+	        </div>
+				</div>
     </div>
     <div class="col-md-2 right">
         <a class="btn btn-save btn-icon" ng-click="updateLink(num, tmpTitle, tmpUrl, tmpType); $parent.$parent.editMode = !$parent.$parent.editMode" role="button"><i class="fa fa-check" aria-hidden="true"></i></a>
