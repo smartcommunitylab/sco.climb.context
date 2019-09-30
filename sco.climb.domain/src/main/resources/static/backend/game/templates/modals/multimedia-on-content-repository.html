@@ -105,8 +105,9 @@
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
                             <div class="selected-items-box" ng-click="subjectsListToggle('searchtypeID','before')">
-                                <span >{{selectedSearchtype}} </span>
-                                <span class="downArrow"></span></div>
+                                <div class="textDropdown"><p class="pTextDropdown">{{selectedSearchtype}} </p></div>
+                                <div class="arrowDropdown"><p class="downArrow"></p></div>
+                            </div>
                             <div class="list" id="searchtypeID">
                                 <ul class="items-list">
                                     <li ng-repeat="st in searchtype">
@@ -123,8 +124,9 @@
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
                             <div class="selected-items-box" ng-click="subjectsListToggle('subjectID','before')">
-                                {{selectedSubject}} 
-                                <span class="downArrow"></span></div>
+                                <div class="textDropdown"><p class="pTextDropdown">{{selectedSubject}} </p></div>
+                                <div class="arrowDropdown"><p class="downArrow"></p></div>
+                            </div>
                             <div class="list" id="subjectID">
                                 <ul class="items-list">
                                     <li ng-repeat="s in subjects">
@@ -141,8 +143,9 @@
                     <div class="row" >
                         <div class="wrapper dropdownSearchEngines">
                             <div class="selected-items-box" ng-click="schoolYearsListToggle('schoolYearID','before')">
-                                {{selectedSchoolYear}}
-                                <span class="downArrow"></span></div>
+                                <div class="textDropdown"><p class="pTextDropdown">{{selectedSchoolYear}} </p></div>
+                                <div class="arrowDropdown"><p class="downArrow"></p></div>
+                            </div>
                             <div class="list" id="schoolYearID">
                                 <ul class="items-list">
                                     <li ng-repeat="sy in schoolYears">

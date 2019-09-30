@@ -913,6 +913,21 @@ hr.cBlue{
     max-height: 80px;
 }
 
+/* */
+.textDropdown{
+    float: left;
+    width: 75%;
+}
+.pTextDropdown{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 98%;
+}
+.arrowDropdown{
+    float: left;
+    width: 25%;
+}
 .downArrow {
     float: right;
     border: solid black;
@@ -923,3 +938,7 @@ hr.cBlue{
     -webkit-transform: rotate(45deg);
     margin: 4px;
   }
+/* */
+.bootstrapColRowPadding{
+    padding: 1px 5px 1px 5px;
+}
