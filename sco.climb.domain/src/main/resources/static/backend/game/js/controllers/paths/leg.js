@@ -3,6 +3,27 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 // Edit the leg for the selected path
 .controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, drawMapLine, createDialog) {
     $scope.$parent.selectedTab = 'legs';
+    $scope.searchtype = [];
+    $scope.searchdistance = null;
+    $scope.searchlocalschool = false;
+    $scope.classes=[];
+	$scope.schoolYears=[];
+    $scope.subjects=[];
+    $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
+    $scope.selectedClasses = "Tutti";
+    $scope.selectedSubject = "Tutti";
+    $scope.selectedSchoolYear = "Tutti";
+
+    $scope.classListToggle = function(dropdownID){
+        $('#classID'+dropdownID).slideToggle('fast');
+    }
+    $scope.subjectsListToggle = function(dropdownID){
+        $('#subjectID'+dropdownID).slideToggle('fast');
+    }
+    $scope.schoolYearsListToggle = function(dropdownID){
+        $('#schoolYearID'+dropdownID).slideToggle('fast');
+    }
+    
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
         { icon: "<img src=img/POI_airplane_full.png />", name: "Aereo", value:"plane"},
@@ -31,17 +52,71 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
             
+            //get tags
+            DataService.getMultimediaContentTags($stateParams.idDomain, $stateParams.idGame).then(
+                function(response) {
+                    console.log("tags:",response)
+                    $scope.searchtype.push(
+                        {searchtype:'Immagini',value:'image',selected:false},
+                        {searchtype:'Video',value:'video',selected:false},
+                        {searchtype:'Wikipedia',value:'wikipedia',selected:false});
+                    //$scope.classes=response.data.classes;
+                    angular.forEach(response.data.classes, function(value, key){
+                        $scope.classes.push({class:value,selected:false});
+                    });
+                    
+                    angular.forEach(response.data.schoolYears, function(value, key){
+                        $scope.schoolYears.push({schoolYear:value,selected:false});
+                    });
+                    
+                    angular.forEach(response.data.subjects, function(value, key){
+                        $scope.subjects.push({subject:value,selected:false});
+                    });
+                },function(error) {
+                    console.log('Errore :' , error.data.errorMsg);
+                }
+            );
             //get multimedia content
             DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, 
             		$stateParams.idPath, $stateParams.idLeg).then(
             		function(response) {
             			if(response.data) {
-            				$scope.leg.externalUrls = response.data;
-            				$scope.leg.externalUrls.forEach(function(element) {
+                            $scope.leg.externalUrls = response.data;
+                            $scope.legsAllTags=angular.copy(response.data);
+            				$scope.leg.externalUrls.forEach(function(element, key) {
             					if (element.type == 'video') {
                                     element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
-            					}
-            				});
+                                }
+                            });
+                            $scope.legsAllTags.forEach(function(element, key) {
+                                element.classes=angular.copy($scope.classes);
+                                angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
+                                    element.classes.forEach(function(value3, key3) {
+                                        if(value3.class == trueVal){
+                                            element.classes[key3].selected=true;
+                                        }
+                                    });
+                                });
+
+                                element.schoolYears=angular.copy($scope.schoolYears);
+                                angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
+                                    element.schoolYears.forEach(function(value3, key3) {
+                                        if(value3.schoolYear == trueVal){
+                                            element.schoolYears[key3].selected=true;
+                                        }
+                                    });
+                                });
+
+                                element.subjects=angular.copy($scope.subjects);
+                                angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
+                                    element.subjects.forEach(function(value3, key3) {
+                                        if(value3.subject == trueVal){
+                                            element.subjects[key3].selected=true;
+                                        }
+                                    });
+                                });
+                            });
+                            console.log("legs with all tags::",$scope.legsAllTags)
             			}
             		},
             		function(error) {
@@ -222,6 +297,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 }
                                 nextLeg.polyline = google.maps.geometry.encoding.encodePath(points);
                                 // encode polyline 
+                                var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
                                 $scope.saveData('leg', nextLeg).then(
                                     function (response) {
                                         console.log('Salvataggio dati a buon fine.');
@@ -433,15 +509,39 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         );
     }
     $scope.updateLink = function(index, newTitle, newUrl, newType) {
-    	$scope.updateElementData(index, newTitle, newUrl, newType);
+        //find out selected classes, subjects, schoolYears
+        var selectedClasses=[];
+        $scope.legsAllTags[index].classes.forEach(e => {
+            if(e.selected){
+                selectedClasses.push(e.class)
+            }
+        });
+        var selectedSchoolYears=[];
+        $scope.legsAllTags[index].schoolYears.forEach(e=>{
+            if(e.selected){
+                selectedSchoolYears.push(e.schoolYear)
+            }
+        });
+        var selectedSubjects=[];
+        $scope.legsAllTags[index].subjects.forEach(e => {
+            if(e.selected){
+                selectedSubjects.push(e.subject);
+            }
+        });
+    	$scope.updateElementData(index, newTitle, newUrl, newType, selectedClasses, selectedSchoolYears, selectedSubjects, $scope.legsAllTags[index].publicLink, $scope.legsAllTags[index].sharable);
         // $scope.saveLegLinks();
         $scope.updateMultimediaData(index);
     }
 
-    $scope.updateElementData = function(index, newTitle, newUrl, newType) {
+    $scope.updateElementData = function(index, newTitle, newUrl, newType, selectedClasses, selectedSchoolYears, selectedSubjects, publicLink, sharable) {
         $scope.leg.externalUrls[index].name = newTitle;
         $scope.leg.externalUrls[index].link = newUrl;
         $scope.leg.externalUrls[index].type = newType;
+        $scope.leg.externalUrls[index].classes = selectedClasses;
+        $scope.leg.externalUrls[index].schoolYears = selectedSchoolYears;
+        $scope.leg.externalUrls[index].subjects = selectedSubjects;
+        $scope.leg.externalUrls[index].publicLink = publicLink;
+        $scope.leg.externalUrls[index].sharable = sharable;
         if (newType == 'video') {
         	$scope.leg.externalUrls[index].youtubeThumbnail = $scope.getYoutubeImageFromLink(newUrl);
         }

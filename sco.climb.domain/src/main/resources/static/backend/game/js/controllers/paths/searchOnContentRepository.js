@@ -10,6 +10,9 @@ angular.module('consoleControllers.leg')
     $scope.classes=[];
 	$scope.schoolYears=[];
     $scope.subjects=[];
+    $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
+    $scope.selectedSubject = "Tutti";
+    $scope.selectedSchoolYear = "Tutti";
     // $scope.searchtext='';
     $scope.subjectsListToggle = function(dropdownID, searchTime){
         if(searchTime == "before"){
@@ -24,7 +27,70 @@ angular.module('consoleControllers.leg')
         }else if(searchTime == 'after'){
             $('#schoolYear'+dropdownID).slideToggle('fast');
         }
-	}
+    }
+    $scope.checkSearchtype = function(){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.searchtype, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSearchtype = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSearchtype = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.searchtype.length; i++){
+                if($scope.searchtype[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSearchtype = $scope.searchtype[i].searchtype;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSearchtype += "...";}
+        }
+    }
+    $scope.checkSubjects = function(){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.subjects, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSubject = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSubject = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.subjects.length; i++){
+                if($scope.subjects[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSubject = $scope.subjects[i].subject;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSubject += "...";}
+        }
+    }
+    $scope.checkSchoolYears = function(){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.schoolYears, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSchoolYear = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSchoolYear = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.schoolYears.length; i++){
+                if($scope.schoolYears[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSchoolYear = $scope.schoolYears[i].schoolYear;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSchoolYear += "...";}
+        }
+    }
     DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
             console.log("tags:",response)
