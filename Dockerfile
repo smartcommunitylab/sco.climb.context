@@ -23,11 +23,9 @@ RUN  addgroup -g ${USER_GROUP_ID} ${USER_GROUP}; \
 
 WORKDIR  /home/${USER}/app
 RUN chown ${USER}:${USER_GROUP} /home/${USER}/app
-RUN mkdir indexes && chown ${USER}:${USER_GROUP} indexes
-# COPY --chown=aac-org:aac-org ./init.sh /tmp/server/target/init.sh
-# #COPY ./app.jar /tmp/server/target/app.jar
+RUN mkdir indexes && chown ${USER}:${USER_GROUP} indexes 
+RUN apk add --no-cache tzdata
 COPY --from=mvn --chown=climb:climb ${FOLDER}/domain.jar /home/${USER}/app/climb.jar
 
 USER climb
-#CMD ["java", "-XX:MaxRAMPercentage=50", "-jar", "climb.jar"]
-CMD ["java", "-jar", "climb.jar"]
+CMD ["java", "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-XX:MaxRAMFraction=2", "-jar", "climb.jar"]
