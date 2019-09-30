@@ -876,7 +876,6 @@ public class GamificationController extends AuthController {
 			@PathVariable String itineraryId,
 			@PathVariable String legId,
 			@PathVariable String contentId,
-			//@RequestBody MultimediaContent content, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
@@ -892,6 +891,13 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("multimedia content not found");
 		}
 		storage.removeMultimediaContent(ownerId, contentId);
+		List<MultimediaContent> list = storage.getMultimediaContentByLeg(ownerId, legId);
+		int position = 0;
+		for(MultimediaContent content : list) {
+			content.setPosition(position);
+			storage.updateMultimediaContentPosition(content);
+			position++;
+		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("deleteMultimediaContent[%s]: %s", ownerId, contentId));
 		}
