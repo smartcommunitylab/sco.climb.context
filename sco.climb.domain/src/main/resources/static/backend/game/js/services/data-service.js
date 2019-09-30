@@ -280,14 +280,21 @@ function ($q, $http, $rootScope, $timeout) {
                 subjects: subjects,
                 schoolYears: schoolYears
             }
-            console.log("config::",config);
             if (position) {
                 config.lat = position[0];
                 config.lng = position[1];
             }
-            $http.get(baseUrl + '/api/game/multimedia', config).then(function(data){
+            console.log("config::",config);
+            $http({
+                url: baseUrl + '/api/game/multimedia', 
+                method: "GET",
+                params: config
+             }).then(function(data){
                 deferred.resolve(data);
-            })
+            });
+            // $http.get(baseUrl + '/api/game/multimedia', config).then(function(data){
+            //     deferred.resolve(data);
+            // })
             return deferred.promise;
         }, 
         updateTerms: function () {

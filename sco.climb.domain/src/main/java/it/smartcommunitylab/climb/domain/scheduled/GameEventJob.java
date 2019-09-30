@@ -23,6 +23,7 @@ public class GameEventJob implements Job {
 			RepositoryManager storage = (RepositoryManager) schedulerContext.get("RepositoryManager");
 			EventsPoller eventsPoller = (EventsPoller) schedulerContext.get("EventsPoller");
 			PedibusGame game = storage.getPedibusGame(pedibusGameId);
+			logger.info("GameEventJob.execute:{}/{}/{}", pedibusGameId, eventsPoller, game);
 			if((game != null) && game.isDeployed() && game.isUsingPedibusData()) {
 				Date now = new Date();
 				if(game.getFrom().before(now) && game.getTo().after(now)) {
