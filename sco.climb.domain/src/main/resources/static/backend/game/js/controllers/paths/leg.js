@@ -565,7 +565,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 console.log("Delete data:",response)
                 DataService.updateMultimediaContentPosition(toSend).then(
                     function(response){
-                        console.log("Data save:",response)
+                        $scope.updateMultimediaDataPosition();
+                        console.log("Data save with right position:",response)
                     },function(errorMsg){
                         console.log("Data not save:",errorMsg)
                     }
