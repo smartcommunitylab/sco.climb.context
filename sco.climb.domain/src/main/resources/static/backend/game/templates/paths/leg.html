@@ -128,7 +128,7 @@
         <ul ui-sortable="sortableOptions" ng-model="leg.externalUrls" class="list-group list-categories">
             <li class="list-group-item leg-multimedia-element" ng-repeat="element in leg.externalUrls">
                 <div class="row v-center">
-                    <a class="col-md-2" ng-class='element.type == "video" && element.youtubeThumbnail ? "multimedia-yt-video" : ""' ng-href="{{element.link}}" target="_blank">
+                    <a class="col-md-2" ng-if="!editMode" ng-class='element.type == "video" && element.youtubeThumbnail ? "multimedia-yt-video" : ""' ng-href="{{element.link}}" target="_blank">
                         <img class="path-img" ng-if="element.type == 'image'" ng-src="{{element.link}}" alt="{{element.name}}">
                         <img class="path-img" ng-if="element.type == 'video' && element.youtubeThumbnail" ng-src="{{element.youtubeThumbnail}}" alt="Video">
                         <img class="path-img" ng-if="element.type == 'video' && !element.youtubeThumbnail" src="img/video.png" alt="Video">
@@ -137,7 +137,7 @@
                     </a>
                     <div class="col-md-10" ng-if="!editMode" ng-include="'templates/paths/media/show.html'">
                     </div>
-                    <div class="col-md-10" ng-if="editMode" ng-include="'templates/paths/media/edit.html'">
+                    <div class="col-md-12" ng-if="editMode" ng-include="'templates/paths/media/edit.html'">
                     </div>
                 </div>
             </li>

@@ -10,9 +10,9 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 	$scope.schoolYears=[];
     $scope.subjects=[];
     $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
-    $scope.selectedClasses = "Tutti";
-    $scope.selectedSubject = "Tutti";
-    $scope.selectedSchoolYear = "Tutti";
+    $scope.selectedClasses = [];
+    $scope.selectedSubject = [];
+    $scope.selectedSchoolYear = [];
 
     $scope.classListToggle = function(dropdownID){
         $('#classID'+dropdownID).slideToggle('fast');
@@ -23,7 +23,69 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.schoolYearsListToggle = function(dropdownID){
         $('#schoolYearID'+dropdownID).slideToggle('fast');
     }
-    
+    $scope.checkClasses = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].classes, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedClasses[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedClasses[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].classes.length; i++){
+                if($scope.legsAllTags[index].classes[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedClasses[index] = $scope.legsAllTags[index].classes[i].class;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedClasses[index] += "...";}
+        }
+    }
+    $scope.checkSubjects = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].subjects, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSubject[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSubject[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].subjects.length; i++){
+                if($scope.legsAllTags[index].subjects[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSubject[index] = $scope.legsAllTags[index].subjects[i].subject;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSubject[index] += "...";}
+        }
+    }
+    $scope.checkSchoolYears = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].schoolYears, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSchoolYear[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSchoolYear[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].schoolYears.length; i++){
+                if($scope.legsAllTags[index].schoolYears[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSchoolYear[index] = $scope.legsAllTags[index].schoolYears[i].schoolYear;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSchoolYear[index] += "...";}
+        }
+    }
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
         { icon: "<img src=img/POI_airplane_full.png />", name: "Aereo", value:"plane"},
@@ -117,6 +179,11 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 });
                             });
                             console.log("legs with all tags::",$scope.legsAllTags)
+                            angular.forEach($scope.legsAllTags, function(val, key){
+                                $scope.checkClasses(key);
+                                $scope.checkSubjects(key);
+                                $scope.checkSchoolYears(key);
+                            })
             			}
             		},
             		function(error) {
@@ -498,7 +565,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 console.log("Delete data:",response)
                 DataService.updateMultimediaContentPosition(toSend).then(
                     function(response){
-                        console.log("Data save:",response)
+                        $scope.updateMultimediaDataPosition();
+                        console.log("Data save with right position:",response)
                     },function(errorMsg){
                         console.log("Data not save:",errorMsg)
                     }
