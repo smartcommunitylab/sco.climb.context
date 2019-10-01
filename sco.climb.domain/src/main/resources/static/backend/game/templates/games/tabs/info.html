@@ -138,13 +138,13 @@
         <label class="col-lg-1" style="position: relative;top:40px"><b>dalle:</b></label>
         <div class="col-lg-2 timepicker time-picker-control">
             <fieldset ng-disabled="!currentGame.usingPedibusData">
-                <div uib-timepicker hour-step="1" minute-step="5" show-meridian="ismeridian" ng-model="$parent.collectFromHour" ng-required="true"></div>
+                <div uib-timepicker ng-model="$parent.collectFromHour" hour-step="1" minute-step="5" show-meridian="ismeridian" ng-required="true"></div>
             </fieldset>
         </div>
         <label class="col-lg-1" style="position: relative;top:40px"><b>alle:</b></label>
         <div class="col-lg-2  timepicker time-picker-control">
             <fieldset ng-disabled="!currentGame.usingPedibusData">
-                <div uib-timepicker hour-step="1" minute-step="5" show-meridian="ismeridian" ng-model="$parent.collectToHour" ng-required="true"></div>
+                <div uib-timepicker ng-model="$parent.collectToHour" hour-step="1" minute-step="5" show-meridian="ismeridian" ng-required="true"></div>
             </fieldset>
         </div>
     </div>
