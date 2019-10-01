@@ -242,6 +242,12 @@ public class EventsPoller {
 					logger.warn("sendScores:" + e.getMessage());
 					continue;
 				}
+				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), 
+						game.getInstituteId(), game.getSchoolId(),
+						childStatus.getNickname(), childStatus.getClassRoom());
+				if(player == null) {
+					continue;
+				}
 				String playerId = childStatus.getClassRoom();
 				Double score = childStatus.getScore();
 				if(actionParamsDistance.containsKey(playerId)) {

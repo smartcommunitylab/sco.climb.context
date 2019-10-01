@@ -317,6 +317,18 @@ angular.module('consoleControllers.games', ['ngSanitize'])
           	$scope.$parent.endDate.setTime($scope.currentGame.to);
           }
           $scope.classToggled();
+          $scope.$parent.collectFromHour = new Date();
+          $scope.$parent.collectFromHour.setSeconds(0);    
+          $scope.$parent.collectFromHour.setMilliseconds(0);
+          if($scope.currentGame.fromHour) {
+            $scope.$parent.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
+          }
+          $scope.$parent.collectToHour = new Date();
+          $scope.$parent.collectToHour.setSeconds(0);    
+          $scope.$parent.collectToHour.setMilliseconds(0);
+          if($scope.currentGame.toHour) {
+            $scope.$parent.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));          	          	
+          }
         });
 
         $scope.toggleSelectedClasses = function () {
@@ -354,8 +366,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         if ($scope.currentGame) {
             $scope.classToggled();
         }
-
-
     })
 
 
