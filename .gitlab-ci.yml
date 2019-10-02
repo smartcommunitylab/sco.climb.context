@@ -38,7 +38,7 @@ deploy_prod:
     name: develop
   script:
     - echo "deploy"
-    - kubectl -n climb set image deployments/climb climb=$CONTAINER_PROD_IMAGE --record=true
+    - kubectl -n climb set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE --record=true
     - kubectl -n climb rollout status deployment climb
   only:
     - prod
