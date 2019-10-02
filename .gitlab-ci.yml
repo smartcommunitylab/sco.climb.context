@@ -11,17 +11,24 @@ stages:
 variables:
   CONTAINER_PROD_IMAGE: smartcommunitylab/climb:$CI_COMMIT_SHORT_SHA
   CONTAINER_IMAGE: smartcommunitylab/climb:latest
-before_script:
-  - docker info
-build:
+
+build_prod:
+  stage: build
+  script:
+    - sed -i -e 's/configService.DEVELOPMENT = true/configService.DEVELOPMENT = false/g' ./sco.climb.context/sco.climb.domain/src/main/resources/static/game-dashboard/js/services/confSrv.js
+    - docker login -u $DHUB_USER -p $DHUB_PASS
+    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_PROD_IMAGE
+  only:
+    - prod
+
+build_dev:
   stage: build
   script:
     - docker login -u $DHUB_USER -p $DHUB_PASS
     - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_PROD_IMAGE
     - docker push $CONTAINER_IMAGE
   only:
-    - prod
     - dev
 
 deploy_prod:
