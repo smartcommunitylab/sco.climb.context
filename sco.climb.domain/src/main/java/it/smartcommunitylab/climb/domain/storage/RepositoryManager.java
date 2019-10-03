@@ -1392,6 +1392,10 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("objectId").is(contentId)
 				.and("ownerId").is(ownerId));
 		mongoTemplate.remove(query, MultimediaContent.class);
+		query = new Query(new Criteria("contentReferenceId").is(contentId));
+		Update update = new Update();
+		update.set("contentReferenceId", null);
+		mongoTemplate.updateMulti(query, update, MultimediaContent.class);
 	}
 	
 	public MultimediaContent getMultimediaContent(String ownerId, String contentId) {

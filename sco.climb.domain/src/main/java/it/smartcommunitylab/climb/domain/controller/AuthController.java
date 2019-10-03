@@ -47,6 +47,9 @@ public class AuthController {
 				accountProfile.getAttribute("google", "email"))) {
 			email = accountProfile.getAttribute("google", "email");
 		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("googlelocal", "email"))) {
+			email = accountProfile.getAttribute("googlelocal", "email");
+		} else if(Utils.isNotEmpty(
 				accountProfile.getAttribute("facebook", "email"))) {
 			email = accountProfile.getAttribute("facebook", "email");
 		} else if(Utils.isNotEmpty(

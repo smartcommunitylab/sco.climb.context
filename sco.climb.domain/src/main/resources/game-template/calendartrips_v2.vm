@@ -1,0 +1,359 @@
+#set( $H = '#' )
+package eu.trentorise.game.model
+import eu.trentorise.game.core.Utility;
+
+global Utility utils;
+global String const_school_name;
+global Double const_NoCarDayClass_bonus;
+global Double const_ZeroImpactDayClass_bonus;
+
+#[[rule "trip mode update"
+when 
+    Action(id == "PlayerCalendarTrip")
+    Player($playerId: id, $members: totalMembers)
+    Game($gameId: id)
+    InputData( 
+    	$absent : data["absent"] != null, 
+    	$walk : data["walk"] != null, 
+    	$bike : data["bike"] != null, 
+    	$pedibus : data["pedibus"] != null,
+    	$pandr : data["pandr"] != null,
+    	$bus : data["bus"] != null,
+    	$carpooling : data["carpooling"] != null,
+    	$car : data["car"] != null,
+    	$meteo : data["meteo"] != null
+    )
+    $tot_dist : PointConcept(name == "total_distance")
+    $tot_trips : PointConcept(name == "total_trips")
+    
+    $walk_distance: PointConcept(name == "walk_distance")
+    $walk_trips: PointConcept(name == "walk_trips")
+    $bike_distance: PointConcept(name == "bike_distance")
+    $bike_trips: PointConcept(name == "bike_trips")
+    $pedibus_distance: PointConcept(name == "pedibus_distance")
+    $pedibus_trips: PointConcept(name == "pedibus_trips")
+    $pandr_distance: PointConcept(name == "pandr_distance")
+    $pandr_trips: PointConcept(name == "pandr_trips")
+    $bus_distance: PointConcept(name == "bus_distance")
+    $bus_trips: PointConcept(name == "bus_trips")
+    $carpooling_distance: PointConcept(name == "carpooling_distance")
+    $carpooling_trips: PointConcept(name == "carpooling_trips")
+    $car_distance: PointConcept(name == "car_distance")
+    $car_trips: PointConcept(name == "car_trips")
+   
+    $absence_count: PointConcept(name == "absence_count")
+    $bonus_dist : PointConcept(name == "bonus_distance")
+    $noCarClasses : PointConcept(name == "no_car_classes")
+then
+	utils.log("apply trip mode update");
+
+	String myMeteo = (String) $meteo;
+	double totalBonus = 0.0;
+	double totalDistance = 0.0;
+	double totalTrips = 0.0;
+	double zeroImpactTrips = 0.0;
+	
+	if((int) $walk > 0) {
+		int counter = (int) $walk;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("walk") * counter;
+		increase($walk_distance, distance);
+		update($walk_distance);
+		increase($walk_trips, counter);
+		update($walk_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $bike > 0) {
+		int counter = (int) $bike;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("bike") * counter;
+		increase($bike_distance, distance);
+		update($bike_distance);
+		increase($bike_trips, counter);
+		update($bike_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $pedibus > 0) {
+		int counter = (int) $pedibus;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("pedibus") * counter;
+		increase($pedibus_distance, distance);
+		update($pedibus_distance);
+		increase($pedibus_trips, counter);
+		update($pedibus_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $pandr > 0) {
+		int counter = (int) $pandr;
+		double bonus = 0.0;
+		double distance = distanceByMode("pandr") * counter;
+		increase($pandr_distance, distance);
+		update($pandr_distance);
+		increase($pandr_trips, counter);
+		update($pandr_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $bus > 0) {
+		int counter = (int) $bus;
+		double bonus = 0.0;
+		double distance = distanceByMode("bus") * counter;
+		increase($bus_distance, distance);
+		update($bus_distance);
+		increase($bus_trips, counter);
+		update($bus_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $carpooling > 0) {
+		int counter = (int) $carpooling;
+		double bonus = 0.0;
+		double distance = distanceByMode("carpooling") * counter;
+		increase($carpooling_distance, distance);
+		update($carpooling_distance);
+		increase($carpooling_trips, counter);
+		update($carpooling_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $car > 0) {
+		int counter = (int) $car;
+		double bonus = 0.0;
+		double distance = distanceByMode("car") * counter;
+		increase($car_distance, distance);
+		update($car_distance);
+		increase($car_trips, counter);
+		update($car_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $absent > 0) {
+		int counter = (int) $absent;
+		increase($absence_count, counter);
+		update($absence_count);
+	}
+	
+	// check if it is a ZeroImpactDay or a NoCarDay
+	if(totalTrips > 0 && (int) $car == 0) {
+		String bonusDayType = null;
+		double dayBonus = 0.0; 
+		if(totalTrips == zeroImpactTrips) {
+			utils.log("apply \'Zero Impact Day Notification\' to class: " + (String) $playerId);
+			bonusDayType = "ZeroImpactDayClass";
+			dayBonus = const_ZeroImpactDayClass_bonus;
+		} else { // No Car Day
+			utils.log("apply \'No Car Day Notification\' to class: " + (String) $playerId);
+			bonusDayType = "NoCarDayClass";
+			dayBonus = const_NoCarDayClass_bonus;
+		}
+		MessageNotification message = new MessageNotification($gameId, $playerId, bonusDayType);
+		message.addData("_bonus_",  dayBonus);
+		insert(message);
+		totalBonus += dayBonus;
+		totalDistance += dayBonus;
+		if(const_school_name.equals($playerId)) {
+			increase($noCarClasses, $members);
+			update($noCarClasses);
+		}
+	}
+	
+	increase($tot_dist, totalDistance);
+	update($tot_dist);
+	increase($tot_trips, totalTrips);
+	update($tot_trips);
+	increase($bonus_dist, totalBonus);
+	update($bonus_dist);
+	
+	insert(new UpdateTeams());
+end
+
+
+rule "trip mode update propagation"
+when
+    Member(
+		$absent : inputData["absent"] != null, 
+    	$walk : inputData["walk"] != null, 
+    	$bike : inputData["bike"] != null, 
+    	$pedibus : inputData["pedibus"] != null,
+    	$pandr : inputData["pandr"] != null,
+    	$bus : inputData["bus"] != null,
+    	$carpooling : inputData["carpooling"] != null,
+    	$car : inputData["car"] != null,
+    	$meteo : inputData["meteo"] != null
+	)
+    Player($playerId : id, team == true)
+    $tot_dist : PointConcept(name == "total_distance")
+    $tot_trips : PointConcept(name == "total_trips")
+    
+    $walk_distance: PointConcept(name == "walk_distance")
+    $walk_trips: PointConcept(name == "walk_trips")
+    $bike_distance: PointConcept(name == "bike_distance")
+    $bike_trips: PointConcept(name == "bike_trips")
+    $pedibus_distance: PointConcept(name == "pedibus_distance")
+    $pedibus_trips: PointConcept(name == "pedibus_trips")
+    $pandr_distance: PointConcept(name == "pandr_distance")
+    $pandr_trips: PointConcept(name == "pandr_trips")
+    $bus_distance: PointConcept(name == "bus_distance")
+    $bus_trips: PointConcept(name == "bus_trips")
+    $carpooling_distance: PointConcept(name == "carpooling_distance")
+    $carpooling_trips: PointConcept(name == "carpooling_trips")
+    $car_distance: PointConcept(name == "car_distance")
+    $car_trips: PointConcept(name == "car_trips")
+   
+    $absence_count: PointConcept(name == "absence_count")
+    $bonus_dist : PointConcept(name == "bonus_distance")
+    $noCarClasses : PointConcept(name == "no_car_classes")
+then
+	utils.log("apply trip mode update propagation");
+
+	String myMeteo = (String) $meteo;
+	double totalBonus = 0.0;
+	double totalDistance = 0.0;
+	double totalTrips = 0.0;
+	double zeroImpactTrips = 0.0;
+	
+	if((int) $walk > 0) {
+		int counter = (int) $walk;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("walk") * counter;
+		increase($walk_distance, distance);
+		update($walk_distance);
+		increase($walk_trips, counter);
+		update($walk_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $bike > 0) {
+		int counter = (int) $bike;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("bike") * counter;
+		increase($bike_distance, distance);
+		update($bike_distance);
+		increase($bike_trips, counter);
+		update($bike_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $pedibus > 0) {
+		int counter = (int) $pedibus;
+		double bonus = meteoBonus(myMeteo) * counter;
+		double distance = distanceByMode("pedibus") * counter;
+		increase($pedibus_distance, distance);
+		update($pedibus_distance);
+		increase($pedibus_trips, counter);
+		update($pedibus_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+		zeroImpactTrips += counter;
+	}
+	
+	if((int) $pandr > 0) {
+		int counter = (int) $pandr;
+		double bonus = 0.0;
+		double distance = distanceByMode("pandr") * counter;
+		increase($pandr_distance, distance);
+		update($pandr_distance);
+		increase($pandr_trips, counter);
+		update($pandr_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $bus > 0) {
+		int counter = (int) $bus;
+		double bonus = 0.0;
+		double distance = distanceByMode("bus") * counter;
+		increase($bus_distance, distance);
+		update($bus_distance);
+		increase($bus_trips, counter);
+		update($bus_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $carpooling > 0) {
+		int counter = (int) $carpooling;
+		double bonus = 0.0;
+		double distance = distanceByMode("carpooling") * counter;
+		increase($carpooling_distance, distance);
+		update($carpooling_distance);
+		increase($carpooling_trips, counter);
+		update($carpooling_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $car > 0) {
+		int counter = (int) $car;
+		double bonus = 0.0;
+		double distance = distanceByMode("car") * counter;
+		increase($car_distance, distance);
+		update($car_distance);
+		increase($car_trips, counter);
+		update($car_trips);
+		totalDistance += distance + bonus;
+		totalBonus += bonus;
+		totalTrips += counter;
+	}
+	
+	if((int) $absent > 0) {
+		int counter = (int) $absent;
+		increase($absence_count, counter);
+		update($absence_count);
+	}
+	
+	// check if it is a ZeroImpactDay or a NoCarDay, no message notification for schools
+	if((int) $car == 0) {
+		double dayBonus = 0.0; 
+		if(totalTrips == zeroImpactTrips) {
+			utils.log("apply \'Zero Impact Day Notification\' to class: " + (String) $playerId);
+			dayBonus = const_ZeroImpactDayClass_bonus;
+		} else { // No Car Day
+			utils.log("apply \'No Car Day Notification\' to class: " + (String) $playerId);
+			dayBonus = const_NoCarDayClass_bonus;
+		}
+		totalBonus += dayBonus;
+		totalDistance += dayBonus;
+		
+		utils.log("increase no_car_classes");
+		increase($noCarClasses, 1.0);
+		update($noCarClasses);
+	}
+	
+	increase($tot_dist, totalDistance);
+	update($tot_dist);
+	increase($tot_trips, totalTrips);
+	update($tot_trips);
+	increase($bonus_dist, totalBonus);
+	update($bonus_dist);
+end]]#

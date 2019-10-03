@@ -130,13 +130,15 @@ public class DashboardController extends AuthController {
 		List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
 				pedibusGameId, itineraryId);
 		for(PedibusItineraryLeg leg : legs) {
+			List<MultimediaContent> mcByLegResponse = new ArrayList<MultimediaContent>();
 			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
 			for(MultimediaContent content : mcByLeg) {
 				if(content.isDisabled() || !content.getClasses().contains(classRoom)) {
-					mcByLeg.remove(content);
+					continue;
 				}
+				mcByLegResponse.add(content);
 			}
-			result.put(leg.getObjectId(), mcByLeg);
+			result.put(leg.getObjectId(), mcByLegResponse);
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getMultimediaContentsByClassRoom[%s]: %s - %s - %s", ownerId, 
@@ -258,9 +260,7 @@ public class DashboardController extends AuthController {
 			
 			Map<String, Object> data = Maps.newTreeMap();
 			data.put(paramMeteo, calendarDay.getMeteo());
-			for(String mode : actionParams.keySet()) {
-				data.put(paramMode, actionParams.get(mode));
-			}
+			data.putAll(actionParams);
 			ed.setData(data);
 			
 			try {

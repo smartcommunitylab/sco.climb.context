@@ -98,6 +98,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					Map<String, Object> google = (Map<String, Object>) accounts.get("google");
 					dataSetInfo.setEmail((String) google.get("email"));
 				}
+				if(accounts.containsKey("googlelocal")) {
+					Map<String, Object> google = (Map<String, Object>) accounts.get("googlelocal");
+					dataSetInfo.setEmail((String) google.get("email"));
+				}
 				if(accounts.containsKey("facebook")) {
 					Map<String, Object> facebook = (Map<String, Object>) accounts.get("facebook");
 					dataSetInfo.setEmail((String) facebook.get("email"));

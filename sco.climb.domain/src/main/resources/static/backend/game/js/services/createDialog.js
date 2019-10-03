@@ -20,8 +20,8 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
             footerTemplate: null,
             modalClass: "modal",
             css: {
-                left: '30%',
-                margin: '0 auto'
+                //left: '30%',
+                //margin: '0 auto'
             }
         };
         var body = $document.find('body');
@@ -84,8 +84,8 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
             })();
             //We don't have the scope we're gonna use yet, so just get a compile function for modal
             var modalEl = angular.element(
-                '<div class="' + options.modalClass + ' fade"' + idAttr + ' style="display: block;">' +
-                '  <div class="modal-dialog">' +
+                '<div class="multimediaModal ' + options.modalClass + ' fade"' + idAttr + '>' +
+                '  <div class="modal-dialog multimediaModal-dialog">' +
                 '    <div class="modal-content">' +
                 '      <div class="modal-header">' +
                 '        <button type="button" class="close" ng-click="$modalCancel()">&times;</button>' +

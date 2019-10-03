@@ -230,8 +230,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   if (entry.selected) {
                       $scope.currentGame.modalities.push(entry.value);
                   }
-              });                
-
+                });
+                
               $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                   function (response) {
                       console.log('Salvataggio dati a buon fine.');
@@ -317,6 +317,18 @@ angular.module('consoleControllers.games', ['ngSanitize'])
           	$scope.$parent.endDate.setTime($scope.currentGame.to);
           }
           $scope.classToggled();
+          $scope.$parent.collectFromHour = new Date();
+          $scope.$parent.collectFromHour.setSeconds(0);    
+          $scope.$parent.collectFromHour.setMilliseconds(0);
+          if($scope.currentGame.fromHour) {
+            $scope.$parent.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
+          }
+          $scope.$parent.collectToHour = new Date();
+          $scope.$parent.collectToHour.setSeconds(0);    
+          $scope.$parent.collectToHour.setMilliseconds(0);
+          if($scope.currentGame.toHour) {
+            $scope.$parent.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));          	          	
+          }
         });
 
         $scope.toggleSelectedClasses = function () {
@@ -354,8 +366,6 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         if ($scope.currentGame) {
             $scope.classToggled();
         }
-
-
     })
 
 
@@ -367,23 +377,21 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         	if((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
             $scope.currentGame.params = {
             		walk_studenti: 0,
-            		walk_distanza: 0,
+            		const_walk_distance: 0,
             		bike_studenti: 0,
-            		bike_distanza: 0,
+            		const_bike_distance: 0,
                 bus_studenti: 0,
-                bus_distanza: 0,
+                const_bus_distance: 0,
                 pedibus_studenti: 0,
-                pedibus_distanza: 0,
+                const_pedibus_distance: 0,
                 pandr_studenti: 0,
-                pandr_distanza: 0,
+                const_pandr_distance: 0,
                 carpooling_studenti: 0,
-                carpooling_distanza: 0,
+                const_carpooling_distance: 0,
                 car_studenti: 0,
-                car_distanza: 0,
+                const_car_distance: 0,
                 const_daily_nominal_distance: 0,
                 const_zeroimpact_distance: 0,
-                const_bus_distance: 0,
-                const_pandr_distance: 0,
                 giorni_chiusi: 0,
                 const_cloudy_bonus: 0,
                 const_rain_bonus: 0,
@@ -427,13 +435,13 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.calculateCDND = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 $scope.currentGame.params.const_daily_nominal_distance = (
-                    ($scope.currentGame.params.walk_studenti * $scope.currentGame.params.walk_distanza) +
-                    ($scope.currentGame.params.bike_studenti * $scope.currentGame.params.bike_distanza) +
-                    ($scope.currentGame.params.bus_studenti * $scope.currentGame.params.bus_distanza) +
-                    ($scope.currentGame.params.pedibus_studenti * $scope.currentGame.params.pedibus_distanza) +
-                    ($scope.currentGame.params.pandr_studenti * $scope.currentGame.params.pandr_distanza) +
-                    ($scope.currentGame.params.carpooling_studenti * $scope.currentGame.params.carpooling_distanza) +
-                    ($scope.currentGame.params.car_studenti * $scope.currentGame.params.car_distanza)
+                    ($scope.currentGame.params.walk_studenti * $scope.currentGame.params.const_walk_distance) +
+                    ($scope.currentGame.params.bike_studenti * $scope.currentGame.params.const_bike_distance) +
+                    ($scope.currentGame.params.bus_studenti * $scope.currentGame.params.const_bus_distance) +
+                    ($scope.currentGame.params.pedibus_studenti * $scope.currentGame.params.const_pedibus_distance) +
+                    ($scope.currentGame.params.pandr_studenti * $scope.currentGame.params.const_pandr_distance) +
+                    ($scope.currentGame.params.carpooling_studenti * $scope.currentGame.params.const_carpooling_distance) +
+                    ($scope.currentGame.params.car_studenti * $scope.currentGame.params.const_car_distance)
                 );
                 return $scope.currentGame.params.const_daily_nominal_distance;
             }

@@ -3,6 +3,89 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 // Edit the leg for the selected path
 .controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, drawMapLine, createDialog) {
     $scope.$parent.selectedTab = 'legs';
+    $scope.searchtype = [];
+    $scope.searchdistance = null;
+    $scope.searchlocalschool = false;
+    $scope.classes=[];
+	$scope.schoolYears=[];
+    $scope.subjects=[];
+    $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
+    $scope.selectedClasses = [];
+    $scope.selectedSubject = [];
+    $scope.selectedSchoolYear = [];
+
+    $scope.classListToggle = function(dropdownID){
+        $('#classID'+dropdownID).slideToggle('fast');
+    }
+    $scope.subjectsListToggle = function(dropdownID){
+        $('#subjectID'+dropdownID).slideToggle('fast');
+    }
+    $scope.schoolYearsListToggle = function(dropdownID){
+        $('#schoolYearID'+dropdownID).slideToggle('fast');
+    }
+    $scope.checkClasses = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].classes, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedClasses[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedClasses[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].classes.length; i++){
+                if($scope.legsAllTags[index].classes[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedClasses[index] = $scope.legsAllTags[index].classes[i].class;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedClasses[index] += "...";}
+        }
+    }
+    $scope.checkSubjects = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].subjects, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSubject[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSubject[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].subjects.length; i++){
+                if($scope.legsAllTags[index].subjects[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSubject[index] = $scope.legsAllTags[index].subjects[i].subject;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSubject[index] += "...";}
+        }
+    }
+    $scope.checkSchoolYears = function(index){
+        var allSelected = true, notAllSelected = false;
+        angular.forEach($scope.legsAllTags[index].schoolYears, function(value, key){
+            if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
+            if(value.selected == false && notAllSelected==false){notAllSelected=false;}else{notAllSelected=true;}
+        });
+        if(allSelected){
+            $scope.selectedSchoolYear[index] = "Tutti";
+        }else if(!notAllSelected){
+            $scope.selectedSchoolYear[index] = "Non Selezionato";
+        }else{
+            var selectedItem = 0;
+            for(var i=0; i<$scope.legsAllTags[index].schoolYears.length; i++){
+                if($scope.legsAllTags[index].schoolYears[i].selected){
+                    selectedItem++;
+                    if(selectedItem == 1){$scope.selectedSchoolYear[index] = $scope.legsAllTags[index].schoolYears[i].schoolYear;}
+                }
+            }
+            if(selectedItem > 1){$scope.selectedSchoolYear[index] += "...";}
+        }
+    }
     $scope.viewIconsModels = [
         { icon: "<img src=img/POI_foot_full.png />", name: "A piedi", value:"foot", ticked: true},
         { icon: "<img src=img/POI_airplane_full.png />", name: "Aereo", value:"plane"},
@@ -31,17 +114,76 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
             $scope.saveData = DataService.editData;
             
+            //get tags
+            DataService.getMultimediaContentTags($stateParams.idDomain, $stateParams.idGame).then(
+                function(response) {
+                    console.log("tags:",response)
+                    $scope.searchtype.push(
+                        {searchtype:'Immagini',value:'image',selected:false},
+                        {searchtype:'Video',value:'video',selected:false},
+                        {searchtype:'Wikipedia',value:'wikipedia',selected:false});
+                    //$scope.classes=response.data.classes;
+                    angular.forEach(response.data.classes, function(value, key){
+                        $scope.classes.push({class:value,selected:false});
+                    });
+                    
+                    angular.forEach(response.data.schoolYears, function(value, key){
+                        $scope.schoolYears.push({schoolYear:value,selected:false});
+                    });
+                    
+                    angular.forEach(response.data.subjects, function(value, key){
+                        $scope.subjects.push({subject:value,selected:false});
+                    });
+                },function(error) {
+                    console.log('Errore :' , error.data.errorMsg);
+                }
+            );
             //get multimedia content
             DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, 
             		$stateParams.idPath, $stateParams.idLeg).then(
             		function(response) {
             			if(response.data) {
-            				$scope.leg.externalUrls = response.data;
-            				$scope.leg.externalUrls.forEach(function(element) {
+                            $scope.leg.externalUrls = response.data;
+                            $scope.legsAllTags=angular.copy(response.data);
+            				$scope.leg.externalUrls.forEach(function(element, key) {
             					if (element.type == 'video') {
                                     element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
-            					}
-            				});
+                                }
+                            });
+                            $scope.legsAllTags.forEach(function(element, key) {
+                                element.classes=angular.copy($scope.classes);
+                                angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
+                                    element.classes.forEach(function(value3, key3) {
+                                        if(value3.class == trueVal){
+                                            element.classes[key3].selected=true;
+                                        }
+                                    });
+                                });
+
+                                element.schoolYears=angular.copy($scope.schoolYears);
+                                angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
+                                    element.schoolYears.forEach(function(value3, key3) {
+                                        if(value3.schoolYear == trueVal){
+                                            element.schoolYears[key3].selected=true;
+                                        }
+                                    });
+                                });
+
+                                element.subjects=angular.copy($scope.subjects);
+                                angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
+                                    element.subjects.forEach(function(value3, key3) {
+                                        if(value3.subject == trueVal){
+                                            element.subjects[key3].selected=true;
+                                        }
+                                    });
+                                });
+                            });
+                            console.log("legs with all tags::",$scope.legsAllTags)
+                            angular.forEach($scope.legsAllTags, function(val, key){
+                                $scope.checkClasses(key);
+                                $scope.checkSubjects(key);
+                                $scope.checkSchoolYears(key);
+                            })
             			}
             		},
             		function(error) {
@@ -54,7 +196,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }, this);
 
         } else {
-        		$scope.newLeg = true;
+            $scope.newLeg = true;
             $scope.leg = {
                 ownerId: $stateParams.idDomain,
                 pedibusGameId: $stateParams.idGame,
@@ -212,24 +354,46 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                             if (nextLeg.transport.toLowerCase() == 'plane' || nextLeg.transport.toLowerCase() == 'boat') {
                                 // define polyline
                                 var points = new Array();
-                                points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
-                                points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
-                                // encode polyline                        
-                                drawMapLine.createEncodings(points).then(function (response) {
-                                    nextLeg.polyline = response;
-                                    var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
-                                    $scope.saveData('leg', nextLeg).then(
-                                        function (response) {
-                                            console.log('Salvataggio dati a buon fine.');
-                                            $state.go('root.path.legs');
-                                        }, function (error) {
-                                            if (backUpLegNext) {
-                                                $scope.legs[backUpLegNext.position] = backUpLegNext.value;
-                                            } else {
-                                                $scope.legs.splice($scope.legs.length - 1, 1);
-                                            }
-                                        });
-                                });
+                                // points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
+                                // points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
+                                //push the first point in the next lag path, then decode next lag path and push all point
+                                points.push(new google.maps.LatLng(modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]));
+                                var decodedNextLegPath = google.maps.geometry.encoding.decodePath(nextLeg.polyline);
+                                for (i = 0; i < decodedNextLegPath.length; i++) {
+                                    points.push(decodedNextLegPath[i]);
+                                }
+                                nextLeg.polyline = google.maps.geometry.encoding.encodePath(points);
+                                // encode polyline 
+                                var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
+                                $scope.saveData('leg', nextLeg).then(
+                                    function (response) {
+                                        console.log('Salvataggio dati a buon fine.');
+                                        $state.go('root.path.legs');
+                                    }, function (error) {
+                                        if (backUpLegNext) {
+                                            $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                        } else {
+                                            $scope.legs.splice($scope.legs.length - 1, 1);
+                                        }
+                                    }
+                                );                       
+                                // drawMapLine.createEncodings(points).then(function (response) {
+                                //     nextLeg.polyline = response;
+                                //     console.log("new save poly line:",response);
+                                //     console.log("points:",points);
+                                //     var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
+                                //     $scope.saveData('leg', nextLeg).then(
+                                //         function (response) {
+                                //             console.log('Salvataggio dati a buon fine.');
+                                //             $state.go('root.path.legs');
+                                //         }, function (error) {
+                                //             if (backUpLegNext) {
+                                //                 $scope.legs[backUpLegNext.position] = backUpLegNext.value;
+                                //             } else {
+                                //                 $scope.legs.splice($scope.legs.length - 1, 1);
+                                //             }
+                                //         });
+                                // });
         
                             } else {
                                 var start = new google.maps.LatLng(modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]);
@@ -401,7 +565,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 console.log("Delete data:",response)
                 DataService.updateMultimediaContentPosition(toSend).then(
                     function(response){
-                        console.log("Data save:",response)
+                        $scope.updateMultimediaDataPosition();
+                        console.log("Data save with right position:",response)
                     },function(errorMsg){
                         console.log("Data not save:",errorMsg)
                     }
@@ -412,15 +577,39 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         );
     }
     $scope.updateLink = function(index, newTitle, newUrl, newType) {
-    	$scope.updateElementData(index, newTitle, newUrl, newType);
+        //find out selected classes, subjects, schoolYears
+        var selectedClasses=[];
+        $scope.legsAllTags[index].classes.forEach(e => {
+            if(e.selected){
+                selectedClasses.push(e.class)
+            }
+        });
+        var selectedSchoolYears=[];
+        $scope.legsAllTags[index].schoolYears.forEach(e=>{
+            if(e.selected){
+                selectedSchoolYears.push(e.schoolYear)
+            }
+        });
+        var selectedSubjects=[];
+        $scope.legsAllTags[index].subjects.forEach(e => {
+            if(e.selected){
+                selectedSubjects.push(e.subject);
+            }
+        });
+    	$scope.updateElementData(index, newTitle, newUrl, newType, selectedClasses, selectedSchoolYears, selectedSubjects, $scope.legsAllTags[index].publicLink, $scope.legsAllTags[index].sharable);
         // $scope.saveLegLinks();
         $scope.updateMultimediaData(index);
     }
 
-    $scope.updateElementData = function(index, newTitle, newUrl, newType) {
+    $scope.updateElementData = function(index, newTitle, newUrl, newType, selectedClasses, selectedSchoolYears, selectedSubjects, publicLink, sharable) {
         $scope.leg.externalUrls[index].name = newTitle;
         $scope.leg.externalUrls[index].link = newUrl;
         $scope.leg.externalUrls[index].type = newType;
+        $scope.leg.externalUrls[index].classes = selectedClasses;
+        $scope.leg.externalUrls[index].schoolYears = selectedSchoolYears;
+        $scope.leg.externalUrls[index].subjects = selectedSubjects;
+        $scope.leg.externalUrls[index].publicLink = publicLink;
+        $scope.leg.externalUrls[index].sharable = sharable;
         if (newType == 'video') {
         	$scope.leg.externalUrls[index].youtubeThumbnail = $scope.getYoutubeImageFromLink(newUrl);
         }
