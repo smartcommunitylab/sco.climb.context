@@ -98,10 +98,11 @@
     </div>
     <!-- Global Team -->
     <div class="col-lg-12 field">
+        <span class="required-sign">*</span>
         <p>
             <b>Nome Team globale:</b>
         </p>
-        <input class="form-control" type="text" ng-model="currentGame.globalTeam" />
+        <input class="form-control" type="text" ng-model="currentGame.globalTeam" ng-required="true" />
     </div>
 
     <div class="col-lg-12">
