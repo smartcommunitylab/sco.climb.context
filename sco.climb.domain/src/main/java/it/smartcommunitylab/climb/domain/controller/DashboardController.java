@@ -159,13 +159,15 @@ public class DashboardController extends AuthController {
 		List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, 
 				pedibusGameId, itineraryId);
 		for(PedibusItineraryLeg leg : legs) {
+			List<MultimediaContent> mcByLegResponse = new ArrayList<MultimediaContent>();
 			List<MultimediaContent> mcByLeg = storage.getMultimediaContentByLeg(ownerId, leg.getObjectId());
 			for(MultimediaContent content : mcByLeg) {
 				if(content.isDisabled() || !content.isPublicLink()) {
-					mcByLeg.remove(content);
+					continue;
 				}
+				mcByLegResponse.add(content);
 			}
-			result.put(leg.getObjectId(), mcByLeg);
+			result.put(leg.getObjectId(), mcByLegResponse);
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getPublicMultimediaContents[%s]: %s - %s", ownerId, 
