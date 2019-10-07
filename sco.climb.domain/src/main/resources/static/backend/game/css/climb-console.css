@@ -828,6 +828,9 @@ hr.cBlue{
     display: inline-block; 
     margin: 5px;
 }
+.tab.smaller {
+	font-size: smaller;
+}
 .dropdownPublicLink{
     width: 23%;
     height: 30px; 
