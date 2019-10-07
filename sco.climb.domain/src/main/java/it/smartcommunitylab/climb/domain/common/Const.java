@@ -61,13 +61,14 @@ public class Const {
 	public static final String METEO_PIOGGIA = "rain";
 	public static final String METEO_NEVE = "snow";
 	
+	public static final String MODE_WALK = "walk";
+	public static final String MODE_BIKE = "bike";
+	public static final String MODE_BUS = "bus";
 	public static final String MODE_PEDIBUS = "pedibus";
-	public static final String MODE_PIEDI_SOLO = "zeroImpact_solo";
-	public static final String MODE_PIEDI_ADULTO = "zeroImpact_wAdult";
-	public static final String MODE_SCUOLABUS = "bus";
 	public static final String MODE_PARK_RIDE = "pandr";
-	public static final String MODE_AUTO = "car";
-	public static final String MODE_ASSENTE = "absent";
+	public static final String MODE_CARPOOLING = "carpooling";
+	public static final String MODE_CAR = "car";
+	public static final String MODE_ABSENT = "absent";
 	public static final String MODE_BONUS = "bonus";
 	
 	public static final String TRANSPORT_FOOT = "foot";

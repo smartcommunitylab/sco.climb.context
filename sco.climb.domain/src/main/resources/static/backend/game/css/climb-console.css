@@ -703,7 +703,7 @@ legend {
   
   .wrapper .list {
     display: none;
-    height: 200px;
+    height: auto;
     overflow-y: auto;
     overflow-x: hidden;
     border-left: solid 1px #C7C6C7;
@@ -827,6 +827,9 @@ hr.cBlue{
 .tab { 
     display: inline-block; 
     margin: 5px;
+}
+.tab.smaller {
+	font-size: smaller;
 }
 .dropdownPublicLink{
     width: 23%;

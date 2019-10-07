@@ -12,15 +12,23 @@ variables:
   CONTAINER_PROD_IMAGE: smartcommunitylab/climb:$CI_COMMIT_SHORT_SHA
   CONTAINER_IMAGE: smartcommunitylab/climb:latest
 
-build:
+build_prod:
+  stage: build
+  script:
+    - sed -i -e 's/configService.DEVELOPMENT = true/configService.DEVELOPMENT = false/g' ./sco.climb.domain/src/main/resources/static/game-dashboard/js/services/confSrv.js
+    - docker login -u $DHUB_USER -p $DHUB_PASS
+    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_PROD_IMAGE
+  only:
+    - prod
+
+build_dev:
   stage: build
   script:
     - docker login -u $DHUB_USER -p $DHUB_PASS
     - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_PROD_IMAGE
     - docker push $CONTAINER_IMAGE
   only:
-    - prod
     - dev
 
 deploy_prod:
@@ -30,8 +38,8 @@ deploy_prod:
     name: develop
   script:
     - echo "deploy"
-    - kubectl -n default set image deployments/climb climb=$CONTAINER_DEV_IMAGE --record=true
-    - kubectl -n default rollout status deployment climb
+    - kubectl -n climb set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE --record=true
+    - kubectl -n climb rollout status deployment climb
   only:
     - prod
 
