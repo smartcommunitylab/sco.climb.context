@@ -25,6 +25,7 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.lastLeg = {}
       $scope.isGameFinishedNotificationDisplaied = false;
       $scope.mapModalities=[];
+      $scope.flexNum=0;
       var returnModalitiesColor = function(type){
         var color = ''
         switch (type) {
@@ -106,6 +107,8 @@ angular.module('climbGame.controllers.calendar', [])
                   })
                 });
                 console.log("mapResult::",$scope.mapModalities)
+                $scope.flexNum=100/$scope.mapModalities.length;
+                console.log("flexNum",$scope.flexNum)
               },function(er){console.log("error",er)});
             }
             //check the Saturday
@@ -114,7 +117,7 @@ angular.module('climbGame.controllers.calendar', [])
               $scope.calHeaderFlex=10;
               $scope.week.push(new Date(getMonday(new Date()).getTime() + (5 * 24 * 60 * 60 * 1000)))
             }else{
-              console.log("daysOfWeek[5] is::",data.game.daysOfWeek[5])
+              console.log("Saturday is::",data.game.daysOfWeek[5])
             }
             calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
 	            function (calendar) {
@@ -188,10 +191,10 @@ angular.module('climbGame.controllers.calendar', [])
           return
         }
 
-//        if ($scope.todayData.babies[index].mean === 'pedibus') {
-//          $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'))
-//          return
-//        }
+        // if ($scope.todayData.babies[index].mean === 'pedibus') {
+        //   $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'))
+        //   return
+        // }
 
         // set baby[$index]= selected mean;
         // add mean to index and remove the other
