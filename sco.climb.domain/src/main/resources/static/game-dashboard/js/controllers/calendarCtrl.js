@@ -188,10 +188,10 @@ angular.module('climbGame.controllers.calendar', [])
           return
         }
 
-        if ($scope.todayData.babies[index].mean === 'pedibus') {
-          $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'))
-          return
-        }
+//        if ($scope.todayData.babies[index].mean === 'pedibus') {
+//          $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'))
+//          return
+//        }
 
         // set baby[$index]= selected mean;
         // add mean to index and remove the other
