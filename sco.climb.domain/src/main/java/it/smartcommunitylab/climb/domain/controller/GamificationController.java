@@ -930,7 +930,7 @@ public class GamificationController extends AuthController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("uploadPedibusItineraryLegLinkFile: %s - %s - %s", ownerId, legId, url));
 		}
-		return url;
+		return "{\"link\":\"" + url + "\"}";
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
