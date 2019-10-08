@@ -97,7 +97,8 @@ angular.module('consoleControllers.leg')
             $scope.searchtype.push(
                 {searchtype:'Immagini',value:'image',selected:true},
                 {searchtype:'Video',value:'video',selected:true},
-                {searchtype:'Wikipedia',value:'wikipedia',selected:true});
+                {searchtype:'Collegamento a pagina web',value:'link',selected:true},
+                {searchtype:'File',value:'file',selected:true});
 			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
 				$scope.classes.push({class:value,selected:true});
