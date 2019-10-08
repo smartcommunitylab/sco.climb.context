@@ -498,49 +498,49 @@ public class DashboardController extends AuthController {
 			}
 			result.setMaxGameScore(getMaxGameScore(ownerId, pedibusGameId));
 			
-			String key = env.getProperty("stat." + Const.MODE_WALK);
+			String key = Const.MODE_WALK + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_WALK, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_BIKE);
+			key = Const.MODE_BIKE + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_BIKE, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_BUS);
+			key = Const.MODE_BUS + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_BUS, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_PEDIBUS);
+			key = Const.MODE_PEDIBUS + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_PEDIBUS, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_PARK_RIDE);
+			key = Const.MODE_PARK_RIDE + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_PARK_RIDE, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_CARPOOLING);
+			key = Const.MODE_CARPOOLING + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_CARPOOLING, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_CAR);
+			key = Const.MODE_CAR + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_CAR, pointConcept.getScore());
 			}
 			
-			key = env.getProperty("stat." + Const.MODE_BONUS);
+			key = Const.MODE_BONUS + "_distance";
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_BONUS, pointConcept.getScore());
@@ -576,49 +576,49 @@ public class DashboardController extends AuthController {
 		}
 		result.setMaxGameScore(getMaxGameScore(ownerId, pedibusGameId));
 		
-		String key = env.getProperty("stat." + Const.MODE_WALK);
+		String key = Const.MODE_WALK + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_WALK, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_BIKE);
+		key = Const.MODE_BIKE + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_BIKE, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_BUS);
+		key = Const.MODE_BUS + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_BUS, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_PEDIBUS);
+		key = Const.MODE_PEDIBUS + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_PEDIBUS, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_PARK_RIDE);
+		key = Const.MODE_PARK_RIDE + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_PARK_RIDE, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_CARPOOLING);
+		key = Const.MODE_CARPOOLING + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_CARPOOLING, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_CAR);
+		key = Const.MODE_CAR + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_CAR, pointConcept.getScore());
 		}
 		
-		key = env.getProperty("stat." + Const.MODE_BONUS);
+		key = Const.MODE_BONUS + "_distance";
 		pointConcept = gengineUtils.getPointConcept(playerStatus, key);
 		if(pointConcept != null) {
 			result.getScoreModeMap().put(Const.MODE_BONUS, pointConcept.getScore());

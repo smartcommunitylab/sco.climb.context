@@ -121,7 +121,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                     $scope.searchtype.push(
                         {searchtype:'Immagini',value:'image',selected:false},
                         {searchtype:'Video',value:'video',selected:false},
-                        {searchtype:'Wikipedia',value:'wikipedia',selected:false});
+                        {searchtype:'Collegamento a pagina web',value:'link',selected:false},
+                        {searchtype:'File',value:'file',selected:false});
                     //$scope.classes=response.data.classes;
                     angular.forEach(response.data.classes, function(value, key){
                         $scope.classes.push({class:value,selected:false});
