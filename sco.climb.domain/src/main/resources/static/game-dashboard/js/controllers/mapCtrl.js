@@ -650,7 +650,7 @@ angular.module("climbGame.controllers.map", [])
         }
         setTimeout(function() {          
           leafletData.getMap('map').then(function (map) {
-            map.popupClose
+            map.popupClose;
             $scope.pathMarkers[leg.position].focus = true;
             map.setView([leg.geocoding[1] + configService.DEFAULT_POI_POPUP_OFFSET, leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
             $scope.selectedPosition = leg.position;
@@ -706,7 +706,6 @@ angular.module("climbGame.controllers.map", [])
     }
 
     function setGallerySize() {
-      //
       document.getElementById('pic-container').setAttribute("style", "width:" + ($scope.legs.length * 100) + "px");
     }
     $scope.$on('$destroy', function () {
