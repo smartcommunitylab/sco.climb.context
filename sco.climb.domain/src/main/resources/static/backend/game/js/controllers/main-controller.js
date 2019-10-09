@@ -82,13 +82,12 @@ angular.module('consoleControllers.mainCtrl', [])
         
         $scope.init = function() {
           MainDataService.getDomains().then(function (p) {
-            //$scope.profile = p;
             $scope.normalProfile = p;
-            if(p.termUsage == null){
-                $state.go('root.registration');
+            if(!p.ownerIds || (p.ownerIds.length == 0)) {
+            	var baseUrl = DataService.getBaseUrl();
+            	$window.location.href = baseUrl + '/public/registration.html';
             }
             else if(!p.termUsage.acceptance){
-                // window.location.href = '../game/templates/terms.html';
                 $state.go('root.terms');
             }else if(p.termUsage.acceptance){
                 $scope.profile = p;
@@ -99,9 +98,6 @@ angular.module('consoleControllers.mainCtrl', [])
                     $scope.loadInstitutesList($scope.profile.ownerIds[0]);
                 }  
             }
-            // else{
-            //     $state.go('root.registration');
-            // }
           });
         }
 
