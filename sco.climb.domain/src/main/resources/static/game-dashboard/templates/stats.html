@@ -28,55 +28,57 @@
     </div>
   </div>
   <div layout="row" class="table">
+    <!-- walkPlusPedibus -->
     <div layout="column" flex="20" class="mode-zeroImpact_solo">
-      <div class="header">{{'stats_zeroimpact_solo' | translate}}</div>
+      <div class="header">{{'stats_walkPlusPedibus' | translate}}</div>
       <div class="scroller">
-        <md-button class="md-icon-button" ng-click="scroll('zeroImpact_solo', 'up')">
+        <md-button class="md-icon-button" ng-click="scroll('walkPlusPedibus', 'up')">
           <md-icon class="icon-arrow_up"></md-icon>
         </md-button>
-        <md-button class="md-icon-button" ng-click="scroll('zeroImpact_solo', 'down')">
+        <md-button class="md-icon-button" ng-click="scroll('walkPlusPedibus', 'down')">
           <md-icon class="icon-arrow_down"></md-icon>
         </md-button>
       </div>
-      <md-content id="zeroImpact_solo" class="content">
-        <div layout="row" layout-wrap ng-repeat="n in getCount(MathFloor(stats.scoreModeMap.zeroImpact_solo / 10)) track by $index">
+      <md-content id="walkPlusPedibus" class="content">
+        <div layout="row" layout-wrap ng-repeat="n in getCount(MathFloor(stats.scoreModeMap.walkPlusPedibus / 10)) track by $index">
           <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(10) track by $index"></i>
           <div flex="100" ng-if="($index + 1) % 10 === 0">
             <hr>
           </div>
         </div>
         <div layout="row">
-          <i flex="10" class="icon icon-foot" ng-repeat="n in getCount(stats.scoreModeMap.zeroImpact_solo % 10) track by $index"></i>
+          <i flex="10" class="icon icon-foot" ng-repeat="n in getCount(stats.scoreModeMap.walkPlusPedibus % 10) track by $index"></i>
           <!-- create another 'i' it show if backend calculation have =>0.5 value -->
-          <i flex="10" ng-if="checkHalfFoot(zeroImpact_solo)" class="icon icon-foot blackFoot" ></i>
+          <i flex="10" ng-if="checkHalfFoot(walkPlusPedibus)" class="icon icon-foot blackFoot" ></i>
         </div>
       </md-content>
     </div>
+    <!-- bike -->
     <div layout="column" flex="20" class="mode-zeroImpact_wAdult">
-      <div class="header">{{'stats_zeroImpact_wAdult' | translate}}</div>
+      <div class="header">{{'stats_bike' | translate}}</div>
       <div class="scroller">
-        <md-button class="md-icon-button" ng-click="scroll('zeroImpact_wAdult', 'up')">
+        <md-button class="md-icon-button" ng-click="scroll('bike', 'up')">
           <md-icon class="icon-arrow_up"></md-icon>
         </md-button>
-        <md-button class="md-icon-button" ng-click="scroll('zeroImpact_wAdult', 'down')">
+        <md-button class="md-icon-button" ng-click="scroll('bike', 'down')">
           <md-icon class="icon-arrow_down"></md-icon>
         </md-button>
       </div>
-      <md-content id="zeroImpact_wAdult" class="content">
-        <!--stats.scoreModeMap.zeroImpact_wAdult-->
-        <div layout="row" layout-wrap ng-repeat="n in getCount(MathFloor(stats.scoreModeMap.zeroImpact_wAdult / 10)) track by $index">
+      <md-content id="bike" class="content">
+        <div layout="row" layout-wrap ng-repeat="n in getCount(MathFloor(stats.scoreModeMap.bike / 10)) track by $index">
           <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(10) track by $index"></i>
           <div flex="100" ng-if="($index + 1) % 10 === 0">
             <hr>
           </div>
         </div>
         <div layout="row">
-          <i flex="10" class="icon icon-foot" ng-repeat="n in getCount(stats.scoreModeMap.zeroImpact_wAdult % 10) track by $index"></i>
+          <i flex="10" class="icon icon-foot" ng-repeat="n in getCount(stats.scoreModeMap.bike % 10) track by $index"></i>
           <!-- create another 'i' it show if backend calculation have =>0.5 value -->
-          <i flex="10" ng-if="checkHalfFoot(zeroImpact_adult)" class="icon icon-foot blackFoot" ></i>
+          <i flex="10" ng-if="checkHalfFoot(bike)" class="icon icon-foot blackFoot" ></i>
         </div>
       </md-content>
     </div>
+    <!-- bus -->
     <div layout="column" flex="20" class="mode-bus">
       <div class="header">{{'stats_bus' | translate}}</div>
       <div class="scroller">
