@@ -125,7 +125,13 @@ angular.module('climbGame.controllers.stats', [])
           return false
         }
       }else if(status=="pandr"){
-        if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+        if ($scope.stats.scoreModeMap.pandr_withoutFloor - $scope.stats.scoreModeMap.pandr >= 0.5) {
+          return true
+        }else{
+          return false
+        }
+      }else if(status=="carpooling"){
+        if ($scope.stats.scoreModeMap.carpooling_withoutFloor - $scope.stats.scoreModeMap.carpooling >= 0.5) {
           return true
         }else{
           return false
