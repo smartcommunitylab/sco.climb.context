@@ -132,13 +132,13 @@
           <div ng-if="val2 == 'walk'">
             <span >{{todayData.means[val2] + todayData.means['pedibus'] + 0}}</span>
           </div> -->
-          <div ng-if="val2 == 'walk'"><span >{{weekData[dayIndex].walk + weekData[dayIndex].pedibus + 0}}</span></div>
-          <div ng-if="val2 == 'bike'"><span>{{weekData[dayIndex].bike + 0}}</span></div>
-          <div ng-if="val2 == 'bus'"><span>{{weekData[dayIndex].bus + 0}}</span></div>
-          <div ng-if="val2 == 'pandr'"><span>{{weekData[dayIndex].pandr + 0}}</span></div>
-          <div ng-if="val2 == 'carpooling'"><span>{{weekData[dayIndex].carpooling + 0}}</span></div>
-          <div ng-if="val2 == 'car'"><span>{{weekData[dayIndex].car + 0}}</span></div>
-          <div ng-if="val2 == 'absent'"><span>{{weekData[dayIndex].absent + 0}}</span></div>
+          <div ng-if="val2 == 'walk'"><span >{{todayData.means.walk + todayData.means.pedibus + 0}}</span></div>
+          <div ng-if="val2 == 'bike'"><span>{{todayData.means.bike + 0}}</span></div>
+          <div ng-if="val2 == 'bus'"><span>{{todayData.means.bus + 0}}</span></div>
+          <div ng-if="val2 == 'pandr'"><span>{{todayData.means.pandr + 0}}</span></div>
+          <div ng-if="val2 == 'carpooling'"><span>{{todayData.means.carpooling + 0}}</span></div>
+          <div ng-if="val2 == 'car'"><span>{{todayData.means.car + 0}}</span></div>
+          <div ng-if="val2 == 'absent'"><span>{{todayData.means.absent + 0}}</span></div>
         </div>
       </div>
       <!-- edit mode -->
