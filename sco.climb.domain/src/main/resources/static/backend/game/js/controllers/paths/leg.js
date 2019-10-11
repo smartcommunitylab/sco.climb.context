@@ -678,7 +678,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 if(response.data.type=='video'){
                     $scope.leg.externalUrls[$scope.leg.externalUrls.length-1].youtubeThumbnail = response.data.previewUrl;
                 }
-                
+                $scope.initController();
             },function(errorMsg){
                 console.log("Data not save:",errorMsg)
             }
