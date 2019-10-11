@@ -561,9 +561,11 @@ angular.module('climbGame.controllers.calendar', [])
             // add entire day of null data
           }
         }
+        console.log("weekData::",$scope.weekData);
+        console.log("$scope.weekData[2].bike::",$scope.weekData[2].bike);
+        console.log("todayData::",$scope.todayData);
         $scope.isLoadingCalendar = false; 
       }
-
       /*
        * Notifications and Challenges stuff
        */
