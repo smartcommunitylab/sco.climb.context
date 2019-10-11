@@ -124,7 +124,7 @@
         </div>
       </div>
       <!-- today -->
-      <div layout="row" ng-if="!isDevEditMode && today(dayIndex) || (isCurrentEditDay(dayIndex))">
+      <div layout="row" ng-if="!isDevEditMode && !today(dayIndex) || (isCurrentEditDay(dayIndex))">
         <div class="today" ng-repeat="modalitie in mapModalities" ng-init="val2 = modalitie.value" ng-if="modalitie.value != 'pedibus'"  layout="column" flex="flexNum" style="background-color:{{modalitie.color}}" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <!-- <div ng-if="val2 != 'walk'">
             <span ng-if="todayData.means[val2]">{{todayData.means[val2]}}</span><span ng-if="!todayData.means[val2]">0</span>
@@ -132,17 +132,17 @@
           <div ng-if="val2 == 'walk'">
             <span >{{todayData.means[val2] + todayData.means['pedibus'] + 0}}</span>
           </div> -->
-          <div ng-if="val2 == 'walk'"><span >{{todayData.means.walk + todayData.means.pedibus + 0}}</span></div>
-          <div ng-if="val2 == 'bike'"><span>{{todayData.means.bike + 0}}</span></div>
-          <div ng-if="val2 == 'bus'"><span>{{todayData.means.bus + 0}}</span></div>
-          <div ng-if="val2 == 'pandr'"><span>{{todayData.means.pandr + 0}}</span></div>
-          <div ng-if="val2 == 'carpooling'"><span>{{todayData.means.carpooling + 0}}</span></div>
-          <div ng-if="val2 == 'car'"><span>{{todayData.means.car + 0}}</span></div>
-          <div ng-if="val2 == 'absent'"><span>{{todayData.means.absent + 0}}</span></div>
+          <div ng-if="val2 == 'walk'"><span >{{todayData.means['walk'] + todayData.means['pedibus'] + 0}}</span></div>
+          <div ng-if="val2 == 'bike'"><span>{{todayData.means['bike'] + 0}}</span></div>
+          <div ng-if="val2 == 'bus'"><span>{{todayData.means['bus'] + 0}}</span></div>
+          <div ng-if="val2 == 'pandr'"><span>{{todayData.means['pandr'] + 0}}</span></div>
+          <div ng-if="val2 == 'carpooling'"><span>{{todayData.means['carpooling'] + 0}}</span></div>
+          <div ng-if="val2 == 'car'"><span>{{todayData.means['car']+ 0}}</span></div>
+          <div ng-if="val2 == 'absent'"><span>{{todayData.means['absent'] + 0}}</span></div>
         </div>
       </div>
       <!-- edit mode -->
-      <!-- <div layout="row" ng-if="!today(dayIndex) && isCurrentEditDay(dayIndex)">
+      <div layout="row" ng-if="today(dayIndex) && !isCurrentEditDay(dayIndex)">
         <div ng-repeat="modalitie in mapModalities" ng-init="val3 = modalitie.value" ng-if="modalitie.value != 'pedibus'"  layout="column" flex="flexNum" style="background-color:{{modalitie.color}}" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <div ng-if="val3 == 'walk'"><span >{{weekData[dayIndex].walk + weekData[dayIndex].pedibus + 0}}</span></div>
           <div ng-if="val3 == 'bike'"><span>{{weekData[dayIndex].bike + 0}}</span></div>
@@ -152,7 +152,7 @@
           <div ng-if="val3 == 'car'"><span>{{weekData[dayIndex].car + 0}}</span></div>
           <div ng-if="val3 == 'absent'"><span>{{weekData[dayIndex].absent + 0}}</span></div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </div>
