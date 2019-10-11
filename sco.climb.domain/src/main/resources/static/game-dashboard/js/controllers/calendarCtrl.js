@@ -97,18 +97,23 @@ angular.module('climbGame.controllers.calendar', [])
 	      	function(data) {
             //check the number of modalities and set color
             if(data.game.modalities.length > 0){
+              var pedibusModalityValue = false;
               dataService.getModalityMap().then(function(modalityData){
                 //$scope.mapModalities = data.game.modalities.map(val => ({ value: val, color: returnModalitiesColor(val) }));
                 data.game.modalities.map(function(val){ 
                   modalityData.modalities.find(function(currentValue){
                     if(currentValue.value==val){
-                      $scope.mapModalities.push(currentValue)
+                      $scope.mapModalities.push(currentValue);
+                      if(currentValue.value=="pedibus"){pedibusModalityValue=true;}
                     }
                   })
                 });
                 console.log("mapResult::",$scope.mapModalities)
-                $scope.flexNum=100/$scope.mapModalities.length;
-                console.log("flexNum",$scope.flexNum)
+                if(pedibusModalityValue){
+                  $scope.flexNum=100/($scope.mapModalities.length-1);
+                }else{$scope.flexNum=100/($scope.mapModalities.length);}
+                
+                console.log("flexNum and walkPlusPedibusModalityValue",$scope.flexNum)
               },function(er){console.log("error",er)});
             }
             //check the Saturday
@@ -556,9 +561,11 @@ angular.module('climbGame.controllers.calendar', [])
             // add entire day of null data
           }
         }
+        console.log("weekData::",$scope.weekData);
+        console.log("$scope.weekData[2].bike::",$scope.weekData[2].bike);
+        console.log("todayData::",$scope.todayData);
         $scope.isLoadingCalendar = false; 
       }
-
       /*
        * Notifications and Challenges stuff
        */

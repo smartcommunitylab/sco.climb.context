@@ -25,7 +25,7 @@ angular.module('regisApp', [])
             "name":$scope.normalProfile.name,
             "surname":$scope.normalProfile.surname,
             "email":$scope.normalProfile.email,
-            "plessoScolastico":$scope.normalProfile.plessoScolastico
+            "customData": {"plessoScolastico": $scope.normalProfile.plessoScolastico}
         }
         regisService.registration(data).then(function successCallback(response) {
             // this callback will be called asynchronously
