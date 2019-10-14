@@ -433,25 +433,22 @@ angular.module('climbGame.controllers.calendar', [])
       function changeWeek(skipWeek) {
         $scope.isLoadingCalendar = true; 
         // take date of week[0] and go 1 week before or after
-        var monday = $scope.week[0]
+        var monday = new Date($scope.week[0].getTime())
         monday.setDate(monday.getDate() + 7 * skipWeek)
         /** */
         if(skipWeek == -1){
+          $scope.week = []
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
+            $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
+          }
           var currentDate = new Date;
           var first = currentDate.getDate() - currentDate.getDay()+1;
           var weekStart = new Date(currentDate.setDate(first));
           var last2week = new Date(weekStart.setDate(weekStart.getDate()-13));
-          if(monday  > last2week ){
-            // console.log("it's within last 2 week")
-            $scope.week = []
-            for (var i = 0; i < $scope.daysOfWeek; i++) {
-              $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
-            }
-          }else{
-            $scope.prev2Week=false;
-            // console.log("it's more then last 2 week")
+          if(monday  < last2week ){
+          	$scope.prev2Week=false;
           }
-        }else{
+        } else {
           $scope.prev2Week=true;
           $scope.week = []
           for (var i = 0; i < $scope.daysOfWeek; i++) {
@@ -469,7 +466,9 @@ angular.module('climbGame.controllers.calendar', [])
           function (calendar) {
             createWeekData(calendar)
           },
-          function () {}
+          function(error) {
+          	$mdToast.show($mdToast.simple().content('Errore nel caricamento dati'))
+          }
         )
 
         // if the new week is the actual week
