@@ -6,13 +6,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.searchtype = [];
     $scope.searchdistance = null;
     $scope.searchlocalschool = false;
-    $scope.classes=[];
-	$scope.schoolYears=[];
-    $scope.subjects=[];
-    $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
-    $scope.selectedClasses = [];
-    $scope.selectedSubject = [];
-    $scope.selectedSchoolYear = [];
+    
 
     $scope.classListToggle = function(dropdownID){
         $('#classID'+dropdownID).slideToggle('fast');
@@ -108,6 +102,13 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     }
 
     $scope.initController = function() {
+        $scope.classes=[];
+        $scope.schoolYears=[];
+        $scope.subjects=[];
+        $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
+        $scope.selectedClasses = [];
+        $scope.selectedSubject = [];
+        $scope.selectedSchoolYear = [];
         if ($stateParams.idLeg) { //edit path
         	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
