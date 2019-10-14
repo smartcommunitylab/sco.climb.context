@@ -49,7 +49,7 @@
                                     <ul class="items-list">
                                         <li ng-repeat="s in subjects">
                                             <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
-                                            <span>{{s.subject}}</span>
+                                            <span>{{s.value}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -68,7 +68,7 @@
                                     <ul class="items-list">
                                         <li ng-repeat="sy in schoolYears">
                                             <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
-                                            <span>{{sy.schoolYear}}</span>
+                                            <span>{{sy.value}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -211,7 +211,7 @@
                                     <span class="notSelectedText">Materia: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span ng-repeat="s in content.referenceContent.subjects">{{s.subject}} </span>
+                                    <span>{{getListText(content.referenceContent.subjects)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -219,7 +219,7 @@
                                     <span class="notSelectedText">Classe: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span ng-repeat="sy in content.referenceContent.schoolYears">{{sy.schoolYear}} </span>
+                                    <span>{{getListText(content.referenceContent.schoolYears)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -247,7 +247,7 @@
                                 <div class="row">
                                     <div class="col-sm-12 selectedRowCol">
                                         <label class="checkbox-inline" ng-repeat="c in content.referenceContent.selectedClasses">
-                                            {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                            {{c.value}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
                                         </label>
                                     </div>
                                 </div>
@@ -262,7 +262,7 @@
                                                 <ul class="items-list">
                                                     <li ng-repeat="s in content.referenceContent.selectedSubjects">
                                                         <input type="checkbox" class='' ng-model="s.selected" />
-                                                        <span>{{s.subject}}</span>
+                                                        <span>{{s.value}}</span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -275,7 +275,7 @@
                                                 <ul class="items-list">
                                                     <li ng-repeat="sy in content.referenceContent.selectedSchoolYears">
                                                         <input type="checkbox" class='' ng-model="sy.selected" />
-                                                        <span>{{sy.schoolYear}}</span>
+                                                        <span>{{sy.value}}</span>
                                                     </li>
                                                 </ul>
                                             </div>
