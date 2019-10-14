@@ -36,7 +36,7 @@
     <div layout="column" flex="95">
       <div layout="row" class="state-row">
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
-      <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header state-row-flex27">
+        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header state-row-flex27">
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
@@ -105,9 +105,9 @@
     </div>
   </div>
   <div class="cal-total" layout="row">
-    <div layout="column" flex="5">
-    </div>
-    <div layout="column" flex="25" class="cal-name">
+    <!-- <div layout="column" flex="5">
+    </div> -->
+    <div layout="column" flex={{calHeaderFlex+5}} class="cal-name">
       Totale
     </div>
     <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index">
@@ -122,6 +122,7 @@
           <div ng-if="val1 == 'car'"><span>{{weekData[dayIndex].car + 0}}</span></div>
           <div ng-if="val1 == 'absent'"><span>{{weekData[dayIndex].absent + 0}}</span></div>
         </div>
+        <div layout="column" flex="flexNum" style="background-color:white"><span></span></div>
       </div>
       <!-- today -->
       <!--  <div layout="row" ng-if="today(dayIndex) && !isCurrentEditDay(dayIndex)">
