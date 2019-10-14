@@ -152,24 +152,24 @@ angular.module('consoleControllers.leg')
                 selectedSubjects, selectedSchoolYears).then(
                 function(response) {
                     response.data.forEach(element => {
-                        switch (element.type) {
+                        switch (element.referenceContent.type) {
                             case 'image':
-                                element.referenceImg = element.link;
+                                element.referenceContent.referenceImg = element.referenceContent.link;
                                 break;
                             case 'video':
-                                var youtubeThumbnail = getYoutubeImageFromLink(element.link);
+                                var youtubeThumbnail = getYoutubeImageFromLink(element.referenceContent.link);
                                 if (youtubeThumbnail) {
-                                    element.referenceImg = youtubeThumbnail;
-                                    element.isYoutubeVideo = true;
+                                    element.referenceContent.referenceImg = youtubeThumbnail;
+                                    element.referenceContent.isYoutubeVideo = true;
                                 } else {
-                                    element.referenceImg = "img/video.png";
+                                    element.referenceContent.referenceImg = "img/video.png";
                                 }                                
                                 break;
                             case 'link':
-                                element.referenceImg = "img/link.png";
+                                element.referenceContent.referenceImg = "img/link.png";
                                 break;
                             case 'file':
-                              element.referenceImg = "img/file.png";
+                              element.referenceContent.referenceImg = "img/file.png";
                               break;
                         }
                     });          
@@ -177,17 +177,23 @@ angular.module('consoleControllers.leg')
                     $scope.noResults = response.data.length == 0;
                     //change the formet of array classes, schoolYears, subjects. because of the selection option
                     $scope.contentResults.forEach(e=>{
-                    		e.referenceContent.classes = [];
+                    		e.referenceContent.selectedClasses = [];
                         angular.forEach($scope.classes, function(value, key){
-                            e.referenceContent.classes[key]={class:value.class,selected:true};
+                            e.referenceContent.selectedClasses[key]={class:value.class,selected:true};
                         });
-                        e.referenceContent.schoolYears = []
+                        e.referenceContent.selectedSchoolYears = []
                         angular.forEach($scope.schoolYears, function(value, key){
-                            e.referenceContent.schoolYears[key]={schoolYear:value.schoolYear,selected:true};
+                            e.referenceContent.selectedSchoolYears[key]={schoolYear:value.schoolYear,selected:true};
+                            if(e.referenceContent.schoolYears.includes(value.schoolYear)) {
+                            	e.referenceContent.schoolYears[key] = {schoolYear:value.schoolYear,selected:true};
+                            }
                         });
-                        e.referenceContent.subjects = [];
+                        e.referenceContent.selectedSubjects = [];
                         angular.forEach($scope.subjects, function(value, key){
-                            e.referenceContent.subjects[key]={subject:value.subject,selected:true};
+                            e.referenceContent.selectedSubjects[key]={subject:value.subject,selected:true};
+                            if(e.referenceContent.subjects.includes(value.subject)) {
+                            	e.referenceContent.subjects[key] = {subject:value.subject,selected:true};
+                            }
                         })
                     });
                     console.log("contentResults:",$scope.contentResults); 
@@ -201,21 +207,21 @@ angular.module('consoleControllers.leg')
             if (element.selectedToAdd) {
                 var selectedClasses=[];
                 countSeletedItem++;
-                element.referenceContent.classes.forEach(e => {
+                element.referenceContent.selectedClasses.forEach(e => {
                     if(e.selected){
                         selectedClasses.push(e.class)
                     }
                 });
 
                 var selectedSchoolYears=[];
-                element.referenceContent.schoolYears.forEach(e=>{
+                element.referenceContent.selectedSchoolYears.forEach(e=>{
                     if(e.selected){
                         selectedSchoolYears.push(e.schoolYear)
                     }
                 });
 
                 var selectedSubjects=[];
-                element.referenceContent.subjects.forEach(e => {
+                element.referenceContent.selectedSubjects.forEach(e => {
                     if(e.selected){
                         selectedSubjects.push(e.subject);
                     }
