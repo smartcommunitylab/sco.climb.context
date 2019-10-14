@@ -968,7 +968,10 @@ public class RepositoryManager {
 	
 	public void removePedibusItineraryLegByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
-		mongoTemplate.remove(query, PedibusItineraryLeg.class);
+		List<PedibusItineraryLeg> list = mongoTemplate.find(query, PedibusItineraryLeg.class);
+		for(PedibusItineraryLeg leg : list) {
+			removeMultimediaContentByLegId(ownerId, leg.getObjectId());
+		}
 	}
 	
 	public void removePedibusItineraryLegByItineraryId(String ownerId, String pedibusGameId,
@@ -1342,7 +1345,19 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId).and("itineraryId").is(itineraryId)
 				.and("ownerId").is(ownerId));
-		mongoTemplate.remove(query, MultimediaContent.class);
+		List<MultimediaContent> list = mongoTemplate.find(query, MultimediaContent.class);
+		for(MultimediaContent mc : list) {
+			removeMultimediaContent(ownerId, mc.getObjectId());
+		}
+	}
+	
+	public void removeMultimediaContentByLegId(String ownerId, String legId) {
+		Query query = new Query(new Criteria("legId").is(legId)
+				.and("ownerId").is(ownerId));
+		List<MultimediaContent> list = mongoTemplate.find(query, MultimediaContent.class);
+		for(MultimediaContent mc : list) {
+			removeMultimediaContent(ownerId, mc.getObjectId());
+		}
 	}
 	
 	public void saveMultimediaContent(MultimediaContent content) {
