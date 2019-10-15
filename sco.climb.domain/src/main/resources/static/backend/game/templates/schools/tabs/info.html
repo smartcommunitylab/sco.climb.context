@@ -15,11 +15,11 @@
         <input class="form-control" type="text" ng-model="currentSchool.address" ng-required="true"/>
     </div>
     <!-- Classes -->
-    <div class="col-lg-12 field">
-        <p><b>Classes:</b></p>
-        <select ng-options="class as class.name for class in currentSchool.classes" ng-model="class" class="classSelector">
+    <div class="col-lg-12">
+        <label><b>Classi:</b></label>
+        <select ng-options="class.name for class in currentSchool.classes track by class.name" ng-model="currentClass" class="classSelector" size="5">
         </select>
         <a class="btn btn-icon btn-standard" ng-click="addClasses(currentSchool)"><i class="glyphicon glyphicon-plus"></i></a>
-        <a class="btn btn-icon btn-standard" ng-if="class" ng-click="removeClasses(currentSchool, class)"><i class="glyphicon glyphicon-trash"></i></a>
+        <a class="btn btn-icon btn-standard" ng-if="currentClass" ng-click="removeClasses(currentSchool, currentClass)"><i class="glyphicon glyphicon-trash"></i></a>
     </div>
 </fieldset>

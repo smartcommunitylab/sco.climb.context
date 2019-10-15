@@ -2,7 +2,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var permissionsService = {};
 
     var showInstitutes, editInstitute;
-    var showSchools, editSchool;
+    var showSchools, editSchool, editPlayer;
     var showGames, editGame;
     var showPaths, editPath;
     var showLegs, editLegs, editLegsMultimedia;
@@ -22,6 +22,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegs = true;
                 editLegs = true;
                 editLegsMultimedia = true;
+                editPlayer = true;
             } else if (role == 'teacher') {
                 showPaths = true;
                 showLegs = true;
@@ -31,9 +32,11 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showSchools = true;
                 editSchool = true;
             } else if (role == 'game-editor') {
-              showPaths = true;
+            	showSchools = true;
+            	showPaths = true;
               showLegs = true;
               editLegsMultimedia = true;
+              editPlayer = true;
             }
         });
         
@@ -93,6 +96,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     permissionsService.permissionEnabledEditLegsMultimedia = function() {
         return editLegsMultimedia;
     }
+    permissionsService.permissionEnabledEditPlayer = function() {
+      return editPlayer;
+  }
 
     return permissionsService;
 });
