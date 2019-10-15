@@ -66,8 +66,8 @@
         <!-- search type image -->
         <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
-                    <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults track by $index">
+                    <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd, $index)">
                     <a ng-href="{{image.link}}" target="_blank" class="col-md-3" style="max-width: 98%; max-height: 98%;">
                         <img ng-src="{{image.image.thumbnailLink}}" style="max-width: 98%; max-height: 98%;">
                         <!-- <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div> -->
@@ -139,8 +139,8 @@
         <!-- search type video -->
         <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
-                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults track by $index">
+                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd, $index)">
                     <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" class="col-md-3 contentRowPadding multimedia-yt-video" style="max-width: 98%; max-height: 98%;">
                         <img ng-src="{{video.snippet.thumbnails.default.url}}" style="max-width: 98%; max-height: 98%;">
                     </a>
@@ -210,8 +210,8 @@
         <!-- search type wikipedia -->
         <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
-                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults track by $index">
+                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd, $index)">
                     <a ng-href="{{result.link}}" target="_blank" class="col-md-3 contentRowPadding">
                         <!-- <div class="defaultImage" ></div> -->
                         <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;">

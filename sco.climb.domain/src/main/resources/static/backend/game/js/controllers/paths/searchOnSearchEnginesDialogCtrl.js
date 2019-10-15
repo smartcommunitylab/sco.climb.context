@@ -9,6 +9,9 @@ angular.module('consoleControllers.leg')
 	$scope.schoolYears=[];
     $scope.subjects=[];
     $scope.selected;
+    $scope.imageResultSelected=[];
+    $scope.ytResultSelected=[];
+    $scope.wikiResultSelected=[];
     $scope.materialeListToggle = function(dropdownID){
         // $('.wrapper .list').slideToggle('fast');
         $('#materiale'+dropdownID).slideToggle('fast');
@@ -53,6 +56,7 @@ angular.module('consoleControllers.leg')
     }
 
     $scope.changePage = function(pageToken) {
+        console.log("pageToken:",pageToken)
         if ($scope.searchtype == 'wikipedia') {
             //in this case pageToken is an offset of search results
             DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
@@ -65,24 +69,39 @@ angular.module('consoleControllers.leg')
                     $scope.prevPageToken = response.data['query-continue'].search.gsroffset - 20;
                     if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
                     $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
-                    console.log(response);
+                    console.log("wikiResults:",$scope.wikiResults);
                     var el = document.getElementById('wikiContentList');
                     el.scrollTop = 0;
-                    if($scope.classes){
-                        for(var page in $scope.wikiResults){
-                            $scope.wikiResults[page].classes=angular.copy($scope.classes);
-                        }
-                    }
-                    if($scope.schoolYears){
-                        for(var page in $scope.wikiResults){
-                            $scope.wikiResults[page].schoolYears=angular.copy($scope.schoolYears);
-                        }
-                    }
-                    if($scope.subjects){
-                        for(var page in $scope.wikiResults){
-                            $scope.wikiResults[page].subjects=angular.copy($scope.subjects);
-                        }
-                    }
+                    //check selected before
+                    angular.forEach($scope.wikiResults, function(e_wr, k_wr){
+                        //if it's have same link then store from wikiResultSelected
+                        angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
+                            console.log("e_wr.link::",e_wr.link)
+                            console.log("e_wrs.link::",e_wrs.link)
+                            if(e_wr[k_wr].link == e_wrs[k_yrs].link){$scope.wikiResults.splice(k_wr, 1, e_wrs);}
+                        });
+                        
+                        //store tags
+                        if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
+                        if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
+                        if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
+                    });
+                    //store tags
+                    // if($scope.classes){
+                    //     for(var page in $scope.wikiResults){
+                    //         $scope.wikiResults[page].classes=angular.copy($scope.classes);
+                    //     }
+                    // }
+                    // if($scope.schoolYears){
+                    //     for(var page in $scope.wikiResults){
+                    //         $scope.wikiResults[page].schoolYears=angular.copy($scope.schoolYears);
+                    //     }
+                    // }
+                    // if($scope.subjects){
+                    //     for(var page in $scope.wikiResults){
+                    //         $scope.wikiResults[page].subjects=angular.copy($scope.subjects);
+                    //     }
+                    // }
                 }, function() {
                 }
             );
@@ -97,21 +116,35 @@ angular.module('consoleControllers.leg')
                     console.log(response);
                     var el = document.getElementById('videoContentList');
                     el.scrollTop = 0;
-                    if($scope.classes){
-                        $scope.ytResults.forEach(e=>{
-                            e.classes=angular.copy($scope.classes);
-                        })
-                    }
-                    if($scope.schoolYears){
-                        $scope.ytResults.forEach(e=>{
-                            e.schoolYears=angular.copy($scope.schoolYears);
-                        })
-                    }
-                    if($scope.subjects){
-                        $scope.ytResults.forEach(e=>{
-                            e.subjects=angular.copy($scope.subjects);
-                        })
-                    }
+                    //check selected before
+                    angular.forEach($scope.ytResults, function(e_yr, k_yr){
+                        //if it's have same link then store from ytResultSelected
+                        angular.forEach($scope.ytResultSelected, function(e_yrs,k_yrs){
+                            if(e_yr.snippet.thumbnails.default.url == e_yrs.snippet.thumbnails.default.url){
+                                $scope.ytResults.splice(k_yr, 1, e_yrs);
+                            }
+                        });
+                        //store tags
+                        if(!e_yr.classes){e_yr.classes=angular.copy($scope.classes);}
+                        if(!e_yr.schoolYears){e_yr.schoolYears=angular.copy($scope.schoolYears);}
+                        if(!e_yr.subjects){e_yr.subjects=angular.copy($scope.subjects);}
+                    });
+                    //store tags
+                    // if($scope.classes){
+                    //     $scope.ytResults.forEach(e=>{
+                    //         e.classes=angular.copy($scope.classes);
+                    //     })
+                    // }
+                    // if($scope.schoolYears){
+                    //     $scope.ytResults.forEach(e=>{
+                    //         e.schoolYears=angular.copy($scope.schoolYears);
+                    //     })
+                    // }
+                    // if($scope.subjects){
+                    //     $scope.ytResults.forEach(e=>{
+                    //         e.subjects=angular.copy($scope.subjects);
+                    //     })
+                    // }
                 }, function() {
                 }
             );
@@ -129,24 +162,36 @@ angular.module('consoleControllers.leg')
                     if (response.data.queries.nextPage) {
                         $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
                     }
-                    console.log(response);
+                    console.log("imageResults:",response);
                     var el = document.getElementById('imageContentList');
                     el.scrollTop = 0;
-                    if($scope.classes){
-                        $scope.imageResults.forEach(e=>{
-                            e.classes=angular.copy($scope.classes);
-                        })
-                    }
-                    if($scope.schoolYears){
-                        $scope.imageResults.forEach(e=>{
-                            e.schoolYears=angular.copy($scope.schoolYears);
-                        })
-                    }
-                    if($scope.subjects){
-                        $scope.imageResults.forEach(e=>{
-                            e.subjects=angular.copy($scope.subjects);
-                        })
-                    }
+                    //check selected before
+                    angular.forEach($scope.imageResults, function(e_ir, k_ir){
+                        //if it's have same link then store from imageResultSelected
+                        angular.forEach($scope.imageResultSelected, function(e_irs,k_irs){
+                            if(e_ir.link == e_irs.link){$scope.imageResults.splice(k_ir, 1, e_irs);}
+                        });
+                        //store tags
+                        if(!e_ir.classes){e_ir.classes=angular.copy($scope.classes);}
+                        if(!e_ir.schoolYears){e_ir.schoolYears=angular.copy($scope.schoolYears);}
+                        if(!e_ir.subjects){e_ir.subjects=angular.copy($scope.subjects);}
+                    });
+                    //store tags
+                    // if($scope.classes){
+                    //     $scope.imageResults.forEach(e=>{
+                    //         e.classes=angular.copy($scope.classes);
+                    //     })
+                    // }
+                    // if($scope.schoolYears){
+                    //     $scope.imageResults.forEach(e=>{
+                    //         e.schoolYears=angular.copy($scope.schoolYears);
+                    //     })
+                    // }
+                    // if($scope.subjects){
+                    //     $scope.imageResults.forEach(e=>{
+                    //         e.subjects=angular.copy($scope.subjects);
+                    //     })
+                    // }
                 }, function() {
                 }
             );
@@ -256,16 +301,45 @@ angular.module('consoleControllers.leg')
         $scope.wikiResults = undefined;
         $scope.ytResults = undefined;
         $scope.imageResults = undefined;
-        $scope.totalCounter = 0;
+        //$scope.totalCounter = 0;
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
     }
-    $scope.updateTotalCounter = function(state) {
+    $scope.updateTotalCounter = function(state, updateIndex) {
+        console.log("updateIndex::",updateIndex)
+        //selected
         if (state) {
             $scope.totalCounter++;
-        } else {
+            if($scope.searchtype == 'image'){$scope.imageResultSelected.push($scope.imageResults[updateIndex]);}
+            else if($scope.searchtype == 'video'){$scope.ytResultSelected.push($scope.ytResults[updateIndex]);}
+            else if ($scope.searchtype == 'wikipedia'){$scope.wikiResultSelected.push($scope.wikiResults[updateIndex]);}
+            console.log("wikiResults push::",$scope.wikiResults[updateIndex])
+        }//unselected 
+        else {
             $scope.totalCounter--;
+            if($scope.searchtype == 'image'){
+                angular.forEach($scope.imageResultSelected, function(e, key){
+                    if(e.link == $scope.imageResults[updateIndex].link){
+                        $scope.imageResultSelected.splice(key,1);
+                    }
+                });
+            }else if($scope.searchtype == 'video'){
+                angular.forEach($scope.ytResultSelected, function(e, key){
+                    if(e.snippet.thumbnails.default.url == $scope.ytResults[updateIndex].snippet.thumbnails.default.url){
+                        $scope.ytResultSelected.splice(key,1);
+                    }
+                });
+            }else if ($scope.searchtype == 'wikipedia'){
+                angular.forEach($scope.wikiResultSelected, function(e, key){
+                    if(e.link == $scope.wikiResults[updateIndex].link){
+                        $scope.wikiResultSelected.splice(key,1);
+                    }
+                });
+            }
         }
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
+        console.log("imageResultSelected:",$scope.imageResultSelected);
+        console.log("ytResultSelected:",$scope.ytResultSelected);
+        console.log("wikiResultSelected:",$scope.wikiResultSelected);
     }
     $scope.checkImage = function(image) {
         image.selectedToAdd = !image.selectedToAdd;
