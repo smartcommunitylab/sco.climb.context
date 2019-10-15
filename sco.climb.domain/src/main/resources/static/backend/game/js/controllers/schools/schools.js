@@ -29,6 +29,11 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 
     $scope.initController = function() {
         if ($scope.currentSchool) { //edit school
+        		if($scope.currentSchool.classes && ($scope.currentSchool.classes.length > 0)) {
+        			$scope.currentClass = $scope.currentSchool.classes[0];
+        		} else {
+        			$scope.currentClass = {};
+        		}
             $scope.saveData = DataService.editData;
             DataService.getData('route', 
                     $stateParams.idDomain, 
@@ -44,6 +49,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 }
             );
         } else {
+        	$scope.currentClass = {};
             $scope.currentSchool = {
                 name: '',
                 address: '',
@@ -69,6 +75,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     			yearOfStudy: yearOfStudy_addClass
                     	}
                       $scope.currentSchool.classes.push(newClass)
+                      $scope.currentClass = newClass
                     }
                 } 
             }
@@ -82,6 +89,11 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                 function(value) {
                     var index = $scope.currentSchool.classes.findIndex(item => item.name === classRoom.name);
                     $scope.currentSchool.classes.splice(index, 1);
+                		if($scope.currentSchool.classes && ($scope.currentSchool.classes.length > 0)) {
+                			$scope.currentClass = $scope.currentSchool.classes[0];
+                		} else {
+                			$scope.currentClass = {};
+                		}                    
                 } 
             }
         });
