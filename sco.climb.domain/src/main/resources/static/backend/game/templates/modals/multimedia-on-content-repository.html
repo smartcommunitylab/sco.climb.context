@@ -49,7 +49,7 @@
                                     <ul class="items-list">
                                         <li ng-repeat="s in subjects">
                                             <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
-                                            <span>{{s.subject}}</span>
+                                            <span>{{s.value}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -68,7 +68,7 @@
                                     <ul class="items-list">
                                         <li ng-repeat="sy in schoolYears">
                                             <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
-                                            <span>{{sy.schoolYear}}</span>
+                                            <span>{{sy.value}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -178,18 +178,18 @@
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
                     <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
                     <!-- image in row -->
-                    <div class="col-md-3">
-                        <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="content.referenceContent.previewUrl">
-                            <img ng-src="{{content.referenceContent.previewUrl}}" class="imageSizeRow">
+                    <div class="col-md-1">
+                        <a ng-href="{{content.referenceContent.referenceImg}}" target="_blank" >
+                            <img ng-src="{{content.referenceContent.referenceImg}}" class="imageSizeRow">
                         </a>
-                        <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="!content.referenceContent.previewUrl">
+                        <!--  <a ng-href="{{content.referenceContent.link}}" target="_blank" ng-if="!content.referenceContent.previewUrl">
                             <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'image'">
                             <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'link'">
                             <img ng-src="img/video.png" style="max-width: 98%; max-height: 98%;" ng-if="content.referenceContent.type== 'video'">
-                        </a>
+                        </a> -->
                     </div>
                     <!-- no selected rows from contentResults -->
-                    <div class="col-md-8 contentRowPadding" ng-if="!content.selectedToAdd">
+                    <div class="col-md-10 contentRowPadding" ng-if="!content.selectedToAdd">
                         <div class="contentSearchResultContainer">
                             <div class="row">
                                 <div class="col-sm-12 contentRowPadding">
@@ -211,7 +211,7 @@
                                     <span class="notSelectedText">Materia: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span ng-repeat="s in content.referenceContent.subjects">{{s.subject}}, </span>
+                                    <span>{{getListText(content.referenceContent.subjects)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -219,7 +219,7 @@
                                     <span class="notSelectedText">Classe: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span ng-repeat="sy in content.referenceContent.schoolYears">{{sy.schoolYear}}, </span>
+                                    <span>{{getListText(content.referenceContent.schoolYears)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -246,8 +246,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 selectedRowCol">
-                                        <label class="checkbox-inline" ng-repeat="c in content.referenceContent.classes">
-                                            {{c.class}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
+                                        <label class="checkbox-inline" ng-repeat="c in content.referenceContent.selectedClasses">
+                                            {{c.value}}<input type="checkbox" class="cbStyleSearch" ng-model="c.selected">
                                         </label>
                                     </div>
                                 </div>
@@ -260,9 +260,9 @@
                                             <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">Materia <span class="downArrow"></span></div>
                                             <div class="list" id="subject{{$index}}">
                                                 <ul class="items-list">
-                                                    <li ng-repeat="s in content.referenceContent.subjects">
+                                                    <li ng-repeat="s in content.referenceContent.selectedSubjects">
                                                         <input type="checkbox" class='' ng-model="s.selected" />
-                                                        <span>{{s.subject}}</span>
+                                                        <span>{{s.value}}</span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -273,9 +273,9 @@
                                             <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">Classe <span class="downArrow"></span></div>
                                             <div class="list" id="schoolYear{{$index}}">
                                                 <ul class="items-list">
-                                                    <li ng-repeat="sy in content.referenceContent.schoolYears">
+                                                    <li ng-repeat="sy in content.referenceContent.selectedSchoolYears">
                                                         <input type="checkbox" class='' ng-model="sy.selected" />
-                                                        <span>{{sy.schoolYear}}</span>
+                                                        <span>{{sy.value}}</span>
                                                     </li>
                                                 </ul>
                                             </div>

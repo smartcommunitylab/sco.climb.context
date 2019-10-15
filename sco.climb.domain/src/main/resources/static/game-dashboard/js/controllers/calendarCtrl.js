@@ -110,8 +110,8 @@ angular.module('climbGame.controllers.calendar', [])
                 });
                 console.log("mapResult::",$scope.mapModalities)
                 if(pedibusModalityValue){
-                  $scope.flexNum=100/($scope.mapModalities.length-1);
-                }else{$scope.flexNum=100/($scope.mapModalities.length);}
+                  $scope.flexNum=100/($scope.mapModalities.length);
+                }else{$scope.flexNum=100/($scope.mapModalities.length+1);}
                 
                 console.log("flexNum and walkPlusPedibusModalityValue",$scope.flexNum)
               },function(er){console.log("error",er)});
