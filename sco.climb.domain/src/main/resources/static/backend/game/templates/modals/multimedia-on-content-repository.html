@@ -178,7 +178,7 @@
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
                     <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
                     <!-- image in row -->
-                    <div class="col-md-1">
+                    <div class="col-md-3">
                         <a ng-href="{{content.referenceContent.referenceImg}}" target="_blank" >
                             <img ng-src="{{content.referenceContent.referenceImg}}" class="imageSizeRow">
                         </a>
@@ -189,7 +189,7 @@
                         </a> -->
                     </div>
                     <!-- no selected rows from contentResults -->
-                    <div class="col-md-10 contentRowPadding" ng-if="!content.selectedToAdd">
+                    <div class="col-md-8 contentRowPadding" ng-if="!content.selectedToAdd">
                         <div class="contentSearchResultContainer">
                             <div class="row">
                                 <div class="col-sm-12 contentRowPadding">
