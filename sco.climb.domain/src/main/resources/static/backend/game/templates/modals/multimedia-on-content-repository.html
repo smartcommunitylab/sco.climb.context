@@ -178,7 +178,7 @@
                 <li class="list-group-item col-md-12 v-center" dir-paginate="content in contentResults | itemsPerPage:10">
                     <input type="checkbox" ng-model="content.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(content.selectedToAdd)">
                     <!-- image in row -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <a ng-href="{{content.referenceContent.referenceImg}}" target="_blank" >
                             <img ng-src="{{content.referenceContent.referenceImg}}" class="imageSizeRow">
                         </a>
@@ -189,7 +189,7 @@
                         </a> -->
                     </div>
                     <!-- no selected rows from contentResults -->
-                    <div class="col-md-8 contentRowPadding" ng-if="!content.selectedToAdd">
+                    <div class="col-md-9 contentRowPadding" ng-if="!content.selectedToAdd">
                         <div class="contentSearchResultContainer">
                             <div class="row">
                                 <div class="col-sm-12 contentRowPadding">
@@ -211,7 +211,7 @@
                                     <span class="notSelectedText">Materia: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span>{{getListText(content.referenceContent.selectedSubjects)}}</span>
+                                    <span>{{getListText(content.referenceContent.subjects)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -219,7 +219,7 @@
                                     <span class="notSelectedText">Classe: </span>
                                 </div>
                                 <div class="col-sm-8 contentRowPadding">
-                                    <span>{{getListText(content.referenceContent.selectedSchoolYears)}}</span>
+                                    <span>{{getListText(content.referenceContent.schoolYears)}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -233,7 +233,7 @@
                         </div>
                     </div>
                     <!-- selected rows from contentResults -->
-                    <div class="col-md-8 contentRowPadding" ng-if="content.selectedToAdd">
+                    <div class="col-md-9 contentRowPadding" ng-if="content.selectedToAdd">
                         <a href="{{content.referenceContent.link}}" target="_blank">
                             <h5>{{content.referenceContent.name}}</h5>
                         </a>
