@@ -56,7 +56,6 @@ angular.module('consoleControllers.leg')
     }
 
     $scope.changePage = function(pageToken) {
-        console.log("pageToken:",pageToken)
         if ($scope.searchtype == 'wikipedia') {
             //in this case pageToken is an offset of search results
             DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
@@ -76,9 +75,9 @@ angular.module('consoleControllers.leg')
                     angular.forEach($scope.wikiResults, function(e_wr, k_wr){
                         //if it's have same link then store from wikiResultSelected
                         angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
-                            console.log("e_wr.link::",e_wr.link)
-                            console.log("e_wrs.link::",e_wrs.link)
-                            if(e_wr[k_wr].link == e_wrs[k_yrs].link){$scope.wikiResults.splice(k_wr, 1, e_wrs);}
+                            if(e_wr.link == e_wrs.link){
+                                $scope.wikiResults[k_wr]=e_wrs;
+                            }
                         });
                         
                         //store tags
@@ -201,8 +200,8 @@ angular.module('consoleControllers.leg')
     $scope.$modalSuccess = function() {
         var countSeletedItem=0;
         if ($scope.searchtype == 'wikipedia') {
-            for(key in $scope.wikiResults){
-                var element = $scope.wikiResults[key];
+            for(key in $scope.wikiResultSelected){
+                var element = $scope.wikiResultSelected[key];
                 if (element.selectedToAdd) {
                     countSeletedItem++;
                     var selectedClasses=[];
@@ -230,7 +229,7 @@ angular.module('consoleControllers.leg')
                 }
             }
         } else if ($scope.searchtype == 'video') {
-            $scope.ytResults.forEach(element => {
+            $scope.ytResultSelected.forEach(element => {
                 if (element.selectedToAdd) {
                     countSeletedItem++;
                     var selectedClasses=[];
@@ -259,7 +258,7 @@ angular.module('consoleControllers.leg')
                 }
             });
         } else if ($scope.searchtype == 'image') {            
-            $scope.imageResults.forEach(element => {
+            $scope.imageResultSelected.forEach(element => {
                 if (element.selectedToAdd) {
                     countSeletedItem++;
                     var selectedClasses=[];
@@ -305,14 +304,14 @@ angular.module('consoleControllers.leg')
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
     }
     $scope.updateTotalCounter = function(state, updateIndex) {
-        console.log("updateIndex::",updateIndex)
         //selected
         if (state) {
             $scope.totalCounter++;
             if($scope.searchtype == 'image'){$scope.imageResultSelected.push($scope.imageResults[updateIndex]);}
             else if($scope.searchtype == 'video'){$scope.ytResultSelected.push($scope.ytResults[updateIndex]);}
-            else if ($scope.searchtype == 'wikipedia'){$scope.wikiResultSelected.push($scope.wikiResults[updateIndex]);}
-            console.log("wikiResults push::",$scope.wikiResults[updateIndex])
+            else if ($scope.searchtype == 'wikipedia'){
+                $scope.wikiResultSelected.push($scope.wikiResults[updateIndex]);
+            }
         }//unselected 
         else {
             $scope.totalCounter--;
@@ -337,9 +336,6 @@ angular.module('consoleControllers.leg')
             }
         }
         $scope.$modalSuccessLabel = "Aggiungi " + $scope.totalCounter + " elementi";
-        console.log("imageResultSelected:",$scope.imageResultSelected);
-        console.log("ytResultSelected:",$scope.ytResultSelected);
-        console.log("wikiResultSelected:",$scope.wikiResultSelected);
     }
     $scope.checkImage = function(image) {
         image.selectedToAdd = !image.selectedToAdd;

@@ -210,8 +210,8 @@
         <!-- search type wikipedia -->
         <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults track by $index">
-                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd, $index)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="(key,result) in wikiResults track by $index">
+                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd, key)">
                     <a ng-href="{{result.link}}" target="_blank" class="col-md-3 contentRowPadding">
                         <!-- <div class="defaultImage" ></div> -->
                         <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;">

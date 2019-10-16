@@ -177,7 +177,7 @@ angular.module('consoleControllers.leg')
                     $scope.noResults = response.data.length == 0;
                     //change the formet of array classes, schoolYears, subjects. because of the selection option
                     $scope.contentResults.forEach(e=>{
-                    		e.referenceContent.selectedClasses = [];
+                    	e.referenceContent.selectedClasses = [];
                         angular.forEach($scope.classes, function(item, key){
                             e.referenceContent.selectedClasses[key]={value:item.value,selected:true};
                         });
@@ -265,7 +265,7 @@ angular.module('consoleControllers.leg')
     	for(var i=0; i<list.length; i++) {
     		text = text + list[i].value + ", "
     	}
-    	return text.substring(0, text.length - 2)
+    	return text.substring(0, text.length - 1)
     }
     
 });
