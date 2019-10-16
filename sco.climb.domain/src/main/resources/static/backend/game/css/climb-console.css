@@ -945,3 +945,41 @@ hr.cBlue{
 .bootstrapColRowPadding{
     padding: 1px 5px 1px 5px;
 }
+
+/* for loader*/
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    border-bottom : 16px solid black;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+  }
+  
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .spinner{
+    width: 100%;
+  height: 100%;
+  z-index: 10000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  background: white;
+  opacity: 0.6;
+  }  

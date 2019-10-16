@@ -12,6 +12,7 @@ angular.module('consoleControllers.leg')
     $scope.imageResultSelected=[];
     $scope.ytResultSelected=[];
     $scope.wikiResultSelected=[];
+    $scope.loading = false;
     $scope.materialeListToggle = function(dropdownID){
         // $('.wrapper .list').slideToggle('fast');
         $('#materiale'+dropdownID).slideToggle('fast');
@@ -42,6 +43,7 @@ angular.module('consoleControllers.leg')
 		}
 	);
     $scope.searchOnEngine = function(searchtext,searchtype) {
+        $scope.loading = true;
         $scope.searchtext=searchtext;
         $scope.searchtype=searchtype;
         if (!$scope.searchtext) return;
@@ -101,6 +103,7 @@ angular.module('consoleControllers.leg')
                     //         $scope.wikiResults[page].subjects=angular.copy($scope.subjects);
                     //     }
                     // }
+                    $scope.loading = false;
                 }, function() {
                 }
             );
@@ -144,6 +147,7 @@ angular.module('consoleControllers.leg')
                     //         e.subjects=angular.copy($scope.subjects);
                     //     })
                     // }
+                    $scope.loading = false;
                 }, function() {
                 }
             );
@@ -191,10 +195,11 @@ angular.module('consoleControllers.leg')
                     //         e.subjects=angular.copy($scope.subjects);
                     //     })
                     // }
+                    $scope.loading = false;
                 }, function() {
                 }
             );
-        }
+        } 
     }
 
     $scope.$modalSuccess = function() {

@@ -141,56 +141,55 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             );
             //get multimedia content
-            DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, 
-            		$stateParams.idPath, $stateParams.idLeg).then(
-            		function(response) {
-            			if(response.data) {
-                            $scope.leg.externalUrls = response.data;
-                            $scope.legsAllTags=angular.copy(response.data);
-            				$scope.leg.externalUrls.forEach(function(element, key) {
-            					if (element.type == 'video') {
-                                    element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
-                                }
-                            });
-                            $scope.legsAllTags.forEach(function(element, key) {
-                                element.classes=angular.copy($scope.classes);
-                                angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
-                                    element.classes.forEach(function(value3, key3) {
-                                        if(value3.class == trueVal){
-                                            element.classes[key3].selected=true;
-                                        }
-                                    });
-                                });
-
-                                element.schoolYears=angular.copy($scope.schoolYears);
-                                angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
-                                    element.schoolYears.forEach(function(value3, key3) {
-                                        if(value3.schoolYear == trueVal){
-                                            element.schoolYears[key3].selected=true;
-                                        }
-                                    });
-                                });
-
-                                element.subjects=angular.copy($scope.subjects);
-                                angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
-                                    element.subjects.forEach(function(value3, key3) {
-                                        if(value3.subject == trueVal){
-                                            element.subjects[key3].selected=true;
-                                        }
-                                    });
+            DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, $stateParams.idPath, $stateParams.idLeg).then(
+                function(response) {
+                    if(response.data) {
+                        $scope.leg.externalUrls = response.data;
+                        $scope.legsAllTags=angular.copy(response.data);
+                        $scope.leg.externalUrls.forEach(function(element, key) {
+                            if (element.type == 'video') {
+                                element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+                            }
+                        });
+                        $scope.legsAllTags.forEach(function(element, key) {
+                            element.classes=angular.copy($scope.classes);
+                            angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
+                                element.classes.forEach(function(value3, key3) {
+                                    if(value3.class == trueVal){
+                                        element.classes[key3].selected=true;
+                                    }
                                 });
                             });
-                            console.log("legs with all tags::",$scope.legsAllTags)
-                            angular.forEach($scope.legsAllTags, function(val, key){
-                                $scope.checkClasses(key);
-                                $scope.checkSubjects(key);
-                                $scope.checkSchoolYears(key);
-                            })
-            			}
-            		},
-            		function(error) {
-            			alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
-            		}
+
+                            element.schoolYears=angular.copy($scope.schoolYears);
+                            angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
+                                element.schoolYears.forEach(function(value3, key3) {
+                                    if(value3.schoolYear == trueVal){
+                                        element.schoolYears[key3].selected=true;
+                                    }
+                                });
+                            });
+
+                            element.subjects=angular.copy($scope.subjects);
+                            angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
+                                element.subjects.forEach(function(value3, key3) {
+                                    if(value3.subject == trueVal){
+                                        element.subjects[key3].selected=true;
+                                    }
+                                });
+                            });
+                        });
+                        console.log("legs with all tags::",$scope.legsAllTags)
+                        angular.forEach($scope.legsAllTags, function(val, key){
+                            $scope.checkClasses(key);
+                            $scope.checkSubjects(key);
+                            $scope.checkSchoolYears(key);
+                        })
+                    }
+                },
+                function(error) {
+                    alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
+                }
             );            
             
             $scope.viewIconsModels.forEach(function(element) {
