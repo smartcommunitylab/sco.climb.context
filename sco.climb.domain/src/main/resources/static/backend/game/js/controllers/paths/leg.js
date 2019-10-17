@@ -714,6 +714,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         // $scope.leg.externalUrls.push(angular.toJson(element));
         $scope.leg.externalUrls.push(element);
+        listLeg = $scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg })
+        if(listLeg) {
+        	listLeg.multimediaContents++;
+        }
         console.log("Give Data:",element)
     };
 

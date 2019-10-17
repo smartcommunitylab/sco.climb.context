@@ -980,6 +980,9 @@ public class GamificationController extends AuthController {
 		try {
 			List<PedibusItineraryLeg> result = storage.getPedibusItineraryLegsByGameId(ownerId, 
 					pedibusGameId, itineraryId);
+			for(PedibusItineraryLeg leg : result) {
+				leg.setMultimediaContents(storage.getMultimediaContentNumberByLeg(ownerId, leg.getObjectId()));
+			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("getPedibusItineraryLegs[%s]: %s", ownerId, result.size()));
 			}

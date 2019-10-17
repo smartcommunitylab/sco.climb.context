@@ -1431,6 +1431,12 @@ public class RepositoryManager {
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
 	}
+	
+	public long getMultimediaContentNumberByLeg(String ownerId, String itineraryLegId) {
+		Query query = new Query(Criteria.where("legId").is(itineraryLegId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.count(query, MultimediaContent.class);
+	}
 
 	public List<MultimediaContent> getMultimediaContentByReferenceId(String contentId) {
 		Query query = new Query(Criteria.where("contentReferenceId").is(contentId));
