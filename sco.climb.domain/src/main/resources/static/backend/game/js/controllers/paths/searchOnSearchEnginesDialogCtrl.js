@@ -43,11 +43,17 @@ angular.module('consoleControllers.leg')
 		}
 	);
     $scope.searchOnEngine = function(searchtext,searchtype) {
-        $scope.loading = true;
         $scope.searchtext=searchtext;
         $scope.searchtype=searchtype;
-        if (!$scope.searchtext) return;
+        if (!$scope.searchtext){
+            $scope.errorMsg="si prega di fornire prima il 'testo di ricerca'";
+            setTimeout(function(){
+                $scope.errorMsg='';
+            }, 2000);
+            return;
+        } 
         $scope.resetResults();
+        $scope.loading = true;
         if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {            
             $scope.changePage(undefined);
         } else if ($scope.searchtype == 'video' && !$scope.ytResults) {
@@ -62,48 +68,40 @@ angular.module('consoleControllers.leg')
             //in this case pageToken is an offset of search results
             DataService.searchOnWikipedia($scope.searchtext, pageToken).then(
                 function(response) {
-                	$scope.resetResults();
-                    $scope.wikiResults = response.data.query.pages;
-                    for(var page in $scope.wikiResults){
-                        $scope.wikiResults[page].link = 'https://it.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
-                    }
-                    $scope.prevPageToken = response.data['query-continue'].search.gsroffset - 20;
-                    if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
-                    $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
-                    console.log("wikiResults:",$scope.wikiResults);
-                    var el = document.getElementById('wikiContentList');
-                    el.scrollTop = 0;
-                    //check selected before
-                    angular.forEach($scope.wikiResults, function(e_wr, k_wr){
-                        //if it's have same link then store from wikiResultSelected
-                        angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
-                            if(e_wr.link == e_wrs.link){
-                                $scope.wikiResults[k_wr]=e_wrs;
-                            }
+                    $scope.resetResults();
+                    if(response.data.query){
+                        $scope.wikiResults = response.data.query.pages;
+                        $scope.loading = false;
+                        for(var page in $scope.wikiResults){
+                            $scope.wikiResults[page].link = 'https://it.wikipedia.org/wiki/' + $scope.wikiResults[page].title; 
+                        }
+                        $scope.prevPageToken = response.data['query-continue'].search.gsroffset - 20;
+                        if ($scope.prevPageToken < 0) $scope.prevPageToken = -1;
+                        $scope.nextPageToken = response.data['query-continue'].search.gsroffset;
+                        console.log("wikiResults:",$scope.wikiResults);
+                        var el = document.getElementById('wikiContentList');
+                        el.scrollTop = 0;
+                        //check selected before
+                        angular.forEach($scope.wikiResults, function(e_wr, k_wr){
+                            //if it's have same link then store from wikiResultSelected
+                            angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
+                                if(e_wr.link == e_wrs.link){
+                                    $scope.wikiResults[k_wr]=e_wrs;
+                                }
+                            });
+                            
+                            //store tags
+                            if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
+                            if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
+                            if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
                         });
-                        
-                        //store tags
-                        if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
-                        if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
-                        if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
-                    });
-                    //store tags
-                    // if($scope.classes){
-                    //     for(var page in $scope.wikiResults){
-                    //         $scope.wikiResults[page].classes=angular.copy($scope.classes);
-                    //     }
-                    // }
-                    // if($scope.schoolYears){
-                    //     for(var page in $scope.wikiResults){
-                    //         $scope.wikiResults[page].schoolYears=angular.copy($scope.schoolYears);
-                    //     }
-                    // }
-                    // if($scope.subjects){
-                    //     for(var page in $scope.wikiResults){
-                    //         $scope.wikiResults[page].subjects=angular.copy($scope.subjects);
-                    //     }
-                    // }
-                    $scope.loading = false;
+                    }else{
+                        $scope.loading = false;
+                        $scope.errorMsg="scusa, nessun dato trovato";
+                        setTimeout(function(){
+                            $scope.errorMsg='';
+                        }, 2000);
+                    }
                 }, function() {
                 }
             );
@@ -111,43 +109,35 @@ angular.module('consoleControllers.leg')
             DataService.searchOnYoutube($scope.searchtext, pageToken).then(
                 function(response) {
                     $scope.resetResults();
-                    $scope.ytResults = response.data.items;
-                    $scope.prevPageToken = response.data.prevPageToken;
-                    if (!$scope.prevPageToken) $scope.prevPageToken = -1; //used to generalize pagination controls
-                    $scope.nextPageToken = response.data.nextPageToken;
-                    console.log(response);
-                    var el = document.getElementById('videoContentList');
-                    el.scrollTop = 0;
-                    //check selected before
-                    angular.forEach($scope.ytResults, function(e_yr, k_yr){
-                        //if it's have same link then store from ytResultSelected
-                        angular.forEach($scope.ytResultSelected, function(e_yrs,k_yrs){
-                            if(e_yr.snippet.thumbnails.default.url == e_yrs.snippet.thumbnails.default.url){
-                                $scope.ytResults.splice(k_yr, 1, e_yrs);
-                            }
+                    if(response.data.items){
+                        $scope.ytResults = response.data.items;
+                        $scope.loading = false;
+                        $scope.prevPageToken = response.data.prevPageToken;
+                        if (!$scope.prevPageToken) $scope.prevPageToken = -1; //used to generalize pagination controls
+                        $scope.nextPageToken = response.data.nextPageToken;
+                        console.log(response);
+                        var el = document.getElementById('videoContentList');
+                        el.scrollTop = 0;
+                        //check selected before
+                        angular.forEach($scope.ytResults, function(e_yr, k_yr){
+                            //if it's have same link then store from ytResultSelected
+                            angular.forEach($scope.ytResultSelected, function(e_yrs,k_yrs){
+                                if(e_yr.snippet.thumbnails.default.url == e_yrs.snippet.thumbnails.default.url){
+                                    $scope.ytResults.splice(k_yr, 1, e_yrs);
+                                }
+                            });
+                            //store tags
+                            if(!e_yr.classes){e_yr.classes=angular.copy($scope.classes);}
+                            if(!e_yr.schoolYears){e_yr.schoolYears=angular.copy($scope.schoolYears);}
+                            if(!e_yr.subjects){e_yr.subjects=angular.copy($scope.subjects);}
                         });
-                        //store tags
-                        if(!e_yr.classes){e_yr.classes=angular.copy($scope.classes);}
-                        if(!e_yr.schoolYears){e_yr.schoolYears=angular.copy($scope.schoolYears);}
-                        if(!e_yr.subjects){e_yr.subjects=angular.copy($scope.subjects);}
-                    });
-                    //store tags
-                    // if($scope.classes){
-                    //     $scope.ytResults.forEach(e=>{
-                    //         e.classes=angular.copy($scope.classes);
-                    //     })
-                    // }
-                    // if($scope.schoolYears){
-                    //     $scope.ytResults.forEach(e=>{
-                    //         e.schoolYears=angular.copy($scope.schoolYears);
-                    //     })
-                    // }
-                    // if($scope.subjects){
-                    //     $scope.ytResults.forEach(e=>{
-                    //         e.subjects=angular.copy($scope.subjects);
-                    //     })
-                    // }
-                    $scope.loading = false;
+                    }else{
+                        $scope.loading = false;
+                        $scope.errorMsg="scusa, nessun dato trovato";
+                        setTimeout(function(){
+                            $scope.errorMsg='';
+                        }, 2000);
+                    }
                 }, function() {
                 }
             );
@@ -156,46 +146,38 @@ angular.module('consoleControllers.leg')
             DataService.searchOnImages($scope.searchtext, pageToken).then(
                 function(response) {
                     $scope.resetResults();
-                    $scope.imageResults = response.data.items;
-                    if (response.data.queries.previousPage) {
-                        $scope.prevPageToken = response.data.queries.previousPage[0].startIndex;
-                    } else {
-                        $scope.prevPageToken = -1; //used to generalize pagination controls
-                    }
-                    if (response.data.queries.nextPage) {
-                        $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
-                    }
-                    console.log("imageResults:",response);
-                    var el = document.getElementById('imageContentList');
-                    el.scrollTop = 0;
-                    //check selected before
-                    angular.forEach($scope.imageResults, function(e_ir, k_ir){
-                        //if it's have same link then store from imageResultSelected
-                        angular.forEach($scope.imageResultSelected, function(e_irs,k_irs){
-                            if(e_ir.link == e_irs.link){$scope.imageResults.splice(k_ir, 1, e_irs);}
+                    if(response.data.items){
+                        $scope.imageResults = response.data.items;
+                        $scope.loading = false;
+                        if (response.data.queries.previousPage) {
+                            $scope.prevPageToken = response.data.queries.previousPage[0].startIndex;
+                        } else {
+                            $scope.prevPageToken = -1; //used to generalize pagination controls
+                        }
+                        if (response.data.queries.nextPage) {
+                            $scope.nextPageToken = response.data.queries.nextPage[0].startIndex;
+                        }
+                        console.log("imageResults:",response);
+                        var el = document.getElementById('imageContentList');
+                        el.scrollTop = 0;
+                        //check selected before
+                        angular.forEach($scope.imageResults, function(e_ir, k_ir){
+                            //if it's have same link then store from imageResultSelected
+                            angular.forEach($scope.imageResultSelected, function(e_irs,k_irs){
+                                if(e_ir.link == e_irs.link){$scope.imageResults.splice(k_ir, 1, e_irs);}
+                            });
+                            //store tags
+                            if(!e_ir.classes){e_ir.classes=angular.copy($scope.classes);}
+                            if(!e_ir.schoolYears){e_ir.schoolYears=angular.copy($scope.schoolYears);}
+                            if(!e_ir.subjects){e_ir.subjects=angular.copy($scope.subjects);}
                         });
-                        //store tags
-                        if(!e_ir.classes){e_ir.classes=angular.copy($scope.classes);}
-                        if(!e_ir.schoolYears){e_ir.schoolYears=angular.copy($scope.schoolYears);}
-                        if(!e_ir.subjects){e_ir.subjects=angular.copy($scope.subjects);}
-                    });
-                    //store tags
-                    // if($scope.classes){
-                    //     $scope.imageResults.forEach(e=>{
-                    //         e.classes=angular.copy($scope.classes);
-                    //     })
-                    // }
-                    // if($scope.schoolYears){
-                    //     $scope.imageResults.forEach(e=>{
-                    //         e.schoolYears=angular.copy($scope.schoolYears);
-                    //     })
-                    // }
-                    // if($scope.subjects){
-                    //     $scope.imageResults.forEach(e=>{
-                    //         e.subjects=angular.copy($scope.subjects);
-                    //     })
-                    // }
-                    $scope.loading = false;
+                    }else{
+                        $scope.loading = false;
+                        $scope.errorMsg="scusa, nessun dato trovato";
+                        setTimeout(function(){
+                            $scope.errorMsg='';
+                        }, 2000);
+                    }
                 }, function() {
                 }
             );
