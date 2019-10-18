@@ -151,6 +151,7 @@ angular.module('consoleControllers.leg')
                 selectedSearchtype,
                 selectedSubjects, selectedSchoolYears).then(
                 function(response) {
+                    console.log("response.data;",response.data)
                     response.data.forEach(element => {
                         switch (element.referenceContent.type) {
                             case 'image':
@@ -181,22 +182,23 @@ angular.module('consoleControllers.leg')
                         angular.forEach($scope.classes, function(item, key){
                             e.referenceContent.selectedClasses[key]={value:item.value,selected:true};
                         });
-                        e.referenceContent.selectedSchoolYears = []
+                        e.referenceContent.selectedSchoolYears = [];
+                        var i=0;
                         angular.forEach($scope.schoolYears, function(item, key){
                             e.referenceContent.selectedSchoolYears[key]={value:item.value,selected:true};
                             if(e.referenceContent.schoolYears.includes(item.value)) {
-                            	e.referenceContent.schoolYears[key] = {value:item.value,selected:true};
+                            	e.referenceContent.schoolYears[i++] = {value:item.value,selected:true};
                             }
                         });
                         e.referenceContent.selectedSubjects = [];
+                        var j=0;
                         angular.forEach($scope.subjects, function(item, key){
                             e.referenceContent.selectedSubjects[key]={value:item.value,selected:true};
                             if(e.referenceContent.subjects.includes(item.value)) {
-                            	e.referenceContent.subjects[key] = {value:item.value,selected:true};
+                            	e.referenceContent.subjects[j++] = {value:item.value,selected:true};
                             }
                         })
-                    });
-                    console.log("contentResults:",$scope.contentResults); 
+                    }); 
                 }, function() {
                 }
         );
@@ -261,7 +263,7 @@ angular.module('consoleControllers.leg')
     	el.scrollTop = 0;
     }
     $scope.getListText = function(list) {
-    	var text = '';
+        var text = '';
     	for(var i=0; i<list.length; i++) {
     		text = text + list[i].value + ", "
     	}
