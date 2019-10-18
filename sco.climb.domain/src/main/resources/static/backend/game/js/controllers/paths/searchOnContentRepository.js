@@ -186,17 +186,11 @@ angular.module('consoleControllers.leg')
                         var i=0;
                         angular.forEach($scope.schoolYears, function(item, key){
                             e.referenceContent.selectedSchoolYears[key]={value:item.value,selected:true};
-                            if(e.referenceContent.schoolYears.includes(item.value)) {
-                            	e.referenceContent.schoolYears[i++] = {value:item.value,selected:true};
-                            }
                         });
                         e.referenceContent.selectedSubjects = [];
                         var j=0;
                         angular.forEach($scope.subjects, function(item, key){
                             e.referenceContent.selectedSubjects[key]={value:item.value,selected:true};
-                            if(e.referenceContent.subjects.includes(item.value)) {
-                            	e.referenceContent.subjects[j++] = {value:item.value,selected:true};
-                            }
                         })
                     }); 
                 }, function() {
@@ -265,9 +259,9 @@ angular.module('consoleControllers.leg')
     $scope.getListText = function(list) {
         var text = '';
     	for(var i=0; i<list.length; i++) {
-    		text = text + list[i].value + ", "
+    		text = text + list[i] + ", "
     	}
-    	return text.substring(0, text.length - 1)
+    	return text.substring(0, text.length - 2)
     }
     
 });
