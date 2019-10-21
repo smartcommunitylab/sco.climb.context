@@ -872,6 +872,17 @@ hr.cBlue{
     color: darkgray;
 }
 
+.belowTextSearchEnginesTags{
+    text-align: center;
+    margin: -15px 0px 5px 0px;
+    color: darkgray;
+}
+.belowTextSearchEnginesButton{
+    text-align: left;
+    margin: 0px;
+    color: darkgray;
+}
+
 .notSelectedText{
     color: darkgray;
 }
