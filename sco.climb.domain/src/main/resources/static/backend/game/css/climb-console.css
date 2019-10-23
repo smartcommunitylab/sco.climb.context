@@ -862,6 +862,12 @@ hr.cBlue{
 .contentRowPadding{
     padding: 0 5px 0 5px;
 }
+.searchContentAgain{
+    background-color: #d9edf7;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px 1px 1px 1px;
+}
 .selectedRowCol{
     padding-right: 5px;
     padding-left: 5px;
