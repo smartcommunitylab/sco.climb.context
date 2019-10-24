@@ -862,6 +862,12 @@ hr.cBlue{
 .contentRowPadding{
     padding: 0 5px 0 5px;
 }
+.searchContentAgain{
+    background-color: #d9edf7;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px 1px 1px 1px;
+}
 .selectedRowCol{
     padding-right: 5px;
     padding-left: 5px;
@@ -943,14 +949,19 @@ hr.cBlue{
     width: 25%;
 }
 .downArrow {
-    float: right;
+    /* float: right;
     border: solid black;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 4px;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    margin: 4px;
+    margin: 4px; */
+    background-image: url(../img/arrow.png);
+    background-repeat: no-repeat;
+    float: right;
+    margin: 2px;
+    padding: 5px 6px;
   }
 /* */
 .bootstrapColRowPadding{

@@ -69,8 +69,9 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan="3"><p class="cBlue-text tab"> <b>Attenzione!</b> I file devono essere privi di copyright e rispattare la legge sul trattamento dei dati personali.</p></td>
+                        <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
+                            <td></td>
+                            <td colspan="2"><p class="cBlue-text tab"> <b>Attenzione!</b> I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</p></td>
                         </tr>
                     </tbody>
                 </table>
@@ -84,12 +85,6 @@
                     <label class="checkbox-inline" ng-repeat="c in classes">
                         {{c.class}}<input type="checkbox" class="cbStyle" ng-model="c.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
             </td>
         </tr>
@@ -112,10 +107,6 @@
             <td colspan="2" class="round-td">
                 <p class="tab">
                     6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca già utilizzati".
-                    <!-- <select class="form-control dropdownCondiviso"  ng-model="sharable">
-                        <option value="si" >Condiviso</option>
-                        <option value="no">No</option>
-                    </select> -->
                     <select class="form-control dropdownCondiviso" 
                         ng-model="sharable"
                         ng-options="o.v as o.n for o in [{ n: 'Condiviso', v: true }, { n: 'No', v: false }]"
@@ -126,7 +117,7 @@
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p class="tab"> 7. <b> Eticchetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca già utilizzati".</p>
+                <p class="tab"> 7. <b> Etichetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca già utilizzati".</p>
                 <br>
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
@@ -134,15 +125,6 @@
                     <label class="checkbox-inline" ng-repeat="s in subjects">
                         {{s.subject}}<input type="checkbox" class="cbStyle" ng-model="s.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 1
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
                 <br>
                 <div class="tab"> 
@@ -151,15 +133,6 @@
                     <label class="checkbox-inline" ng-repeat="sy in schoolYears">
                         {{sy.schoolYear}}<input type="checkbox" class="cbStyle" ng-model="sy.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 1
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
             </td>
         </tr>

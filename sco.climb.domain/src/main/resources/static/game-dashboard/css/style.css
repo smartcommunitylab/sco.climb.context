@@ -629,6 +629,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 
 .cal-interactive-button {
   color: #F39C12;
+  cursor: pointer;
 }
 
 .first-row-button {
