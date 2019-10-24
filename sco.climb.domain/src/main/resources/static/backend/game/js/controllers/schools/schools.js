@@ -72,7 +72,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
                     if(name_addClass && !$scope.currentSchool.classes.some(item => item.name === name_addClass)) {
                     	var newClass = {
                     			name: name_addClass,
-                    			yearOfStudy: yearOfStudy_addClass
+                    			schoolYear: yearOfStudy_addClass
                     	}
                       $scope.currentSchool.classes.push(newClass)
                       $scope.currentClass = newClass
