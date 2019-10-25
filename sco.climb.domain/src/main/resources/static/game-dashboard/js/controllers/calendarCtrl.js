@@ -192,7 +192,7 @@ angular.module('climbGame.controllers.calendar', [])
 
       $scope.selectBabyMean = function (index, dayIndex, babyId) {
         if (!$scope.selectedMean) {
-          $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto'))
+          $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto').position('top left'))
           return
         }
         
@@ -296,7 +296,7 @@ angular.module('climbGame.controllers.calendar', [])
                     } else {
                       $scope.isDevEditMode = undefined;
                       // sent data
-                      $mdToast.show($mdToast.simple().content('Dati inviati'))
+                      $mdToast.show($mdToast.simple().content('Dati inviati').position('top left'))
                         // reload and show
                       calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                         function (calendar) {

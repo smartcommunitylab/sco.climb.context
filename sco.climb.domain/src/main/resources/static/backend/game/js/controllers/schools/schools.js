@@ -1,4 +1,4 @@
-angular.module('consoleControllers.schools', ['ngSanitize'])
+angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
 
 // Schools controller
 .controller('SchoolsListCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
@@ -26,7 +26,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
 .controller('SchoolCtrl', function ($scope, $stateParams, $state, $rootScope, $location, $timeout, DataService, MainDataService, createDialog) {
     $scope.$parent.mainView = 'school';
     $scope.uploadFileOnlyChilds = false;
-
+    
     $scope.initController = function() {
         if ($scope.currentSchool) { //edit school
         		if($scope.currentSchool.classes && ($scope.currentSchool.classes.length > 0)) {
@@ -72,7 +72,7 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
                     if(name_addClass && !$scope.currentSchool.classes.some(item => item.name === name_addClass)) {
                     	var newClass = {
                     			name: name_addClass,
-                    			yearOfStudy: yearOfStudy_addClass
+                    			schoolYear: yearOfStudy_addClass
                     	}
                       $scope.currentSchool.classes.push(newClass)
                       $scope.currentClass = newClass
@@ -82,21 +82,29 @@ angular.module('consoleControllers.schools', ['ngSanitize'])
         });
     }
     $scope.removeClasses = function(currentSchool, classRoom){
-        createDialog('templates/modals/removeClasses.html',{
-            id : 'removeClass-dialog',
-            title: 'Rimuovi la classe',
-            success: { label: 'Conferma', fn: 
-                function(value) {
-                    var index = $scope.currentSchool.classes.findIndex(item => item.name === classRoom.name);
-                    $scope.currentSchool.classes.splice(index, 1);
-                		if($scope.currentSchool.classes && ($scope.currentSchool.classes.length > 0)) {
-                			$scope.currentClass = $scope.currentSchool.classes[0];
-                		} else {
-                			$scope.currentClass = {};
-                		}                    
-                } 
-            }
-        });
+        let promiseClass = new Promise(function(resolve, reject) {
+            createDialog('templates/modals/removeClasses.html',{
+                id : 'removeClass-dialog',
+                title: 'Rimuovi la classe',
+                success: { label: 'Conferma', fn: 
+                    function(value) {
+                        // var index = $scope.currentSchool.classes.findIndex(item => item.name === classRoom.name);
+                        // $scope.currentSchool.classes.splice(index, 1);
+                        // 	if($scope.currentSchool.classes && ($scope.currentSchool.classes.length > 0)) {
+                        // 		$scope.currentClass = $scope.currentSchool.classes[0];
+                        // 	} else {
+                        // 		$scope.currentClass = {};
+                        // 	}     
+                        resolve(true);              
+                    } 
+                },
+                cancel: {fn: function () { reject(false);}}
+            });
+        }).then(
+            function(result) { return result; },
+            function(error) { return error; }
+        );;
+        return promiseClass;
     }
     if ($stateParams.idSchool) {
         MainDataService.getDomains().then(function (response) {
