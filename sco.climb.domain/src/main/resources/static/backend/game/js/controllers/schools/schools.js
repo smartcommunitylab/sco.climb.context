@@ -103,7 +103,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
         }).then(
             function(result) { return result; },
             function(error) { return error; }
-        );;
+        );
         return promiseClass;
     }
     if ($stateParams.idSchool) {

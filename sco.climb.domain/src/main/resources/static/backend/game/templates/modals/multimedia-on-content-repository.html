@@ -131,7 +131,7 @@
                                 <ul class="items-list">
                                     <li ng-repeat="s in subjects">
                                         <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
-                                        <span>{{s.subject}}</span>
+                                        <span>{{s.value}}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -150,7 +150,7 @@
                                 <ul class="items-list">
                                     <li ng-repeat="sy in schoolYears">
                                         <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
-                                        <span>{{sy.schoolYear}}</span>
+                                        <span>{{sy.value}}</span>
                                     </li>
                                 </ul>
                             </div>
