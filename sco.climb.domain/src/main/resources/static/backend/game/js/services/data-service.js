@@ -184,7 +184,7 @@ function ($q, $http, $rootScope, $timeout) {
         uploadFileContent: function(element) 
         {
             var postUrl = baseUrl + '/api/game/' + element.ownerId + '/' + element.pedibusGameId + '/itinerary/'
-            + element.itineraryId + '/leg/' + element.legId + '/link/file';
+            + element.itineraryId + '/leg/' + element.legId + '/file';
             return $http.post(postUrl, element.formdata, 
                 {
                     timeout: timeout,

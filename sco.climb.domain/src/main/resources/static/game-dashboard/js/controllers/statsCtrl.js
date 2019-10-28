@@ -9,18 +9,22 @@ angular.module('climbGame.controllers.stats', [])
     }
 
     var data2stats = function (data) {
+      console.log("data::",data);
       return {
         'gameScore': Math.round(data.gameScore / 1000, 0),
         'maxGameScore': Math.round(data.maxGameScore / 1000, 0),
-        'scoreModeMap': {
-          'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
-          'zeroImpact_wAdult_withoutFloor': data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT),
-          'bus': Math.floor(data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT)),
-          'bus_withoutFloor': data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT),
-          'pandr': Math.floor(data['scoreModeMap']['pandr'] / (1000 * KMS_PER_FOOT)),
-          'bonus': Math.floor(data['scoreModeMap']['bonus'] / (1000 * KMS_PER_FOOT)),
-          'zeroImpact_solo': Math.floor(data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT)),
-          'zeroImpact_solo_withoutFloor':data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT)
+        'scoreModeMap': {          
+          'walkPlusPedibus': Math.floor((data.scoreModeMap.walk+data.scoreModeMap.pedibus) / (1000 * KMS_PER_FOOT)),
+          'walkPlusPedibus_withoutFloor': (data.scoreModeMap.walk+data.scoreModeMap.pedibus) / (1000 * KMS_PER_FOOT),
+          'bike': Math.floor(data.scoreModeMap.bike / (1000 * KMS_PER_FOOT)),
+          'bike_withoutFloor': data.scoreModeMap.bike / (1000 * KMS_PER_FOOT),
+          'bus': Math.floor(data.scoreModeMap.bus / (1000 * KMS_PER_FOOT)),
+          'bus_withoutFloor': data.scoreModeMap.bus / (1000 * KMS_PER_FOOT),
+          'pandr': Math.floor(data.scoreModeMap.pandr / (1000 * KMS_PER_FOOT)),
+          'pandr_withoutFloor':data.scoreModeMap.pandr / (1000 * KMS_PER_FOOT),
+          'carpooling': Math.floor(data.scoreModeMap.carpooling / (1000 * KMS_PER_FOOT)),
+          'carpooling_withoutFloor': data.scoreModeMap.carpooling / (1000 * KMS_PER_FOOT),
+          'bonus': Math.floor(data.scoreModeMap.bonus / (1000 * KMS_PER_FOOT))
         }
       }
     }
@@ -52,7 +56,6 @@ angular.module('climbGame.controllers.stats', [])
     // };
     mapService.getStatus().then(function (data) {
       console.log("Data:",data);
-      console.log("teams:",data.teams);
       $scope.status = data;
       $scope.legs = data.legs;
       $scope.globalTeam = data.game.globalTeam;
@@ -103,14 +106,14 @@ angular.module('climbGame.controllers.stats', [])
     }
 
     $scope.checkHalfFoot = function (status) {
-      if(status=="zeroImpact_solo"){
-        if ($scope.stats.scoreModeMap.zeroImpact_solo_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_solo >= 0.5) {
+      if(status=="walkPlusPedibus"){
+        if ($scope.stats.scoreModeMap.walkPlusPedibus_withoutFloor - $scope.stats.scoreModeMap.walkPlusPedibus >= 0.5) {
           return true
         }else{
           return false
         }
-      }else if(status=="zeroImpact_adult"){
-        if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+      }else if(status=="bike"){
+        if ($scope.stats.scoreModeMap.bike_withoutFloor - $scope.stats.scoreModeMap.bike >= 0.5) {
           return true
         }else{
           return false
@@ -122,7 +125,13 @@ angular.module('climbGame.controllers.stats', [])
           return false
         }
       }else if(status=="pandr"){
-        if ($scope.stats.scoreModeMap.zeroImpact_wAdult_withoutFloor - $scope.stats.scoreModeMap.zeroImpact_wAdult >= 0.5) {
+        if ($scope.stats.scoreModeMap.pandr_withoutFloor - $scope.stats.scoreModeMap.pandr >= 0.5) {
+          return true
+        }else{
+          return false
+        }
+      }else if(status=="carpooling"){
+        if ($scope.stats.scoreModeMap.carpooling_withoutFloor - $scope.stats.scoreModeMap.carpooling >= 0.5) {
           return true
         }else{
           return false

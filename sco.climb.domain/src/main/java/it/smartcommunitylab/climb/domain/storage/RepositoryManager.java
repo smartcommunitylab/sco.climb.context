@@ -852,7 +852,7 @@ public class RepositoryManager {
 						continue;
 					} else if(mode.equals(Const.MODE_PEDIBUS) && oldMode.equals(Const.MODE_PEDIBUS)) {
 						continue;
-					}	else if(mode.equals(Const.MODE_PIEDI_ADULTO) && oldMode.equals(Const.MODE_PEDIBUS)) {
+					}	else if(mode.equals(Const.MODE_WALK) && oldMode.equals(Const.MODE_PEDIBUS)) {
 						calendarDay.getModeMap().put(playerId, Const.MODE_PEDIBUS);
 					} else if(oldMode.equals(Const.MODE_PEDIBUS)){
 						calendarDay.getModeMap().put(playerId, Const.MODE_PEDIBUS);
@@ -968,7 +968,10 @@ public class RepositoryManager {
 	
 	public void removePedibusItineraryLegByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
-		mongoTemplate.remove(query, PedibusItineraryLeg.class);
+		List<PedibusItineraryLeg> list = mongoTemplate.find(query, PedibusItineraryLeg.class);
+		for(PedibusItineraryLeg leg : list) {
+			removeMultimediaContentByLegId(ownerId, leg.getObjectId());
+		}
 	}
 	
 	public void removePedibusItineraryLegByItineraryId(String ownerId, String pedibusGameId,
@@ -1342,7 +1345,19 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId).and("itineraryId").is(itineraryId)
 				.and("ownerId").is(ownerId));
-		mongoTemplate.remove(query, MultimediaContent.class);
+		List<MultimediaContent> list = mongoTemplate.find(query, MultimediaContent.class);
+		for(MultimediaContent mc : list) {
+			removeMultimediaContent(ownerId, mc.getObjectId());
+		}
+	}
+	
+	public void removeMultimediaContentByLegId(String ownerId, String legId) {
+		Query query = new Query(new Criteria("legId").is(legId)
+				.and("ownerId").is(ownerId));
+		List<MultimediaContent> list = mongoTemplate.find(query, MultimediaContent.class);
+		for(MultimediaContent mc : list) {
+			removeMultimediaContent(ownerId, mc.getObjectId());
+		}
 	}
 	
 	public void saveMultimediaContent(MultimediaContent content) {
@@ -1415,6 +1430,12 @@ public class RepositoryManager {
 		query.with(new Sort(Sort.Direction.ASC, "position"));
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
+	}
+	
+	public long getMultimediaContentNumberByLeg(String ownerId, String itineraryLegId) {
+		Query query = new Query(Criteria.where("legId").is(itineraryLegId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.count(query, MultimediaContent.class);
 	}
 
 	public List<MultimediaContent> getMultimediaContentByReferenceId(String contentId) {

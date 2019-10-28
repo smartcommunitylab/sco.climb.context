@@ -84,6 +84,11 @@
     <script src="js/services/imgur-service.js"></script>
     <script src="js/services/createDialog.js"></script>
     <script src="js/services/permissions-service.js"></script>
+
+    <!-- stylesheet for ng-tags-input -->
+    <link rel="stylesheet" href="css/ng-tags-input.min.css" />
+    <!-- js for  ng-tags-input -->
+    <script src="lib/ng-tags-input.min.js"></script>
 </head>
 
 <body>
@@ -92,4 +97,14 @@
     <script src="lib/bootstrap.min.js"></script>
 </body>
 
+<script type="text/ng-template" id="custom-tags-template">
+      <div class="tag-template">
+        <div>
+          <span>{{$getDisplayText()}}</span>
+					<span ng-if="data.schoolYear" style="font-size:smaller;"> - {{data.schoolYear}}</span>
+          <a class="remove-button" ng-click="$removeTag()">&#10006;</a>
+        </div>
+      </div>
+</script>
+  
 </html>

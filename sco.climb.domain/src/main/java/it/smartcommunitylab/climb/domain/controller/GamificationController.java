@@ -930,7 +930,7 @@ public class GamificationController extends AuthController {
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("uploadPedibusItineraryLegLinkFile: %s - %s - %s", ownerId, legId, url));
 		}
-		return url;
+		return "{\"link\":\"" + url + "\"}";
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)
@@ -980,6 +980,9 @@ public class GamificationController extends AuthController {
 		try {
 			List<PedibusItineraryLeg> result = storage.getPedibusItineraryLegsByGameId(ownerId, 
 					pedibusGameId, itineraryId);
+			for(PedibusItineraryLeg leg : result) {
+				leg.setMultimediaContents(storage.getMultimediaContentNumberByLeg(ownerId, leg.getObjectId()));
+			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("getPedibusItineraryLegs[%s]: %s", ownerId, result.size()));
 			}

@@ -5,6 +5,7 @@
             data-ng-click="resetError()">&times;</a>
             {{errorMsg}}
         </div>
+        <div class="spinner" ng-show="loading"><div class="loader" ></div></div>
         <div class="row" ng-if="!imageResults && !ytResults && !wikiResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale sul motore di ricerca senza uscire dalla console.</p>
         </div>
@@ -20,7 +21,7 @@
                     </tr>
                     <tr class="info">
                         <td>
-                            <select class="form-control" ng-model="$parent.searchtype" ng-change="searchOnEngine()">
+                            <select class="form-control" ng-model="$parent.searchtype" >
                                 <option value="image">Immagini</option>
                                 <option value="video">Video</option>
                                 <option value="wikipedia">Wikipedia</option>
@@ -66,8 +67,8 @@
         <!-- search type image -->
         <div class="row" id="imageContentList" ng-if="$parent.searchtype == 'image'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults">
-                    <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="image in imageResults track by $index">
+                    <input type="checkbox" ng-model="image.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(image.selectedToAdd, $index)">
                     <a ng-href="{{image.link}}" target="_blank" class="col-md-3" style="max-width: 98%; max-height: 98%;">
                         <img ng-src="{{image.image.thumbnailLink}}" style="max-width: 98%; max-height: 98%;">
                         <!-- <div class="multimedia-size-label">{{image.image.width}}x{{image.image.height}}</div> -->
@@ -101,11 +102,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4 selectedRowCol">
-                                        <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                        <p class="tab selectedText"> <b> Etichetta il materiale </b></p>
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
+                                            <div class="selected-items-box" ng-click="materialeListToggle($index)">Discipline <span class="downArrow"></span></div>
                                             <div class="list" id="materiale{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="s in image.subjects">
@@ -118,7 +119,7 @@
                                     </div>
                                     <div class="col-sm-4 selectedRowCol">
                                         <div class="wrapper dropdownSelectedClass">
-                                            <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
+                                            <div class="selected-items-box" ng-click="classListToggle($index)">Classi <span class="downArrow"></span></div>
                                             <div class="list" id="classe{{$index}}">
                                                 <ul class="items-list">
                                                     <li ng-repeat="sy in image.schoolYears">
@@ -139,8 +140,8 @@
         <!-- search type video -->
         <div class="row" id="videoContentList" ng-if="$parent.searchtype == 'video'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults">
-                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="video in ytResults track by $index">
+                    <input type="checkbox" ng-model="video.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(video.selectedToAdd, $index)">
                     <a href="https://www.youtube.com/watch?v={{video.id.videoId}}" target="_blank" class="col-md-3 contentRowPadding multimedia-yt-video" style="max-width: 98%; max-height: 98%;">
                         <img ng-src="{{video.snippet.thumbnails.default.url}}" style="max-width: 98%; max-height: 98%;">
                     </a>
@@ -171,7 +172,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4 selectedRowCol">
-                                            <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                            <p class="tab selectedText"> <b> Eticchetta il materiale </b></p>
                                         </div>
                                         <div class="col-sm-4 selectedRowCol">
                                             <div class="wrapper dropdownSelectedClass">
@@ -210,8 +211,8 @@
         <!-- search type wikipedia -->
         <div class="row" id="wikiContentList" ng-if="$parent.searchtype == 'wikipedia'">
             <ul class="list-group">
-                <li class="list-group-item col-md-12 v-center" ng-repeat="result in wikiResults">
-                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd)">
+                <li class="list-group-item col-md-12 v-center" ng-repeat="(key,result) in wikiResults track by $index">
+                    <input type="checkbox" ng-model="result.selectedToAdd" class="col-md-1 multimedia-add-checkbox" ng-change="updateTotalCounter(result.selectedToAdd, key)">
                     <a ng-href="{{result.link}}" target="_blank" class="col-md-3 contentRowPadding">
                         <!-- <div class="defaultImage" ></div> -->
                         <img ng-src="img/link.png" style="max-width: 98%; max-height: 98%;">
@@ -240,7 +241,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4 selectedRowCol">
-                                            <p class="tab selectedText"> <b> Elicchetta il materiale </b></p>
+                                            <p class="tab selectedText"> <b> Eticchetta il materiale </b></p>
                                         </div>
                                         <div class="col-sm-4 selectedRowCol">
                                             <div class="wrapper dropdownSelectedClass">

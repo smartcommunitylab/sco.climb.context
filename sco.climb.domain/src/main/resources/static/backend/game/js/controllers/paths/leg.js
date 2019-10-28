@@ -6,13 +6,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.searchtype = [];
     $scope.searchdistance = null;
     $scope.searchlocalschool = false;
-    $scope.classes=[];
-	$scope.schoolYears=[];
-    $scope.subjects=[];
-    $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
-    $scope.selectedClasses = [];
-    $scope.selectedSubject = [];
-    $scope.selectedSchoolYear = [];
+    
 
     $scope.classListToggle = function(dropdownID){
         $('#classID'+dropdownID).slideToggle('fast');
@@ -108,6 +102,13 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     }
 
     $scope.initController = function() {
+        $scope.classes=[];
+        $scope.schoolYears=[];
+        $scope.subjects=[];
+        $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
+        $scope.selectedClasses = [];
+        $scope.selectedSubject = [];
+        $scope.selectedSchoolYear = [];
         if ($stateParams.idLeg) { //edit path
         	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
@@ -121,7 +122,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                     $scope.searchtype.push(
                         {searchtype:'Immagini',value:'image',selected:false},
                         {searchtype:'Video',value:'video',selected:false},
-                        {searchtype:'Wikipedia',value:'wikipedia',selected:false});
+                        {searchtype:'Collegamento a pagina web',value:'link',selected:false},
+                        {searchtype:'File',value:'file',selected:false});
                     //$scope.classes=response.data.classes;
                     angular.forEach(response.data.classes, function(value, key){
                         $scope.classes.push({class:value,selected:false});
@@ -139,56 +141,55 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             );
             //get multimedia content
-            DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, 
-            		$stateParams.idPath, $stateParams.idLeg).then(
-            		function(response) {
-            			if(response.data) {
-                            $scope.leg.externalUrls = response.data;
-                            $scope.legsAllTags=angular.copy(response.data);
-            				$scope.leg.externalUrls.forEach(function(element, key) {
-            					if (element.type == 'video') {
-                                    element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
-                                }
-                            });
-                            $scope.legsAllTags.forEach(function(element, key) {
-                                element.classes=angular.copy($scope.classes);
-                                angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
-                                    element.classes.forEach(function(value3, key3) {
-                                        if(value3.class == trueVal){
-                                            element.classes[key3].selected=true;
-                                        }
-                                    });
-                                });
-
-                                element.schoolYears=angular.copy($scope.schoolYears);
-                                angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
-                                    element.schoolYears.forEach(function(value3, key3) {
-                                        if(value3.schoolYear == trueVal){
-                                            element.schoolYears[key3].selected=true;
-                                        }
-                                    });
-                                });
-
-                                element.subjects=angular.copy($scope.subjects);
-                                angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
-                                    element.subjects.forEach(function(value3, key3) {
-                                        if(value3.subject == trueVal){
-                                            element.subjects[key3].selected=true;
-                                        }
-                                    });
+            DataService.getMultimediaContent($stateParams.idDomain, $stateParams.idGame, $stateParams.idPath, $stateParams.idLeg).then(
+                function(response) {
+                    if(response.data) {
+                        $scope.leg.externalUrls = response.data;
+                        $scope.legsAllTags=angular.copy(response.data);
+                        $scope.leg.externalUrls.forEach(function(element, key) {
+                            if (element.type == 'video') {
+                                element.youtubeThumbnail = $scope.getYoutubeImageFromLink(element.link);
+                            }
+                        });
+                        $scope.legsAllTags.forEach(function(element, key) {
+                            element.classes=angular.copy($scope.classes);
+                            angular.forEach($scope.leg.externalUrls[key].classes, function(trueVal, key2){
+                                element.classes.forEach(function(value3, key3) {
+                                    if(value3.class == trueVal){
+                                        element.classes[key3].selected=true;
+                                    }
                                 });
                             });
-                            console.log("legs with all tags::",$scope.legsAllTags)
-                            angular.forEach($scope.legsAllTags, function(val, key){
-                                $scope.checkClasses(key);
-                                $scope.checkSubjects(key);
-                                $scope.checkSchoolYears(key);
-                            })
-            			}
-            		},
-            		function(error) {
-            			alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
-            		}
+
+                            element.schoolYears=angular.copy($scope.schoolYears);
+                            angular.forEach($scope.leg.externalUrls[key].schoolYears, function(trueVal, key2){
+                                element.schoolYears.forEach(function(value3, key3) {
+                                    if(value3.schoolYear == trueVal){
+                                        element.schoolYears[key3].selected=true;
+                                    }
+                                });
+                            });
+
+                            element.subjects=angular.copy($scope.subjects);
+                            angular.forEach($scope.leg.externalUrls[key].subjects, function(trueVal, key2){
+                                element.subjects.forEach(function(value3, key3) {
+                                    if(value3.subject == trueVal){
+                                        element.subjects[key3].selected=true;
+                                    }
+                                });
+                            });
+                        });
+                        console.log("legs with all tags::",$scope.legsAllTags)
+                        angular.forEach($scope.legsAllTags, function(val, key){
+                            $scope.checkClasses(key);
+                            $scope.checkSubjects(key);
+                            $scope.checkSchoolYears(key);
+                        })
+                    }
+                },
+                function(error) {
+                    alert('Errore nel caricamento delle modalità:' + error.data.errorMsg);
+                }
             );            
             
             $scope.viewIconsModels.forEach(function(element) {
@@ -677,7 +678,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 if(response.data.type=='video'){
                     $scope.leg.externalUrls[$scope.leg.externalUrls.length-1].youtubeThumbnail = response.data.previewUrl;
                 }
-                
+                $scope.initController();
             },function(errorMsg){
                 console.log("Data not save:",errorMsg)
             }
@@ -713,6 +714,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         // $scope.leg.externalUrls.push(angular.toJson(element));
         $scope.leg.externalUrls.push(element);
+        listLeg = $scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg })
+        if(listLeg) {
+        	listLeg.multimediaContents++;
+        }
         console.log("Give Data:",element)
     };
 

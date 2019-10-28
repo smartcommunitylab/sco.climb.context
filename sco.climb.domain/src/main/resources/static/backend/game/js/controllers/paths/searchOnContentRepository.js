@@ -97,18 +97,19 @@ angular.module('consoleControllers.leg')
             $scope.searchtype.push(
                 {searchtype:'Immagini',value:'image',selected:true},
                 {searchtype:'Video',value:'video',selected:true},
-                {searchtype:'Wikipedia',value:'wikipedia',selected:true});
+                {searchtype:'Collegamento a pagina web',value:'link',selected:true},
+                {searchtype:'File',value:'file',selected:true});
 			//$scope.classes=response.data.classes;
-			angular.forEach(response.data.classes, function(value, key){
-				$scope.classes.push({class:value,selected:true});
+			angular.forEach(response.data.classes, function(item, key){
+				$scope.classes.push({value:item,selected:true});
             });
             
-			angular.forEach(response.data.schoolYears, function(value, key){
-				$scope.schoolYears.push({schoolYear:value,selected:true});
+			angular.forEach(response.data.schoolYears, function(item, key){
+				$scope.schoolYears.push({value:item,selected:true});
             });
 
-			angular.forEach(response.data.subjects, function(value, key){
-				$scope.subjects.push({subject:value,selected:true});
+			angular.forEach(response.data.subjects, function(item, key){
+				$scope.subjects.push({value:item,selected:true});
             });
 		},function(error) {
 			console.log('Errore :' , error.data.errorMsg);
@@ -135,13 +136,13 @@ angular.module('consoleControllers.leg')
         var selectedSubjects=[];
         $scope.subjects.forEach(e => {
             if(e.selected){
-                selectedSubjects.push(e.subject);
+                selectedSubjects.push(e.value);
             }
         });
         var selectedSchoolYears=[];
         $scope.schoolYears.forEach(e=>{
             if(e.selected){
-                selectedSchoolYears.push(e.schoolYear);
+                selectedSchoolYears.push(e.value);
             }
         });
         console.log("$scope.searchtext",$scope.searchtext)
@@ -150,25 +151,26 @@ angular.module('consoleControllers.leg')
                 selectedSearchtype,
                 selectedSubjects, selectedSchoolYears).then(
                 function(response) {
+                    console.log("response.data;",response.data)
                     response.data.forEach(element => {
-                        switch (element.type) {
+                        switch (element.referenceContent.type) {
                             case 'image':
-                                element.referenceImg = element.link;
+                                element.referenceContent.referenceImg = element.referenceContent.link;
                                 break;
                             case 'video':
-                                var youtubeThumbnail = getYoutubeImageFromLink(element.link);
+                                var youtubeThumbnail = getYoutubeImageFromLink(element.referenceContent.link);
                                 if (youtubeThumbnail) {
-                                    element.referenceImg = youtubeThumbnail;
-                                    element.isYoutubeVideo = true;
+                                    element.referenceContent.referenceImg = youtubeThumbnail;
+                                    element.referenceContent.isYoutubeVideo = true;
                                 } else {
-                                    element.referenceImg = "img/video.png";
+                                    element.referenceContent.referenceImg = "img/video.png";
                                 }                                
                                 break;
                             case 'link':
-                                element.referenceImg = "img/link.png";
+                                element.referenceContent.referenceImg = "img/link.png";
                                 break;
                             case 'file':
-                              element.referenceImg = "img/file.png";
+                              element.referenceContent.referenceImg = "img/file.png";
                               break;
                         }
                     });          
@@ -176,17 +178,21 @@ angular.module('consoleControllers.leg')
                     $scope.noResults = response.data.length == 0;
                     //change the formet of array classes, schoolYears, subjects. because of the selection option
                     $scope.contentResults.forEach(e=>{
-                        angular.forEach(e.referenceContent.classes, function(value, key){
-                            e.referenceContent.classes[key]={class:value,selected:false};
+                    	e.referenceContent.selectedClasses = [];
+                        angular.forEach($scope.classes, function(item, key){
+                            e.referenceContent.selectedClasses[key]={value:item.value,selected:true};
                         });
-                        angular.forEach(e.referenceContent.schoolYears, function(value, key){
-                            e.referenceContent.schoolYears[key]={schoolYear:value,selected:false};
+                        e.referenceContent.selectedSchoolYears = [];
+                        var i=0;
+                        angular.forEach($scope.schoolYears, function(item, key){
+                            e.referenceContent.selectedSchoolYears[key]={value:item.value,selected:true};
                         });
-                        angular.forEach(e.referenceContent.subjects, function(value, key){
-                            e.referenceContent.subjects[key]={subject:value,selected:false};
+                        e.referenceContent.selectedSubjects = [];
+                        var j=0;
+                        angular.forEach($scope.subjects, function(item, key){
+                            e.referenceContent.selectedSubjects[key]={value:item.value,selected:true};
                         })
-                    });
-                    console.log("contentResults:",$scope.contentResults); 
+                    }); 
                 }, function() {
                 }
         );
@@ -197,23 +203,23 @@ angular.module('consoleControllers.leg')
             if (element.selectedToAdd) {
                 var selectedClasses=[];
                 countSeletedItem++;
-                element.referenceContent.classes.forEach(e => {
+                element.referenceContent.selectedClasses.forEach(e => {
                     if(e.selected){
-                        selectedClasses.push(e.class)
+                        selectedClasses.push(e.value)
                     }
                 });
 
                 var selectedSchoolYears=[];
-                element.referenceContent.schoolYears.forEach(e=>{
+                element.referenceContent.selectedSchoolYears.forEach(e=>{
                     if(e.selected){
-                        selectedSchoolYears.push(e.schoolYear)
+                        selectedSchoolYears.push(e.value)
                     }
                 });
 
                 var selectedSubjects=[];
-                element.referenceContent.subjects.forEach(e => {
+                element.referenceContent.selectedSubjects.forEach(e => {
                     if(e.selected){
-                        selectedSubjects.push(e.subject);
+                        selectedSubjects.push(e.value);
                     }
                 });
                 addElementsFunction(element.referenceContent.name, element.referenceContent.link, element.referenceContent.type, 
@@ -249,6 +255,13 @@ angular.module('consoleControllers.leg')
     $scope.changePage = function(newPageNumber, oldPageNumber) {
     	var el = document.getElementById('contentList');
     	el.scrollTop = 0;
+    }
+    $scope.getListText = function(list) {
+        var text = '';
+    	for(var i=0; i<list.length; i++) {
+    		text = text + list[i] + ", "
+    	}
+    	return text.substring(0, text.length - 2)
     }
     
 });

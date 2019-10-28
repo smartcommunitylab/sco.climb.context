@@ -49,22 +49,17 @@ angular.module('consoleControllers.mainCtrl', [])
 
         $scope.showRegi = false;
         $scope.showNoti = false;
-        $scope.acceptTerms = function(){
+        $scope.acceptTerms = function() {
             //call api "/console/user/accept-terms" to accept
-            DataService.updateTerms();
-            MainDataService.getDomains().then(function (p) {
-                $scope.profile = p;
-                PermissionsService.setProfilePermissions($scope.profile.roles);
-
-                if ($scope.profile.ownerIds.length == 1) {
-                    MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
-                    $scope.selectedOwner = $scope.profile.ownerIds[0];
-                    $scope.loadInstitutesList($scope.profile.ownerIds[0]);
-                }
-                $state.go('root.institutes-list');
-            });
+          DataService.updateTerms().success(function (data) {
+          	$window.location.href = $location.$$absUrl.replace($location.$$path,'');
+          	$window.location.reload();
+          }).error(function(error) {
+          	$scope.errorMsg = error.errorMsg;
+          });
         }
-        $scope.userRegistration = function(){
+        
+        $scope.userRegistration = function() {
             //call api "//public/api/registration" to registration
             var data = {
                 "cf":$scope.normalProfile.cf,
@@ -84,31 +79,27 @@ angular.module('consoleControllers.mainCtrl', [])
                 $scope.errorMsg = error.errorMsg;
             });
         }
-        MainDataService.getDomains().then(function (p) {
-            //$scope.profile = p;
+        
+        $scope.init = function() {
+          MainDataService.getDomains().then(function (p) {
             $scope.normalProfile = p;
-            if(p.termUsage == null){
-                $state.go('root.registration');
+            if(!p.ownerIds || (p.ownerIds.length == 0)) {
+            	var baseUrl = DataService.getBaseUrl();
+            	$window.location.href = baseUrl + '/public/registration.html';
             }
             else if(!p.termUsage.acceptance){
-                // window.location.href = '../game/templates/terms.html';
                 $state.go('root.terms');
             }else if(p.termUsage.acceptance){
                 $scope.profile = p;
                 PermissionsService.setProfilePermissions($scope.profile.roles);
-
                 if ($scope.profile.ownerIds.length == 1) {
                     MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
                     $scope.selectedOwner = $scope.profile.ownerIds[0];
                     $scope.loadInstitutesList($scope.profile.ownerIds[0]);
-                }
-                
+                }  
             }
-            // else{
-            //     $state.go('root.registration');
-            // }
-            
-        });
+          });
+        }
 
         $scope.loadInstitutesList = function(owner) {
             if (!owner) return;
@@ -131,6 +122,7 @@ angular.module('consoleControllers.mainCtrl', [])
                 }
             });  
         };
+        
         $scope.loadGames = function(school) {
             if (!school) return;
             $scope.gamesConfigs = [];
@@ -143,6 +135,7 @@ angular.module('consoleControllers.mainCtrl', [])
             });
             // $scope.reloadGamesConfig(school.objectId);
         };
+        
         $scope.loadItineraries = function(game) {
             if (!game) return;          
             MainDataService.getItineraries(game.objectId).then(function (response) {
@@ -178,6 +171,8 @@ angular.module('consoleControllers.mainCtrl', [])
         $scope.exportPaths = function () {
             window.open('console/exportexcel', '_blank');
         };
+        
+        $scope.init();
 
     }
 );

@@ -1,66 +1,3 @@
-<!-- <div>
-    <div class="modal-body">
-    		
-        <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
-            <a class="close" data-hide="alert" aria-label="close"
-            data-ng-click="resetError()">&times;</a>
-            {{errorMsg}}
-        </div>
-        
-        <div class="add-media field">
-            <p><b>Titolo:</b></p>
-            <input class="form-control" type="text" ng-model="newMedia.name" />
-        </div>
-        <div class="add-media field">
-            <p><b>Tipologia:</b></p>
-            <select class="form-control" ng-model="newMedia.type">
-                <option value="image">Immagine</option>
-                <option value="video">Video</option>
-                <option value="link">Collegamento a pagina web</option>
-                <option value="file">File</option>
-            </select>
-        </div>
-        <div class="add-media field">
-            <p><b>URL:</b> <span class="required-sign">*</span></p>
-            <input type="url" class="form-control" ng-model="newMedia.link" required/>
-        </div>
-        <div class="wrapper">
-            <p>
-                <b>Tags:</b>
-                <b ng-repeat="tag in tags | filter: getSelectedtags" >
-                    {{tag.name}}
-                </b>
-            </p>
-            <div class="selected-items-box" ng-click="tagListToggle()">
-                --- Select tags ---
-                <span class="dropdown-icon"></span>
-            </div>
-            <div class="list">
-                <ul class="items-list">
-                  <li ng-repeat="tag in tags">
-                    <input type="checkbox" class='' ng-model="tag.selected" />
-                    <span>{{tag.name}}</span>
-                  </li>
-                </ul>
-            </div>
-        </div>
-
-        <div ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
-            <div class="field add-media">
-                <p>oppure scegli e carica un file. I file saranno ad accesso pubblico; devono essere privi di copyright e rispettare...:<p> 
-                <p>{{file.filename ? file.filename : 'Nessun file selezionato'}}</p>
-                <span ng-disabled="loading" class="btn btn-info btn-file btn-margin">
-                Scegli file <input type="file" id="upload-content-file" base-sixty-four-input ng-model="file" />
-                </span>
-                <button ng-disabled="!file" ng-click="uploadFile()" class="btn btn-info">
-                	<span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
-                	Carica
-                </button>
-                <p></p>
-            </div>
-        </div>
-    </div>
-</div> -->
 <div class="container container-dialog"> 
     <div id="error" class="alert alert-danger fade in" data-ng-show="errorMsg">
         <a class="close" data-hide="alert" aria-label="close"
@@ -72,7 +9,7 @@
         <tr class="info">
           <td>
             <div>
-                <p><span class="required-sign">*</span><span class="tab"></span> 1. Iserisci il titolo del materiale</p>
+                <p><span class="required-sign">*</span><span class="tab"></span> 1. Iserisci il <strong>titolo</strong> del materiale</p>
             </div>
           </td>
           <td>
@@ -82,7 +19,7 @@
         <tr class="info">
           <td>
             <div>
-                <p><span class="required-sign">*</span><span class="tab"></span> 2. Seleziona la tipologia del materiale</p>
+                <p><span class="required-sign">*</span><span class="tab"></span> 2. Seleziona la <strong>tipologia</strong> del materiale</p>
             </div>
           </td>
           <td>
@@ -104,7 +41,7 @@
                         <tr class="info">
                             <td colspan="2">
                                 <div>
-                                    <p><span class="required-sign">*</span> <span class="tab"></span> 3.a) Inserisci I'indirizzo web (URL)</p>
+                                    <p><span class="required-sign">*</span> <span class="tab"></span> 3.a) Inserisci I'indirizzo web (<strong>URL</strong>)</p>
                                 </div>
                             </td>
                             <td >
@@ -132,8 +69,9 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr ng-show="(newMedia.type == 'image') || (newMedia.type == 'file')">
-                            <td colspan="3"><p class="cBlue-text tab"> <b>Attenzione!</b> I file devono essere privi de copyright e rispattare la legge sul trattamento dei dati personali.</p></td>
+                        <tr>
+                            <td></td>
+                            <td colspan="2"><p class="cBlue-text tab"> <b>Attenzione!</b> I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</p></td>
                         </tr>
                     </tbody>
                 </table>
@@ -141,18 +79,12 @@
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p class="tab"> 4. <b> La Classi</b> che potranno vedere il materiale dalle Console de Gioco.</p>
+                <p class="tab"> 4. <b> La Classi</b> che potranno vedere il materiale dalla Console di Gioco.</p>
                  
                 <div class="tab"> 
                     <label class="checkbox-inline" ng-repeat="c in classes">
                         {{c.class}}<input type="checkbox" class="cbStyle" ng-model="c.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
             </td>
         </tr>
@@ -167,18 +99,14 @@
                     </select>
                 </p>
                 <div>
-                    <p class="tab">  Il materiale sara ad accesso pubblico. Chiunque in possesso del link pubblico del gioco lo potra vedere.</p>
+                    <p class="tab smaller">Il materiale sarà ad accesso pubblico. Chiunque in possesso del link pubblico del gioco lo potra vedere.</p>
                 </div>
             </td>
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
                 <p class="tab">
-                    6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca gia utilizzati."
-                    <!-- <select class="form-control dropdownCondiviso"  ng-model="sharable">
-                        <option value="si" >Condiviso</option>
-                        <option value="no">No</option>
-                    </select> -->
+                    6. <b> Condividi </b> il materiale. Permetterai di trovalo con la funzione "Cerca già utilizzati".
                     <select class="form-control dropdownCondiviso" 
                         ng-model="sharable"
                         ng-options="o.v as o.n for o in [{ n: 'Condiviso', v: true }, { n: 'No', v: false }]"
@@ -189,7 +117,7 @@
         </tr>
         <tr class="info">
             <td colspan="2" class="round-td">
-                <p class="tab"> 7. <b> Elicchetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca gia utilizzati."</p>
+                <p class="tab"> 7. <b> Etichetta </b> il materiale. Aiuterai a trovalo con la funzione "Cerca già utilizzati".</p>
                 <br>
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
@@ -197,15 +125,6 @@
                     <label class="checkbox-inline" ng-repeat="s in subjects">
                         {{s.subject}}<input type="checkbox" class="cbStyle" ng-model="s.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 1
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
                 <br>
                 <div class="tab"> 
@@ -214,15 +133,6 @@
                     <label class="checkbox-inline" ng-repeat="sy in schoolYears">
                         {{sy.schoolYear}}<input type="checkbox" class="cbStyle" ng-model="sy.selected">
                     </label>
-                    <!-- <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 1
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="checkBoxStyle" value=""> 3
-                    </label> -->
                 </div>
             </td>
         </tr>

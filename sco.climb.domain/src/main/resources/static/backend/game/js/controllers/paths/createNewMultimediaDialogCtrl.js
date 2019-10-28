@@ -18,15 +18,15 @@ angular.module('consoleControllers.leg')
 			console.log("tags::",response)
 			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
-				$scope.classes.push({class:value,selected:false});
+				$scope.classes.push({class:value,selected:true});
 			});
 			// $scope.schoolYears=response.data.schoolYears;
 			angular.forEach(response.data.schoolYears, function(value, key){
-				$scope.schoolYears.push({schoolYear:value,selected:false});
+				$scope.schoolYears.push({schoolYear:value,selected:true});
 			});
 			// $scope.subjects=response.data.subjects;
 			angular.forEach(response.data.subjects, function(value, key){
-				$scope.subjects.push({subject:value,selected:false});
+				$scope.subjects.push({subject:value,selected:true});
 			});
 		},function(error) {
 			console.log('Errore :' , error.data.errorMsg);

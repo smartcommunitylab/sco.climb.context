@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.domain.model.Marker;
+import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
@@ -114,6 +115,7 @@ public class JsonConverter {
 	public boolean storePedibusItineraryLeg(String ownerId, String instituteId, String schoolId, 
 			Reader reader) {
 		try {
+			MultimediaContentTags contentTags = storage.getMultimediaContentTags();
 			JsonParser jp = jsonFactory.createParser(reader);
 			JsonToken current;
 			current = jp.nextToken();
@@ -131,6 +133,8 @@ public class JsonConverter {
 						List<MultimediaContent> contents = parseMultimediaContent(ownerId, instituteId, schoolId, 
 								leg, rootNode);
 						for(MultimediaContent content : contents) {
+							content.getSubjects().addAll(contentTags.getSubjects());
+							content.getSchoolYears().addAll(contentTags.getSchoolYears());
 							storage.saveMultimediaContent(content);
 						}
 					}					

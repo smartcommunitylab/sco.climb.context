@@ -629,6 +629,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 
 .cal-interactive-button {
   color: #F39C12;
+  cursor: pointer;
 }
 
 .first-row-button {
@@ -782,7 +783,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .stats .table .content {
   height: 420px;
 }
-
+/**** previous stats color */
 .stats .table .mode-zeroImpact_solo .header {
   background-color: #ef5350;
 }
@@ -833,6 +834,67 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .stats .table .bonus .content {
   color: #29b6f6;
 }
+/**** end previous stats color */
+/**** current stats color */
+.stats .table .mode-walkPlusPedibus .header {
+  background-color: #A8E206;
+}
+
+.stats .table .mode-bike .header {
+  background-color: #01C86E;
+}
+
+.stats .table .mode-bus .header {
+  background-color: #FFE600;
+}
+
+.stats .table .mode-carpooling .header {
+  background-color: #FF7F00;
+}
+
+.stats .table .mode-pandr .header {
+  background-color: #0074FF;
+}
+
+.stats .table .bonus .header {
+  background-color: #29b6f6;
+}
+
+.stats .table .mode-walkPlusPedibus .content {
+  color: #A8E206;
+}
+
+.stats .table .mode-bike .content {
+  color: #01C86E;
+}
+.stats .table .mode-bike .content >div>i.blackFoot::before{
+  content: '\e90b';
+  color: #01C86E;
+  position: absolute;
+  width: 8px;
+  overflow: hidden;
+}
+.stats .table .mode-bike .content >div>i.blackFoot::after {
+  content: '\e90b';
+  color: rgba(0,0,0,0.87);
+}
+
+.stats .table .mode-bus .content {
+  color: #FFE600;
+}
+
+.stats .table .mode-carpooling .content {
+  color: #FF7F00;
+}
+
+.stats .table .mode-pandr .content {
+  color: #0074FF;
+}
+
+.stats .table .bonus .content {
+  color: #29b6f6;
+}
+/**** end current stats color */
 
 
 /* Excursions */

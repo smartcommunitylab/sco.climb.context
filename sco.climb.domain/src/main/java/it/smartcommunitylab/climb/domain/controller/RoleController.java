@@ -190,6 +190,8 @@ public class RoleController extends AuthController {
 		auth = new Authorization();
 		auth.getActions().add(Const.AUTH_ACTION_READ);
 		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
+		auth.getActions().add(Const.AUTH_ACTION_ADD);
+		auth.getActions().add(Const.AUTH_ACTION_DELETE);
 		auth.setRole(Const.ROLE_GAME_EDITOR);
 		auth.setOwnerId(ownerId);
 		auth.setInstituteId(instituteId);

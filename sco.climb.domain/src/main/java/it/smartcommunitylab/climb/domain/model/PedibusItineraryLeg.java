@@ -3,6 +3,8 @@ package it.smartcommunitylab.climb.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.Transient;
+
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 public class PedibusItineraryLeg extends BaseObject implements Comparable<PedibusItineraryLeg> {
@@ -18,6 +20,9 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private String transport;
 	private String icon;
 	private List<Marker> additionalPoints = new ArrayList<Marker>();
+	
+	@Transient
+	private long multimediaContents;
 	
 	public String getName() {
 		return name;
@@ -95,5 +100,11 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setAdditionalPoints(List<Marker> additionalPoints) {
 		this.additionalPoints = additionalPoints;
+	}
+	public long getMultimediaContents() {
+		return multimediaContents;
+	}
+	public void setMultimediaContents(long multimediaContents) {
+		this.multimediaContents = multimediaContents;
 	}
 }
