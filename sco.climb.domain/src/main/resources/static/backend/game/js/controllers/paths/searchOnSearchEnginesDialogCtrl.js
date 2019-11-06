@@ -4,6 +4,7 @@ angular.module('consoleControllers.leg')
     
     $scope.errorMsg;
     $scope.searchtype = 'image';
+    $scope.lastSearchtype = '';
     $scope.totalCounter = 0;
     $scope.classes=[];
 	$scope.schoolYears=[];
@@ -82,19 +83,21 @@ angular.module('consoleControllers.leg')
                         var el = document.getElementById('wikiContentList');
                         el.scrollTop = 0;
                         //check selected before
-                        angular.forEach($scope.wikiResults, function(e_wr, k_wr){
-                            //if it's have same link then store from wikiResultSelected
-                            angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
-                                if(e_wr.link == e_wrs.link){
-                                    $scope.wikiResults[k_wr]=e_wrs;
+                            angular.forEach($scope.wikiResults, function(e_wr, k_wr){
+                                //if it's have same link then store from wikiResultSelected
+                                if($scope.lastSearchtype == $scope.searchtype){
+                                    angular.forEach($scope.wikiResultSelected, function(e_wrs,k_yrs){
+                                        if(e_wr.link == e_wrs.link){
+                                            $scope.wikiResults[k_wr]=e_wrs;
+                                        }
+                                    });
                                 }
+                                //store tags
+                                if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
+                                if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
+                                if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
                             });
-                            
-                            //store tags
-                            if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
-                            if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
-                            if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
-                        });
+                        $scope.lastSearchtype = $scope.searchtype;
                     }else{
                         $scope.loading = false;
                         $scope.errorMsg="scusa, nessun dato trovato";
@@ -121,16 +124,19 @@ angular.module('consoleControllers.leg')
                         //check selected before
                         angular.forEach($scope.ytResults, function(e_yr, k_yr){
                             //if it's have same link then store from ytResultSelected
-                            angular.forEach($scope.ytResultSelected, function(e_yrs,k_yrs){
-                                if(e_yr.snippet.thumbnails.default.url == e_yrs.snippet.thumbnails.default.url){
-                                    $scope.ytResults.splice(k_yr, 1, e_yrs);
-                                }
-                            });
+                            if($scope.lastSearchtype == $scope.searchtype){
+                                angular.forEach($scope.ytResultSelected, function(e_yrs,k_yrs){
+                                    if(e_yr.snippet.thumbnails.default.url == e_yrs.snippet.thumbnails.default.url){
+                                        $scope.ytResults.splice(k_yr, 1, e_yrs);
+                                    }
+                                });
+                            }
                             //store tags
                             if(!e_yr.classes){e_yr.classes=angular.copy($scope.classes);}
                             if(!e_yr.schoolYears){e_yr.schoolYears=angular.copy($scope.schoolYears);}
                             if(!e_yr.subjects){e_yr.subjects=angular.copy($scope.subjects);}
                         });
+                        $scope.lastSearchtype = $scope.searchtype;
                     }else{
                         $scope.loading = false;
                         $scope.errorMsg="scusa, nessun dato trovato";
@@ -163,14 +169,18 @@ angular.module('consoleControllers.leg')
                         //check selected before
                         angular.forEach($scope.imageResults, function(e_ir, k_ir){
                             //if it's have same link then store from imageResultSelected
-                            angular.forEach($scope.imageResultSelected, function(e_irs,k_irs){
-                                if(e_ir.link == e_irs.link){$scope.imageResults.splice(k_ir, 1, e_irs);}
-                            });
+                            if($scope.searchtype == $scope.lastSearchtype){
+                                angular.forEach($scope.imageResultSelected, function(e_irs,k_irs){
+                                    if(e_ir.link == e_irs.link){$scope.imageResults.splice(k_ir, 1, e_irs);}
+                                });
+                            }
                             //store tags
                             if(!e_ir.classes){e_ir.classes=angular.copy($scope.classes);}
                             if(!e_ir.schoolYears){e_ir.schoolYears=angular.copy($scope.schoolYears);}
                             if(!e_ir.subjects){e_ir.subjects=angular.copy($scope.subjects);}
                         });
+                        
+                        $scope.lastSearchtype = $scope.searchtype;
                     }else{
                         $scope.loading = false;
                         $scope.errorMsg="scusa, nessun dato trovato";

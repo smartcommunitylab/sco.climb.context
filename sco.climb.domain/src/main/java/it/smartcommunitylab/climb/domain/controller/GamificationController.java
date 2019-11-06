@@ -1311,6 +1311,7 @@ public class GamificationController extends AuthController {
 				content.setType(mcToClone.getType());
 				content.setLink(mcToClone.getLink());
 				content.setGeocoding(mcToClone.getGeocoding());
+				content.setClasses(game.getClassRooms());
 				content.setSubjects(mcToClone.getSubjects());
 				content.setSchoolYears(mcToClone.getSchoolYears());
 				content.setPreviewUrl(mcToClone.getPreviewUrl());

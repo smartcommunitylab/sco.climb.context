@@ -8,7 +8,7 @@
         <!-- ***before search***  -->
         <div class="row" ng-if="!contentResults">
             <p class="tab cBlue-text">Ricerca del materiale multimediale utilizzato in precedenza in altri percorsi.</p>
-            <p class="tab">Inserisci uno o piu paprametri e avvia la ricerca. </p>
+            <p class="tab">Inserisci uno o piu parametri e avvia la ricerca. </p>
         </div>
         <div class="row" ng-if="!contentResults">
             <table class="table tableSearchEngines" >
@@ -131,7 +131,7 @@
                                 <ul class="items-list">
                                     <li ng-repeat="s in subjects">
                                         <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects()"/>
-                                        <span>{{s.subject}}</span>
+                                        <span>{{s.value}}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -150,7 +150,7 @@
                                 <ul class="items-list">
                                     <li ng-repeat="sy in schoolYears">
                                         <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears()"/>
-                                        <span>{{sy.schoolYear}}</span>
+                                        <span>{{sy.value}}</span>
                                     </li>
                                 </ul>
                             </div>
