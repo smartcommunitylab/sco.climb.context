@@ -82,7 +82,7 @@
                 <p class="tab"> 4. <b> La Classi</b> che potranno vedere il materiale dalla Console di Gioco.</p>
                  
                 <div class="tab"> 
-                    <label class="checkbox-inline" ng-repeat="c in classes">
+                    <label class="checkbox-inline tagsCheckboxList" ng-repeat="c in classes">
                         {{c.class}}<input type="checkbox" class="cbStyle" ng-model="c.selected">
                     </label>
                 </div>
@@ -122,16 +122,18 @@
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
                     <span class="tab"></span> 
-                    <label class="checkbox-inline" ng-repeat="s in subjects">
-                        {{s.subject}}<input type="checkbox" class="cbStyle" ng-model="s.selected">
+                    <label class="checkbox-inline tagsCheckboxList" ng-repeat="s in subjects">
+                        {{s.subject}}
+                        <input type="checkbox" class="cbStyle" ng-model="s.selected">
                     </label>
                 </div>
                 <br>
                 <div class="tab"> 
                     <span ><u>Classi:</u></span> 
                     <span class="tab"></span> 
-                    <label class="checkbox-inline" ng-repeat="sy in schoolYears">
-                        {{sy.schoolYear}}<input type="checkbox" class="cbStyle" ng-model="sy.selected">
+                    <label class="checkbox-inline tagsCheckboxList" ng-repeat="sy in schoolYears">
+                        {{sy.schoolYear}}
+                        <input type="checkbox" class="cbStyle" ng-model="sy.selected">
                     </label>
                 </div>
             </td>

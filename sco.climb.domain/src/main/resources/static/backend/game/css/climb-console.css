@@ -1005,3 +1005,6 @@ hr.cBlue{
   background: white;
   opacity: 0.6;
   }  
+  .tagsCheckboxList{
+    margin-right: 15px;
+  }
