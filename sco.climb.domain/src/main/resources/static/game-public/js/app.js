@@ -52,7 +52,8 @@ angular.module('climbGame', [
         url: '/:idDomain/:idGame/:idItinerary/',
         views: {
           '@': {
-            templateUrl: 'templates/home.html'
+            templateUrl: 'templates/home.html',
+            controller: 'mapCtrlHome'
           }
         }
       })

@@ -427,6 +427,7 @@ angular.module("climbGame.controllers.map", [])
       },
       function (err) {
         //error with status
+        console.log("error:",err);
       });
     }
 
@@ -762,4 +763,12 @@ angular.module("climbGame.controllers.map", [])
       return Math.floor(number);
     }
 
+  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", function ($scope, $window, $timeout) {
+    $scope.flashPublicData = true;
+    
+    $timeout(function(){ 
+      $scope.flashPublicData=false; 
+      console.log("flashPublicData after 3sec",$scope.flashPublicData);
+    }, 3000);
+    console.log("flashPublicData",$scope.flashPublicData);
   }]);
