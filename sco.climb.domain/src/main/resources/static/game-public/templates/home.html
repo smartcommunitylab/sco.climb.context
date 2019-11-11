@@ -1,10 +1,10 @@
-<div layout="row" class="credits-banner" ng-show="flashPublicData">
+<div class="" ng-show="flashPublicData" style="height: 100%;">
   <!-- <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
   <a href="http://www.comune.trento.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_comune_TN.png"></a>
   <a href="http://www.smartcommunitylab.it/climb/" class="credit-banner"><img src="../game-dashboard/img/credits/logo_climb.png"></a>
   <a href="http://www.comune.trento.it/Aree-tematiche/Smart-city" class="credit-banner"><img src="../game-dashboard/img/credits/logo_smart_city.png"></a> -->
 
-    <md-toolbar class="desktop" md-colors="{background: 'white'}">
+    <md-toolbar style="background-color: white">
       <div class="md-toolbar-tools">
         <md-button aria-label="Go Back" class="credits-banner" flex="">
           <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
@@ -21,10 +21,41 @@
       </div>
     </md-toolbar>
   
-    <md-content flex layout-padding>
-      
+    <md-content flex layout-padding style="height: 100%;">
+      <div layout="column" layout-wrap="" style="height: 100%;">
+        <div flex="60" style="background-color: #4153a0; position: relative;">
+          <div layout="row" class="centerBanner" >
+            <div flex="20" class="credits-banner" >
+              <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
+            </div>
+            <div flex="20" class="credits-banner" >
+              <a href="http://www.comune.trento.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_comune_TN.png"></a>
+            </div>
+            <div flex="40" class="credits-banner" >
+              <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
+            </div>
+            <div flex="20" class="credits-banner" >
+              <a href="http://www.comune.trento.it/Aree-tematiche/Smart-city" class="credit-banner"><img src="../game-dashboard/img/credits/logo_smart_city.png"></a>
+            </div>
+          </div>
+        </div>
+        <div flex="40" style="position: relative;">
+          <div layout="row" class="centerBanner" >
+            <div flex="30" class="credits-banner" >
+              <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
+            </div>
+            <div flex="40" class="credits-banner" >
+              <a href="http://www.comune.trento.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_comune_TN.png"></a>
+            </div>
+            <div flex="30" class="credits-banner" >
+              <a href="http://www.smartcommunitylab.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_sco_fbk.png"></a>
+            </div>
+          </div>
+        </div>
+      </div>
   
     </md-content>
+
 </div>
 <div ng-show="!flashPublicData">
   <md-toolbar class="desktop bar-colors">
