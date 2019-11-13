@@ -40,19 +40,23 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
 
             var key;
             var idAttr = options.id ? ' id="' + options.id + '" ' : '';
-            if(options.id=="search-on-search-engines-dialog"){
+            if(options.id=="search-on-search-engines-dialog") {
                 var titleIcon='<span class="glyphicon glyphicon-search"></span>';
                 var defaultFooter ='<button class="btn btn-success" ng-click="$modalSuccess()" >{{$modalSuccessLabel}}</button>';
                 var footerTemplate = '<div class="modal-footer" ng-if="imageResults || ytResults || wikiResults">' +
                     (options.footerTemplate || defaultFooter) +
                     '</div>';             
-            }else if(options.id=="search-on-content-dialog"){
+            } else if(options.id=="search-on-content-dialog") {
                 var titleIcon='<span class="glyphicon glyphicon-search"></span>';
                 var defaultFooter ='<button class="btn btn-success" ng-click="$modalSuccess()" >{{$modalSuccessLabel}}</button>';
                 var footerTemplate = '<div class="modal-footer" ng-if="contentResults">' +
                     (options.footerTemplate || defaultFooter) +
                     '</div>';
-            }else{
+            } else if(options.id=="clone-game-dialog") {
+            	var titleIcon="";
+            	var defaultFooter ='<button class="btn btn-success" ng-disabled="!$modalHaveClasses()">{{$modalSuccessLabel}}</button>';
+              var footerTemplate = '<div class="modal-footer">' + defaultFooter + '</div>';
+            } else {
                 var titleIcon="";
                 if(options.id== "create-new-multimedia-dialog"){
                     var defaultFooter = '<span style="float:left;">I campi contrassegnati con simbolo <span class="required-sign">*</span> sono obbligatori</span>';
@@ -142,6 +146,9 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
             };
             scope.$modalSuccessLabel = options.success.label;
             scope.$modalCancelLabel = options.cancel.label;
+            scope.$modalHaveClasses = function() {
+            	return options.classes == 0 ? false : true
+            };
 
             if (options.controller) {
                 locals = angular.extend({$scope: scope}, passedInLocals);
