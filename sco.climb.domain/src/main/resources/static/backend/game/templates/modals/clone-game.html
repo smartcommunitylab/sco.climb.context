@@ -1,5 +1,7 @@
 <div>
     <div class="modal-body">
         <p>Confermi di voler clonare il percorso selezionato?</p>
+        <p>Attenzione! Controlla di aver inserito prima TUTTE le classi.</p>
+        <div ng-show="!$modalHaveClasses()">Attenzione! Nel gioco non sono state selezionate delle classi, impossibile procedere.</div>
     </div>
 </div>
