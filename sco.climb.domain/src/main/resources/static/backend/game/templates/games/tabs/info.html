@@ -55,6 +55,16 @@
         </p>
         <input class="form-control" type="text" ng-model="currentGame.shortName" ng-required="true" />
     </div>
+    <div class="col-lg-12 field">
+        <p>
+        	<span class="required-sign">*</span>
+        	<b>Sponsor:</b>
+        </p>
+        <select ng-model="currentGame.sponsorTemplate" ng-required="true" style="width: 100px;">
+        	<option value="trentino">Trentino</option>
+        	<option value="ferrara">Ferrara</option>
+        </select>
+    </div>
     <!-- checkbox for days of week -->
     <div class="col-lg-12 ">
         <label class="checkbox-inline" ng-repeat="d in currentGame.daysOfWeek track by $index">

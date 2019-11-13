@@ -1062,13 +1062,20 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 }
 
 .credits-banner {
-  height: 70px;
+  height: 60px;
 }
 .credits-banner .credit-banner {
   margin: auto;
 }
 .credits-banner .credit-banner img {
   height: 50px;
+}
+.centerBanner{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;

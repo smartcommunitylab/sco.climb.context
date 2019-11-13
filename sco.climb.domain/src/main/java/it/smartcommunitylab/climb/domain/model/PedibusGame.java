@@ -35,6 +35,7 @@ public class PedibusGame extends BaseObject {
 	 */
 	private List<Boolean> daysOfWeek = new ArrayList<>();
 	private List<String> modalities = new ArrayList<>();
+	private String sponsorTemplate;
 
 	public String getSchoolId() {
 		return schoolId;
@@ -210,6 +211,14 @@ public class PedibusGame extends BaseObject {
 
 	public void setModalities(List<String> modalities) {
 		this.modalities = modalities;
+	}
+
+	public String getSponsorTemplate() {
+		return sponsorTemplate;
+	}
+
+	public void setSponsorTemplate(String sponsorTemplate) {
+		this.sponsorTemplate = sponsorTemplate;
 	}
 
 }
