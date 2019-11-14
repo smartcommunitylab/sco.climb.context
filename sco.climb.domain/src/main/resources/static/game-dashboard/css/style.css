@@ -1070,7 +1070,41 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .credits-banner .credit-banner img {
   height: 50px;
 }
-.centerBanner{
+
+.centerBannerUp{
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerRelative{
+  position: relative;
+}
+.centerBannerFBK{
+  position: absolute;
+  width: 40%;
+  left: 50%;
+  margin-top: 30%;
+}
+.centerBannerKids{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+}
+.centerBannerAntartide{
+  position: absolute;
+  width: 40%;
+  left: -10%;
+  margin-top: 30%;
+}
+.centerBannerMetropoli{
+  position: absolute;
+  width: 70%;
+  left: 55%;
+  margin: -2% 2%;
+}
+.centerBannerDown{
   position: absolute;
   width: 90%;
   top: 50%;

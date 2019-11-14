@@ -3,7 +3,9 @@
   <a href="http://www.comune.trento.it" class="credit-banner"><img src="../game-dashboard/img/credits/logo_comune_TN.png"></a>
   <a href="http://www.smartcommunitylab.it/climb/" class="credit-banner"><img src="../game-dashboard/img/credits/logo_climb.png"></a>
   <a href="http://www.comune.trento.it/Aree-tematiche/Smart-city" class="credit-banner"><img src="../game-dashboard/img/credits/logo_smart_city.png"></a> -->
-
+  
+  <!-- Trentino -->
+  <div ng-if="sponsorTemplate == 'trentino'"  style="height: 100%;">
     <md-toolbar style="background-color: white">
       <div class="md-toolbar-tools">
         <md-button aria-label="Go Back" class="credits-banner" flex="">
@@ -20,7 +22,6 @@
         </md-button>
       </div>
     </md-toolbar>
-  
     <md-content flex layout-padding style="height: 100%;">
       <div layout="column" layout-wrap="" style="height: 100%;">
         <div flex="60" style="background-color: #4153a0; position: relative;">
@@ -53,9 +54,54 @@
           </div>
         </div>
       </div>
-  
     </md-content>
-
+  </div>
+  <!-- Ferrara -->
+  <div ng-if="sponsorTemplate == 'ferrara'"  style="height: 100%;">
+    <md-toolbar style="background-color: white">
+      <div class="md-toolbar-tools" >
+        <div aria-label="Go Back"  class="credits-banner " flex="25">
+        </div>
+        <md-button aria-label="Go Back" aria-label="Go Back" class="credits-banner " flex="25">
+          <a href="#" class="credit-banner"><img src="../game-dashboard/img/credits/comuneFerrara.jpg"></a>
+        </md-button>
+        <md-button aria-label="Go Back" aria-label="Go Back" class="credits-banner " flex="25">
+            <a href="#" class="credit-banner"><img src="../game-dashboard/img/credits/provinciaFerrara.png"></a>
+        </md-button>
+        <div aria-label="Go Back"  class="credits-banner " flex="25">
+        </div>
+      </div>
+    </md-toolbar>
+  
+    <md-content flex layout-padding style="height: 100%; padding: 0px;">
+      <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <div flex="60" style="background-color: #4153a0; position: relative;">
+          <div layout="row" class="centerBannerUp" >
+            <div flex="20" class="centerBannerRelative">
+              <a href="http://www.fbk.eu" class="centerBannerFBK"><img src="../game-dashboard/img/credits/fbk.svg" style="width: 95%;" ></a>
+            </div>
+            <div flex="60" class="centerBannerRelative">
+              <a href="#" class="centerBannerKids"><img src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+            </div>
+            <div flex="20" class="centerBannerRelative">
+              <a href="http://www.centroantartide.it" class="centerBannerAntartide"><img src="../game-dashboard/img/credits/antartide.svg" style="width: 95%;"></a>
+            </div>
+          </div>
+        </div>
+        <div flex="40" style="position: relative;">
+          <div layout="row" class="centerBannerDown" >
+            <div flex="40" class="centerBannerRelative" >
+              <a href="https://www.metropolidipaesaggio.it" class="centerBannerMetropoli"><img src="../game-dashboard/img/credits/landscapeMetropolis.png" style="width: 50%;"></a>
+            </div>
+            <div flex="60" class="credits-banner" >
+              <a href="http://www.climate-kic.org" class=""><img src="../game-dashboard/img/credits/KIC_EU.png" style="width: 50%;"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-content>
+  </div>
+  
 </div>
 <div ng-show="!flashPublicData">
   <md-toolbar class="desktop bar-colors">

@@ -88,4 +88,4 @@ angular.module('climbGame', [
       return doc.label || doc.name
     }
   }
-})
+});
