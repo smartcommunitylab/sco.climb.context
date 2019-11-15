@@ -1070,8 +1070,74 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .credits-banner .credit-banner img {
   height: 50px;
 }
-
-.centerBannerUp{
+/* for the template Trentino */
+.centerBannerUpTN{
+  position: relative;
+  background-color: #4153a0; 
+}
+.centerBannerRowUpTN{
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerUpLeftTN{
+  position: absolute;
+  width: 50%;
+  left: 50%;
+  margin-top: 20%; 
+}
+.centerBannerUpMiddleTN{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+}
+.centerBannerUpRightTN{
+  position: absolute;
+  width: 50%;
+  left: -10%;
+  margin-top: 20%;
+}
+.centerBannerDownTN{
+  position: relative; 
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownTN{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftTN{
+  position: absolute;
+  width: 45%;
+  left: 40%;
+}
+.centerBannerDownRightTN{
+  position: absolute;
+  width: 60%;
+  right: 40%;
+}
+.centerBannerRowFooterTN{
+  position: absolute;
+  width: 90%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerFooterTN{
+  position: absolute;
+  width: 60%;
+  left: 40%;
+}
+/* for the template Ferrara */
+.centerBannerUpFR{
+  background-color: #4153a0; 
+  position: relative;
+}
+.centerBannerRowUpFR{
   position: absolute;
   width: 100%;
   top: 40%;
@@ -1081,36 +1147,37 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerRelative{
   position: relative;
 }
-.centerBannerFBK{
+.centerBannerUpLeftFR{
   position: absolute;
-  width: 40%;
-  left: 50%;
-  margin-top: 30%;
+  width: 50%;
+  left: 40%;
+  margin-top: 20%;
 }
-.centerBannerKids{
+.centerBannerUpMiddleFR{
   position: absolute;
   width: 95%;
   left: 0%;
 }
-.centerBannerAntartide{
-  position: absolute;
-  width: 40%;
-  left: -10%;
-  margin-top: 30%;
-}
-.centerBannerMetropoli{
+.centerBannerUpRightFR{
   position: absolute;
   width: 70%;
-  left: 55%;
-  margin: -2% 2%;
+  right: 45%;
+  margin-top: 15%;
 }
-.centerBannerDown{
+.centerBannerDownFR{
   position: absolute;
   width: 90%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.centerBannerDownLeftFR{
+  position: absolute;
+  width: 40%;
+  left: 55%;
+  margin: -2% 2%;
+}
+
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;
   font-size: 18px;
