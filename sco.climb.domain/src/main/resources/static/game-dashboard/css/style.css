@@ -1177,7 +1177,20 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   left: 55%;
   margin: -2% 2%;
 }
-
+/* for login style */
+.loginLogoUp{
+  position: absolute;
+  width: 40%;
+  top: 25%;
+  left: 5%;
+}
+.loginLogoDown{
+  width: 50%;
+  position: absolute;
+  top: 55%;
+  left: 2%;
+}
+/*  */
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;
   font-size: 18px;
