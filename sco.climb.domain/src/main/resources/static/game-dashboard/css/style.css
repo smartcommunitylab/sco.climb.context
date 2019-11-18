@@ -1106,7 +1106,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerRowDownTN{
   position: absolute;
   width: 90%;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -1181,16 +1181,16 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .loginLogoUp{
   position: absolute;
   width: 40%;
-  top: 25%;
+  top: 20%;
   left: 5%;
 }
 .loginLogoDown{
   width: 50%;
   position: absolute;
-  top: 55%;
+  top: 60%;
   left: 2%;
 }
-/*  */
+/* end */
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;
   font-size: 18px;
