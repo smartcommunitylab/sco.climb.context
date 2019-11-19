@@ -315,7 +315,6 @@ angular.module("climbGame.controllers.map", [])
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
         $scope.myInitialBounds = new L.latLngBounds();
-
         if ($scope.$parent) {
           $scope.$parent.gamePublicTitle = data.itinerary.name;
           $scope.$parent.gamePublicDescription = $scope.sanitizeHtmlString(data.itinerary.description);
@@ -763,11 +762,19 @@ angular.module("climbGame.controllers.map", [])
       return Math.floor(number);
     }
 
-  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", function ($scope, $window, $timeout) {
+  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "mapService", function ($scope, $window, $timeout, mapService) {
     $scope.flashPublicData = true;
+    mapService.getStatus().then(function (data) {
+      $scope.sponsorTemplate=data.game.sponsorTemplate;
+    },
+    function (err) {
+      //error with status
+      console.log("error:",err);
+    });
     
     $timeout(function(){ 
       $scope.flashPublicData=false; 
+      console.log("$sponsorTemplate in mapCtrlHome",$scope.sponsorTemplate);
       console.log("flashPublicData after 3sec",$scope.flashPublicData);
     }, 3000);
     console.log("flashPublicData",$scope.flashPublicData);
