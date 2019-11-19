@@ -430,10 +430,11 @@ angular.module("climbGame.controllers.map", [])
       });
     }
 
+
     init();
     setMapSize();
+    $timeout(function(){loadData(); }, 2200);
 
-    loadData();
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
     }
@@ -771,11 +772,8 @@ angular.module("climbGame.controllers.map", [])
       //error with status
       console.log("error:",err);
     });
-    
+    // splashscreen stay 3sec
     $timeout(function(){ 
       $scope.flashPublicData=false; 
-      console.log("$sponsorTemplate in mapCtrlHome",$scope.sponsorTemplate);
-      console.log("flashPublicData after 3sec",$scope.flashPublicData);
     }, 3000);
-    console.log("flashPublicData",$scope.flashPublicData);
   }]);
