@@ -18,6 +18,7 @@ angular.module('regisApp', [])
 })
 .controller('RegistrationController', function($scope, regisService) {
     /** */
+		$scope.normalProfile = {};
     $scope.userRegistration = function(){
         //call api "//public/api/registration" to registration
         var data = {
@@ -40,6 +41,11 @@ angular.module('regisApp', [])
             $scope.errorMsg=response.data.errorMsg;
             $scope.showNoti=true;
           });
+    }
+    
+    $scope.checkSend = function() {
+    	var result = ($scope.normalProfile.name && $scope.normalProfile.surname && $scope.normalProfile.email && $scope.normalProfile.cf && $scope.normalProfile.plessoScolastico) ?  true : false;
+    	return result;
     }
     
 });
