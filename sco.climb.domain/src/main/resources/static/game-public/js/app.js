@@ -45,26 +45,27 @@ angular.module('climbGame', [
 }])
 .config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+      $urlRouterProvider.otherwise('/');
 
-    $stateProvider
-      .state('home', {
-        url: '/:idDomain/:idGame/:idItinerary/',
-        views: {
-          '@': {
-            templateUrl: 'templates/home.html'
+      $stateProvider
+        .state('home', {
+          url: '/:idDomain/:idGame/:idItinerary/',
+          views: {
+            '@': {
+              templateUrl: 'templates/home.html',
+              controller: 'mapCtrlHome'
+            }
           }
-        }
-      })
-      .state('home.map', {
-        url: 'map',
-        views: {
-          'content@home': {
-            templateUrl: 'templates/map.html',
-            controller: 'mapCtrl'
+        })
+        .state('home.map', {
+          url: 'map',
+          views: {
+            'content@home': {
+              templateUrl: 'templates/map.html',
+              controller: 'mapCtrl'
+            }
           }
-        }
-      })
+        });
     }
   ])
 
@@ -87,4 +88,4 @@ angular.module('climbGame', [
       return doc.label || doc.name
     }
   }
-})
+});

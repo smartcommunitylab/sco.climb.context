@@ -315,7 +315,6 @@ angular.module("climbGame.controllers.map", [])
         $scope.legs = data.legs;
         $scope.globalTeam = data.game.globalTeam;
         $scope.myInitialBounds = new L.latLngBounds();
-
         if ($scope.$parent) {
           $scope.$parent.gamePublicTitle = data.itinerary.name;
           $scope.$parent.gamePublicDescription = $scope.sanitizeHtmlString(data.itinerary.description);
@@ -427,13 +426,15 @@ angular.module("climbGame.controllers.map", [])
       },
       function (err) {
         //error with status
+        console.log("error:",err);
       });
     }
 
+
     init();
     setMapSize();
+    $timeout(function(){loadData(); }, 5000);
 
-    loadData();
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
     }
@@ -762,4 +763,17 @@ angular.module("climbGame.controllers.map", [])
       return Math.floor(number);
     }
 
+  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "mapService", function ($scope, $window, $timeout, mapService) {
+    $scope.flashPublicData = true;
+    mapService.getStatus().then(function (data) {
+      $scope.sponsorTemplate=data.game.sponsorTemplate;
+    },
+    function (err) {
+      //error with status
+      console.log("error:",err);
+    });
+    // splashscreen stay 3sec
+    $timeout(function(){ 
+      $scope.flashPublicData=false; 
+    }, 5000);
   }]);

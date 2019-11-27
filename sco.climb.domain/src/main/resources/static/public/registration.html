@@ -56,7 +56,7 @@
                                     <label>Email:</label>
                                 </div>
                                 <div class="col-md-5 form-group">
-                                    <input type="email" class="form-control" name="email" ng-model="normalProfile.email" required>
+                                    <input type="text" class="form-control" name="email" ng-model="normalProfile.email" required>
                                 </div>
                                 <div class="col-md-5"></div>
                             </div>
@@ -80,10 +80,8 @@
                             </div>
                             <div class="row">
                                     <div class="col-md-12">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                    Richiesta di accesso alle soluzioni Kids Go Green, per la progettazione dei percorsi, l’inserimento del materiale didattico multimediale e l’accesso alla Web App di gioco.</br>
+																		Ai sensi dell'art.13 del Regolamento EU n. 2016/679 (GDPR), i dati personali forniti saranno trattati per poter dare riscontro alla sua richiesta tramite strumenti manuali, informatici e telematici, comunque idonei a garantire la sicurezza e la riservatezza dei dati stessi. L'informativa Privacy completa è disponibile al seguente link <a href="Informativa-registrazione insegnanti.pdf">LINK PRIVACY</a>. Richiedendo l’accesso, dichiaro di aver letto e compreso l’informativa sul trattamento dei dati personali.
                                     </div>
                                 </div>
                                 <!--<div class="row">
@@ -94,7 +92,7 @@
                             <!-- </form> -->
                         </div>
                         <div class="panel-footer">
-                            <button class="btn btn-primary" ng-disabled="(normalProfile.name && normalProfile.surname && normalProfile.email && normalProfile.cf && normalProfile.plessoScolastico) ?  false : true" 
+                            <button class="btn btn-primary" ng-disabled="!checkSend()" 
                             ng-click="userRegistration()">Invia richiesta di registrazione</button>
                         </div>
                     </div>

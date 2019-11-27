@@ -3,6 +3,11 @@ angular.module('consoleControllers.pathclone', ['ngSanitize'])
     .controller('PathCloneCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, MainDataService, createDialog) {
 
         $scope.initController = function () {
+        	DataService.getGameById($stateParams.idDomain, $stateParams.idGame).then(function (response)  {
+        		console.log('Caricamento gioco andata a buon fine.');
+        		$scope.currentGame = response.data;
+        		$scope.classes = $scope.currentGame.classRooms ? $scope.currentGame.classRooms.length : 0; 
+        	});
             DataService.getData('gamereports').then(function (response) {
 		            console.log('Caricamento report dei giochi andata a buon fine.');
 		            $scope.allGames = response.data;
@@ -11,8 +16,9 @@ angular.module('consoleControllers.pathclone', ['ngSanitize'])
         
         $scope.clone = function (game) {
           createDialog('templates/modals/clone-game.html', {
-              id: 'delete-dialog',
-              title: 'Attenzione!',
+              id: 'clone-game-dialog',
+              title: 'Clona percorso',
+              classes: $scope.classes,
               success: {
                   label: 'Conferma', fn: function () {
                       DataService.cloneGame($stateParams.idDomain, $stateParams.idInstitute,
