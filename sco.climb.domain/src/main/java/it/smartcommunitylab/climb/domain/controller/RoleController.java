@@ -21,11 +21,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
+import it.smartcommunitylab.climb.contextstore.model.Institute;
+import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.manager.RoleManager;
+import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
@@ -34,6 +38,8 @@ public class RoleController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	@Autowired
+	private RoleManager roleManager;
 
 	@RequestMapping(value = "/api/role/{ownerId}/owner", method = RequestMethod.POST)
 	public @ResponseBody List<Authorization> addOwner(
@@ -44,23 +50,7 @@ public class RoleController extends AuthController {
 				!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<Authorization> auths = new ArrayList<Authorization>();
-		Authorization auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_ADD);
-		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
-		auth.getActions().add(Const.AUTH_ACTION_DELETE);
-		auth.setRole(Const.ROLE_OWNER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId("*");
-		auth.setSchoolId("*");
-		auth.setRouteId("*");
-		auth.setGameId("*");
-		auth.getResources().add("*");
-		auths.add(auth);
-		
-		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_OWNER), auths);
+		List<Authorization> auths = roleManager.addOwner(ownerId, email);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addOwner: %s - %s", ownerId, email));
 		}
@@ -77,23 +67,12 @@ public class RoleController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<Authorization> auths = new ArrayList<Authorization>();
-		Authorization auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_ADD);
-		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
-		auth.getActions().add(Const.AUTH_ACTION_DELETE);
-		auth.setRole(Const.ROLE_SCHOOL_OWNER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId("*");
-		auth.getResources().add("*");
-		auths.add(auth);
-		
-		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_SCHOOL_OWNER, instituteId, schoolId), auths);
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		if((institute == null) || (school == null)) {
+			throw new EntityNotFoundException("institute or school not found");
+		}
+		List<Authorization> auths = roleManager.addSchoolOwner(ownerId, email, institute, school);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addSchoolOwner: %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId));
@@ -111,42 +90,12 @@ public class RoleController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<Authorization> auths = new ArrayList<Authorization>();
-		
-		Authorization auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.setRole(Const.ROLE_VOLUNTEER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId("*");
-		auth.getResources().add(Const.AUTH_RES_Institute);
-		auth.getResources().add(Const.AUTH_RES_School);
-		auth.getResources().add(Const.AUTH_RES_Child);
-		auth.getResources().add(Const.AUTH_RES_Volunteer);
-		auth.getResources().add(Const.AUTH_RES_Stop);
-		auth.getResources().add(Const.AUTH_RES_Route);
-		auth.getResources().add(Const.AUTH_RES_Attendance);
-		auth.getResources().add(Const.AUTH_RES_NodeState);
-		auths.add(auth);
-		
-		auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_ADD);
-		auth.setRole(Const.ROLE_VOLUNTEER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId("*");
-		auth.getResources().add(Const.AUTH_RES_WsnEvent);
-		auth.getResources().add(Const.AUTH_RES_EventLogFile);
-		auth.getResources().add(Const.AUTH_RES_Image);
-		auths.add(auth);
-		
-		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_VOLUNTEER, instituteId, schoolId), auths);
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		if((institute == null) || (school == null)) {
+			throw new EntityNotFoundException("institute or school not found");
+		}
+		List<Authorization> auths = roleManager.addVolunteer(ownerId, email, institute, school, true);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addVolunteer: %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId));
@@ -165,58 +114,13 @@ public class RoleController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<Authorization> auths = new ArrayList<Authorization>();
-		
-		Authorization auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.setRole(Const.ROLE_GAME_EDITOR);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId(pedibusGameId);
-		auth.getResources().add(Const.AUTH_RES_Institute);
-		auth.getResources().add(Const.AUTH_RES_School);
-		auth.getResources().add(Const.AUTH_RES_Child);
-		auth.getResources().add(Const.AUTH_RES_Image);
-		auth.getResources().add(Const.AUTH_RES_Volunteer);
-		auth.getResources().add(Const.AUTH_RES_Stop);
-		auth.getResources().add(Const.AUTH_RES_Route);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Calendar);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Excursion);
-		auths.add(auth);
-		
-		auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
-		auth.getActions().add(Const.AUTH_ACTION_ADD);
-		auth.getActions().add(Const.AUTH_ACTION_DELETE);
-		auth.setRole(Const.ROLE_GAME_EDITOR);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId(pedibusGameId);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Link);
-		auths.add(auth);
-
-		auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_ADD);
-		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
-		auth.getActions().add(Const.AUTH_ACTION_DELETE);
-		auth.setRole(Const.ROLE_GAME_EDITOR);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId("*");
-		auth.getResources().add(Const.AUTH_RES_Player);
-		auths.add(auth);
-		
-		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_GAME_EDITOR, instituteId, schoolId, pedibusGameId), auths);
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		PedibusGame pedibusGame = storage.getPedibusGame(ownerId, pedibusGameId);
+		if((institute == null) || (school == null) || (pedibusGame == null)) {
+			throw new EntityNotFoundException("institute or school or game not found");
+		}
+		List<Authorization> auths = roleManager.addGameEditor(ownerId, email, institute, school, pedibusGame);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addGameEditor: %s - %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId, pedibusGameId));
@@ -235,42 +139,13 @@ public class RoleController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<Authorization> auths = new ArrayList<Authorization>();
-		
-		Authorization auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.setRole(Const.ROLE_TEACHER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId(pedibusGameId);
-		auth.getResources().add(Const.AUTH_RES_Institute);
-		auth.getResources().add(Const.AUTH_RES_School);
-		auth.getResources().add(Const.AUTH_RES_Child);
-		auth.getResources().add(Const.AUTH_RES_Image);
-		auth.getResources().add(Const.AUTH_RES_Volunteer);
-		auth.getResources().add(Const.AUTH_RES_Stop);
-		auth.getResources().add(Const.AUTH_RES_Route);
-		auth.getResources().add(Const.AUTH_RES_Player);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame);
-		auths.add(auth);
-		
-		auth = new Authorization();
-		auth.getActions().add(Const.AUTH_ACTION_READ);
-		auth.getActions().add(Const.AUTH_ACTION_UPDATE);
-		auth.setRole(Const.ROLE_TEACHER);
-		auth.setOwnerId(ownerId);
-		auth.setInstituteId(instituteId);
-		auth.setSchoolId(schoolId);
-		auth.setRouteId("*");
-		auth.setGameId(pedibusGameId);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Calendar);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame_Excursion);
-		auths.add(auth);
-
-		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_TEACHER, instituteId, schoolId, pedibusGameId), auths);
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		PedibusGame pedibusGame = storage.getPedibusGame(ownerId, pedibusGameId);
+		if((institute == null) || (school == null) || (pedibusGame == null)) {
+			throw new EntityNotFoundException("institute or school or game not found");
+		}
+		List<Authorization> auths = roleManager.addTeacher(ownerId, email, institute, school, pedibusGame);		
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addTeacher: %s - %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId, pedibusGameId));
