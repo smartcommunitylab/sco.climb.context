@@ -100,7 +100,7 @@ public class MailManager {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("info@smartcommunitylab.it"));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));    
-      message.setSubject("Richiesta registrazione accesso console CLIMB");    
+      message.setSubject("Assegnazione ruolo progetto CLIMB");    
       message.setText(String.format(msg, institute.getName(), school.getName()));    
       Transport.send(message);
       logger.info("sendTeacherRoleAssign mail sent");
