@@ -119,21 +119,21 @@ public class Utils {
 		return result;
 	}
 	
-//	public static String getOwnerIdFromAuthKey(String authKey) {
-//		String[] strings = authKey.split("__");
-//		if(strings.length >= 1) {
-//			return strings[0];
-//		}
-//		return null;
-//	}
+	public static String getOwnerIdFromAuthKey(String authKey) {
+		String[] strings = authKey.split("__");
+		if(strings.length >= 1) {
+			return strings[0];
+		}
+		return null;
+	}
 	
-//	public static String getRoleFromAuthKey(String authKey) {
-//		String[] strings = authKey.split("__");
-//		if(strings.length >= 2) {
-//			return strings[1];
-//		}
-//		return null;
-//	}
+	public static String getRoleFromAuthKey(String authKey) {
+		String[] strings = authKey.split("__");
+		if(strings.length >= 2) {
+			return strings[1];
+		}
+		return null;
+	}
 	
 //	public static String getBaseFromAuthKey(String authKey) {
 //		String[] strings = authKey.split("__");
