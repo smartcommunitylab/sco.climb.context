@@ -53,6 +53,7 @@ angular.module('consoleControllers.leg')
             }, 2000);
             return;
         } 
+        $scope.totalCounter = 0;
         $scope.resetResults();
         $scope.loading = true;
         if ($scope.searchtype == 'wikipedia' && !$scope.wikiResults) {            

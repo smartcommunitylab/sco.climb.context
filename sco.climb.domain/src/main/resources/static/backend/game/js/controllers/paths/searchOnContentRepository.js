@@ -64,7 +64,7 @@ angular.module('consoleControllers.leg')
             for(var i=0; i<$scope.subjects.length; i++){
                 if($scope.subjects[i].selected){
                     selectedItem++;
-                    if(selectedItem == 1){$scope.selectedSubject = $scope.subjects[i].subject;}
+                    if(selectedItem == 1){$scope.selectedSubject = $scope.subjects[i].value;}
                 }
             }
             if(selectedItem > 1){$scope.selectedSubject += "...";}
@@ -85,7 +85,7 @@ angular.module('consoleControllers.leg')
             for(var i=0; i<$scope.schoolYears.length; i++){
                 if($scope.schoolYears[i].selected){
                     selectedItem++;
-                    if(selectedItem == 1){$scope.selectedSchoolYear = $scope.schoolYears[i].schoolYear;}
+                    if(selectedItem == 1){$scope.selectedSchoolYear = $scope.schoolYears[i].value;}
                 }
             }
             if(selectedItem > 1){$scope.selectedSchoolYear += "...";}
@@ -93,7 +93,7 @@ angular.module('consoleControllers.leg')
     }
     DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
-            console.log("tags:",response)
+            // console.log("tags:",response)
             $scope.searchtype.push(
                 {searchtype:'Immagini',value:'image',selected:true},
                 {searchtype:'Video',value:'video',selected:true},

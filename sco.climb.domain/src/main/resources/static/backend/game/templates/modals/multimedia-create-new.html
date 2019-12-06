@@ -121,6 +121,10 @@
                 <br>
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
+                    <label class="checkbox-inline tagsCheckboxList" >
+                        {{selectAllSubjectText}}
+                        <input type="checkbox" class="cbStyle" ng-model="selectAllSubject" ng-change="changeSubjectSelectedMode()">
+                    </label>
                     <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="s in subjects">
                         {{s.subject}}
@@ -130,6 +134,10 @@
                 <br>
                 <div class="tab"> 
                     <span ><u>Classi:</u></span> 
+                    <label class="checkbox-inline tagsCheckboxList" >
+                        {{selectAllSchoolYearText}}
+                        <input type="checkbox" class="cbStyle" ng-model="selectAllSchoolYear" ng-change="changeSchoolYearSelectedMode()">
+                    </label>
                     <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="sy in schoolYears">
                         {{sy.schoolYear}}
