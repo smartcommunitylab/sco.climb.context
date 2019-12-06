@@ -73,6 +73,16 @@ angular.module('climbGame', [
     // Can change week display to start on Monday.
     $mdDateLocaleProvider.firstDayOfWeek = 1;
     // Optional.
+    
+    $mdDateLocaleProvider.parseDate = function(dateString) {
+      var m = moment(dateString, 'DD/MM/YYYY', true);
+      return m.isValid() ? m.toDate() : new Date(NaN);
+    };
+    
+    $mdDateLocaleProvider.formatDate = function(date) {
+      var m = moment(date);
+      return m.isValid() ? m.format('DD/MM/YYYY') : '';
+    };
 
   })
   .config(['$translateProvider', function ($translateProvider) {
