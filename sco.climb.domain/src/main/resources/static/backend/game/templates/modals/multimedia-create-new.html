@@ -121,28 +121,22 @@
                 <br>
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
-                    <label class="checkbox-inline tagsCheckboxList" >
-                        {{selectAllSubjectText}}
-                        <input type="checkbox" class="cbStyle" ng-model="selectAllSubject" ng-change="changeSubjectSelectedMode()">
-                    </label>
-                    <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="s in subjects">
                         {{s.subject}}
                         <input type="checkbox" class="cbStyle" ng-model="s.selected">
                     </label>
+                    <span class="tab"></span>
+                    <button class="btn btn-info" ng-click="changeSubjectSelectedMode()">{{selectAllSubjectText}}</button>
                 </div>
                 <br>
                 <div class="tab"> 
                     <span ><u>Classi:</u></span> 
-                    <label class="checkbox-inline tagsCheckboxList" >
-                        {{selectAllSchoolYearText}}
-                        <input type="checkbox" class="cbStyle" ng-model="selectAllSchoolYear" ng-change="changeSchoolYearSelectedMode()">
-                    </label>
-                    <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="sy in schoolYears">
                         {{sy.schoolYear}}
                         <input type="checkbox" class="cbStyle" ng-model="sy.selected">
                     </label>
+                    <span class="tab"></span>
+                    <button class="btn btn-info" ng-click="changeSchoolYearSelectedMode()">{{selectAllSchoolYearText}}</button>
                 </div>
             </td>
         </tr>

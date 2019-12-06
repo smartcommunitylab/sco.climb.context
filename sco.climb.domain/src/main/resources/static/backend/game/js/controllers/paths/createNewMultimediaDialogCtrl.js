@@ -13,10 +13,10 @@ angular.module('consoleControllers.leg')
 	$scope.classes=[];
 	$scope.schoolYears=[];
 	$scope.selectAllSchoolYear=true;
-	$scope.selectAllSchoolYearText="Deseleziona tutto classi";
+	$scope.selectAllSchoolYearText="Deseleziona tutte le classi";
 	$scope.subjects=[];
 	$scope.selectAllSubject=true;
-	$scope.selectAllSubjectText="Deseleziona tutto discipline";
+	$scope.selectAllSubjectText="Deseleziona tutte le materie";
 	dataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
 			//$scope.classes=response.data.classes;
@@ -43,13 +43,13 @@ angular.module('consoleControllers.leg')
 		console.log("$scope.selectAllSubject",$scope.selectAllSubject);
 		if($scope.selectAllSubject){
 			// have to select all
-			$scope.selectAllSubjectText="Deseleziona tutto discipline";
+			$scope.selectAllSubjectText="Deseleziona tutte le materie";
 			angular.forEach($scope.subjects, function(value, key){
 				value.selected=true;
 			});
 		}else{
 			//have to unselect all
-			$scope.selectAllSubjectText="Seleziona tutto discipline";
+			$scope.selectAllSubjectText="Seleziona tutte le materie";
 			angular.forEach($scope.subjects, function(value, key){
 				value.selected=false;
 			});
@@ -60,13 +60,13 @@ angular.module('consoleControllers.leg')
 		console.log("$scope.selectAllSchoolYear",$scope.selectAllSchoolYear);
 		if($scope.selectAllSchoolYear){
 			// have to select all
-			$scope.selectAllSchoolYearText="Deseleziona tutto classi";
+			$scope.selectAllSchoolYearText="Deseleziona tutte le classi";
 			angular.forEach($scope.schoolYears, function(value, key){
 				value.selected=true;
 			});
 		}else{
 			//have to unselect all
-			$scope.selectAllSchoolYearText="Seleziona tutto classi";
+			$scope.selectAllSchoolYearText="Seleziona tutte le classi";
 			angular.forEach($scope.schoolYears, function(value, key){
 				value.selected=false;
 			});
