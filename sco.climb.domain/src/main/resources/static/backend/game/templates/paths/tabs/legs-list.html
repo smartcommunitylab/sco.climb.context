@@ -1,7 +1,7 @@
 <fieldset class="row" style="min-height:300px" ng-disabled="!PermissionsService.permissionEnabledShowLegs()">
     <fieldset class="col-lg-12 center field" ng-disabled="!PermissionsService.permissionEnabledEditPath()">
-        <a class="btn btn-info btn-margin" ui-sref="root.path.leg({idLeg: ''})">Crea nuova</a>
-        <a class="btn" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()">{{enableOrder ? 'Conferma ordine' : 'Riordina tappe'}}</a>
+        <a class="btn btn-info btn-margin" ui-sref="root.path.leg({idLeg: ''})" ng-disabled="currentGame.deployed">Crea nuova</a>
+        <a class="btn" ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}" ng-click="saveOrder()" ng-disabled="currentGame.deployed">{{enableOrder ? 'Conferma ordine' : 'Riordina tappe'}}</a>
     </fieldset>
     <div class="col-lg-12">
         <ul ui-sortable="sortableOptions" ng-model="legs" class="list-group list-categories">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-2 right">
                         <a ng-hide="enableOrder" ui-sref="root.path.leg({idLeg: leg.objectId})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-hide="enableOrder" ng-click="remove(leg)" class="btn btn-icon btn-danger" role="button" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || ($parent.selectedGame.deployed)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a ng-hide="enableOrder" ng-click="remove(leg)" class="btn btn-icon btn-danger" role="button" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || currentGame.deployed"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a ng-show="enableOrder" class="handle btn-icon btn-reorder"><i class="glyphicon glyphicon-align-justify"></i></a>
                     </div>
                 </div>

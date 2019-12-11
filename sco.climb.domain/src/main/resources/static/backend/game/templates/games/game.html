@@ -1,8 +1,9 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-8 header-path-category">
-            <h4>{{(currentGame && currentGame.title) ? 'MODIFICA GIOCO: ' + currentGame.title : 'CREA NUOVO GIOCO'}}</h4>
+            <h4>{{(currentGame && currentGame.gameName) ? 'MODIFICA GIOCO: ' + currentGame.gameName : 'CREA NUOVO GIOCO'}}</h4>
             <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+            <mark ng-show="currentGame.deployed">Attenzione! Questo gioco è attualmente in esecuzione</mark>
         </div>
 
         <div class="col-md-4 right">

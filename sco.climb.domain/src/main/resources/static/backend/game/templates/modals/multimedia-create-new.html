@@ -27,7 +27,7 @@
                 <select class="form-control" ng-model="newMedia.type">
                     <option value="" selected disabled style="display: none;">Tipologia</option>
                     <option value="image">Immagine</option>
-                    <option value="video">Video</option>
+                    <option value="video">Video Youtube</option>
                     <option value="link">Collegamento a pagina web</option>
                     <option value="file">File</option>
                 </select>
@@ -121,20 +121,22 @@
                 <br>
                 <div class="tab"> 
                     <span ><u>Materia:</u></span> 
-                    <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="s in subjects">
                         {{s.subject}}
                         <input type="checkbox" class="cbStyle" ng-model="s.selected">
                     </label>
+                    <span class="tab"></span>
+                    <button class="btn btn-info" ng-click="changeSubjectSelectedMode()">{{selectAllSubjectText}}</button>
                 </div>
                 <br>
                 <div class="tab"> 
                     <span ><u>Classi:</u></span> 
-                    <span class="tab"></span> 
                     <label class="checkbox-inline tagsCheckboxList" ng-repeat="sy in schoolYears">
                         {{sy.schoolYear}}
                         <input type="checkbox" class="cbStyle" ng-model="sy.selected">
                     </label>
+                    <span class="tab"></span>
+                    <button class="btn btn-info" ng-click="changeSchoolYearSelectedMode()">{{selectAllSchoolYearText}}</button>
                 </div>
             </td>
         </tr>

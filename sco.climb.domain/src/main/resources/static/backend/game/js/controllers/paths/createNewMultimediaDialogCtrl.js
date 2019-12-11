@@ -12,10 +12,13 @@ angular.module('consoleControllers.leg')
 	$scope.tags= [];
 	$scope.classes=[];
 	$scope.schoolYears=[];
+	$scope.selectAllSchoolYear=true;
+	$scope.selectAllSchoolYearText="Deseleziona tutte le classi";
 	$scope.subjects=[];
+	$scope.selectAllSubject=true;
+	$scope.selectAllSubjectText="Deseleziona tutte le materie";
 	dataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
-			console.log("tags::",response)
 			//$scope.classes=response.data.classes;
 			angular.forEach(response.data.classes, function(value, key){
 				$scope.classes.push({class:value,selected:true});
@@ -35,20 +38,51 @@ angular.module('consoleControllers.leg')
 	$scope.getSelectedtags = function(tag){
         return tag.selected;
 	};
+	$scope.changeSubjectSelectedMode = () =>{
+		$scope.selectAllSubject = $scope.selectAllSubject ? false : true;
+		console.log("$scope.selectAllSubject",$scope.selectAllSubject);
+		if($scope.selectAllSubject){
+			// have to select all
+			$scope.selectAllSubjectText="Deseleziona tutte le materie";
+			angular.forEach($scope.subjects, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			$scope.selectAllSubjectText="Seleziona tutte le materie";
+			angular.forEach($scope.subjects, function(value, key){
+				value.selected=false;
+			});
+		}
+	}
+	$scope.changeSchoolYearSelectedMode = () =>{
+		$scope.selectAllSchoolYear = $scope.selectAllSchoolYear ? false : true;
+		console.log("$scope.selectAllSchoolYear",$scope.selectAllSchoolYear);
+		if($scope.selectAllSchoolYear){
+			// have to select all
+			$scope.selectAllSchoolYearText="Deseleziona tutte le classi";
+			angular.forEach($scope.schoolYears, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			$scope.selectAllSchoolYearText="Seleziona tutte le classi";
+			angular.forEach($scope.schoolYears, function(value, key){
+				value.selected=false;
+			});
+		}
+	}
 	$scope.changePublicLink = function(publicLink){
 		$scope.publicLink = publicLink;
-		console.log("publicLink",$scope.publicLink)
 	}
 	$scope.changeSharable = function(sharable){
 		$scope.sharable = sharable;
-		console.log("sharable",$scope.sharable)
 	}
     $scope.resetError = function() {
     	$scope.errorMsg = undefined;
     }
     
     $scope.$modalSuccess = function() {
-		console.log("class after success::",$scope.classes)
         if(!$scope.newMedia.link) {     // controlla che sia stato inserito un URL
             $scope.errorMsg = "Non è stato inserito un indirizzo valido.";
         }

@@ -33,7 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.contextstore.model.Volunteer;
@@ -44,6 +46,7 @@ import it.smartcommunitylab.climb.domain.converter.ExcelError;
 import it.smartcommunitylab.climb.domain.converter.JsonConverter;
 import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.manager.RoleManager;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -53,6 +56,9 @@ public class AdminController extends AuthController {
 	
 	@Autowired
 	private RepositoryManager storage;
+	
+	@Autowired
+	private RoleManager roleManager;
 	
 	@Autowired
 	private ExcelConverter excelConverter;
@@ -137,6 +143,11 @@ public class AdminController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		if((institute == null) || (school == null)) {
+			throw new EntityNotFoundException("institute or school not found");
+		}		
 		List<ExcelError> errors = new ArrayList<ExcelError>();
 		if (!file.isEmpty()) {
 			Path tempFile = Files.createTempFile("climb-volunteer", ".csv");
@@ -204,44 +215,8 @@ public class AdminController extends AuthController {
 				    		continue;
 				    	}
 				    }
-				    
 				    //add auths
-						List<Authorization> auths = new ArrayList<Authorization>();
-						
-						Authorization auth = new Authorization();
-						auth.getActions().add(Const.AUTH_ACTION_READ);
-						auth.setRole(Const.ROLE_VOLUNTEER);
-						auth.setOwnerId(ownerId);
-						auth.setInstituteId(instituteId);
-						auth.setSchoolId(schoolId);
-						auth.setRouteId("*");
-						auth.setGameId("*");
-						auth.getResources().add(Const.AUTH_RES_Institute);
-						auth.getResources().add(Const.AUTH_RES_School);
-						auth.getResources().add(Const.AUTH_RES_Child);
-						auth.getResources().add(Const.AUTH_RES_Volunteer);
-						auth.getResources().add(Const.AUTH_RES_Stop);
-						auth.getResources().add(Const.AUTH_RES_Route);
-						auth.getResources().add(Const.AUTH_RES_Attendance);
-						auth.getResources().add(Const.AUTH_RES_NodeState);
-						auths.add(auth);
-						
-						auth = new Authorization();
-						auth.getActions().add(Const.AUTH_ACTION_READ);
-						auth.getActions().add(Const.AUTH_ACTION_ADD);
-						auth.setRole(Const.ROLE_VOLUNTEER);
-						auth.setOwnerId(ownerId);
-						auth.setInstituteId(instituteId);
-						auth.setSchoolId(schoolId);
-						auth.setRouteId("*");
-						auth.setGameId("*");
-						auth.getResources().add(Const.AUTH_RES_WsnEvent);
-						auth.getResources().add(Const.AUTH_RES_EventLogFile);
-						auth.getResources().add(Const.AUTH_RES_Image);
-						auths.add(auth);
-					
-						storage.addUserRole(user.getEmail(), 
-								Utils.getAuthKey(ownerId, Const.ROLE_VOLUNTEER, instituteId, schoolId), auths);					
+						roleManager.addVolunteer(ownerId, user.getEmail(), institute, school, true);
 					} catch (Exception e) {
 						ExcelError error = new ExcelError("Volunteers", count, 
 								"errore assegbnazo e ruolo a " + user.getEmail());
