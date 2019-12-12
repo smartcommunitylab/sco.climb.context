@@ -97,8 +97,8 @@
 	            <div class="row">
 	                <div class="col-lg-4 bootstrapColRowPadding"><p><b>Adatto per</b></p></div>
 	                <div class="col-lg-4 bootstrapColRowPadding">
-							        <!-- Media  subjects-->
-							        <div class="bootstrapColRowPadding">Discipline</div>
+						<!-- Media  subjects-->
+						<div class="bootstrapColRowPadding">Discipline</div>
 	                    <div class="wrapper dropdownSearchEngines">
 	                        <div class="selected-items-box" ng-click="subjectsListToggle(num)">
 	                            <div class="textDropdown"><p class="pTextDropdown">{{selectedSubject[num]}} </p></div>
@@ -106,6 +106,10 @@
 	                        </div>
 	                        <div class="list" id="subjectID{{num}}">
 	                            <ul class="items-list">
+									<li class="allSelectedBGColor">
+										<input type="checkbox" ng-model="selectAllSubjects[num]" ng-click="checkSubjects(num, true)"/>
+										<span >Seleziona/Deseleziona tutte le materie</span>
+									</li>
 	                                <li ng-repeat="s in subjects">
 	                                    <input type="checkbox" class='' ng-model="s.selected" ng-click="checkSubjects(num)"/>
 	                                    <span>{{s.subject}}</span>
@@ -115,8 +119,8 @@
 	                    </div>
 	                </div>
 	                <div class="col-lg-4 bootstrapColRowPadding">
-	                		<!-- Media  schoolYears-->
-	                		<div class="bootstrapColRowPadding">Classi</div>
+						<!-- Media  schoolYears-->
+						<div class="bootstrapColRowPadding">Classi</div>
 	                    <div class="wrapper dropdownSearchEngines">
 	                        <div class="selected-items-box" ng-click="schoolYearsListToggle(num)">
 	                            <div class="textDropdown"><p class="pTextDropdown">{{selectedSchoolYear[num]}} </p></div>
@@ -124,6 +128,10 @@
 	                        </div>
 	                        <div class="list" id="schoolYearID{{num}}">
 	                            <ul class="items-list">
+									<li class="allSelectedBGColor">
+										<input type="checkbox" ng-model="selectAllSchoolYears[num]" ng-click="checkSchoolYears(num, true)"/>
+										<span >Seleziona/Deseleziona tutte le materie</span>
+									</li>
 	                                <li ng-repeat="sy in schoolYears">
 	                                    <input type="checkbox" class='' ng-model="sy.selected" ng-click="checkSchoolYears(num)"/>
 	                                    <span>{{sy.schoolYear}}</span>
