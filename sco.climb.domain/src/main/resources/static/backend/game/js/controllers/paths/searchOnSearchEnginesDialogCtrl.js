@@ -21,7 +21,57 @@ angular.module('consoleControllers.leg')
     $scope.classListToggle = function(dropdownID){
         // $('.wrapper .list').slideToggle('fast');
         $('#classe'+dropdownID).slideToggle('fast');
-	}
+    }
+    $scope.changeSubjectSelectedMode = (index) =>{
+        var tempResult; 
+        if($scope.searchtype == 'image') {
+            tempResult = $scope.imageResults[index];
+        }else if($scope.searchtype == 'video'){
+            tempResult = $scope.ytResults[index];
+        }else if($scope.searchtype == 'wikipedia'){
+            tempResult = $scope.wikiResults[index];
+        }
+		tempResult.selectAllSubjects = tempResult.selectAllSubjects ? false : true;
+		
+		if(tempResult.selectAllSubjects){
+			// have to select all
+			tempResult.selectAllSubjectText="Deseleziona tutte le materie";
+			angular.forEach(tempResult.subjects, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			tempResult.selectAllSubjectText="Seleziona tutte le materie";
+			angular.forEach(tempResult.subjects, function(value, key){
+				value.selected=false;
+			});
+		}
+    }
+    $scope.changeSchoolYearSelectedMode = (index) =>{
+        var tempResult; 
+        if($scope.searchtype == 'image') {
+            tempResult = $scope.imageResults[index];
+        }else if($scope.searchtype == 'video'){
+            tempResult = $scope.ytResults[index];
+        }else if($scope.searchtype == 'wikipedia'){
+            tempResult = $scope.wikiResults[index];
+        }
+        tempResult.selectAllSchoolYears = tempResult.selectAllSchoolYears ? false : true;
+		
+		if(tempResult.selectAllSchoolYears){
+			// have to select all
+			tempResult.selectAllSchoolYearText="Deseleziona tutte le classi";
+			angular.forEach(tempResult.schoolYears, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			tempResult.selectAllSchoolYearText="Seleziona tutte le classi";
+			angular.forEach(tempResult.schoolYears, function(value, key){
+				value.selected=false;
+			});
+		} 
+    }
 	DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
 			console.log("tags:",response)
@@ -97,6 +147,11 @@ angular.module('consoleControllers.leg')
                                 if(!e_wr.classes){e_wr.classes=angular.copy($scope.classes);}
                                 if(!e_wr.schoolYears){e_wr.schoolYears=angular.copy($scope.schoolYears);}
                                 if(!e_wr.subjects){e_wr.subjects=angular.copy($scope.subjects);}
+                                //select or unselect all
+                                e_wr.selectAllSubjects=true;
+                                e_wr.selectAllSubjectText = "Deseleziona tutte le materie";
+                                e_wr.selectAllSchoolYears=true;
+                                e_wr.selectAllSchoolYearText = "Deseleziona tutte le classi";
                             });
                         $scope.lastSearchtype = $scope.searchtype;
                     }else{
@@ -136,6 +191,11 @@ angular.module('consoleControllers.leg')
                             if(!e_yr.classes){e_yr.classes=angular.copy($scope.classes);}
                             if(!e_yr.schoolYears){e_yr.schoolYears=angular.copy($scope.schoolYears);}
                             if(!e_yr.subjects){e_yr.subjects=angular.copy($scope.subjects);}
+                            //select or unselect all
+                            e_yr.selectAllSubjects=true;
+                            e_yr.selectAllSubjectText = "Deseleziona tutte le materie";
+                            e_yr.selectAllSchoolYears=true;
+                            e_yr.selectAllSchoolYearText = "Deseleziona tutte le classi";
                         });
                         $scope.lastSearchtype = $scope.searchtype;
                     }else{
@@ -179,6 +239,11 @@ angular.module('consoleControllers.leg')
                             if(!e_ir.classes){e_ir.classes=angular.copy($scope.classes);}
                             if(!e_ir.schoolYears){e_ir.schoolYears=angular.copy($scope.schoolYears);}
                             if(!e_ir.subjects){e_ir.subjects=angular.copy($scope.subjects);}
+                            //select or unselect all
+                            e_ir.selectAllSubjects=true;
+                            e_ir.selectAllSubjectText = "Deseleziona tutte le materie";
+                            e_ir.selectAllSchoolYears=true;
+                            e_ir.selectAllSchoolYearText = "Deseleziona tutte le classi";
                         });
                         
                         $scope.lastSearchtype = $scope.searchtype;
