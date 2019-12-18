@@ -40,8 +40,17 @@ angular.module("climbGame.controllers.map", [])
               name: 'OpenStreetMap',
               url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               type: 'xyz'
-            }
-
+            },
+            satellite: {
+            	name: 'Satellitare',
+            	url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?blankTile=false',
+            	type: 'xyz'
+            },            
+            fisica: {
+            	name: 'Fisica',
+            	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
+            	type: 'xyz'
+            }            
           }
         },
         events: {

@@ -91,6 +91,42 @@ angular.module('consoleControllers.leg')
             if(selectedItem > 1){$scope.selectedSchoolYear += "...";}
         }
     }
+
+    $scope.changeSubjectSelectedMode = (index) =>{
+		$scope.contentResults[index].referenceContent.selectAllSubjects = $scope.contentResults[index].referenceContent.selectAllSubjects ? false : true;
+		
+		if($scope.contentResults[index].referenceContent.selectAllSubjects){
+			// have to select all
+			$scope.contentResults[index].referenceContent.selectAllSubjectText="Deseleziona tutte le materie";
+			angular.forEach($scope.contentResults[index].referenceContent.selectedSubjects, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			$scope.contentResults[index].referenceContent.selectAllSubjectText="Seleziona tutte le materie";
+			angular.forEach($scope.contentResults[index].referenceContent.selectedSubjects, function(value, key){
+				value.selected=false;
+			});
+		}
+    }
+    
+    $scope.changeSchoolYearSelectedMode = (index) =>{
+        $scope.contentResults[index].referenceContent.selectAllSchoolYears = $scope.contentResults[index].referenceContent.selectAllSchoolYears ? false : true;
+		
+		if($scope.contentResults[index].referenceContent.selectAllSchoolYears){
+			// have to select all
+			$scope.contentResults[index].referenceContent.selectAllSchoolYearText="Deseleziona tutte le classi";
+			angular.forEach($scope.contentResults[index].referenceContent.selectedSchoolYears, function(value, key){
+				value.selected=true;
+			});
+		}else{
+			//have to unselect all
+			$scope.contentResults[index].referenceContent.selectAllSchoolYearText="Seleziona tutte le classi";
+			angular.forEach($scope.contentResults[index].referenceContent.selectedSchoolYears, function(value, key){
+				value.selected=false;
+			});
+		}
+    }
     DataService.getMultimediaContentTags(leg.ownerId, leg.pedibusGameId).then(
 		function(response) {
             // console.log("tags:",response)
@@ -177,7 +213,12 @@ angular.module('consoleControllers.leg')
                     $scope.contentResults = response.data;
                     $scope.noResults = response.data.length == 0;
                     //change the formet of array classes, schoolYears, subjects. because of the selection option
+                    // also add selectAllSubjects, selectAllSchoolYears and selectAllSubjectText, selectAllSchoolYearText
                     $scope.contentResults.forEach(e=>{
+                        e.referenceContent.selectAllSubjects=true;
+                        e.referenceContent.selectAllSubjectText = "Deseleziona tutte le materie";
+                        e.referenceContent.selectAllSchoolYears=true;
+                        e.referenceContent.selectAllSchoolYearText = "Deseleziona tutte le classi";
                     	e.referenceContent.selectedClasses = [];
                         angular.forEach($scope.classes, function(item, key){
                             e.referenceContent.selectedClasses[key]={value:item.value,selected:true};
