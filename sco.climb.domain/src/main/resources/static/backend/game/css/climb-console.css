@@ -1008,3 +1008,7 @@ hr.cBlue{
   .tagsCheckboxList{
     margin-right: 15px;
   }
+
+  .allSelectedBGColor{
+    background-color: #abd7ed !important;
+  }

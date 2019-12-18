@@ -109,6 +109,10 @@
                                             <div class="selected-items-box" ng-click="materialeListToggle($index)">Discipline <span class="downArrow"></span></div>
                                             <div class="list" id="materiale{{$index}}">
                                                 <ul class="items-list">
+                                                    <li class="allSelectedBGColor">
+                                                        <input type="checkbox" checked ng-click="changeSubjectSelectedMode($index)"/>
+                                                        <span >{{image.selectAllSubjectText}}</span>
+                                                    </li>
                                                     <li ng-repeat="s in image.subjects">
                                                         <input type="checkbox" class='' ng-model="s.selected" />
                                                         <span>{{s.subject}}</span>
@@ -122,6 +126,10 @@
                                             <div class="selected-items-box" ng-click="classListToggle($index)">Classi <span class="downArrow"></span></div>
                                             <div class="list" id="classe{{$index}}">
                                                 <ul class="items-list">
+                                                    <li class="allSelectedBGColor">
+                                                        <input type="checkbox" checked ng-click="changeSchoolYearSelectedMode($index)"/>
+                                                        <span >{{image.selectAllSchoolYearText}}</span>
+                                                    </li>
                                                     <li ng-repeat="sy in image.schoolYears">
                                                         <input type="checkbox" class='' ng-model="sy.selected" />
                                                         <span>{{sy.schoolYear}}</span>
@@ -179,6 +187,10 @@
                                                 <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
                                                 <div class="list" id="materiale{{$index}}">
                                                     <ul class="items-list">
+                                                        <li class="allSelectedBGColor">
+                                                            <input type="checkbox" checked ng-click="changeSubjectSelectedMode($index)"/>
+                                                            <span >{{video.selectAllSubjectText}}</span>
+                                                        </li>
                                                         <li ng-repeat="s in video.subjects">
                                                             <input type="checkbox" class='' ng-model="s.selected" />
                                                             <span>{{s.subject}}</span>
@@ -192,6 +204,10 @@
                                                 <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
                                                 <div class="list" id="classe{{$index}}">
                                                     <ul class="items-list">
+                                                        <li class="allSelectedBGColor">
+                                                            <input type="checkbox" checked ng-click="changeSchoolYearSelectedMode($index)"/>
+                                                            <span >{{video.selectAllSchoolYearText}}</span>
+                                                        </li>
                                                         <li ng-repeat="sy in video.schoolYears">
                                                             <input type="checkbox" class='' ng-model="sy.selected" />
                                                             <span>{{sy.schoolYear}}</span>
@@ -248,6 +264,10 @@
                                                 <div class="selected-items-box" ng-click="materialeListToggle($index)">Materiale <span class="downArrow"></span></div>
                                                 <div class="list" id="materiale{{$index}}">
                                                     <ul class="items-list">
+                                                        <li class="allSelectedBGColor">
+                                                            <input type="checkbox" checked ng-click="changeSubjectSelectedMode(key)"/>
+                                                            <span >{{result.selectAllSubjectText}}</span>
+                                                        </li>
                                                         <li ng-repeat="s in result.subjects">
                                                             <input type="checkbox" class='' ng-model="s.selected" />
                                                             <span>{{s.subject}}</span>
@@ -261,6 +281,10 @@
                                                 <div class="selected-items-box" ng-click="classListToggle($index)">Classe <span class="downArrow"></span></div>
                                                 <div class="list" id="classe{{$index}}">
                                                     <ul class="items-list">
+                                                        <li class="allSelectedBGColor">
+                                                            <input type="checkbox" checked ng-click="changeSchoolYearSelectedMode(key)"/>
+                                                            <span >{{result.selectAllSchoolYearText}}</span>
+                                                        </li>
                                                         <li ng-repeat="sy in result.schoolYears">
                                                             <input type="checkbox" class='' ng-model="sy.selected" />
                                                             <span>{{sy.schoolYear}}</span>

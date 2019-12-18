@@ -38,7 +38,21 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             if(selectedItem > 1){$scope.selectedClasses[index] += "...";}
         }
     }
-    $scope.checkSubjects = function(index){
+    $scope.checkSubjects = function(index, allSelectUnselectMode = false){
+        // "allSelectUnselectMode" true only when user click in ckeckbox
+        if(allSelectUnselectMode){
+            if($scope.selectAllSubjects[index]){
+                // have to select all
+                angular.forEach($scope.legsAllTags[index].subjects, function(value, key){
+                    value.selected=true;
+                });
+            }else{
+                //have to unselect all
+                angular.forEach($scope.legsAllTags[index].subjects, function(value, key){
+                    value.selected=false;
+                });
+            }
+        }
         var allSelected = true, notAllSelected = false;
         angular.forEach($scope.legsAllTags[index].subjects, function(value, key){
             if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
@@ -46,8 +60,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
         if(allSelected){
             $scope.selectedSubject[index] = "Tutti";
+            $scope.selectAllSubjects[index] = true;
         }else if(!notAllSelected){
             $scope.selectedSubject[index] = "Non Selezionato";
+            $scope.selectAllSubjects[index] = false;
         }else{
             var selectedItem = 0;
             for(var i=0; i<$scope.legsAllTags[index].subjects.length; i++){
@@ -57,9 +73,24 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             }
             if(selectedItem > 1){$scope.selectedSubject[index] += "...";}
+            $scope.selectAllSubjects[index] = false;
         }
     }
-    $scope.checkSchoolYears = function(index){
+    $scope.checkSchoolYears = function(index, allSelectUnselectMode = false){
+        // "allSelectUnselectMode" true only when user click in ckeckbox
+        if(allSelectUnselectMode){
+            if($scope.selectAllSchoolYears[index]){
+                // have to select all
+                angular.forEach($scope.legsAllTags[index].schoolYears, function(value, key){
+                    value.selected=true;
+                });
+            }else{
+                //have to unselect all
+                angular.forEach($scope.legsAllTags[index].schoolYears, function(value, key){
+                    value.selected=false;
+                });
+            }
+        }
         var allSelected = true, notAllSelected = false;
         angular.forEach($scope.legsAllTags[index].schoolYears, function(value, key){
             if(value.selected == true && allSelected == true){allSelected = true;}else{allSelected = false;}
@@ -67,8 +98,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
         if(allSelected){
             $scope.selectedSchoolYear[index] = "Tutti";
+            $scope.selectAllSchoolYears[index] = true;
         }else if(!notAllSelected){
             $scope.selectedSchoolYear[index] = "Non Selezionato";
+            $scope.selectAllSchoolYears[index] = false;
         }else{
             var selectedItem = 0;
             for(var i=0; i<$scope.legsAllTags[index].schoolYears.length; i++){
@@ -78,6 +111,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 }
             }
             if(selectedItem > 1){$scope.selectedSchoolYear[index] += "...";}
+            $scope.selectAllSchoolYears[index] = false;
         }
     }
     $scope.viewIconsModels = [
@@ -108,7 +142,9 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.selectedSearchtype = "Tutti"; //it may be : all / notAll / ...(value of the first selected one)
         $scope.selectedClasses = [];
         $scope.selectedSubject = [];
+        $scope.selectAllSubjects = [];
         $scope.selectedSchoolYear = [];
+        $scope.selectAllSchoolYears = [];
         if ($stateParams.idLeg) { //edit path
         	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));

@@ -260,6 +260,10 @@
                                             <div class="selected-items-box" ng-click="subjectsListToggle($index,'after')">Discipline <span class="downArrow"></span></div>
                                             <div class="list" id="subject{{$index}}">
                                                 <ul class="items-list">
+                                                    <li class="allSelectedBGColor">
+                                                        <input type="checkbox" checked ng-click="changeSubjectSelectedMode($index)"/>
+                                                        <span >{{content.referenceContent.selectAllSubjectText}}</span>
+                                                    </li>
                                                     <li ng-repeat="s in content.referenceContent.selectedSubjects">
                                                         <input type="checkbox" class='' ng-model="s.selected" />
                                                         <span>{{s.value}}</span>
@@ -273,6 +277,10 @@
                                             <div class="selected-items-box" ng-click="schoolYearsListToggle($index,'after')">Classe <span class="downArrow"></span></div>
                                             <div class="list" id="schoolYear{{$index}}">
                                                 <ul class="items-list">
+                                                    <li class="allSelectedBGColor">
+                                                        <input type="checkbox" checked ng-click="changeSchoolYearSelectedMode($index)"/>
+                                                        <span >{{content.referenceContent.selectAllSchoolYearText}}</span>
+                                                    </li>
                                                     <li ng-repeat="sy in content.referenceContent.selectedSchoolYears">
                                                         <input type="checkbox" class='' ng-model="sy.selected" />
                                                         <span>{{sy.value}}</span>
