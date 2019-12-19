@@ -33,7 +33,7 @@ angular.module("climbGame.controllers.map", [])
               url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
               type: 'xyz',
               layerOptions: {
-                attribution: "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC-BY-SA",
+                attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC-BY-SA'
               }
             },
             osm: {
@@ -44,12 +44,18 @@ angular.module("climbGame.controllers.map", [])
             satellite: {
             	name: 'Satellitare',
             	url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?blankTile=false',
-            	type: 'xyz'
+            	type: 'xyz',
+              layerOptions: {
+                attribution: 'Copyright ESRI. Sources: Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, GeoEye, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community'
+              }
             },            
             fisica: {
             	name: 'Fisica',
             	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
-            	type: 'xyz'
+            	type: 'xyz',
+              layerOptions: {
+                attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data © OpenStreetMap contributors.'
+              }							
             }            
           }
         },
