@@ -485,10 +485,10 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
               }, 5000);
             }           
         } else {
-          $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco, di avere inserito almeno una foto e un punto di interesse prima di salvare.";
-          $timeout(function () {
-              $rootScope.modelErrors = '';
-          }, 5000);
+//          $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco, che il nome della tappa sia univoco nel gioco e di avere inserito almeno una foto e un punto di interesse prima di salvare.";
+//          $timeout(function () {
+//              $rootScope.modelErrors = '';
+//          }, 5000);
         }
     };
     
@@ -528,16 +528,33 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 
     function checkFields() {
         var allCompiled = true;
-        var invalidFields = $('.error','.ng-invalid');
+        var uniqueName = true;
+        var invalidFields = $('.ng-invalid');
         // Get all inputs
         if (invalidFields.length > 0) {
-            $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+          $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+          $timeout(function () {
+              $rootScope.modelErrors = '';
+          }, 5000);        	
+          allCompiled = false;
+        } else {
+          for (var i = 0; i < $scope.legs.length; i++) {
+          	if($scope.leg.position == i) {
+          		continue;
+          	}
+          	if($scope.legs[i].name.toUpperCase() === $scope.leg.name.trim().toUpperCase()) {
+          		uniqueName = false;
+          		break;
+          	}
+          }
+          if(!uniqueName) {
+            $rootScope.modelErrors = "Errore! Il nome della tappa deve essere univoco nel percorso.";
             $timeout(function () {
                 $rootScope.modelErrors = '';
-            }, 5000);
-            allCompiled = false;
+            }, 5000);        	        	
+          }        	
         }
-        return allCompiled;
+        return (allCompiled && uniqueName);
     }
 
     // Exit without saving changes
