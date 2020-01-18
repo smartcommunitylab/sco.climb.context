@@ -12,16 +12,16 @@
 <fieldset class="row" ng-hide="!PermissionsService.permissionEnabledEditLegs()">
     <legend>Generale</legend>
     <div class="col-lg-12 field">
-        <p><span class="required-sign">*</span> <b>Nome:</b></p>
-        <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-model="leg.name" ng-disabled="currentGame.deployed" />
+        <p><span class="required-sign">*</span> <b>Nome:</b> <span class="tab smaller">(deve essere univoco nel percorso)</span></p>
+        <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-model="leg.name" ng-disabled="currentGame.deployed" ng-required="true"/>
     </div>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Descrizione:</b></p>
-        <text-angular ng-class="{error: !leg.description}" ng-model="leg.description"></text-angular>
+        <text-angular ng-class="{error: !leg.description}" ng-model="leg.description" ng-required="true"></text-angular>
     </div>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Punteggio (metri):</b></p>
-        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-model="leg.score" ng-disabled="currentGame.deployed" />
+        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-model="leg.score" ng-disabled="currentGame.deployed" ng-required="true"/>
     </div>
     <div class="col-lg-12 field">
         <p><b>Punteggio tappa precedente (metri): {{previousLegScore}}</b></p>
@@ -70,13 +70,13 @@
                 <div class="coordinates-label">
                     <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
                 </div>
-                <input ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lat}" class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lat" />
+                <input ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lat}" class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lat" ng-required="true"/>
             </div>
             <div class="col-lg-12 field">
                 <div class="coordinates-label">
                     <p><span class="required-sign">*</span> <b>Longitudine:</b></p>
                 </div>
-                <input ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}" class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lng" />
+                <input ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}" class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lng" ng-required="true"/>
             </div>
             <div class="col-lg-12 field">
                 <b>Distanza totale: </b>{{leg.totalDistance}}

@@ -54,7 +54,7 @@ angular.module('fundoo.services', []).factory('createDialog', ["$document", "$co
                     '</div>';
             } else if(options.id=="clone-game-dialog") {
             	var titleIcon="";
-            	var defaultFooter ='<button class="btn btn-success" ng-disabled="!$modalHaveClasses()">{{$modalSuccessLabel}}</button>';
+            	var defaultFooter ='<button class="btn btn-success" ng-disabled="!$modalHaveClasses()" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>';
               var footerTemplate = '<div class="modal-footer">' + defaultFooter + '</div>';
             } else {
                 var titleIcon="";
