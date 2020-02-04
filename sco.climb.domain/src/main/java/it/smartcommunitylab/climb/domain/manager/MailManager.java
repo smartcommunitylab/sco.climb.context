@@ -1,5 +1,7 @@
 package it.smartcommunitylab.climb.domain.manager;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -13,7 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.School;
@@ -95,15 +100,20 @@ public class MailManager {
 	
 	public void sendVolunteerRoleAssign(String email, Institute institute, School school) {
 		try {
+			Resource resource = new ClassPathResource("mail/volontario_pedibus.txt", 
+					this.getClass().getClassLoader());
+			Reader reader = new InputStreamReader(resource.getInputStream(), "UTF-8");
+			String msg = FileCopyUtils.copyToString(reader);
+			msg = msg.replace("%istituto%", institute.getName());
+			msg = msg.replace("%scuola%", school.getName());
 			Session session = setMailerSession();
-			String msg = "Assegnato il ruolo di VOLONTARIO per:\nIstituto: %s\nScuola: %s";
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("info@smartcommunitylab.it"));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));    
       message.setSubject("Assegnazione ruolo progetto CLIMB");    
-      message.setText(String.format(msg, institute.getName(), school.getName()));    
+      message.setText(msg);    
       Transport.send(message);
-      logger.info("sendTeacherRoleAssign mail sent");
+      logger.info("sendTeacherRoleAssign mail sent to " + email);
 		} catch (Exception e) {
 			logger.warn("sendTeacherRoleAssign error:" + e.getMessage());
 		}
