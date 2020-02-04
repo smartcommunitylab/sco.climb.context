@@ -1,0 +1,23 @@
+Caro volontario del Pedibus,
+
+Benvenuto in PedibusSmart, una collaborazione fra il tuo pedibus locale e la Fondazione Bruno Kessler.
+Il tuo nome ed e-mail sono stati registrati come volontario per il Pedibus e adesso hai accesso a PedibusSmart.
+
+PedibusSmart è un'app per il tuo smartphone che semplifica la routine quotidiana del pedibus, aiutando voi "conducenti" (volontari) e rendendo il viaggio a scuola sicuro e divertente per tutti.
+
+Fra poco dovresti ricevere istruzioni sull'app PedibusSmart nella tua scuola, o durante un incontro con la tua associazione pedibus o con il Comune o direttamente dal coordinatore del tuo pedibus.
+
+E' già possibile scaricare l'app per il tuo smartphone:
+
+    Android (Google): http://bit.ly/PBsGoogle
+    IOs (Apple): http://bit.ly/PBsApple
+    
+Per favore però, aspetta a fare login e ad usare l'app se non hai già ricevuto istruzioni come detto sopra.
+
+Benvenuto!
+Il Gruppo PedibusSmart di FBK
+http://pedibussmart.fbk.eu/
+
+Assegnato il ruolo di VOLONTARIO per:
+Istituto: %istituto%
+Scuola: %scuola%
