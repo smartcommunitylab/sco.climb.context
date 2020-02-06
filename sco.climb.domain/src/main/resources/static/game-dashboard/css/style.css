@@ -1132,6 +1132,19 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   width: 60%;
   left: 40%;
 }
+/* for the template Collecchio */
+.centerBannerRowDownCH{
+  position: absolute;
+  width: 65%;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownCenterCH{
+  position: absolute;
+  width: 20%;
+  left: 40%;
+}
 /* for the template Ferrara */
 .centerBannerUpFR{
   background-color: #4153a0; 
