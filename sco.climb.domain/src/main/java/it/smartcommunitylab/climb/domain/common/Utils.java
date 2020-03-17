@@ -219,8 +219,7 @@ public class Utils {
 	}
 	
 	public static String getNormalizeLegName(String name) {
-		//TODO capire come normalizzare il nome della tappa
-		return name.trim().replace(" ", "");
+		return name.trim().replace(" ", "").replaceAll("\\W", "X");
 	}
 	
 	public static Date getStartOfTheDay(Date date) {
