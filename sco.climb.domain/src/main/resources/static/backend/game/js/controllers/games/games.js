@@ -263,6 +263,12 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
         // Controlla se ci sono campi vuoti e se le ore e le date di fine sono precedenti o uguali a quelle di inizio comparando le stringhe
         function checkFields() {
+          var regExp = new RegExp(/\W/);
+          if(regExp.test($scope.currentGame.globalTeam)) {
+          	alert("nel nome del team sono consentiti solo i seguenti caratteri: A-Z, a-z, 0-9, _");
+          	return false;
+          }
+          
             var isValidate = true;
             var invalidFields = $('.ng-invalid');
 
