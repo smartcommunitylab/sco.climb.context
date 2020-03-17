@@ -68,14 +68,19 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
             success: { label: 'Conferma', fn: 
                 function(value) {
                     var name_addClass=document.getElementById("name_addClass").value.trim();
-                    var yearOfStudy_addClass=document.getElementById("yearOfStudy_addClass").value.trim();
-                    if(name_addClass && !$scope.currentSchool.classes.some(item => item.name === name_addClass)) {
-                    	var newClass = {
-                    			name: name_addClass,
-                    			schoolYear: yearOfStudy_addClass
-                    	}
-                      $scope.currentSchool.classes.push(newClass)
-                      $scope.currentClass = newClass
+                    var regExp = new RegExp(/\W/);
+                    if(regExp.test(name_addClass)) {
+                    	alert("sono consentiti solo i seguenti caratteri: A-Z, a-z, 0-9, _");
+                    } else {
+                      var yearOfStudy_addClass=document.getElementById("yearOfStudy_addClass").value.trim();
+                      if(name_addClass && !$scope.currentSchool.classes.some(item => item.name === name_addClass)) {
+                      	var newClass = {
+                      			name: name_addClass,
+                      			schoolYear: yearOfStudy_addClass
+                      	}
+                        $scope.currentSchool.classes.push(newClass)
+                        $scope.currentClass = newClass
+                      }                    	
                     }
                 } 
             }
