@@ -173,7 +173,7 @@ function ($q, $http, $rootScope, $timeout) {
             var postUrl = baseUrl + '/admin/import/' + element.ownerId + '/' + element.instituteId + '/' + element.schoolId + '?players=' + element.players;
             return $http.post(postUrl, element.formdata, 
                 {
-                    timeout: timeout,
+                    timeout: 30000,
                     headers: {
                         'Authorization': 'Bearer ' + profileToken,
                         'Content-Type': undefined 
@@ -187,7 +187,7 @@ function ($q, $http, $rootScope, $timeout) {
             + element.itineraryId + '/leg/' + element.legId + '/file';
             return $http.post(postUrl, element.formdata, 
                 {
-                    timeout: timeout,
+                    timeout: 30000,
                     headers: {
                         'Authorization': 'Bearer ' + profileToken,
                         'Content-Type': undefined 
