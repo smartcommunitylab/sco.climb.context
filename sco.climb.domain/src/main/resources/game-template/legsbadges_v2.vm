@@ -27,29 +27,29 @@ global Double $Utils.getNormalizeLegName($leg.name)#[[_distance]]#;
 
 #foreach($leg in $legList)
 #if($leg.position > 0)
-rule "R-add-badge $leg.name"
+rule "R-add-badge $Utils.getNormalizeLegName($leg.name)"
 	salience -1000
 when 
 	PointConcept(name == 'total_distance', score >= $Utils.getNormalizeLegName($leg.name)#[[_distance]]#)
-	$bc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$leg.name') 
+	$bc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$Utils.getNormalizeLegName($leg.name)') 
 	Game($gameId: id)
 	Player( $teamId : id, $teamId == const_school_name, team == true )
 then
 	utils.log("apply 'R-add-badge $leg.name'");
-	#[[$bc.getBadgeEarned().add]]#('$leg.name');
-	insert(new BadgeNotification($gameId, $teamId, $bc.getName(), '$leg.name'));
+	#[[$bc.getBadgeEarned().add]]#('$Utils.getNormalizeLegName($leg.name)');
+	insert(new BadgeNotification($gameId, $teamId, $bc.getName(), '$Utils.getEscapedLegName($leg.name)'));
 	update( $bc );
 end
 #end
 
 #if(${almostReachedMap.get($leg.objectId)})
-rule "R-notify-almost $leg.name"
+rule "R-notify-almost $Utils.getNormalizeLegName($leg.name)"
     salience -2000
 when 
-    $bc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$leg.name') 
+    $bc : BadgeCollectionConcept(name == badge_collection_name, badgeEarned not contains '$Utils.getNormalizeLegName($leg.name)') 
     PointConcept(name == 'total_distance', 
         score > $Utils.getNormalizeLegName($leg.name)#[[_distance]]# - const_almost_reached_next_leg && const_almost_reached_next_leg < $Utils.getNormalizeLegName($leg.name)#[[_distance]]#)
-    $cd: CustomData($almost : this["almost_reached_legs"] == null || !((ArrayList)$almost).contains("$leg.name")) 
+    $cd: CustomData($almost : this["almost_reached_legs"] == null || !((ArrayList)$almost).contains("$Utils.getNormalizeLegName($leg.name)")) 
     Game( $gameId: id)
     Player( $teamId : id, $teamId == const_school_name, team == true )
 then
@@ -59,10 +59,10 @@ then
         hs = new ArrayList();
         $cd.put("almost_reached_legs", hs);
     }
-    hs.add("$leg.name");
+    hs.add("$Utils.getNormalizeLegName($leg.name)");
     
     MessageNotification message = new MessageNotification($gameId,$teamId, 'AlmostReachedLeg');
-    message.addData("_leg_", "$leg.name");
+    message.addData("_leg_", "$Utils.getNormalizeLegName($leg.name)");
     insert(message);
 end
 
@@ -74,7 +74,7 @@ rule "R-GAME-END"
 // minimal salience to guarantee the MessageNotification is the last seen
 salience -10000
 when
-	BadgeCollectionConcept(name == badge_collection_name, badgeEarned contains '$params.final_destination')
+	BadgeCollectionConcept(name == badge_collection_name, badgeEarned contains '$Utils.getNormalizeLegName($params.final_destination)')
 #[[
 	Game($gameId: id)
 	Player( $teamId : id, $teamId == const_school_name, team == true )
