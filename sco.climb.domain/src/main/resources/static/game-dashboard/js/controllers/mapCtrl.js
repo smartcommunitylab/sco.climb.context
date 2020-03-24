@@ -448,7 +448,7 @@ angular.module("climbGame.controllers.map", [])
 
     init();
     setMapSize();
-    $timeout(function(){loadData(); }, 5000);
+    $timeout(function(){loadData(); }, 10000);
 
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
@@ -790,5 +790,5 @@ angular.module("climbGame.controllers.map", [])
     // splashscreen stay 3sec
     $timeout(function(){ 
       $scope.flashPublicData=false; 
-    }, 5000);
+    }, 10000);
   }]);
