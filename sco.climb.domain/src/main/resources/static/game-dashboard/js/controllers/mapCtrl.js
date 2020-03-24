@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", "dataService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService, dataService) {
+  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", "dataService", "loginService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService, dataService, loginService) {
     $scope.IMAGES_PREFIX_URL = configService.IMAGES_PREFIX_URL;
     $scope.demoUpdateTimeout = $location.search().demoupdatetimeout; 
     $scope.demoCenterLat = $location.search().demolat; 
@@ -448,8 +448,13 @@ angular.module("climbGame.controllers.map", [])
 
     init();
     setMapSize();
-    $timeout(function(){loadData(); }, 10000);
-
+    if(loginService.getUserToken()){
+      loadData(); 
+    }else{
+      $timeout(function(){
+        loadData(); 
+      }, 10000);
+    }
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
     }
@@ -787,7 +792,6 @@ angular.module("climbGame.controllers.map", [])
       //error with status
       console.log("error:",err);
     });
-    // splashscreen stay 3sec
     $timeout(function(){ 
       $scope.flashPublicData=false; 
     }, 10000);
