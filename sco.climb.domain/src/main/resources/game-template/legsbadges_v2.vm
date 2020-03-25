@@ -35,7 +35,7 @@ when
 	Game($gameId: id)
 	Player( $teamId : id, $teamId == const_school_name, team == true )
 then
-	utils.log("apply 'R-add-badge $leg.name'");
+	utils.log("apply 'R-add-badge $Utils.getEscapedLegName($leg.name)'");
 	#[[$bc.getBadgeEarned().add]]#('$Utils.getNormalizeLegName($leg.name)');
 	insert(new BadgeNotification($gameId, $teamId, $bc.getName(), '$Utils.getEscapedLegName($leg.name)'));
 	update( $bc );
@@ -53,7 +53,7 @@ when
     Game( $gameId: id)
     Player( $teamId : id, $teamId == const_school_name, team == true )
 then
-    utils.log("apply \'R-notify-almost $leg.name\'");
+    utils.log("apply \'R-notify-almost $Utils.getEscapedLegName($leg.name)\'");
     ArrayList hs = (ArrayList)$almost;
     if (hs==null) { 
         hs = new ArrayList();
