@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", "dataService", "loginService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService, dataService, loginService) {
+  .controller("mapCtrl", ["$scope", "$window", "$timeout", "$sce", '$location', "leafletData", "mapService", "configService", "dataService", function ($scope, $window, $timeout, $sce, $location, leafletData, mapService, configService, dataService) {
     $scope.IMAGES_PREFIX_URL = configService.IMAGES_PREFIX_URL;
     $scope.demoUpdateTimeout = $location.search().demoupdatetimeout; 
     $scope.demoCenterLat = $location.search().demolat; 
@@ -445,16 +445,9 @@ angular.module("climbGame.controllers.map", [])
       });
     }
 
-
     init();
     setMapSize();
-    if(loginService.getUserToken()){
-      loadData(); 
-    }else{
-      $timeout(function(){
-        loadData(); 
-      }, 10000);
-    }
+    loadData();
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
     }
@@ -783,7 +776,7 @@ angular.module("climbGame.controllers.map", [])
       return Math.floor(number);
     }
 
-  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "mapService", function ($scope, $window, $timeout, mapService) {
+  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "$state", "mapService", function ($scope, $window, $timeout, $state, mapService) {
     $scope.flashPublicData = true;
     mapService.getStatus().then(function (data) {
       $scope.sponsorTemplate=data.game.sponsorTemplate;
@@ -793,6 +786,7 @@ angular.module("climbGame.controllers.map", [])
       console.log("error:",err);
     });
     $timeout(function(){ 
-      $scope.flashPublicData=false; 
+    	$scope.flashPublicData = false;
+    	$state.go('home.content', {}, { reload: 'home.content' })
     }, 10000);
   }]);
