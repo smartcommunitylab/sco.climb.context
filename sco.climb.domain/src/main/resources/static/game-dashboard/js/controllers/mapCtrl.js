@@ -445,11 +445,9 @@ angular.module("climbGame.controllers.map", [])
       });
     }
 
-
     init();
     setMapSize();
-    $timeout(function(){loadData(); }, 10000);
-
+    loadData();
     if ($scope.isDemoDisplayer) {
       setInterval(loadData, $scope.demoUpdateTimeout*1000);
     }
@@ -778,7 +776,7 @@ angular.module("climbGame.controllers.map", [])
       return Math.floor(number);
     }
 
-  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "mapService", function ($scope, $window, $timeout, mapService) {
+  }]).controller("mapCtrlHome", ["$scope", "$window", "$timeout", "$state", "mapService", function ($scope, $window, $timeout, $state, mapService) {
     $scope.flashPublicData = true;
     mapService.getStatus().then(function (data) {
       $scope.sponsorTemplate=data.game.sponsorTemplate;
@@ -787,8 +785,13 @@ angular.module("climbGame.controllers.map", [])
       //error with status
       console.log("error:",err);
     });
-    // splashscreen stay 3sec
     $timeout(function(){ 
-      $scope.flashPublicData=false; 
-    }, 10000);
+    	$scope.flashPublicData = false;
+    	$state.go('home.content', {}, { reload: 'home.content' })
+    }, 5000);
+    
+    $scope.goContent = function() {
+    	$scope.flashPublicData = false;
+    	$state.go('home.content', {}, { reload: 'home.content' });
+    }
   }]);

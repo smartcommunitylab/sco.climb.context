@@ -49,7 +49,7 @@ angular.module('climbGame', [
 
       $stateProvider
         .state('home', {
-          url: '/:idDomain/:idGame/:idItinerary/',
+          url: '/:idDomain/:idGame/:idItinerary/map',
           views: {
             '@': {
               templateUrl: 'templates/home.html',
@@ -57,8 +57,8 @@ angular.module('climbGame', [
             }
           }
         })
-        .state('home.map', {
-          url: 'map',
+        .state('home.content', {
+          url: '/:idDomain/:idGame/:idItinerary/map/content',
           views: {
             'content@home': {
               templateUrl: 'templates/map.html',

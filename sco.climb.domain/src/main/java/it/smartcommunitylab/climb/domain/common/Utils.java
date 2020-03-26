@@ -222,6 +222,10 @@ public class Utils {
 		return name.trim().replace(" ", "").replaceAll("\\W", "X");
 	}
 	
+	public static String getEscapedLegName(String name) {
+		return name.trim().replace("\\", "\\\\").replace("'", "\\'").replace("\"", "\\\"");
+	}
+	
 	public static Date getStartOfTheDay(Date date) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date);
