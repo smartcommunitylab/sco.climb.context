@@ -15,7 +15,7 @@
         </md-card-title>
         <md-card-content>
           <p class="md-title" ng-if="notif.key">{{'notif_' + notif.key | translate:notif.data}}</p>
-          <p class="md-title" ng-if="notif.badge">{{'notif_badge' | translate:'{badge: "' + notif.badge + '"}'}}</p>
+          <p class="md-title" ng-if="notif.badge">{{'notif_badge' | translate:'{badge: "' + escape(notif.badge) + '"}'}}</p>
         </md-card-content>
       </md-card>
     </md-content>
