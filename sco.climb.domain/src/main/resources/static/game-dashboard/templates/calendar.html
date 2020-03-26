@@ -6,7 +6,7 @@
           <div class="md-title">{{'cal_notifications' | translate}}</div>
           <div ng-if="!lastNotification">{{'cal_notifications_empty' | translate}}</div>
           <div ng-if="lastNotification.key">{{'notif_' + lastNotification.key | translate:lastNotification.data}}</div>
-          <div ng-if="lastNotification.badge">{{'notif_badge' | translate:'{badge: "' + lastNotification.badge + '"}'}}</div>
+          <div ng-if="lastNotification.badge">{{'notif_badge' | translate:'{badge: "' + escape(lastNotification.badge) + '"}'}}</div>
         </div>
         <div layout="column" class="cal-arrow-max"></div>
       </div>

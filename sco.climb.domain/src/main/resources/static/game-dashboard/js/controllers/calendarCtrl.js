@@ -143,8 +143,12 @@ angular.module('climbGame.controllers.calendar', [])
 	      console.log(err)
 	      // Toast the Problem
 	      $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
-	    });
-
+      });
+      
+      $scope.escape = function(str) {
+        return str.replace(/"/g,'\\"');
+      }
+      
       $scope.returnColorByType = function (type) {
         var color = ''
         switch (type) {
