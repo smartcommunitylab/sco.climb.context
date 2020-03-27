@@ -27,4 +27,8 @@ angular.module('climbGame.controllers.notifications', [])
         $scope.loading = false
       }
     )
+    
+    $scope.escape = function(str) {
+    	return str.replace(/"/g,'\\"');
+    }
   })
