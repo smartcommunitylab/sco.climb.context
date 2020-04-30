@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.excursions', [])
   .controller('excursionsCtrl',
-    function ($scope, $window, $mdDialog, dataService) {
+    function ($scope, $window, $mdDialog, $mdToast, dataService) {
       $scope.showHints = false
       $scope.datepickerisOpen = false
       $scope.excursions = null
@@ -114,6 +114,8 @@ angular.module('climbGame.controllers.excursions', [])
                   },
                   function (reason) {
                     // console.log(reason)
+                  	$mdDialog.hide();
+                  	$mdToast.show($mdToast.simple().content('errore nel salvataggio dati'));
                     $scope.sendingData = false;
                   }
                 )
