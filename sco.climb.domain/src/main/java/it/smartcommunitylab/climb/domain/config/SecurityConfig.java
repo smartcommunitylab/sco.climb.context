@@ -1,9 +1,5 @@
 package it.smartcommunitylab.climb.domain.config;
 
-import it.smartcommunitylab.climb.domain.security.AacUserInfoTokenServices;
-import it.smartcommunitylab.climb.domain.security.DataSetDetails;
-import it.smartcommunitylab.climb.domain.security.DataSetInfo;
-
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -16,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -29,6 +26,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+
+import it.smartcommunitylab.climb.domain.security.AacUserInfoTokenServices;
+import it.smartcommunitylab.climb.domain.security.DataSetDetails;
+import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
 @Configuration
 @EnableOAuth2Client
@@ -43,25 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String rememberMeKey;
 	
   @Autowired
-  OAuth2ClientContext oauth2ClientContext;
-  
-  @Autowired
-  CustomLogoutSuccessHandler customLogoutSuccessHandler;
-  
-  @Autowired
   private UserDetailsService userDetailsServiceImpl;
-  
-  @Bean
-  @ConfigurationProperties("security.oauth2.client")
-  public AuthorizationCodeResourceDetails aac() {
-      return new AuthorizationCodeResourceDetails();
-  }
-
-  @Bean
-  @ConfigurationProperties("security.oauth2.resource")
-  public ResourceServerProperties aacResource() {
-      return new ResourceServerProperties();
-  }
   
   @Bean
   public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
@@ -71,13 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       return registration;
   }
   
-  private Filter ssoFilter() {
-    OAuth2ClientAuthenticationProcessingFilter aacFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/aac");
-    OAuth2RestTemplate aacTemplate = new OAuth2RestTemplate(aac(), oauth2ClientContext);
-    aacFilter.setRestTemplate(aacTemplate);
-    AacUserInfoTokenServices tokenServices = new AacUserInfoTokenServices(aacResource().getUserInfoUri(), aac().getClientId());
-    tokenServices.setRestTemplate(aacTemplate);
-    tokenServices.setPrincipalExtractor(new PrincipalExtractor() {
+  @Bean
+  public PrincipalExtractor principalExtractor() {
+	  return new PrincipalExtractor() {
 			
 			@SuppressWarnings("unchecked")
 			@Override
@@ -113,40 +94,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				DataSetDetails details = new DataSetDetails(dataSetInfo);
 				return details;
 			}
-		});
-    aacFilter.setTokenServices(tokenServices);
-    return aacFilter;
+		};
   }
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.headers()
-			.frameOptions().disable();
-		http
-			.logout()
-				.clearAuthentication(true)
-				.deleteCookies("rememberme", "JSESSIONID")
-				.invalidateHttpSession(true)
-				.logoutSuccessHandler(customLogoutSuccessHandler);
-		http
-			.csrf()
-				.disable()
-			.authorizeRequests()
-				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**", "/game-dashboard/**/*.html")
-					.authenticated()
-				.anyRequest()
-					.permitAll()
-			.and()
-				.addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
-				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
-				.rememberMe();
-					
-		http
-			.formLogin()
-				.loginPage("/login/aac");
-	}
-	
+  
   @Bean
   public RememberMeAuthenticationFilter rememberMeAuthenticationFilter() throws Exception {
       return new RememberMeAuthenticationFilter(authenticationManager(),
@@ -167,4 +117,143 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       service.setTokenValiditySeconds(3600 * 24 * 365 * 1);
       return service;
   }
+
+  
+  @Bean
+  @ConfigurationProperties("security.oauth2.client")
+  public AuthorizationCodeResourceDetails aacGoogleOnly() {
+      return new AuthorizationCodeResourceDetails();
+  }
+	
+
+    @Configuration
+    @Order(1)
+    public static class DashboardWebSecurityConfig extends WebSecurityConfigurerAdapter{
+	    @Autowired
+	    CustomLogoutSuccessHandler customLogoutSuccessHandler;
+	    @Autowired
+	    RememberMeAuthenticationFilter rememberMeAuthenticationFilter;
+	    @Autowired
+	    OAuth2ClientContext oauth2ClientContext;
+	    @Autowired
+	    PrincipalExtractor principalExtractor;
+
+	    @Bean
+	    @ConfigurationProperties("security.oauth2.resource")
+	    public ResourceServerProperties aacResource() {
+	        return new ResourceServerProperties();
+	    }
+	    @Bean("aacGoogle")
+	    @ConfigurationProperties("security.oauth2.client")
+	    public AuthorizationCodeResourceDetails aacGoogle() {
+	    	return new AuthorizationCodeResourceDetails();
+	    }
+
+	    private Filter ssoFilter() {
+	        OAuth2ClientAuthenticationProcessingFilter aacFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/aacgoogle");
+	        AuthorizationCodeResourceDetails details = aacGoogle();
+	        details.setUserAuthorizationUri(details.getUserAuthorizationUri() + "/google");
+	        OAuth2RestTemplate aacTemplate = new OAuth2RestTemplate(details, oauth2ClientContext);
+	        aacFilter.setRestTemplate(aacTemplate);
+	        AacUserInfoTokenServices tokenServices = new AacUserInfoTokenServices(aacResource().getUserInfoUri(), details.getClientId());
+	        tokenServices.setRestTemplate(aacTemplate);
+	        tokenServices.setPrincipalExtractor(principalExtractor);
+	        aacFilter.setTokenServices(tokenServices);
+	        return aacFilter;
+	      }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+    		http
+			.headers()
+			.frameOptions().disable();
+		http
+			.logout()
+				.clearAuthentication(true)
+				.deleteCookies("rememberme", "JSESSIONID")
+				.invalidateHttpSession(true)
+				.logoutSuccessHandler(customLogoutSuccessHandler);
+		http
+			.csrf()
+				.disable()
+			.requestMatcher(new OrRequestMatcher(
+						        new AntPathRequestMatcher("/game-dashboard/**/*.html"),
+						        new AntPathRequestMatcher("/login/aacgoogle")))
+				.authorizeRequests()
+					.anyRequest()
+						.authenticated()
+			.and()
+				.addFilterBefore(rememberMeAuthenticationFilter, BasicAuthenticationFilter.class)
+				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
+				.rememberMe();
+					
+		http
+			.formLogin()
+				.loginPage("/login/aacgoogle");
+		}
+    }
+    
+    @Configuration
+    @Order(2)
+    public static class MainWebSecurityConfig extends WebSecurityConfigurerAdapter{
+	    @Autowired
+	    CustomLogoutSuccessHandler customLogoutSuccessHandler;
+	    @Autowired
+	    RememberMeAuthenticationFilter rememberMeAuthenticationFilter;
+	    @Autowired
+	    OAuth2ClientContext oauth2ClientContext;
+	    @Autowired
+	    PrincipalExtractor principalExtractor;
+
+	    @Bean
+	    @ConfigurationProperties("security.oauth2.resource")
+	    public ResourceServerProperties aacResource() {
+	        return new ResourceServerProperties();
+	    }
+	    @Bean("aac")
+	    @ConfigurationProperties("security.oauth2.client")
+	    public AuthorizationCodeResourceDetails aac() {
+	        return new AuthorizationCodeResourceDetails();
+	    }
+
+	    private Filter ssoFilter() {
+	        OAuth2ClientAuthenticationProcessingFilter aacFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/aac");
+	        OAuth2RestTemplate aacTemplate = new OAuth2RestTemplate(aac(), oauth2ClientContext);
+	        aacFilter.setRestTemplate(aacTemplate);
+	        AacUserInfoTokenServices tokenServices = new AacUserInfoTokenServices(aacResource().getUserInfoUri(), aac().getClientId());
+	        tokenServices.setRestTemplate(aacTemplate);
+	        tokenServices.setPrincipalExtractor(principalExtractor);
+	        aacFilter.setTokenServices(tokenServices);
+	        return aacFilter;
+	      }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+    		http
+			.headers()
+			.frameOptions().disable();
+		http
+			.logout()
+				.clearAuthentication(true)
+				.deleteCookies("rememberme", "JSESSIONID")
+				.invalidateHttpSession(true)
+				.logoutSuccessHandler(customLogoutSuccessHandler);
+		http
+			.csrf()
+				.disable()
+			.authorizeRequests()
+				.antMatchers("/console/**", "/upload/**", "/report/**", "/backend/**")
+					.authenticated()
+				.anyRequest()
+					.permitAll()
+			.and()
+				.addFilterBefore(rememberMeAuthenticationFilter, BasicAuthenticationFilter.class)
+				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
+				.rememberMe();
+					
+		http
+			.formLogin()
+				.loginPage("/login/aac");
+		}
+    }
 }

@@ -192,7 +192,9 @@ public class DashboardController extends AuthController {
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<PedibusPlayer> players = storage.getPedibusPlayersByClassRoom(ownerId, pedibusGameId, classRoom);
+		List<String> classes = new ArrayList<>();
+		classes.add(classRoom);
+		List<PedibusPlayer> players = storage.getPedibusPlayersByClassRooms(ownerId, pedibusGameId, classes);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getPlayersByClassRoom[%s]: %s - %s", ownerId, 
 					pedibusGameId, players.size()));
