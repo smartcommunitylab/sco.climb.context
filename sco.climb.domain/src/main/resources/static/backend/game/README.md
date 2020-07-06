@@ -49,6 +49,7 @@ I templates HTML sono suddivisi in base alle sezioni dell'app e rappresentano gl
 * **Angular-ui-router**: 0.4.2. Sconsigliato l'aggiornamento al ramo 1.0, bisognerebbe apportare pesanti modifiche.
 * **Angular-ui-sortable**: 0.14.4. Impossibile aggiornare ulteriormente a meno di non portare jQuery almeno alla versione 3.1.
 * **Angular-ui-bootstrap**: 0.14.3. L'aggiornamento è fattibile, ma bisognerebbe adattare il modo in cui vengono configurati alcuni elementi (come i date-picker).
-* **Bootstrap**: 3.2.0. L'aggiornamento al ramo 3.3 dovrebbe essere fattibile.
+* **Bootstrap**: 3.2.0. https://bootstrapdocs.com/v3.2.0/docs/
+L'aggiornamento al ramo 3.3 dovrebbe essere fattibile.
 
 *Ultimo aggiornamento: 04/08/2017 - Francesco Saltori*

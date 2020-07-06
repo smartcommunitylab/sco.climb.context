@@ -1012,3 +1012,13 @@ hr.cBlue{
   .allSelectedBGColor{
     background-color: #abd7ed !important;
   }
+  .button-blue{
+  background-color: #4899D6 !important;
+  color:white;
+  }
+  .margin-8{
+  margin: 8px;
+  }
+  .interact-blue {
+    color: #4899D6 !important;
+  }
