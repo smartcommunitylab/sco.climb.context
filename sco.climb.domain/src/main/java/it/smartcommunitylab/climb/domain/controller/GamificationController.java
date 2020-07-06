@@ -339,6 +339,11 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
+		PedibusItinerary itinerary = new PedibusItinerary();
+		itinerary.setOwnerId(ownerId);
+		itinerary.setPedibusGameId(result.getObjectId());
+		itinerary.setName(result.getGameName() + " - itinerario");
+		storage.savePedibusItinerary(itinerary);
 		try {
 			schedulerManager.resetJob(result.getObjectId());
 		} catch (Exception e) {
