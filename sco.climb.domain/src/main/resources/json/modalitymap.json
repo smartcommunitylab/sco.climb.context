@@ -2,14 +2,14 @@
 	"modalities": [
 		{
 			"value":"walk",
-			"label": "A piedi",
+			"label": "Piedi",
 			"active": true,
 			"category": "cat1",
 			"color": "#A8E206"
 		},
 		{
 			"value":"bike",
-			"label": "In bici",
+			"label": "Bicicletta",
 			"active": true,
 			"category": "cat1",
 			"color": "#01C86E"
