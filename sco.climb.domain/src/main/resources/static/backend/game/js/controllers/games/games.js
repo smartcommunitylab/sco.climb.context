@@ -507,4 +507,18 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 
 
-    });
+    })
+.controller('GameGamersCtrl', function ($scope) {
+	        $scope.$parent.selectedTab = 'gamers';
+
+	})
+	.controller('GameCalibrationCtrl', function ($scope) {
+		        $scope.$parent.selectedTab = 'calibration';
+
+		
+	})
+	.controller('GamePedibusCtrl', function ($scope) {
+		        $scope.$parent.selectedTab = 'pedibus';
+
+		
+	})

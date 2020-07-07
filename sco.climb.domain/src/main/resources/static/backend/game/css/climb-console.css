@@ -262,8 +262,8 @@ hr.border-paths {
 }
 
 .field p {
-    margin-right: 15px
-}
+/*     margin-right: 15px
+ */}
 
 .field select {
     /*width: 100px;*/
@@ -376,8 +376,9 @@ input.default-height + .input-group-btn {
 }
 
 .tabs-menu a.active-tab, .tabs-menu a:hover {
-    color: #118575;
-    border-bottom: 4px solid #118575
+    color: #4899D6;
+    border-bottom: 4px solid #4899D6;
+    font-weight: bold;
 }
 
 .tabs-menu a:first-child {

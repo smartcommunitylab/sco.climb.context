@@ -117,6 +117,21 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/games/tabs/params.html',
             controller: 'GameParamsCtrl'
         })
+        .state('root.game.gamers', {
+            url: '/gamers',
+            templateUrl: 'templates/games/tabs/gamers.html',
+            controller: 'GameGamersCtrl'
+        })
+        .state('root.game.calibration', {
+            url: '/calibration',
+            templateUrl: 'templates/games/tabs/calibration.html',
+            controller: 'GameCalibrationCtrl'
+        })
+        .state('root.game.pedibus', {
+            url: '/pedibus',
+            templateUrl: 'templates/games/tabs/pedibus.html',
+            controller: 'GamePedibusCtrl'
+        })
         .state('root.institutes-list', {
             url: '/institutes-list',
             templateUrl: 'templates/institutes/institutes-list.html',
