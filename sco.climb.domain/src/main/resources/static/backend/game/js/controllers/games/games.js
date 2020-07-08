@@ -363,6 +363,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             //call api and calculate nr.of studenti.
             DataService.getNrOfStudents($scope.currentGame.ownerId, $scope.currentGame.instituteId, $scope.currentGame.schoolId, selectedClasses).then(
                 function (response) {
+	console.log("nrOfStudenti"+response.data);
                     $scope.nrOfStudenti = response.data;
                     $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
                 });
@@ -522,3 +523,89 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 		
 	})
+.controller('PlayerCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
+	$scope.$parent.selectedTab = 'players-list';
+    
+    $scope.initController = function() {
+        DataService.getData('players',
+                $stateParams.idDomain, 
+                $stateParams.idInstitute, 
+                $stateParams.idSchool).then(
+        function(response) {
+            $scope.currentSchool.players = response.data;
+            console.log('Caricamento dei giocatori andato a buon fine.');
+            if ($stateParams.idPlayer) {
+                for (var i = 0; i < $scope.currentSchool.players.length && !$scope.selectedPlayer; i++) {
+                    if ($scope.currentSchool.players[i].objectId == $stateParams.idPlayer) {
+                        $scope.selectedPlayer = angular.copy($scope.currentSchool.players[i]);
+                    }
+                }	
+                $scope.saveData = DataService.editData;
+            } else {
+                $scope.selectedPlayer = {
+                    "nickname": '',
+                    "classRoom": '',
+                    "ownerId": $scope.currentSchool.ownerId,
+                    "instituteId": $scope.currentSchool.instituteId,
+                    "schoolId": $scope.currentSchool.objectId
+                };
+                $scope.saveData = DataService.saveData;
+            }
+        }, function() {
+            $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
+            console.log("Errore nel caricamento dei giocatori.");
+        }
+        );
+    }
+
+    if ($scope.currentSchool) {
+        $scope.initController();
+    } else {
+        $scope.$on('schoolLoaded', function(e) {  
+            $scope.initController();        
+        });
+    }    
+	
+  $scope.isNewPlayer = function() {
+  	return ($stateParams.idPlayer == null || $stateParams.idPlayer == '');
+  }
+  
+  // Exit without saving changes
+  $scope.back = function () {
+      createDialog('templates/modals/back.html',{
+          id : 'back-dialog',
+          title: 'Sei sicuro di voler uscire senza salvare?',
+          success: { label: 'Conferma', fn: function() {$state.go('root.game.gamers');} }
+      });
+  }
+  
+  $scope.save = function () {  
+  	if (checkFields()) {
+  		$scope.saveData('player', $scope.selectedPlayer).then(
+				function(response) {
+                    console.log('Giocatore salvato.');
+                    $state.go('root.game.gamers');
+				},
+				function(err) {
+                    $rootScope.networkProblemDetected('Errore nel salvataggio del giocatore! ' + err.data.errorMsg);
+                    console.log("Errore nel salvataggio del giocatore.");
+				}
+  		);
+  	}
+  }
+  
+  function checkFields() {
+    var allCompiled = true;
+    var invalidFields = $('.ng-invalid');
+    // Get all inputs
+    if (invalidFields.length > 0) {
+        $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
+        $timeout(function () {
+            $rootScope.modelErrors = '';
+        }, 5000);
+        allCompiled = false;
+    }
+    return allCompiled;
+  }
+
+});

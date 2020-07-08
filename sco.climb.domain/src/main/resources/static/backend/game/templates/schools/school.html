@@ -46,8 +46,8 @@
             	ng-if="PermissionsService.permissionEnabledEditSchool()">LINEE PEDIBUS</a>
             <a ng-class="{'active-tab':selectedTab == 'children-list'}" ui-sref="root.school.children-list"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">SCOLARI PEDIBUS</a>
-            <a ng-class="{'active-tab':selectedTab == 'players-list'}" ui-sref="root.school.players-list" 
-            	ng-if="PermissionsService.permissionEnabledEditPlayer()">GIOCATORI</a>
+           <!--  <a ng-class="{'active-tab':selectedTab == 'players-list'}" ui-sref="root.school.players-list" 
+            	ng-if="PermissionsService.permissionEnabledEditPlayer()">GIOCATORI</a> -->
             <a ng-class="{'active-tab':selectedTab == 'volunteer-list'}" ui-sref="root.school.volunteer-list"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">VOLONTARI</a>
         </div>
