@@ -400,13 +400,7 @@ public class GamificationController extends AuthController {
 				null, null, Const.AUTH_RES_PedibusGame_Mobility, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		pedibusGameDb.getParams().put("walk_studenti", game.getParams().get("walk_studenti"));
-		pedibusGameDb.getParams().put("bike_studenti", game.getParams().get("bike_studenti"));
-		pedibusGameDb.getParams().put("bus_studenti", game.getParams().get("bus_studenti"));
-		pedibusGameDb.getParams().put("pedibus_studenti", game.getParams().get("pedibus_studenti"));
-		pedibusGameDb.getParams().put("pandr_studenti", game.getParams().get("pandr_studenti"));
-		pedibusGameDb.getParams().put("carpooling_studenti", game.getParams().get("carpooling_studenti"));
-		pedibusGameDb.getParams().put("car_studenti", game.getParams().get("car_studenti"));
+		pedibusGameDb.getParams().putAll(game.getParams());
 		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGameMobility[%s]: %s", ownerId, pedibusGameId));
