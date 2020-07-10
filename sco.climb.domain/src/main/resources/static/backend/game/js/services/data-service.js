@@ -350,7 +350,69 @@ function ($q, $http, $rootScope, $timeout) {
         deleteMultimediaContent: function(element){
         var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
         return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
-        }
-    };
+        },
+        // PUT /api/game/{ownerId}/{pedibusGameId}/mobility
+        // modifica i dati di abitudini di mobilità
+        updateParams: function(element){
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.objectId + "/mobility";
+            return $http.put(url, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        }, 
+        // PUT /api/game/{ownerId}/{pedibusGameId}/tuning
+        // modifica i dati di calibrazione
+        updateCalibrazioni: function(element){
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.objectId + "/tuning";
+            return $http.put(url, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
+        //todo GET /api/game/{ownerId}/{pedibusGameId}/students
+        // da lista studenti in base a lista di classi
+        getStudentsByClasses: function (ownerId, pedibusGameId,classes) {
+            var filtered = classes.filter(function (el) {
+                return el != null;
+              });
+            var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/students?classes=" + filtered;
+            return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
+        //done DELETE /api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}
+        // cancella tappa itinerario
+        deleteStopFromItinerary: function(element,leg){
+            var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + leg.objectId;
+            return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
+        //done PUT /api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs/position
+        // modifica ordine tappe
+        updateStopsPosition: function(element){
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.objectId + "/legs/positions";
+            return $http.put(url, element.legs, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
+        //GET /api/game/{ownerId}/{pedibusGameId}/player
+        // lista giocatori per gioco
+        getStudentsByGame: function (element,classes) {
+            var filtered = classes.filter(function (el) {
+                return el != null;
+              });
+            var fetchUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.objectId + "/player?classes=" + filtered;
+            return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        },
+        //todo POST /api/game/{ownerId}/{pedibusGameId}/player
+        // crea giocatore
+        createPlayer: function (ownerId, pedibusGameId,data) {
+            var url = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/player";
+            return $http.post(url, data, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+            },
+            //todo PUT /api/game/{ownerId}/player/{id}
+            // modifica giocatore
+            updateGamer: function(element){
+                console.log("element::",element)
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/player/" + element.id ;
+            return $http.put(url, element.content, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+            },
+             //todo DELETE /api/game/{ownerId}/player/{id}
+            // cancella giocatore
+            deleteGamer: function(element){
+                console.log("element::",element)
+            var url= baseUrl + "/api/game/"+ element.ownerId + "/player/" + element.objectId ;
+            return $http.delete(url, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+            }
+                };
 }
 ]);

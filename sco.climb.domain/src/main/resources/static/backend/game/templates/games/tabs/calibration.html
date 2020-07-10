@@ -6,34 +6,35 @@
         <!-- Start and end date -->
         <div class="col-sm-12" style="margin-bottom: 20px;">
             <p style="display: inline-block" class="col-sm-3">
-                <span class="required-sign">*</span>
-                <b>Data di inizio:&emsp;</b>
+                 <b>Data di inizio:&emsp;</b>
             </p>
             <p class="input-group" class="col-sm-4" style="display: inline-block">
-                <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+                <b>{{$parent.startDate | date:"dd/MM/yyyy"}}</b>
+                <!-- <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
                     ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
-                />
-                <span class="input-group-btn">
+                /> -->
+                <!-- <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
-                </span>
+                </span> -->
             </p>
         </div>
         <div class="col-sm-12" style="margin-bottom: 20px;">
             <p style="display: inline-block" class="col-sm-3">
-                <span class="required-sign">*</span>
-                <b>Data di fine:&emsp;</b>
+                 <b>Data di fine:&emsp;</b>
             </p>
             <p class="input-group" class="col-sm-4" style="display: inline-block">
-                <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
+                <b>{{$parent.endDate | date:"dd/MM/yyyy"}}</b>
+
+                <!-- <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
                     ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
                 />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
-                </span>
+                </span> -->
             </p>
         </div>
         <div class="row">

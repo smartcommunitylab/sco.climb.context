@@ -81,7 +81,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.endDate = new Date();
         $scope.isCalendarOpen = [false, false];
         $scope.minDate = new Date(1970, 1, 1);
-
+        $scope.players=[];
         // Variabili per time-picker
         $scope.collectFromHour = new Date();
         $scope.collectFromHour.setSeconds(0);           // in questo modo evito che nell'input field compaiano anche i secondi e i millisecondi
@@ -89,12 +89,28 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.collectToHour = new Date();
         $scope.collectToHour.setSeconds(0);
         $scope.collectToHour.setMilliseconds(0);
-
+		// $scope.paramsChanged = false;
+		// $scope.calibrationChanged = false;
         // Variabili per selezione scuola, classi e linee corrispondenti
         $scope.classes = [];
         $scope.modalities = [];
 
-
+        $scope.manageResponse = function (response) {
+            console.log('Salvataggio dati a buon fine.');
+                      if ($scope.currentGame.objectId) { //edited
+                      	if ($scope.games) {
+                        	for (var i = 0; i < $scope.games.length; i++) {
+                            if ($scope.games[i].objectId == $scope.currentGame.objectId) {
+                            	$scope.games[i] = $scope.currentGame;
+                            }
+                        	}                        		
+                      	}  
+                      } else {
+                      	$scope.currentGame.objectId = response.data.objectId;
+                        if ($scope.games) $scope.games.push(response.data);
+                      }
+                      $state.go('root.games-list');
+        }
         $scope.initController = function () {
             if ($scope.currentGame) { //edit game
                 $scope.weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
@@ -129,29 +145,54 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 }
                 $scope.saveData = DataService.saveData;
             }
-            DataService.getData('classes',
-                $stateParams.idDomain,
-                $stateParams.idInstitute,
-                $stateParams.idSchool).then(
-                    function (response) {
-                        var classes = response.data;
-                        if (classes) {
-                            classes.forEach(function (entry) {
-                                var classEntry = {
-                                    value: false,
-                                    name: entry.name
-                                };
-                                if ($scope.currentGame.classRooms && $scope.currentGame.classRooms.includes(entry.name)) {
-                                    classEntry.value = true;
-                                }
-                                $scope.classes.push(classEntry);
-                            });
-                        }
+            $scope.classes= $scope.currentGame.classRooms;
+            // var classes = response.data;
+            //             if (classes) {
+            //                 classes.forEach(function (entry) {
+            //                     var classEntry = {
+            //                         value: false,
+            //                         name: entry.name
+            //                     };
+            //                     if ($scope.currentGame.classRooms && $scope.currentGame.classRooms.includes(entry.name)) {
+            //                         classEntry.value = true;
+            //                     }
+            //                     $scope.classes.push(classEntry);
+            //                 });
+            //             }
                         $scope.$broadcast('gameLoaded');
-                    }, function (error) {
-                        alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
-                    }
-                );
+            // DataService.getData('classes',
+            //     $stateParams.idDomain,
+            //     $stateParams.idInstitute,
+            //     $stateParams.idSchool).then(
+            //         function (response) {
+            //             var classes = response.data;
+            //             if (classes) {
+            //                 classes.forEach(function (entry) {
+            //                     var classEntry = {
+            //                         value: false,
+            //                         name: entry.name
+            //                     };
+            //                     if ($scope.currentGame.classRooms && $scope.currentGame.classRooms.includes(entry.name)) {
+            //                         classEntry.value = true;
+            //                     }
+            //                     $scope.classes.push(classEntry);
+            //                 });
+            //             }
+            //             $scope.$broadcast('gameLoaded');
+            //         }, function (error) {
+            //             alert('Errore nel caricamento delle classi:' + error.data.errorMsg);
+            //         }
+            //     );
+            var classes=[]
+            $scope.currentGame.classRooms.forEach(function (cl) {
+                if (cl)
+                    classes.push(cl);
+            })
+            DataService.getStudentsByGame($scope.currentGame,classes).then(
+                function(response){
+                    $scope.players=response.data;
+                }
+            )
             DataService.getModalityMap().then(
             		function(response) {
             			if(response.data) {
@@ -220,9 +261,9 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
                 $scope.currentGame.classRooms = [];
                 $scope.classes.forEach(function (entry) {
-                    if (entry.value) {
-                        $scope.currentGame.classRooms.push(entry.name);
-                    }
+                    // if (entry.value) {
+                        $scope.currentGame.classRooms.push(entry);
+                    // }
                 });
                 
                 $scope.currentGame.modalities = [];
@@ -232,22 +273,21 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                   }
                 });
                 
+ 
+                
+              if ($scope.selectedTab == 'params'){
+	DataService.updateParams($scope.currentGame).then(
+                    function (response) {
+                        $scope.manageResponse(response);	})
+} else if ($scope.selectedTab == 'calibration')  {
+	DataService.updateCalibrazioni($scope.currentGame).then(
+                    function (response) {
+                        $scope.manageResponse(response);	})
+} else
               $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                   function (response) {
-                      console.log('Salvataggio dati a buon fine.');
-                      if ($scope.currentGame.objectId) { //edited
-                      	if ($scope.games) {
-                        	for (var i = 0; i < $scope.games.length; i++) {
-                            if ($scope.games[i].objectId == $scope.currentGame.objectId) {
-                            	$scope.games[i] = $scope.currentGame;
-                            }
-                        	}                      		
-                      	}  
-                      } else {
-                      	$scope.currentGame.objectId = response.data.objectId;
-                        if ($scope.games) $scope.games.push(response.data);
-                      }
-                      $state.go('root.games-list');
+                      $scope.manageResponse(response);
+                      
                   }, function (error) {
                   	alert("Errore nella richiesta:" + error.data.errorMsg);
                   }
@@ -343,21 +383,26 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             });
             $scope.classToggled();
         }
-
-        $scope.classToggled = function () {
-            $scope.selectedClasses = [];
-            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
-                return cl.value;
-            })
+        $scope.addClasse = function (nomeClasse) {
+            $scope.$parent.classes.push(nomeClasse);
+        }
+        $scope.classToggled = function (name) {
+	if (name){            $scope.selectedClasses = [];
+/*            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
+                return cl.name;
+            })*/
 
             $scope.$parent.classes.forEach(function (cl) {
-                if (cl.value) {
-                    $scope.selectedClasses.push(cl.name);
+                if (cl!=name) {
+                    $scope.selectedClasses.push(cl);
                 }
             })
+			$scope.$parent.classes = $scope.selectedClasses;
 
-            $scope.calculateStudenti($scope.selectedClasses);
-        }
+}
+
+/*            $scope.calculateStudenti($scope.selectedClasses);
+*/        }
         
         $scope.calculateStudenti = function (selectedClasses) {
             //call api and calculate nr.of studenti.
@@ -383,10 +428,10 @@ angular.module('consoleControllers.games', ['ngSanitize'])
         $scope.initParamController = function () {
         	if((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
             $scope.currentGame.params = {
-            		walk_studenti: 0,
-            		const_walk_distance: 0,
-            		bike_studenti: 0,
-            		const_bike_distance: 0,
+            	walk_studenti: 0,
+            	const_walk_distance: 0,
+            	bike_studenti: 0,
+            	const_bike_distance: 0,
                 bus_studenti: 0,
                 const_bus_distance: 0,
                 pedibus_studenti: 0,
@@ -509,14 +554,126 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 
 
     })
-.controller('GameGamersCtrl', function ($scope) {
-	        $scope.$parent.selectedTab = 'gamers';
+.controller('GameGamersCtrl', function ($scope,$stateParams,$rootScope,DataService) {
+            $scope.$parent.selectedTab = 'gamers';
+            //get players
+            $scope.classes = $scope.$parent.classes;
+            $scope.players = $scope.$parent.players;
+
+            $scope.initController = function() {
+                DataService.getStudentsByGame(
+                    $scope.$parent.currentGame,$scope.$parent.classes).then(
+                function(response) {
+                    $scope.$parent.players=response.data;
+                    $scope.players = $scope.$parent.players;
+                    console.log('Caricamento dei giocatori andato a buon fine.');
+                }, function() {
+                    $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
+                    console.log("Errore nel caricamento dei giocatori.");
+                }
+                );
+            }
+        
+
+            $scope.editIsEnabled = function (index) {
+                return true
+            }
+            $scope.enableEdit = function (index) {
+            }
+            $scope.saveEdit = function (index) {
+                
+            }
+            $scope.remove = function (player) {
+                $scope.done=true;
+                DataService.deleteGamer(player).then(function(){
+                    //refresh list
+                    //update players
+                    DataService.getStudentsByGame($scope.$parent.currentGame,$scope.$parent.classes).then(
+                        function(response){
+                            $scope.$parent.players=response.data;
+                            $scope.players = $scope.$parent.players;
+                            setTimeout(function(){
+                                $scope.done=false;
+                            },1000);
+ 
+                        }
+                    )
+                }, function(err){
+                    //error
+                    $scope.done=false;
+
+                })
+            }
+
+            // if ($scope.currentSchool) {
+                if (!$scope.$parent.currentGame)
+                $scope.$on('gameLoaded', function(e) {  
+                        $scope.initController();        
+                    });
+                    else {
+                        $scope.initController();
+                    }
+                //$scope.initController();
+            // } else {
+            //     $scope.$on('schoolLoaded', function(e) {  
+                //     $scope.initController();        
+                // });
+            // }
 
 	})
 	.controller('GameCalibrationCtrl', function ($scope) {
 		        $scope.$parent.selectedTab = 'calibration';
 
-		
+                $scope.initParamController = function () {
+                    if((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
+                    $scope.currentGame.params = {
+                        walk_studenti: 0,
+                        const_walk_distance: 0,
+                        bike_studenti: 0,
+                        const_bike_distance: 0,
+                        bus_studenti: 0,
+                        const_bus_distance: 0,
+                        pedibus_studenti: 0,
+                        const_pedibus_distance: 0,
+                        pandr_studenti: 0,
+                        const_pandr_distance: 0,
+                        carpooling_studenti: 0,
+                        const_carpooling_distance: 0,
+                        car_studenti: 0,
+                        const_car_distance: 0,
+                        const_daily_nominal_distance: 0,
+                        const_zeroimpact_distance: 0,
+                        giorni_chiusi: 0,
+                        const_cloudy_bonus: 0,
+                        const_rain_bonus: 0,
+                        const_snow_bonus: 0,
+                        const_ZeroImpactDayClass_bonus: 0,
+                        const_NoCarDayClass_bonus: 0,
+                        km_bonus: 0
+                    }
+                    } else {
+                    // typecast params.
+                    for (var p in $scope.currentGame.params) {
+                        $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
+                    }
+                    }
+                    // Variabili per date-picker(fix for refresh issue on parametri page)
+                    $scope.$parent.dateFormat = 'dd/MM/yyyy';
+                    $scope.$parent.startDate = new Date();
+                    $scope.$parent.endDate = new Date();
+                    $scope.$parent.isCalendarOpen = [false, false];
+                    $scope.$parent.minDate = new Date(1970, 1, 1);
+                    if($scope.currentGame.from) {
+                        $scope.$parent.startDate.setTime($scope.currentGame.from);
+                    }
+                    if($scope.currentGame.to) {
+                        $scope.$parent.endDate.setTime($scope.currentGame.to);
+                    }
+                }
+                
+                    
+                $scope.initParamController();
+    
 	})
 	.controller('GamePedibusCtrl', function ($scope) {
 		        $scope.$parent.selectedTab = 'pedibus';
@@ -526,45 +683,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
 .controller('PlayerCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
 	$scope.$parent.selectedTab = 'players-list';
     
-    $scope.initController = function() {
-        DataService.getData('players',
-                $stateParams.idDomain, 
-                $stateParams.idInstitute, 
-                $stateParams.idSchool).then(
-        function(response) {
-            $scope.currentSchool.players = response.data;
-            console.log('Caricamento dei giocatori andato a buon fine.');
-            if ($stateParams.idPlayer) {
-                for (var i = 0; i < $scope.currentSchool.players.length && !$scope.selectedPlayer; i++) {
-                    if ($scope.currentSchool.players[i].objectId == $stateParams.idPlayer) {
-                        $scope.selectedPlayer = angular.copy($scope.currentSchool.players[i]);
-                    }
-                }	
-                $scope.saveData = DataService.editData;
-            } else {
-                $scope.selectedPlayer = {
-                    "nickname": '',
-                    "classRoom": '',
-                    "ownerId": $scope.currentSchool.ownerId,
-                    "instituteId": $scope.currentSchool.instituteId,
-                    "schoolId": $scope.currentSchool.objectId
-                };
-                $scope.saveData = DataService.saveData;
-            }
-        }, function() {
-            $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
-            console.log("Errore nel caricamento dei giocatori.");
-        }
-        );
-    }
-
-    if ($scope.currentSchool) {
-        $scope.initController();
-    } else {
-        $scope.$on('schoolLoaded', function(e) {  
-            $scope.initController();        
-        });
-    }    
+        
 	
   $scope.isNewPlayer = function() {
   	return ($stateParams.idPlayer == null || $stateParams.idPlayer == '');
@@ -581,10 +700,11 @@ angular.module('consoleControllers.games', ['ngSanitize'])
   
   $scope.save = function () {  
   	if (checkFields()) {
-  		$scope.saveData('player', $scope.selectedPlayer).then(
+  		DataService.createPlayer($scope.currentGame.ownerId, $scope.currentGame.objectId,$scope.selectedPlayer).then(
 				function(response) {
                     console.log('Giocatore salvato.');
                     $state.go('root.game.gamers');
+                    //update gamers
 				},
 				function(err) {
                     $rootScope.networkProblemDetected('Errore nel salvataggio del giocatore! ' + err.data.errorMsg);

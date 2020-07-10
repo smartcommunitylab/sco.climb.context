@@ -356,7 +356,7 @@ input.default-height+.input-group-btn {
 
 .tabs-menu a {
 	cursor: pointer;
-	color: #000;
+	color: #4899D6;
 	font-weight: 500;
 	display: block;
 	font-size: 15px;
@@ -1147,4 +1147,18 @@ rotate
 	padding: 10px;
 	border: 1px solid black;
 	border-radius: 16px;
+}
+.class-button{
+    text-align: left;
+    width: 200px;
+    background-color: lightgray;
+    border: solid 1px gray;
+  	padding: 8px;
+  	margin:8px;
+	}
+.class-button span{
+	color: white;
+    background-color: #EA5E5E;
+    padding: 8px;
+    border-radius: 4px;	
 }

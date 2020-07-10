@@ -76,24 +76,32 @@
         <p>
             <span class="required-sign">*</span>
             <b>Aggiungi le classi che parteciperanno al gioco:</b>
+
         </p>
-        <div style="margin-left: 10px;" class="checkbox-inline">
+        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="addClass=!addClass;console.log('ciao')">Aggiungi classe</a></div>
+        <div ng-if="addClass"> Aggiungi classe: <input type="text" ng-model="new.classe"><a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a></div>
+
+        <!-- <div style="margin-left: 10px;" class="checkbox-inline">
             <label style="font-weight: normal">
                 <input type="checkbox" ng-click="toggleSelectedClasses()" ng-disabled="currentGame.deployed" ng-model="classesAllSelected">Seleziona tutto&ensp;|&ensp;
             </label>
-        </div>
-        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in classes">
-            <label style="font-weight: normal">
-                <input type="checkbox" value="{{classe.value}}" ng-model="classe.value" ng-disabled="currentGame.deployed" ng-change="classToggled()">{{classe.name}}&ensp;
-            </label>
+        </div> -->
+        <!-- <div ng-repeat="classe in classes track by $index">
+                <div class="class-button "> <span>{{classe}} <span><a class="btn btn-primary btn-lg" role="button"><i class="fas fa-trash" ng-click="classToggled(classe)"></i></a></span>
+                </div> 
+        </div> -->
+                <div class="col-sm-4" ng-repeat="classe in classes track by $index">
+        <div class="btn btn-sm class-button"  ng-click="classToggled(classe)">
+            <div ><span class="fa fa-trash pull-right" ></span> {{classe}}</div>
         </div>
     </div>
+    </div>
     <!-- Num studenti nelle classi -->
-    <div class="col-sm-12 field">
+    <!-- <div class="col-sm-12 field">
         <p>
             <b>Num. studenti nelle classi: {{nrOfStudenti}}</b>
         </p>
-    </div>
+    </div> -->
     <!-- Global Team -->
     <div class="col-sm-12 field">
         <span class="required-sign">*</span>
