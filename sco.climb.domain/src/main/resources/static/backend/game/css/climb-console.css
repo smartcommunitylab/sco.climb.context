@@ -679,7 +679,7 @@ to {
 .checkBoxStyle {
 	width: 20px;
 	height: 20px;
-	margin: -1px 0px 0px -22px !important;
+	margin: -1px 8px 0px -22px !important;
 }
 
 .cbStyle {
@@ -1161,4 +1161,22 @@ rotate
     background-color: #EA5E5E;
     padding: 8px;
     border-radius: 4px;	
+}
+.adder{
+    border-radius: 8px;
+    border: solid 2px #4899D6;
+	padding: 8px;
+	margin:8px;
+}
+.edit-gamer {
+	position: absolute;
+    right: 13px;
+}
+.gamer {
+	line-height: 40px;
+}
+.information-circle {
+	color:  #4899D6;
+	margin: 8px;
+	font-size: 18px !important;
 }

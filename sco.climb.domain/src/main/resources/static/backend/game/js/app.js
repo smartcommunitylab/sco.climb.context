@@ -37,7 +37,19 @@ consoleApp.config(['$provide', function ($provide) {
     }]);
 }]);
 
-
+consoleApp.directive('stringToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(value) {
+        return '' + value;
+      });
+      ngModel.$formatters.push(function(value) {
+        return parseFloat(value);
+      });
+    }
+  };
+});
 consoleApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/institutes-list');
     $stateProvider

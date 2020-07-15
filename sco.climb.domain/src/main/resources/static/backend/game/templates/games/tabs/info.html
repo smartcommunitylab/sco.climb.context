@@ -1,7 +1,7 @@
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
     <!-- Name -->
     <div class="col-sm-12 field">
-        <p class="col-sm-3">
+        <p class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Nome:</b>
         </p>
@@ -16,13 +16,13 @@
         <text-angular ng-model="currentGame.gameDescription" ng-required="true"></text-angular>
     </div> -->
     <!-- Start and end date -->
-    <div class="col-sm-12" style="margin-bottom: 20px;">
-        <p style="display: inline-block" class="col-sm-3">
+    <div class="col-sm-12 col-12" style="margin-bottom: 20px;">
+        <p style="display: inline-block" class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Data di inizio:&emsp;</b>
         </p>
-        <p class="input-group col-sm-4"" style="display: inline-block">
-            <input style="width: 200px" class="form-control  type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+        <p class="input-group col-sm-4 col-4" style="display: inline-block">
+            <input style="width: 200px" class="form-control"  type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
                 ng-disabled="currentGame.deployed" ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
             <span class="input-group-btn">
@@ -32,12 +32,12 @@
             </span>
         </p>
     </div>
-    <div class="col-sm-12" style="margin-bottom: 20px;">
-        <p style="display: inline-block" class="col-sm-3">
+    <div class="col-sm-12 col-12 " style="margin-bottom: 20px;">
+        <p style="display: inline-block" class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Data di fine:&emsp;</b>
         </p>
-        <p class="input-group col-sm-4"" style="display: inline-block">
+        <p class="input-group col-sm-4 col-4" style="display: inline-block">
             <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
                 ng-disabled="currentGame.deployed" ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
@@ -48,15 +48,17 @@
             </span>
         </p>
     </div>
-    <div class="col-sm-12 field">
-        <p class="col-sm-3">
+    <div class="col-sm-12 col-12 field">
+        <p class="col-sm-4 col-4 col-xs-4">
         	<span class="required-sign ">*</span>
-        	<b>Link breve:</b>
+        	<b>Link breve:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="Si tratta di un link precompilato pubblico per accedere al percorso."></i>
+    </b>
         </p>
         <input class="form-control col-sm-4" type="text" ng-model="currentGame.shortName" ng-required="true" />
     </div>
-    <div class="col-sm-12 field">
-        <p class="col-sm-3">
+    <div class="col-sm-12 col-12 field">
+        <p class="col-sm-4 col-4 col-xs-4">
         	<span class="required-sign">*</span>
         	<b>Sponsor:</b>
         </p>
@@ -67,19 +69,21 @@
         </select>
     </div>
     
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-12 ">
         <h3>Team di gioco</h3>
         <hr style="border-color: black;">
     </div>
     <!-- Classi partecipanti -->
     <div class="col-sm-12">
-        <p>
-            <span class="required-sign">*</span>
-            <b>Aggiungi le classi che parteciperanno al gioco:</b>
+        <div class="row">
+                        <b>Aggiungi le classi che parteciperanno al gioco:</b>
+                        <div ng-if="addClass" class="pull-right adder"> Aggiungi classe: 
+                            <input type="text" ng-model="new.classe">
+                            <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a>
+                        </div>
+                        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="switchAddClasse()">Crea nuova classe</a></div>
 
-        </p>
-        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="addClass=!addClass;console.log('ciao')">Aggiungi classe</a></div>
-        <div ng-if="addClass"> Aggiungi classe: <input type="text" ng-model="new.classe"><a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a></div>
+        </div>
 
         <!-- <div style="margin-left: 10px;" class="checkbox-inline">
             <label style="font-weight: normal">
@@ -90,7 +94,7 @@
                 <div class="class-button "> <span>{{classe}} <span><a class="btn btn-primary btn-lg" role="button"><i class="fas fa-trash" ng-click="classToggled(classe)"></i></a></span>
                 </div> 
         </div> -->
-                <div class="col-sm-4" ng-repeat="classe in classes track by $index">
+                <div class="col-sm-4 col-4" ng-repeat="classe in classes track by $index">
         <div class="btn btn-sm class-button"  ng-click="classToggled(classe)">
             <div ><span class="fa fa-trash pull-right" ></span> {{classe}}</div>
         </div>
@@ -103,33 +107,35 @@
         </p>
     </div> -->
     <!-- Global Team -->
-    <div class="col-sm-12 field">
+    <div class="col-sm-12  col-12 field">
         <span class="required-sign">*</span>
         <p>
-            <b>Nome Team globale:</b>
+            <b>Nome Team globale:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="Qui puoi dare un nome al team globale che partecipa al gioco."></i>
+    </b>
         </p>
         <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-model="currentGame.globalTeam" ng-required="true" />
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-12 ">
         <h3>Modalità di arrivo a scuola</h3>
         <hr style="border-color: black;">
     </div>
-    <div class="col-sm-12">
-        <div style="margin-left: 10px;" class="checkbox-inline col-sm-4" ng-repeat="modality in modalities">
+    <div class="col-sm-12 col-12 ">
+        <div   class=" col-12 col-sm-12  " ng-repeat="modality in modalities">
             <label style="font-weight: normal">
-                <input type="checkbox" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-model="modality.selected">{{modality.label}}&ensp;</label>
+                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-model="modality.selected">{{modality.label}}&ensp;</label>
         </div>
     </div>
     <!-- checkbox for days of week -->
-        <div class="col-sm-12">
+        <div class="col-sm-12 col-12 ">
         <h3>Giorni della settimana</h3>
         <hr style="border-color: black;">
     </div>
-    <div class="col-sm-12 ">
-        <label class="checkbox-inline" ng-repeat="d in currentGame.daysOfWeek track by $index">
+    <div class="col-sm-12 col-12 ">
+        <div class="col-sm-12 col-12 " ng-repeat="d in currentGame.daysOfWeek track by $index">
         <div>
-                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle " value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
             </div>
            <!--  <div ng-if="$index < 5">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}"  ng-checked="{{d}}" disabled>{{weekDays[$index]}}
@@ -140,7 +146,7 @@
             <div ng-if="$index == 6">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div> -->
-        </label>
+        </div>
     </div>
     
 </fieldset>

@@ -48,6 +48,7 @@
             <option value="plane">Aereo</option>
             <option value="boat">Nave/Traghetto</option>
         </select>
+        <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Scegli l’icona del mezzo di arrivo per quella tappa."></i>
     </div>
     <div class="col-md-12 field" ng-if="leg.position > 0">
         <p><b>Icona da visualizzare:</b></p>
@@ -60,6 +61,7 @@
             selection-mode="single"
             helper-elements=""
             style="display:inline-block;"/>
+            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Scegli l’icona della modalità di viaggio per quella tappa che sarà visibile dai giocatori."></i>
     </div>
 </fieldset>
 <fieldset class="row" ng-hide="!PermissionsService.permissionEnabledEditLegs()">

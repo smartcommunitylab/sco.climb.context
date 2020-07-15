@@ -1,7 +1,9 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-8 header-path-category">
-            <h4>{{(currentGame && currentGame.gameName) ? 'MODIFICA GIOCO: ' + currentGame.gameName : 'CREA NUOVO GIOCO'}}</h4>
+            <h4>{{(currentGame && currentGame.gameName) ? 'MODIFICA GIOCO: ' + currentGame.gameName : 'CREA NUOVO GIOCO'}}            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="In questa sezione puoi inserire le informazioni per creare un nuovo gioco o modificarlo."></i>
+    </h4>
             <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
             <mark ng-show="currentGame.deployed">Attenzione! Questo gioco è attualmente in esecuzione</mark>
         </div>
@@ -15,11 +17,11 @@
     <div class="row">
         <!-- Menu tab -->
         <div class="col-md-2 tabs-menu">
-            <a ng-class="{'active-tab':selectedTab == 'info'}" ui-sref="root.game.info">INFO</a>
-            <a ng-class="{'active-tab':selectedTab == 'params'}" ui-sref="root.game.params">ABITUDINI</a>
-            <a ng-class="{'active-tab':selectedTab == 'gamers'}" ui-sref="root.game.gamers">GIOCATORI</a>
-            <a ng-class="{'active-tab':selectedTab == 'calibration'}" ui-sref="root.game.calibration">CALIBRAZIONE</a>
-            <a ng-class="{'active-tab':selectedTab == 'pedibus'}" ui-sref="root.game.pedibus">PEDIBUS</a>
+            <a ng-class="{'active-tab':selectedTab == 'info'}" ng-disabled="!PermissionsService.permissionEnabledInfoGame()" ui-sref="root.game.info">INFO</a>
+            <a ng-class="{'active-tab':selectedTab == 'params'}" ng-disabled="!PermissionsService.permissionEnabledParamInfo()" ui-sref="root.game.params">ABITUDINI</a>
+            <a ng-class="{'active-tab':selectedTab == 'gamers'}" ng-disabled="!PermissionsService.permissionEnabledShowPlayer()" ui-sref="root.game.gamers">GIOCATORI</a>
+            <a ng-class="{'active-tab':selectedTab == 'calibration'}" ng-disabled="!PermissionsService.permissionEnabledCalibrationInfo()" ui-sref="root.game.calibration">CALIBRAZIONE</a>
+            <a ng-class="{'active-tab':selectedTab == 'pedibus'}" ng-disabled="!PermissionsService.permissionEnabledPedibusInfo()"  ui-sref="root.game.pedibus">PEDIBUS</a>
         </div>
 
         <!-- Tabs container -->

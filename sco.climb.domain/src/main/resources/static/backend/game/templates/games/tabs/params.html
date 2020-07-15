@@ -1,129 +1,132 @@
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame() || currentGame.deployed">
 
         <div class="col-lg-12">
-            <h3>Abitudini di mobilità e distanze</h3>
+            <h3>Abitudini di mobilità e distanze<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="Inserisci il numero di studenti che attualmente vanno a scuola a piedi, in bici, con il pedibus ecc. "></i></h3>
             <hr style="border-color: black;">
         </div>
         <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
+            <div class="col-lg-4 col-xs-4 col-4"></div>
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
                 <label style="font-style: italic; font-weight: normal">Numero studenti</label>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
                 <label style="font-style: italic; font-weight: normal">Distanza media (metri)</label>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>A Piedi</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.walk_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.walk_studenti" 
                 ng-disabled="!isModalityPresent('walk')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_walk_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_walk_distance" 
                 ng-disabled="!isModalityPresent('walk')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>In bici</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bike_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.bike_studenti" 
                 ng-disabled="!isModalityPresent('bike')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_bike_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_bike_distance" 
                 ng-disabled="!isModalityPresent('bike')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>Scuolabus o trasporto pubblico</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.bus_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.bus_studenti" 
                 ng-disabled="!isModalityPresent('bus')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_bus_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_bus_distance" 
                 ng-disabled="!isModalityPresent('bus')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>Pedibus</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pedibus_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.pedibus_studenti" 
                 ng-disabled="!isModalityPresent('pedibus')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_pedibus_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_pedibus_distance" 
                 ng-disabled="!isModalityPresent('pedibus')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>In auto fino alla piazzola di sosta</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.pandr_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.pandr_studenti" 
                 ng-disabled="!isModalityPresent('pandr')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_pandr_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_pandr_distance" 
                 ng-disabled="!isModalityPresent('pandr')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>Car pooling</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.carpooling_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.carpooling_studenti" 
                 ng-disabled="!isModalityPresent('carpooling')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_carpooling_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_carpooling_distance" 
                 ng-disabled="!isModalityPresent('carpooling')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>In auto fino a scuola</b>
                 </p>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.car_studenti" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.car_studenti" 
                 ng-disabled="!isModalityPresent('car')"/>
             </div>
-            <div class="col-lg-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" ng-model="currentGame.params.const_car_distance" 
+            <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
+                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_car_distance" 
                 ng-disabled="!isModalityPresent('car')"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
-                <p>&emsp;
-                    <b>Abitudini relevate:</b> {{calculateSS()}}/{{$parent.nrOfStudenti}}</p>
+            <div class="col-lg-4 col-xs-4 col-4">
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4 col-xs-4 col-4">
+                <p>&emsp;
+                    <b>Abitudini relevate:</b> {{calculateSS()}}/{{nrOfStudenti}}</p>
+            </div>
+            <div class="col-lg-4 col-xs-4 col-4">
                 <p>&emsp;
                     <b>Velocità stimata(KM/gg): {{calculateCDND()/1000}}</b>
                 </p>

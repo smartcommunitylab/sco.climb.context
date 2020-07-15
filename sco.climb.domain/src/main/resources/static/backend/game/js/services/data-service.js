@@ -314,7 +314,10 @@ function ($q, $http, $rootScope, $timeout) {
         return $http.put(url, game.params, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
         },
         getNrOfStudents: function (ownerId, instituteId, schoolId, classes) {
-            var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/students?classes=" + classes;
+            var filtered = classes.filter(function (el) {
+                return el != null;
+              });
+            var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/students?classes=" + filtered;
             return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
         getGameById: function (ownerId, id) {
@@ -393,6 +396,14 @@ function ($q, $http, $rootScope, $timeout) {
             var fetchUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.objectId + "/player?classes=" + filtered;
             return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
+        //post  /api/game/{ownerId}/{pedibusGameId}/players"
+        //modifica lista giocatori del gioco
+
+
+        updatePlayers: function (element,data) {
+            var url = baseUrl + "/api/game/" + element.ownerId + "/" + element.objectId + "/players";
+            return $http.post(url, data, { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+            },
         //todo POST /api/game/{ownerId}/{pedibusGameId}/player
         // crea giocatore
         createPlayer: function (ownerId, pedibusGameId,data) {
