@@ -17,11 +17,11 @@
     <div class="row">
         <!-- Menu tab -->
         <div class="col-md-2 tabs-menu">
-            <a ng-class="{'active-tab':selectedTab == 'info'}" ng-disabled="!PermissionsService.permissionEnabledInfoGame()" ui-sref="root.game.info">INFO</a>
-            <a ng-class="{'active-tab':selectedTab == 'params'}" ng-disabled="!PermissionsService.permissionEnabledParamInfo()" ui-sref="root.game.params">ABITUDINI</a>
-            <a ng-class="{'active-tab':selectedTab == 'gamers'}" ng-disabled="!PermissionsService.permissionEnabledShowPlayer()" ui-sref="root.game.gamers">GIOCATORI</a>
-            <a ng-class="{'active-tab':selectedTab == 'calibration'}" ng-disabled="!PermissionsService.permissionEnabledCalibrationInfo()" ui-sref="root.game.calibration">CALIBRAZIONE</a>
-            <a ng-class="{'active-tab':selectedTab == 'pedibus'}" ng-disabled="!PermissionsService.permissionEnabledPedibusInfo()"  ui-sref="root.game.pedibus">PEDIBUS</a>
+            <a ng-class="{'active-tab':selectedTab == 'info'}" ng-if="PermissionsService.permissionEnabledInfoGame()" ui-sref="root.game.info">INFO</a>
+            <a ng-class="{'active-tab':selectedTab == 'params'}" ng-if="PermissionsService.permissionEnabledParamInfo()" ui-sref="root.game.params">ABITUDINI</a>
+            <a ng-class="{'active-tab':selectedTab == 'gamers'}" ng-if="PermissionsService.permissionEnabledShowPlayer()" ui-sref="root.game.gamers">GIOCATORI</a>
+            <a ng-class="{'active-tab':selectedTab == 'calibration'}" ng-if="PermissionsService.permissionEnabledCalibrationInfo()" ui-sref="root.game.calibration">CALIBRAZIONE</a>
+            <a ng-class="{'active-tab':selectedTab == 'pedibus'}" ng-if="PermissionsService.permissionEnabledPedibusInfo()"  ui-sref="root.game.pedibus">PEDIBUS</a>
         </div>
 
         <!-- Tabs container -->

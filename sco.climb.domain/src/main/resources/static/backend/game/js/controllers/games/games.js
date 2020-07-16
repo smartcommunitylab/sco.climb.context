@@ -102,7 +102,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                 title: 'Modificato!',
                 success: {label: 'Ok', fn: null}
             });
-        
+            
             //show toast salvataggio
             if ($scope.currentGame.objectId) { //edited
                 if ($scope.games) {
@@ -115,6 +115,8 @@ angular.module('consoleControllers.games', ['ngSanitize'])
             } else {
                 $scope.currentGame.objectId = response.data.objectId;
                 if ($scope.games) $scope.games.push(response.data);
+                $scope.saveData = DataService.editData;
+
             }
             //$state.go('root.games-list');
         }
@@ -467,7 +469,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
             if ($scope.currentGame.to) {
                 $scope.$parent.endDate.setTime($scope.currentGame.to);
             }
-            $scope.calculateStudenti($scope.$parent.classes);
+            $scope.calculateStudenti($scope.currentGame.classRooms);
             $scope.initParamController();
         });
 
@@ -516,7 +518,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
 
         if ($scope.currentGame) {
             $scope.initParamController();
-            $scope.calculateStudenti();
+            $scope.calculateStudenti($scope.currentGame.classRooms);
         }
 
 

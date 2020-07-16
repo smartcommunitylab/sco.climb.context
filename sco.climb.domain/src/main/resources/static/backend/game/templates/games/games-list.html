@@ -18,7 +18,7 @@
                         <h5><b>Inizio:</b> {{game.from | date : 'dd/MM/yyyy'}} - <b>Fine:</b> {{game.to | date : 'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-md-4 col-xs-12 right">
-                        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/gameconfig"  class="btn btn-icon btn-primary" role="button" ng-disabled="gamesConfigs[game.objectId].active" ng-disabled="!PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-cogs" aria-hidden="true" uib-tooltip="CONF TEMPLATE"></i></a>
+                        <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/gameconfig"  class="btn btn-icon btn-primary" role="button" ng-disabled="gamesConfigs[game.objectId].active || !PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-cogs" aria-hidden="true" uib-tooltip="CONF TEMPLATE"></i></a>
                         <a class="btn btn-icon btn-primary" ng-click="initGameOnServer(game)"  ng-disabled="!PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-gamepad" aria-hidden="true" uib-tooltip="DEPLOY"></i></a>
 <!--                         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.gamesModified = true"><i class="fa fa-pencil" aria-hidden="true" uib-tooltip="EDIT"></i></a>
  -->                    <a ng-click="reset(game)" class="btn btn-icon btn-danger" role="button"  ng-disabled="!PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-eraser" aria-hidden="true" uib-tooltip="RESET"></i></a>

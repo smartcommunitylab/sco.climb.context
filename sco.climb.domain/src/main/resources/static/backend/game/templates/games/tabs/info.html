@@ -1,4 +1,4 @@
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
     <!-- Name -->
     <div class="col-sm-12 field">
         <p class="col-sm-4 col-xs-4">
@@ -68,7 +68,9 @@
         	<option value="collecchio">Collecchio</option>
         </select>
     </div>
-    
+</fieldset>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
+
     <div class="col-sm-12 col-12 ">
         <h3>Team di gioco</h3>
         <hr style="border-color: black;">
@@ -116,6 +118,8 @@
         </p>
         <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-model="currentGame.globalTeam" ng-required="true" />
     </div>
+</fieldset>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
 
     <div class="col-sm-12 col-12 ">
         <h3>Modalità di arrivo a scuola</h3>
@@ -148,5 +152,4 @@
             </div> -->
         </div>
     </div>
-    
 </fieldset>

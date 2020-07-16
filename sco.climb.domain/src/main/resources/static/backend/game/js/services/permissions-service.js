@@ -11,7 +11,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var calibrationInfo;
     var showPlayer, editPlayer, deletePlayer;
     var pedibusInfo;
-    var showPaths, editPath, deletePath, clonePath, infoPath;
+    var showPaths, createPaths, editPath, deletePath, clonePath, infoPath;
     var showLegs, editLegs, deleteLegs, reorderLegs;
     var showLegsMultimedia, editLegsMultimedia, deleteLegsMultimedia;
     var userRoles;
@@ -47,6 +47,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 editPlayer = true;
                 deletePlayer = true;
                 pedibusInfo = true;
+                createPaths=true;
                 showPaths = true;
                 editPath = true;
                 deletePath = true;
@@ -83,6 +84,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 editPlayer = true;
                 deletePlayer = true;
                 pedibusInfo = true;
+                createPaths = true;
                 showPaths = true;
                 editPath = true;
                 deletePath = true;
@@ -115,12 +117,13 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 deleteClasses = false;
                 paramInfo = true;
                 calibrationInfo = false;
-                showPlayer = false;
-                editPlayer = false;
-                deletePlayer = false;
+                showPlayer = true;
+                editPlayer = true;
+                deletePlayer = true;
                 pedibusInfo = false;
+                createPaths = false;
                 showPaths = true;
-                editPath = false;
+                editPath = true;
                 deletePath = false;
                 clonePath = false;
                 infoPath = true;
@@ -160,6 +163,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 editPlayer = false;
                 deletePlayer = false;
                 pedibusInfo = false;
+                createPaths = true;
                 showPaths = true;
                 editPath = true;
                 deletePath = true;
@@ -254,7 +258,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
         return paramInfo;
     }
     permissionsService.permissionEnabledCalibrationInfo = function () {
-        return infoGames;
+        return calibrationInfo;
     }
     permissionsService.permissionEnabledShowPlayer = function () {
         return showPlayer;
@@ -273,6 +277,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     }
     permissionsService.permissionEnabledEditPaths = function () {
         return editPath;
+    }
+    permissionsService.permissionEnabledCreatePaths = function () {
+        return createPaths;
     }
     permissionsService.permissionEnabledDeletePaths = function () {
         return deletePath;
