@@ -12,8 +12,10 @@
     </div>
     <!-- Description -->
     <div class="col-lg-12 field">
-        <p><span class="required-sign">*</span> <b>Descrizione:<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Crea una breve descrizione del tuo percorso (es. qual’è il tema del percorso)"></i></b></p>
-        <text-angular ng-model="currentPath.description"></text-angular>
+        <p><span class="required-sign">*</span> <b>Descrizione breve (per titolo mappa pubblicata):<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Crea una breve descrizione del tuo percorso (es. qual’è il tema del percorso)"></i></b></p>
+        <!-- <text-angular ng-model="currentPath.description"></text-angular> -->
+        <textarea ng-model="currentPath.description"  class="input-text-area"></textarea>
+
     </div>
     <div class="col-lg-12">
     	<p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>

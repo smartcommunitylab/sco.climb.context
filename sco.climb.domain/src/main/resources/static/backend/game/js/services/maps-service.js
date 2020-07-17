@@ -17,16 +17,31 @@ angular.module('MapsService', [])
             zoom: 10
         });
 
-        // Inizialize the polyline on the map
-        polyPath = new google.maps.Polyline({
-            geodesic: true,
-            strokeColor: '#2980b9',
-            strokeOpacity: 1.0,
-            strokeWeight: 4,
-            map: map,
-            editable: false
-        });
 
+        google.maps.LatLng.prototype.kmTo = function(a){ 
+            var e = Math, ra = e.PI/180; 
+            var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+            var g = this.lng() * ra - a.lng() * ra; 
+            var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+            (c) * e.pow(e.sin(g/2), 2))); 
+            return f * 6378.137; 
+        }
+        google.maps.Polyline.prototype.inKm = function(n){ 
+            var a = this.getPath(n), len = a.getLength(), dist = 0; 
+            for (var i=0; i < len-1; i++) { 
+               dist += a.getAt(i).kmTo(a.getAt(i+1)); 
+            }
+            return dist; 
+        }
+                // Inizialize the polyline on the map
+                polyPath = new google.maps.Polyline({
+                    geodesic: true,
+                    strokeColor: '#2980b9',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 4,
+                    map: map,
+                    editable: false
+                });
         // Genera la polyline del percorso
         generatePath(poisArray);
         // Draw markers on the map
@@ -112,6 +127,22 @@ angular.module('MapsService', [])
             },
             zoom: 13
         });
+        google.maps.LatLng.prototype.kmTo = function(a){ 
+            var e = Math, ra = e.PI/180; 
+            var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+            var g = this.lng() * ra - a.lng() * ra; 
+            var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+            (c) * e.pow(e.sin(g/2), 2))); 
+            return f * 6378.137; 
+        }
+        google.maps.Polyline.prototype.inKm = function(n){ 
+            var a = this.getPath(n), len = a.getLength(), dist = 0; 
+            for (var i=0; i < len-1; i++) { 
+               dist += a.getAt(i).kmTo(a.getAt(i+1)); 
+            }
+            return dist; 
+        }
+        
         var autocomplete = new google.maps.places.Autocomplete(document.getElementById(idHintField));        
         autocomplete.bindTo('bounds', map);
 
@@ -240,11 +271,18 @@ angular.module('MapsService', [])
         total = total / 1000;
         return total;
     }
-
+    
     var reloadMarkerPosition = function() {
         drawPolyline();
         centerOnLastMarker();
-        $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), true);       // avviso che la posizione del marker è cambiata
+        var length = 0;
+        if (polyPath.getPath().length != 0)
+         length = polyPath.inKm();
+         else length = (directionsDisplay.directions.routes[0].legs[0].distance.value)/1000;
+
+        //var length = google.maps.geometry.spherical.computeLength(directionsDisplay.getPath());
+
+        $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), true, length);       // avviso che la posizione del marker è cambiata
     }
     var centerOnLastMarker = function() {
         map.panTo(thisPoiMarker.getPosition());
@@ -256,7 +294,8 @@ angular.module('MapsService', [])
         var heading = google.maps.geometry.spherical.computeHeading(prevPoiMarker.getPosition(), thisPoiMarker.getPosition());
         thisPoiMarker.setPosition(google.maps.geometry.spherical.computeOffset(prevPoiMarker.getPosition(), distance, heading));
         drawPolyline();
-        $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), false);        // false: non svuotare il campo lunghezza linea
+        var length = calculatelength();
+        $rootScope.$broadcast('poiMarkerPosChanged', thisPoiMarker.position.lat(), thisPoiMarker.position.lng(), false,length);        // false: non svuotare il campo lunghezza linea
     };
 
     this.getPathPolyline = function()       // restituisce la polyline del percorso selezionato
@@ -307,7 +346,21 @@ angular.module('MapsService', [])
             },
             zoom: 13
         });
-
+        google.maps.LatLng.prototype.kmTo = function(a){ 
+            var e = Math, ra = e.PI/180; 
+            var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+            var g = this.lng() * ra - a.lng() * ra; 
+            var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+            (c) * e.pow(e.sin(g/2), 2))); 
+            return f * 6378.137; 
+        }
+        google.maps.Polyline.prototype.inKm = function(n){ 
+            var a = this.getPath(n), len = a.getLength(), dist = 0; 
+            for (var i=0; i < len-1; i++) { 
+               dist += a.getAt(i).kmTo(a.getAt(i+1)); 
+            }
+            return dist; 
+        }
         // Inizializza il servizio per il rendering del percorso a piedi
         directionsDisplay = new google.maps.DirectionsRenderer({markerOptions: {visible: false}});
         directionsDisplay.setMap(map);

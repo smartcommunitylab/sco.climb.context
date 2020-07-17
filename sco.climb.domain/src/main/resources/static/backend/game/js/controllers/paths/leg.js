@@ -7,7 +7,29 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.searchdistance = null;
     $scope.searchlocalschool = false;
     
+    $scope.loadImg = function() {
+        console.log("log img");
+        $scope.input = document.getElementById('upload-featured-img');
 
+        $scope.input.onchange = function(e) { 
+
+   // getting a hold of the file reference
+   var file = e.target.files[0]; 
+
+   // setting up the reader
+   var reader = new FileReader();
+   reader.readAsText(file,'UTF-8');
+
+   // here we tell the reader what to do when it's done reading...
+   reader.onload = function(readerEvent)  {
+      $scope.img =readerEvent.target.result; // this is the content!
+      $scope.uploadFeaturedPic()
+   }
+
+}
+
+$scope.input.click();
+    }
     $scope.classListToggle = function(dropdownID){
         $('#classID'+dropdownID).slideToggle('fast');
     }
@@ -305,9 +327,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         });
     }
 
-    $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
+    $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance, distance) {     // listener del broadcast che indica il cambiamento della posizione del marker
         $scope.leg.coordinates.lat = newLat;
         $scope.leg.coordinates.lng = newLng;
+        // $scope.leg.score = $scope.leg.totalDistance;
+        //prendi distanza e cambia la lunghezza
+
         /*if(wipeAirDistance)
             document.getElementById('airDistance').value = '';       // pulisci la textbox per il calcolo della lunghezza della linea*/
         if(!$scope.$$phase)
@@ -316,6 +341,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 
     $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
         $scope.leg.totalDistance = newDistance;
+        $scope.leg.score = $scope.leg.totalDistance;
+
         if(!$scope.$$phase)
             $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
     });

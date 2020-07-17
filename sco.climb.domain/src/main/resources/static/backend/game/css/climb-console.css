@@ -1180,3 +1180,25 @@ rotate
 	margin: 8px;
 	font-size: 18px !important;
 }
+.input-text-area {
+	width: 100%;
+	height:300px;
+}
+.empty-list{
+	text-align: center;
+	font-size: 20px;
+	padding: 8px;
+}
+.img-leg img {
+	height: 100%;
+	 width: 100%;
+	 max-height: 400px;
+	  object-fit: contain;
+}
+.change-img {
+	    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}

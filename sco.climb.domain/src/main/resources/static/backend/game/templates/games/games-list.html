@@ -11,6 +11,9 @@
  	</div>
     <div class="col-md-12 search-container">
           <ul class="list-group list-categories">
+            <div ng-if="!games || games.length ==0" class="empty-list">
+                Nessun gioco presente
+            </div>
             <li class="list-group-item" ng-repeat="game in games | filter:searchText">
                 <div class="row v-center">
                     <div class="col-md-8 col-xs-12">

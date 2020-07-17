@@ -16,15 +16,18 @@
 	<div class="col-lg-12">
 		<ul ui-sortable="sortableOptions" ng-model="legs"
 			class="list-group list-categories">
+			<div ng-if="!legs || legs.length ==0" class="empty-list">
+				Nessuna tappa presente
+			</div>
 			<li class="list-group-item" ng-repeat="leg in legs">
 				<div class="row v-center">
 					<div class="col-sm-4 col-xs-4">
-						<a ng-hide="enableOrder"
+						<a
 							ui-sref="root.path.leg({idLeg: leg.objectId})"
 							href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}/{{path.objectId}}/info"
 							ng-click="$parent.$parent.$parent.pathsModified = true"
 							class="interact-blue">
-							<h5>{{$index + 1}}. {{leg.name}}</h5>
+							<h5> <span ng-hide="enableOrder">{{$index + 1}}.</span> {{leg.name}}</h5>
 						</a> <img class="path-img" ng-src="{{leg.imageUrl}}"
 							alt="{{leg.name}}" ng-if="leg.imageUrl">
 						<div class="load-img" ng-if="!leg.imageUrl" ui-sref="root.path.leg({idLeg: leg.objectId})"
