@@ -32,13 +32,21 @@
                 <p class="center">
                     <i class="fa fa-plus-circle"></i>
                 </p>
+                </p>
             </div>
             <div class="img-leg" ng-if="leg.imageUrl" >
+                <div class="center">Attenzione! I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</div>
+                <div class="center">
                 <img ng-src="{{leg.imageUrl}}">
-                <a ng-click="input.click()" class="btn btn-info change-img" role="button"
+                </div>
+                <div class="center">
+                <a ng-click="input.click()" class="btn btn-info " role="button"
             ng-disabled="$parent.selectedGame.deployed">Cambia</a>
             </div>
             </div>
+
+            </div>
+
         </div>
         <input type="file" id="upload-featured-img" base-sixty-four-input ng-model="img"
         accept="image/*" ng-show="false" />
@@ -100,7 +108,7 @@
     </div>
     <!-- <div class="col-md-5"> -->
     <div class="row">
-        <div class="col-md-6 col-xs-6 field">
+        <div class="col-md-6 col-xs-6 field lat-long-filed">
             <div class="coordinates-label">
                 <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
             </div>
@@ -108,7 +116,7 @@
                 class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lat"
                 ng-required="true" />
         </div>
-        <div class="col-md-6 col-xs-6 field">
+        <div class="col-md-6 col-xs-6 field lat-long-filed">
             <div class="coordinates-label">
                 <p><span class="required-sign">*</span> <b>Longitudine:</b></p>
             </div>

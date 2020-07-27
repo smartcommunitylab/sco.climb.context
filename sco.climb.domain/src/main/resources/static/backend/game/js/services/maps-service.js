@@ -74,16 +74,36 @@ angular.module('MapsService', [])
 
     // Create and draw a list of markers on the map
     function drawMarkers(legs) {
-        for (var i = 0; i < legs.length; i++) {
-            markers.push(new google.maps.Marker({
-                position: {
-                    lat: parseFloat(legs[i].geocoding[1]),
-                    lng: parseFloat(legs[i].geocoding[0])
-                },
-                map: map,
-                label: (i+1).toString()
-            }));
-        }
+        legs.forEach(function(element,i){
+            var contentString = '<div id="content">'+
+            i+'. '+element.name
+            '</div>';
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+            
+            //   var marker = new google.maps.Marker({
+            //     position: uluru,
+            //     map: map,
+            //     title: 'Uluru (Ayers Rock)'
+            //   });
+var marker = new google.maps.Marker({
+    position: {
+        lat: parseFloat(element.geocoding[1]),
+        lng: parseFloat(element.geocoding[0])
+    },
+    map: map,
+    animation: google.maps.Animation.DROP,
+    label: (i+1).toString()
+})
+marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+            markers.push(marker);
+        })
+        // for (var i = 0; i < legs.length; i++) {
+            
+        // }
     }
 
     // Shows markers on the map

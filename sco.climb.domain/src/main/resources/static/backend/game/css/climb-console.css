@@ -1147,6 +1147,7 @@ rotate
 	padding: 10px;
 	border: 1px solid black;
 	border-radius: 16px;
+	cursor: pointer;
 }
 .class-button{
     text-align: left;
@@ -1190,10 +1191,10 @@ rotate
 	padding: 8px;
 }
 .img-leg img {
-	height: 100%;
-	 width: 100%;
-	 max-height: 400px;
-	  object-fit: contain;
+	height: 120px;
+	width: 120px;
+	object-fit: contain;
+
 }
 .change-img {
 	    position: absolute;
@@ -1201,4 +1202,7 @@ rotate
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
+}
+.lat-long-filed{
+	padding-top: 16px;
 }
