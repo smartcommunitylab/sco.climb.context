@@ -45,6 +45,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                         function (response) {
                             console.log('Ciao,Caricamento delle tappe a buon fine.');
                             $scope.legs = response.data;
+                            $scope.convertDistance();
                             $scope.$broadcast('legsLoaded');
                         }, function () {
                             alert('Errore nel caricamento delle tappe.');
@@ -92,7 +93,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 }
             }
         };
-
+        //all the distances referred to the previous one and not to the totale (saving -> total)
+        $scope.convertDistance = function() {
+          for (var i=$scope.legs.length-1;i>0;i--)
+            $scope.legs[i].score=$scope.legs[i].score - $scope.legs[i-1].score
+        }
         // Save the changes made to the path
         $scope.save = function () {
             if (checkFields()) {
@@ -110,14 +115,16 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.legs[i].position = i;
                         }
                         $scope.currentPath.legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
-                        $scope.saveData('legs', $scope.currentPath).then(
-                            function (response) {
-                                console.log('Salvataggio dati a buon fine.');
-                                $state.go('root.paths-list');
-                            }, function () {
-                                alert('Errore nel salvataggio delle tappe.');
-                            }
-                        );
+                        //$state.go('root.paths-list');
+
+                        // $scope.saveData('legs', $scope.currentPath).then(
+                        //     function (response) {
+                        //         console.log('Salvataggio dati a buon fine.');
+                        //         $state.go('root.paths-list');
+                        //     }, function () {
+                        //         alert('Errore nel salvataggio delle tappe.');
+                        //     }
+                        // );
                     }, function () {
                         alert('Errore nel salvataggio del percorso.');
                     }

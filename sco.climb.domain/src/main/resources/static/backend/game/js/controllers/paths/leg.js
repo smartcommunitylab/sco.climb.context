@@ -171,6 +171,8 @@ $scope.input.click();
         	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
+            $scope.leg.score = $scope.leg.score/1000;
+$scope.firstScore =true;
             $scope.saveData = DataService.editData;
             
             //get tags
@@ -308,13 +310,14 @@ $scope.input.click();
         }
         if($scope.newLeg) {
         	if($scope.leg.position > 0) {
-        		$scope.previousLegScore = $scope.legs[$scope.legs.length - 1].score;
+        		$scope.previousLegScore = $scope.legs[$scope.legs.length - 1].score/1000;
         	} else {
         		$scope.previousLegScore = 0;
-        	}
+            }
+            // ottiene la polyline dal servizio
         }
         if(currentLegIndex > 0) {
-        	$scope.previousLegScore = $scope.legs[currentLegIndex - 1].score;
+        	$scope.previousLegScore = $scope.legs[currentLegIndex - 1].score/1000;
         }
     }
 
@@ -323,7 +326,8 @@ $scope.input.click();
         $scope.initController();
     } else {
         $scope.$on('legsLoaded', function(e) {  
-            $scope.initController();        
+            $scope.initController(); 
+       
         });
     }
 
@@ -339,12 +343,26 @@ $scope.input.click();
             $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
     });
 
-    $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
+    // $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
+    //     // $scope.leg.totalDistance = newDistance;
+    //     // $scope.leg.score = $scope.leg.totalDistance;
+
+    //     // if(!$scope.$$phase)
+    //     //     $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
+    // });
+    $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener for new leg
+        if ($scope.newLeg ||  !$scope.firstScore)
+        {
         $scope.leg.totalDistance = newDistance;
         $scope.leg.score = $scope.leg.totalDistance;
+        }
+        if (!$scope.newLeg && $scope.firstScore) {
+            $scope.firstScore=false;
+        }
 
         if(!$scope.$$phase)
-            $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
+            $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi}
+        
     });
 
     $scope.updateTravelType = function (newTravelType) {
@@ -361,6 +379,12 @@ $scope.input.click();
         drawMapLeg.calculateMarkerPosFromDistance(Number(distance)*1000);
     };
 
+
+    $scope.convertDistance = function() {
+        for (var i=$scope.legs.length-1;i>0;i--)
+          $scope.legs[i].score=$scope.legs[i].score - $scope.legs[i-1].score
+      }
+    
     $scope.saveLeg = function () {
         $scope.leg.icon = undefined;
         for (var i = 0; i < $scope.viewIconsModels.length && !$scope.leg.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
@@ -370,6 +394,14 @@ $scope.input.click();
             $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
             $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
+        //change score from km to meters (better to use a local variable)
+        //add all the previous
+        var previousScore = $scope.leg.score;
+        var score = $scope.leg.score*1000;
+        for (var i=1;i<$scope.leg.position;i++){
+            score = score + $scope.legs[i].score;
+        }
+        $scope.leg.score = score;
         if (checkFields()) {
             if (PermissionsService.permissionEnabledEditLegs()) {
                 $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
@@ -385,12 +417,16 @@ $scope.input.click();
                             break;
                         }
                     }
+                    $scope.convertDistance();
+
                 }
+
                 $scope.saveData('leg', $scope.leg).then(
                     function(response) {
                         console.log('Salvataggio dati a buon fine.');
                         $scope.leg = response.data;
                         $scope.leg.coordinates = {};
+                        $scope.leg.score = previousScore;
                         $scope.leg.coordinates.lat = $scope.leg.geocoding[1];
                         $scope.leg.coordinates.lng = $scope.leg.geocoding[0];
                         if (!$stateParams.idLeg) {

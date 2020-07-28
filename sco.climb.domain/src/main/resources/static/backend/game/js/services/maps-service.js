@@ -5,7 +5,6 @@ angular.module('MapsService', [])
     var map;            // contains the google.maps.Map istance
     var polyPath;       // the line drawed on the map
     var markers = [];   // Array of legs markers
-
     // Draw the map with his shape
     this.createMap = function (idMap, poisArray) {
         // Google Maps + path edit
@@ -125,6 +124,7 @@ marker.addListener('click', function() {
     // Proprietà della leg
     var prevPoiCoordinates;
     var travelType;
+    var directionChangeListener = null;
 
     // Oggetti di Google Maps
     var map;
@@ -197,9 +197,15 @@ marker.addListener('click', function() {
             preserveViewport: true
         });
 
-        directionsDisplay.addListener('directions_changed', function() {
-            $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(directionsDisplay.getDirections()));
-        });
+    //    directionsDisplay.addListener('directions_changed', function() {
+            // $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(directionsDisplay.getDirections()));
+            // if (!directionChangeListener)
+            {
+                directionChangeListener = directionsDisplay.addListener('directions_changed', function() {
+                $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(directionsDisplay.getDirections()));
+                // $rootScope.$broadcast('poiMapTotalKmFirst', computeTotalDistance(directionsDisplay.getDirections()));
+            })}
+        // });
 
         // Inizializza gli oggetti marker
         prevPoiMarker = new google.maps.Marker({
@@ -293,12 +299,17 @@ marker.addListener('click', function() {
     }
     
     var reloadMarkerPosition = function() {
+        // if (!directionChangeListener)
+        // {directionChangeListener = directionsDisplay.addListener('directions_changed', function() {
+        //     $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(directionsDisplay.getDirections()));
+        // })}
         drawPolyline();
         centerOnLastMarker();
         var length = 0;
         if (polyPath.getPath().length != 0)
          length = polyPath.inKm();
-         else length = (directionsDisplay.directions.routes[0].legs[0].distance.value)/1000;
+         else if (directionsDisplay.direction)
+			length = (directionsDisplay.directions.routes[0].legs[0].distance.value)/1000;
 
         //var length = google.maps.geometry.spherical.computeLength(directionsDisplay.getPath());
 
