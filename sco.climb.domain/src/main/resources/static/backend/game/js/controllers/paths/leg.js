@@ -386,25 +386,26 @@ $scope.firstScore =true;
       }
     
     $scope.saveLeg = function () {
-        $scope.leg.icon = undefined;
-        for (var i = 0; i < $scope.viewIconsModels.length && !$scope.leg.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
-            if ($scope.viewIconsModels[i].ticked) $scope.leg.icon = $scope.viewIconsModels[i].value;
+        var savedLed = JSON.parse(JSON.stringify($scope.leg));
+        savedLed.icon = undefined;
+        for (var i = 0; i < $scope.viewIconsModels.length && !savedLed.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
+            if ($scope.viewIconsModels[i].ticked) savedLed.icon = $scope.viewIconsModels[i].value;
         }
-        if ($scope.leg.position > 0) {
-            $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
-            $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
+        if (savedLed.position > 0) {
+            savedLed.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+            savedLed.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
         //change score from km to meters (better to use a local variable)
         //add all the previous
-        var previousScore = $scope.leg.score;
-        var score = $scope.leg.score*1000;
-        for (var i=1;i<$scope.leg.position;i++){
+        var previousScore = savedLed.score;
+        var score = savedLed.score*1000;
+        for (var i=1;i<savedLed.position;i++){
             score = score + $scope.legs[i].score;
         }
-        $scope.leg.score = score;
+        savedLed.score = score;
         if (checkFields()) {
             if (PermissionsService.permissionEnabledEditLegs()) {
-                $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
+                savedLed.geocoding = [savedLed.coordinates.lng, savedLed.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
                 var legBackup;
                 if ($stateParams.idLeg) { //edited, have to update array
                     for (var i = 0; i < $scope.legs.length; i++) {
@@ -413,20 +414,20 @@ $scope.firstScore =true;
                                 value: $scope.legs[i],
                                 positon: i
                             }
-                            $scope.legs[i] = $scope.leg;
+                            $scope.legs[i] = JSON.parse(JSON.stringify(savedLed));
+                            $scope.legs[i].score= previousScore*1000;
                             break;
                         }
                     }
-                    $scope.convertDistance();
-
+                    //$scope.convertDistance();
                 }
 
-                $scope.saveData('leg', $scope.leg).then(
+                $scope.saveData('leg', savedLed).then(
                     function(response) {
                         console.log('Salvataggio dati a buon fine.');
                         $scope.leg = response.data;
                         $scope.leg.coordinates = {};
-                        $scope.leg.score = previousScore;
+                        $scope.leg.score = previousScore*1000;
                         $scope.leg.coordinates.lat = $scope.leg.geocoding[1];
                         $scope.leg.coordinates.lng = $scope.leg.geocoding[0];
                         if (!$stateParams.idLeg) {

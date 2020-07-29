@@ -1,7 +1,7 @@
-angular.module('consoleControllers.games', ['ngSanitize'])
+angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate'])
 
     // Games controller
-    .controller('GamesListCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
+    .controller('GamesListCtrl', function ($scope, $rootScope, toaster,DataService, createDialog, PermissionsService) {
         $scope.$parent.mainView = 'game';
         $scope.PermissionsService = PermissionsService;
 
@@ -15,6 +15,7 @@ angular.module('consoleControllers.games', ['ngSanitize'])
                             function (result) {
                                 console.log("Rimozione gioco effettuata con successo.");
                                 $scope.games.splice($scope.games.indexOf(game), 1);
+                                toaster.pop('toaster', "Cancellato", "Rimozione gioco effettuata con successo");
                             }, function (error) {
                                 alert("Errore nella richiesta:" + error.data.errorMsg);
                             });

@@ -115,7 +115,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.legs[i].position = i;
                         }
                         $scope.currentPath.legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
-                        //$state.go('root.paths-list');
+                        $state.go('root.paths-list');
 
                         // $scope.saveData('legs', $scope.currentPath).then(
                         //     function (response) {

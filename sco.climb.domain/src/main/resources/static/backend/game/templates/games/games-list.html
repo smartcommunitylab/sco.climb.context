@@ -5,6 +5,8 @@
         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditGame()">Crea nuovo</a>
     </div>
  -->
+ <toaster-container></toaster-container>
+
  <div class="row">
  <h5 class="pull-left col-lg-6"><b>Lista giochi:</b></h5>
     <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}//info" class="btn btn-info button-blue margin-8 pull-right " ng-disabled="!PermissionsService.permissionEnabledEditGame()">Crea nuovo gioco <i class="fa fa-plus-circle" aria-hidden="true" uib-tooltip="RESET"></i></a>
