@@ -398,8 +398,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         };
 
         $scope.computeLength = function () {
-            var distanceInMeters = drawMap.getPathLength();
-            return (distanceInMeters / 1000).toFixed(0);
+            // return last score of the leg
+            return $scope.legs[$scope.legs.length-1].score/1000;
+            // var distanceInMeters = drawMap.getPathLength();
+            // return (distanceInMeters / 1000).toFixed(0);
         };
 
         $scope.toggleMarkers = function () {
