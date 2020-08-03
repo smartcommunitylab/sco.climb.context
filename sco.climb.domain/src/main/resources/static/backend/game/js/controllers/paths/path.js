@@ -45,6 +45,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                         function (response) {
                             console.log('Ciao,Caricamento delle tappe a buon fine.');
                             $scope.legs = response.data;
+                            $scope.totalScore = JSON.parse(JSON.stringify($scope.legs[$scope.legs.length-1].score))
                             $scope.convertDistance();
                             $scope.$broadcast('legsLoaded');
                         }, function () {
@@ -399,7 +400,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
         $scope.computeLength = function () {
             // return last score of the leg
-            return $scope.legs[$scope.legs.length-1].score/1000;
+            return $scope.totalScore;
             // var distanceInMeters = drawMap.getPathLength();
             // return (distanceInMeters / 1000).toFixed(0);
         };
