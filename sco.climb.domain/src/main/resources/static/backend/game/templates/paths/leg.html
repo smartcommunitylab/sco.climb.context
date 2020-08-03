@@ -26,6 +26,8 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-xs-12 pull-right">
+         <div class="center warning-img">Attenzione! I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</div>
+
         <div ng-click="loadImg()">
             <div class="load-img" ng-if="!leg.imageUrl" >
                 <p class="center">Carica immagine</p>
@@ -34,8 +36,8 @@
                 </p>
                 </p>
             </div>
+
             <div class="img-leg" ng-if="leg.imageUrl" >
-                <div class="center">Attenzione! I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</div>
                 <div class="center">
                 <img ng-src="{{leg.imageUrl}}">
                 </div>
