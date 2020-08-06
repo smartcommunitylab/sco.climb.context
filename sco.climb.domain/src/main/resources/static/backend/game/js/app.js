@@ -37,7 +37,19 @@ consoleApp.config(['$provide', function ($provide) {
     }]);
 }]);
 
-
+consoleApp.directive('stringToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(value) {
+        return '' + value;
+      });
+      ngModel.$formatters.push(function(value) {
+        return parseFloat(value);
+      });
+    }
+  };
+});
 consoleApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/institutes-list');
     $stateProvider
@@ -117,6 +129,26 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/games/tabs/params.html',
             controller: 'GameParamsCtrl'
         })
+        .state('root.game.gamers', {
+            url: '/gamers',
+            templateUrl: 'templates/games/tabs/gamers.html',
+            controller: 'GameGamersCtrl'
+        })
+        .state('root.game.player', {
+            url: '/gamers/:idPlayer',
+            templateUrl: 'templates/games/player.html',
+            controller: 'PlayerCtrl'
+        })
+        .state('root.game.calibration', {
+            url: '/calibration',
+            templateUrl: 'templates/games/tabs/calibration.html',
+            controller: 'GameCalibrationCtrl'
+        })
+        .state('root.game.pedibus', {
+            url: '/pedibus',
+            templateUrl: 'templates/games/tabs/pedibus.html',
+            controller: 'GamePedibusCtrl'
+        })
         .state('root.institutes-list', {
             url: '/institutes-list',
             templateUrl: 'templates/institutes/institutes-list.html',
@@ -167,16 +199,12 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/schools/child.html',
             controller: 'ChildCtrl'
         })
-        .state('root.school.players-list', {
+/*        .state('root.school.players-list', {
           url: '/players-list',
           templateUrl: 'templates/schools/tabs/players-list.html',
           controller: 'PlayersCtrl'
-        })
-        .state('root.school.player', {
-            url: '/player/:idPlayer',
-            templateUrl: 'templates/schools/player.html',
-            controller: 'PlayerCtrl'
-        })
+        })*/
+
         .state('root.school.volunteer-list', {
             url: '/volunteer-list',
             templateUrl: 'templates/schools/tabs/volunteer-list.html',

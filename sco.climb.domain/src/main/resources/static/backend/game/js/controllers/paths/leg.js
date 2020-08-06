@@ -7,7 +7,29 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
     $scope.searchdistance = null;
     $scope.searchlocalschool = false;
     
+    $scope.loadImg = function() {
+        console.log("log img");
+        $scope.input = document.getElementById('upload-featured-img');
 
+        $scope.input.onchange = function(e) { 
+
+   // getting a hold of the file reference
+   var file = e.target.files[0]; 
+
+   // setting up the reader
+   var reader = new FileReader();
+   reader.readAsText(file,'UTF-8');
+
+   // here we tell the reader what to do when it's done reading...
+   reader.onload = function(readerEvent)  {
+      $scope.img =readerEvent.target.result; // this is the content!
+      $scope.uploadFeaturedPic()
+   }
+
+}
+
+$scope.input.click();
+    }
     $scope.classListToggle = function(dropdownID){
         $('#classID'+dropdownID).slideToggle('fast');
     }
@@ -149,6 +171,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         	$scope.newLeg = false;
             $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
             $scope.leg.coordinates = {lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0]};      // trasformo le coordinate in un formato gestibile da GMaps
+            $scope.leg.score = $scope.leg.score/1000;
+$scope.firstScore =true;
             $scope.saveData = DataService.editData;
             
             //get tags
@@ -286,13 +310,14 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         }
         if($scope.newLeg) {
         	if($scope.leg.position > 0) {
-        		$scope.previousLegScore = $scope.legs[$scope.legs.length - 1].score;
+        		$scope.previousLegScore = $scope.legs[$scope.legs.length - 1].score/1000;
         	} else {
         		$scope.previousLegScore = 0;
-        	}
+            }
+            // ottiene la polyline dal servizio
         }
         if(currentLegIndex > 0) {
-        	$scope.previousLegScore = $scope.legs[currentLegIndex - 1].score;
+        	$scope.previousLegScore = $scope.legs[currentLegIndex - 1].score/1000;
         }
     }
 
@@ -301,23 +326,43 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.initController();
     } else {
         $scope.$on('legsLoaded', function(e) {  
-            $scope.initController();        
+            $scope.initController(); 
+       
         });
     }
 
-    $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance) {     // listener del broadcast che indica il cambiamento della posizione del marker
+    $scope.$on('poiMarkerPosChanged', function(event, newLat, newLng, wipeAirDistance, distance) {     // listener del broadcast che indica il cambiamento della posizione del marker
         $scope.leg.coordinates.lat = newLat;
         $scope.leg.coordinates.lng = newLng;
+        // $scope.leg.score = $scope.leg.totalDistance;
+        //prendi distanza e cambia la lunghezza
+
         /*if(wipeAirDistance)
             document.getElementById('airDistance').value = '';       // pulisci la textbox per il calcolo della lunghezza della linea*/
         if(!$scope.$$phase)
             $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
     });
 
-    $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
+    // $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener
+    //     // $scope.leg.totalDistance = newDistance;
+    //     // $scope.leg.score = $scope.leg.totalDistance;
+
+    //     // if(!$scope.$$phase)
+    //     //     $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
+    // });
+    $scope.$on('poiMapTotalKmChanged', function(event, newDistance) {     //total km changed listener for new leg
+        if ($scope.newLeg ||  !$scope.firstScore)
+        {
         $scope.leg.totalDistance = newDistance;
+        $scope.leg.score = $scope.leg.totalDistance;
+        }
+        if (!$scope.newLeg && $scope.firstScore) {
+            $scope.firstScore=false;
+        }
+
         if(!$scope.$$phase)
-            $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi
+            $scope.$apply();        // forzo il controllo per l'aggiornamento dei campi}
+        
     });
 
     $scope.updateTravelType = function (newTravelType) {
@@ -334,18 +379,33 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         drawMapLeg.calculateMarkerPosFromDistance(Number(distance)*1000);
     };
 
+
+    $scope.convertDistance = function() {
+        for (var i=$scope.legs.length-1;i>0;i--)
+          $scope.legs[i].score=$scope.legs[i].score - $scope.legs[i-1].score
+      }
+    
     $scope.saveLeg = function () {
-        $scope.leg.icon = undefined;
-        for (var i = 0; i < $scope.viewIconsModels.length && !$scope.leg.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
-            if ($scope.viewIconsModels[i].ticked) $scope.leg.icon = $scope.viewIconsModels[i].value;
+        var savedLed = JSON.parse(JSON.stringify($scope.leg));
+        savedLed.icon = undefined;
+        for (var i = 0; i < $scope.viewIconsModels.length && !savedLed.icon; i++) { //bug in the library, no output-model present, so need to search selected item in the input-model
+            if ($scope.viewIconsModels[i].ticked) savedLed.icon = $scope.viewIconsModels[i].value;
         }
-        if ($scope.leg.position > 0) {
-            $scope.leg.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
-            $scope.leg.additionalPoints = drawMapLeg.getCustomWayPoint();
+        if (savedLed.position > 0) {
+            savedLed.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
+            savedLed.additionalPoints = drawMapLeg.getCustomWayPoint();
         }
+        //change score from km to meters (better to use a local variable)
+        //add all the previous
+        var previousScore = savedLed.score;
+        var score = savedLed.score*1000;
+        for (var i=1;i<savedLed.position;i++){
+            score = score + $scope.legs[i].score;
+        }
+        savedLed.score = score;
         if (checkFields()) {
             if (PermissionsService.permissionEnabledEditLegs()) {
-                $scope.leg.geocoding = [$scope.leg.coordinates.lng, $scope.leg.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
+                savedLed.geocoding = [savedLed.coordinates.lng, savedLed.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
                 var legBackup;
                 if ($stateParams.idLeg) { //edited, have to update array
                     for (var i = 0; i < $scope.legs.length; i++) {
@@ -354,16 +414,20 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                 value: $scope.legs[i],
                                 positon: i
                             }
-                            $scope.legs[i] = $scope.leg;
+                            $scope.legs[i] = JSON.parse(JSON.stringify(savedLed));
+                            $scope.legs[i].score= previousScore*1000;
                             break;
                         }
                     }
+                    //$scope.convertDistance();
                 }
-                $scope.saveData('leg', $scope.leg).then(
+
+                $scope.saveData('leg', savedLed).then(
                     function(response) {
                         console.log('Salvataggio dati a buon fine.');
                         $scope.leg = response.data;
                         $scope.leg.coordinates = {};
+                        $scope.leg.score = previousScore*1000;
                         $scope.leg.coordinates.lat = $scope.leg.geocoding[1];
                         $scope.leg.coordinates.lng = $scope.leg.geocoding[0];
                         if (!$stateParams.idLeg) {

@@ -477,8 +477,7 @@ public class ExcelConverter {
 	}
 	
 	public Map<String, PedibusPlayer> readPlayers(InputStream excel,
-			String ownerId, String instituteId, String schoolId, 
-			List<ExcelError> errors) throws Exception {
+			String ownerId, String pedibusGameId, List<ExcelError> errors) throws Exception {
 		Map<String, PedibusPlayer> result = new HashMap<>();
 		List<String> playerKeys = new ArrayList<>();
 		XSSFWorkbook wb = new XSSFWorkbook(excel);
@@ -515,13 +514,12 @@ public class ExcelConverter {
 						playerKeys.add(Utils.getPlayerKey(classe, nickname));
 					}
 					
-					PedibusPlayer playerDb = storage.getPedibusPlayer(ownerId, instituteId, schoolId, nickname, classe);
+					PedibusPlayer playerDb = storage.getPedibusPlayer(ownerId, pedibusGameId, nickname, classe);
 					
 					if(playerDb == null) {
 						PedibusPlayer player = new PedibusPlayer();
 						player.setOwnerId(ownerId);
-						player.setInstituteId(instituteId);
-						player.setSchoolId(schoolId);
+						player.setPedibusGameId(pedibusGameId);
 						player.setObjectId(Utils.getUUID());
 						player.setNickname(nickname);
 						player.setClassRoom(classe);

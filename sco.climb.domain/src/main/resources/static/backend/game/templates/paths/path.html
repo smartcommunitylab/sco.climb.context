@@ -1,7 +1,9 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-8 header-path-category">
-            <h4>{{isNewPath ? 'CREA NUOVO PERCORSO' : 'MODIFICA PERCORSO: ' + currentPath.name}}</h4>
+            <h4>{{isNewPath ? 'CREA NUOVO PERCORSO' : 'MODIFICA PERCORSO: ' + currentPath.name}}
+                <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="In questa sezione puoi inserire le informazioni per creare un nuovo percorso o modificarlo."></i>
+            </h4>
             <mark ng-show="currentGame.deployed">Attenzione! Questo gioco è attualmente in esecuzione</mark>
         </div>
 

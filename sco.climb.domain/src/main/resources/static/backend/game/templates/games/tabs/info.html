@@ -1,28 +1,28 @@
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditGame()">
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
     <!-- Name -->
-    <div class="col-lg-12 field">
-        <p>
+    <div class="col-sm-12 field">
+        <p class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Nome:</b>
         </p>
-        <input class="form-control" type="text" ng-model="currentGame.gameName" ng-required="true" />
+        <input class="form-control col-sm-3" type="text" ng-model="currentGame.gameName" ng-required="true" />
     </div>
-    <!-- Description -->
-    <div class="col-lg-12 field">
+<!--     Description
+    <div class="col-sm-12 field">
         <p>
             <span class="required-sign">*</span>
             <b>Descrizione:</b>
         </p>
         <text-angular ng-model="currentGame.gameDescription" ng-required="true"></text-angular>
-    </div>
+    </div> -->
     <!-- Start and end date -->
-    <div class="col-lg-6" style="margin-bottom: 20px;">
-        <p style="display: inline-block">
+    <div class="col-sm-12 col-12" style="margin-bottom: 20px;">
+        <p style="display: inline-block" class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Data di inizio:&emsp;</b>
         </p>
-        <p class="input-group" style="display: inline-block">
-            <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
+        <p class="input-group col-sm-5 col-5" style="display: inline-block">
+            <input style="width: 200px" class="form-control"  type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
                 ng-disabled="currentGame.deployed" ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
             <span class="input-group-btn">
@@ -32,12 +32,12 @@
             </span>
         </p>
     </div>
-    <div class="col-lg-6" style="margin-bottom: 20px;">
-        <p style="display: inline-block">
+    <div class="col-sm-12 col-12 " style="margin-bottom: 20px;">
+        <p style="display: inline-block" class="col-sm-4 col-xs-4">
             <span class="required-sign">*</span>
             <b>Data di fine:&emsp;</b>
         </p>
-        <p class="input-group" style="display: inline-block">
+        <p class="input-group col-sm-5 col-5" style="display: inline-block">
             <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
                 ng-disabled="currentGame.deployed" ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
@@ -48,15 +48,17 @@
             </span>
         </p>
     </div>
-    <div class="col-lg-12 field">
-        <p>
-        	<span class="required-sign">*</span>
-        	<b>Link breve:</b>
+    <div class="col-sm-12 col-12 field">
+        <p class="col-sm-4 col-4 col-xs-4">
+        	<span class="required-sign ">*</span>
+        	<b>Link breve:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="Si tratta di un link precompilato pubblico per accedere al percorso."></i>
+    </b>
         </p>
-        <input class="form-control" type="text" ng-model="currentGame.shortName" ng-required="true" />
+        <input class="form-control col-sm-4" type="text" ng-model="currentGame.shortName" ng-required="true" />
     </div>
-    <div class="col-lg-12 field">
-        <p>
+    <div class="col-sm-12 col-12 field">
+        <p class="col-sm-4 col-4 col-xs-4">
         	<span class="required-sign">*</span>
         	<b>Sponsor:</b>
         </p>
@@ -66,10 +68,80 @@
         	<option value="collecchio">Collecchio</option>
         </select>
     </div>
+</fieldset>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
+
+    <div class="col-sm-12 col-12 ">
+        <h3>Team di gioco</h3>
+        <hr style="border-color: black;">
+    </div>
+    <!-- Classi partecipanti -->
+    <div class="col-sm-12">
+        <div class="row">
+                        <b>Aggiungi le classi che parteciperanno al gioco:</b>
+                        <div ng-if="addClass" class="pull-right adder"> Aggiungi classe: 
+                            <input type="text" ng-model="new.classe">
+                            <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a>
+                        </div>
+                        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="switchAddClasse()" ng-disabled="currentGame.deployed">Crea nuova classe</a></div>
+
+        </div>
+
+        <!-- <div style="margin-left: 10px;" class="checkbox-inline">
+            <label style="font-weight: normal">
+                <input type="checkbox" ng-click="toggleSelectedClasses()" ng-disabled="currentGame.deployed" ng-model="classesAllSelected">Seleziona tutto&ensp;|&ensp;
+            </label>
+        </div> -->
+        <!-- <div ng-repeat="classe in classes track by $index">
+                <div class="class-button "> <span>{{classe}} <span><a class="btn btn-primary btn-lg" role="button"><i class="fas fa-trash" ng-click="classToggled(classe)"></i></a></span>
+                </div> 
+        </div> -->
+                <div class="col-sm-4 col-4" ng-repeat="classe in classes track by $index">
+        <div class="btn btn-sm class-button"  ng-click="classToggled(classe)" ng-disabled="currentGame.deployed">
+            <div ><span class="fa fa-trash pull-right" ></span> {{classe}}</div>
+        </div>
+    </div>
+    </div>
+    <!-- Num studenti nelle classi -->
+    <!-- <div class="col-sm-12 field">
+        <p>
+            <b>Num. studenti nelle classi: {{nrOfStudenti}}</b>
+        </p>
+    </div> -->
+    <!-- Global Team -->
+    <div class="col-sm-12  col-12 field">
+        <span class="required-sign">*</span>
+        <p>
+            <b>Nome Team globale:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="Qui puoi dare un nome al team globale che partecipa al gioco."></i>
+    </b>
+        </p>
+        <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-model="currentGame.globalTeam" ng-required="true" />
+    </div>
+</fieldset>
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
+
+    <div class="col-sm-12 col-12 ">
+        <h3>Modalità di arrivo a scuola</h3>
+        <hr style="border-color: black;">
+    </div>
+    <div class="col-sm-12 col-12 ">
+        <div   class=" col-12 col-sm-12  " ng-repeat="modality in modalities">
+            <label style="font-weight: normal">
+                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-model="modality.selected">{{modality.label}}&ensp;</label>
+        </div>
+    </div>
     <!-- checkbox for days of week -->
-    <div class="col-lg-12 ">
-        <label class="checkbox-inline" ng-repeat="d in currentGame.daysOfWeek track by $index">
-            <div ng-if="$index < 5">
+        <div class="col-sm-12 col-12 ">
+        <h3>Giorni della settimana</h3>
+        <hr style="border-color: black;">
+    </div>
+    <div class="col-sm-12 col-12 ">
+        <div class="col-sm-12 col-12 " ng-repeat="d in currentGame.daysOfWeek track by $index">
+        <div>
+                <input type="checkbox" class="checkBoxStyle " value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
+            </div>
+           <!--  <div ng-if="$index < 5">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}"  ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 5">
@@ -77,94 +149,7 @@
             </div>
             <div ng-if="$index == 6">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" disabled>{{weekDays[$index]}}
-            </div>
-        </label>
-    </div>
-    <div class="col-lg-12">
-        <h3>Partecipanti</h3>
-        <hr style="border-color: black;">
-    </div>
-    <!-- Classi partecipanti -->
-    <div class="col-lg-12">
-        <p>
-            <span class="required-sign">*</span>
-            <b>Classi partecipanti:</b>
-        </p>
-        <div style="margin-left: 10px;" class="checkbox-inline">
-            <label style="font-weight: normal">
-                <input type="checkbox" ng-click="toggleSelectedClasses()" ng-disabled="currentGame.deployed" ng-model="classesAllSelected">Seleziona tutto&ensp;|&ensp;
-            </label>
+            </div> -->
         </div>
-        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="classe in classes">
-            <label style="font-weight: normal">
-                <input type="checkbox" value="{{classe.value}}" ng-model="classe.value" ng-disabled="currentGame.deployed" ng-change="classToggled()">{{classe.name}}&ensp;
-            </label>
-        </div>
-    </div>
-    <!-- Num studenti nelle classi -->
-    <div class="col-lg-12 field">
-        <p>
-            <b>Num. studenti nelle classi: {{nrOfStudenti}}</b>
-        </p>
-    </div>
-    <!-- Global Team -->
-    <div class="col-lg-12 field">
-        <span class="required-sign">*</span>
-        <p>
-            <b>Nome Team globale:</b>
-        </p>
-        <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-model="currentGame.globalTeam" ng-required="true" />
-    </div>
-
-    <div class="col-lg-12">
-        <h3>Modalità di arrivo a scuola</h3>
-        <hr style="border-color: black;">
-    </div>
-    <div class="col-lg-12">
-        <div style="margin-left: 10px;" class="checkbox-inline" ng-repeat="modality in modalities">
-            <label style="font-weight: normal">
-                <input type="checkbox" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-model="modality.selected">{{modality.label}}&ensp;</label>
-        </div>
-    </div>
-    
-    <div class="col-lg-12">
-        <h3>Impostazioni pedibus</h3>
-        <hr style="border-color: black;">
-    </div>
-
-    <div class="col-lg-12">
-        <p>
-            <input type="checkbox" ng-model="currentGame.usingPedibusData">&nbsp;Utilizza nel gioco i dati del piedibus
-        </p>
-    </div>
-    <br>
-    <!-- Intervallo di raccolta dati -->
-    <div class="col-lg-12 field">
-        <p>
-            <span class="required-sign">*</span>
-            <b>Tempo di raccolta per gli eventi del Pedibus:</b>
-        </p>
-    </div>
-		<!-- Scheduling -->
-    <div class="col-lg-12">
-        <label class="col-lg-1" style="position: relative;top:40px"><b>dalle:</b></label>
-        <div class="col-lg-2 timepicker time-picker-control">
-            <fieldset ng-disabled="!currentGame.usingPedibusData">
-                <div uib-timepicker ng-model="$parent.collectFromHour" hour-step="1" minute-step="5" show-meridian="ismeridian" ng-required="true"></div>
-            </fieldset>
-        </div>
-        <label class="col-lg-1" style="position: relative;top:40px"><b>alle:</b></label>
-        <div class="col-lg-2  timepicker time-picker-control">
-            <fieldset ng-disabled="!currentGame.usingPedibusData">
-                <div uib-timepicker ng-model="$parent.collectToHour" hour-step="1" minute-step="5" show-meridian="ismeridian" ng-required="true"></div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="col-lg-12 field">
-	    <p>
-	    	<b>Intervallo (minuti 1-30):</b>
-	    </p>
-	    <input class="form-control" style="width: 75px" type="number" min="1" max="30" step="1" 
-	    	ng-disabled="!currentGame.usingPedibusData" ng-model="currentGame.interval"/>
     </div>
 </fieldset>

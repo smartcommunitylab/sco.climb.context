@@ -22,8 +22,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
+import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 
 public class Utils {
@@ -256,6 +258,17 @@ public class Utils {
 	
 	public static String getPlayerKey(String classRoom, String nickname) {
 		return classRoom + "-" + nickname;
+	}
+	
+	public static boolean containsId(String id, List<PedibusPlayer> players) {
+		boolean result = false;
+		for(BaseObject obj : players) {
+			if(id.equals(obj.getObjectId())) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 	
 }

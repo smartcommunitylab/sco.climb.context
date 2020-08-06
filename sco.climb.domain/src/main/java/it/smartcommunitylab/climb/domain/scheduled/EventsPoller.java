@@ -242,8 +242,7 @@ public class EventsPoller {
 					logger.warn("sendScores:" + e.getMessage());
 					continue;
 				}
-				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), 
-						game.getInstituteId(), game.getSchoolId(),
+				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), game.getObjectId(),
 						childStatus.getNickname(), childStatus.getClassRoom());
 				if(player == null) {
 					continue;
@@ -303,8 +302,7 @@ public class EventsPoller {
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived() && Utils.isNotEmpty(childStatus.getNickname()) 
 					&& Utils.isNotEmpty(childStatus.getClassRoom())) {
-				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), 
-						game.getInstituteId(), game.getSchoolId(),
+				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), game.getObjectId(),
 						childStatus.getNickname(), childStatus.getClassRoom());
 				if(player != null) {
 					Map<String, String> modeMap = classModeMap.get(player.getClassRoom());
