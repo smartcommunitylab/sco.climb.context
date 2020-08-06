@@ -83,7 +83,7 @@
                             <input type="text" ng-model="new.classe">
                             <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a>
                         </div>
-                        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="switchAddClasse()">Crea nuova classe</a></div>
+                        <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="switchAddClasse()" ng-disabled="currentGame.deployed">Crea nuova classe</a></div>
 
         </div>
 
@@ -97,7 +97,7 @@
                 </div> 
         </div> -->
                 <div class="col-sm-4 col-4" ng-repeat="classe in classes track by $index">
-        <div class="btn btn-sm class-button"  ng-click="classToggled(classe)">
+        <div class="btn btn-sm class-button"  ng-click="classToggled(classe)" ng-disabled="currentGame.deployed">
             <div ><span class="fa fa-trash pull-right" ></span> {{classe}}</div>
         </div>
     </div>
