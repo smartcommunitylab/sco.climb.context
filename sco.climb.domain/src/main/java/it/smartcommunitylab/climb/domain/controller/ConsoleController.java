@@ -124,9 +124,9 @@ public class ConsoleController extends AuthController {
             dsInfo.setTermUsage(user.getTermUsage());
 		}
 		//save rememeberme
-		Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
-		rememberMeServices.loginSuccess((HttpServletRequest)request, 
-				(HttpServletResponse)response, existingAuth);
+		//Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
+		//rememberMeServices.loginSuccess((HttpServletRequest)request, 
+		//		(HttpServletResponse)response, existingAuth);
 		return dsInfo;
 	}
 
