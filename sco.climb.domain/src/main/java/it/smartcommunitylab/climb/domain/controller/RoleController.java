@@ -109,21 +109,19 @@ public class RoleController extends AuthController {
 			@RequestParam String email,
 			@RequestParam String instituteId,
 			@RequestParam String schoolId,
-			@RequestParam String pedibusGameId,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		Institute institute = storage.getInstitute(ownerId, instituteId);
 		School school = storage.getSchool(ownerId, instituteId, schoolId);
-		PedibusGame pedibusGame = storage.getPedibusGame(ownerId, pedibusGameId);
-		if((institute == null) || (school == null) || (pedibusGame == null)) {
-			throw new EntityNotFoundException("institute or school or game not found");
+		if((institute == null) || (school == null)) {
+			throw new EntityNotFoundException("institute or school not found");
 		}
-		List<Authorization> auths = roleManager.addGameEditor(ownerId, email, institute, school, pedibusGame);
+		List<Authorization> auths = roleManager.addGameEditor(ownerId, email, institute, school);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addGameEditor: %s - %s - %s - %s - %s", ownerId, email, 
-					instituteId, schoolId, pedibusGameId));
+			logger.info(String.format("addGameEditor: %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId));
 		}
 		return auths;
 	}
