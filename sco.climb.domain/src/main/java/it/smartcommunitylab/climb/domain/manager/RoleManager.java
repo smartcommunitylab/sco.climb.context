@@ -114,7 +114,7 @@ public class RoleManager {
 	}
 
 	public List<Authorization> addGameEditor(String ownerId, String email, 
-			Institute institute, School school, PedibusGame pedibusGame) throws EntityNotFoundException {
+			Institute institute, School school) throws EntityNotFoundException {
 		List<Authorization> auths = new ArrayList<Authorization>();
 		
 		Authorization auth = new Authorization();
@@ -124,11 +124,11 @@ public class RoleManager {
 		auth.setInstituteId(institute.getObjectId());
 		auth.setSchoolId(school.getObjectId());
 		auth.setRouteId("*");
-		auth.setGameId(pedibusGame.getObjectId());
+		auth.setGameId("*");
 		auth.getResources().add(Const.AUTH_RES_Institute);
 		auth.getResources().add(Const.AUTH_RES_School);
 		auth.getResources().add(Const.AUTH_RES_Image);
-		auth.getResources().add(Const.AUTH_RES_PedibusGame);
+		
 		auths.add(auth);
 		
 		auth = new Authorization();
@@ -141,7 +141,8 @@ public class RoleManager {
 		auth.setInstituteId(institute.getObjectId());
 		auth.setSchoolId(school.getObjectId());
 		auth.setRouteId("*");
-		auth.setGameId(pedibusGame.getObjectId());
+		auth.setGameId("*");
+		auth.getResources().add(Const.AUTH_RES_PedibusGame);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Player);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Itinerary);
 		auth.getResources().add(Const.AUTH_RES_PedibusGame_Leg);
@@ -161,8 +162,7 @@ public class RoleManager {
 		auths.add(auth);
 		
 		storage.addUserRole(email, 
-				Utils.getAuthKey(ownerId, Const.ROLE_GAME_EDITOR, institute.getObjectId(), school.getObjectId(), 
-						pedibusGame.getObjectId()), auths);
+				Utils.getAuthKey(ownerId, Const.ROLE_GAME_EDITOR, institute.getObjectId(), school.getObjectId()), auths);
 		return auths;
 	}
 	

@@ -318,7 +318,6 @@ angular.module('climbGameUser.services.data', [])
       	}  else if(role == "game-editor") {
       		instituteId = auth.instituteId;
       		schoolId = auth.schoolId;
-      		gameId = auth.gameId;
       	}    		
     	}
     	authText = ownerId + " - " + role;

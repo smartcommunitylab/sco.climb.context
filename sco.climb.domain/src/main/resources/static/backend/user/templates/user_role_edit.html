@@ -41,7 +41,7 @@
             </md-select>
         </md-input-container>    
     
-        <md-input-container class="md-block" ng-show="actualRole == 'editor' || actualRole == 'teacher'">
+        <md-input-container class="md-block" ng-show="actualRole == 'teacher'">
             <label>{{'role_editor_game_id' | translate}}</label>
             <md-icon>videogame_asset</md-icon>
             <md-select ng-if="gamesList && gamesList.length" placeholder="{{'role_editor_game_id' | translate}}" 
