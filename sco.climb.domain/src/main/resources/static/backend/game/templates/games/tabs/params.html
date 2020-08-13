@@ -11,7 +11,10 @@
                 <label style="font-style: italic; font-weight: normal">Numero studenti</label>
             </div>
             <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
-                <label style="font-style: italic; font-weight: normal">Distanza media (metri)</label>
+                <label style="font-style: italic; font-weight: normal">Distanza media (metri)
+                	<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                		uib-tooltip="Distanza media per singolo studente"></i>
+                </label>
             </div>
         </div>
         <div class="row">
@@ -123,12 +126,10 @@
             <div class="col-lg-4 col-xs-4 col-4">
             </div>
             <div class="col-lg-4 col-xs-4 col-4">
-                <p>&emsp;
-                    <b>Abitudini relevate:</b> {{calculateSS()}}/{{nrOfStudenti}}</p>
+                <p><b>Abitudini rilevate degli studenti:</b> {{calculateSS()}}/{{nrOfStudenti}}</p>
             </div>
             <div class="col-lg-4 col-xs-4 col-4">
-                <p>&emsp;
-                    <b>Velocità stimata(KM/gg): {{calculateCDND()/1000}}</b>
+                <p><b>Velocità stimata(KM/gg): {{calculateCDND()/1000}}</b>
                 </p>
             </div>
         </div>

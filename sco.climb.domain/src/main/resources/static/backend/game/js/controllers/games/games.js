@@ -147,6 +147,8 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                     toHour: '',
                     school: '',
                     classRooms: [],
+                    globalTeam: 'Scuola',
+                    shortName: getSchoolName(),
                     ownerId: $stateParams.idDomain,
                     schoolId: $stateParams.idSchool,
                     instituteId: $stateParams.idInstitute,
@@ -316,7 +318,16 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
 
             return isValidate;
         }
-
+        
+        function getSchoolName() {
+        	var d = new Date()
+        	var year = d.getFullYear();
+        	if($scope.$parent.selectedSchool) {
+        		return ($scope.$parent.selectedSchool.name + ' ' + year);
+        	}
+        	return ('Scuola ' + year);
+        }
+        
         // Back without saving changes
         $scope.back = function () {
             createDialog('templates/modals/back.html', {
