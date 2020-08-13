@@ -45,37 +45,43 @@
                 uib-tooltip="specificare il numero di giorni in cui la scuola rimane chiusa durante il periodo del gioco, ad esclusione di sabati e domeniche."></i>
             </p></div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.giorni_chiusi" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.giorni_chiusi" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12"><p><b>Bonus meteo (metri):</b></p></div>
             <div class="col-sm-6 col-xs-6">nuovoloso</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control"  string-to-number type="number" ng-model="currentGame.params.const_cloudy_bonus" />
+                <input class="form-control"  string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.const_cloudy_bonus" />
             </div>
         <div class="row">
             <div class="col-sm-6 col-xs-6">pioggia</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.const_rain_bonus" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.const_rain_bonus" />
              </div>
             </div>
         <div class="row">
             <div class="col-sm-6 col-xs-6">neve</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.const_snow_bonus" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.const_snow_bonus" />
             </div>
        </div>
         <div class="row">
             <div class="col-sm-12"><p><b>Bonus performance (metri):</b></p></div>
             <div class="col-sm-6 col-xs-6">giorno impatto zero</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
             </div>
         <div class="row">
           <div class="col-sm-6 col-xs-6">giorno senz'auto</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.const_NoCarDayClass_bonus" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.const_NoCarDayClass_bonus" />
             </div>
             </div>
         </div>
@@ -85,7 +91,8 @@
                 <b>km sfide:</b>
             </div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" ng-model="currentGame.params.km_bonus" />
+                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                	ng-model="currentGame.params.km_bonus" />
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-6"><p><b>Km target: </div><div class="col-sm-6 col-xs-6"> {{calculateKMTarget()}}</div></b></p></div>

@@ -159,9 +159,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 deleteClasses = false;
                 paramInfo = true;
                 calibrationInfo = true;
-                showPlayer = false;
-                editPlayer = false;
-                deletePlayer = false;
+                showPlayer = true;
+                editPlayer = true;
+                deletePlayer = true;
                 pedibusInfo = false;
                 createPaths = true;
                 showPaths = true;
