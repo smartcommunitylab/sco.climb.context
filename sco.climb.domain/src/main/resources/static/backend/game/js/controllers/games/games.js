@@ -685,7 +685,8 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
 
         $scope.calculateKMTarget = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
-                return ($scope.kmStimati + $scope.currentGame.params.km_bonus);
+            	var km = $scope.kmStimati + Number($scope.currentGame.params.km_bonus);
+                return km;
             }
         }
 

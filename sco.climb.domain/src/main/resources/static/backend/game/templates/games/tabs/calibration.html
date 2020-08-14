@@ -86,7 +86,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6 col-xs-6"><p><b>Km stimati:</div><div class="col-sm-6 col-xs-6"> {{calculateKMStimati()}}</div></b></p></div>
+            <div class="col-sm-6 col-xs-6"><p><b>Km stimati:
+            	<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Sono i Km che riesce a percorrere virtualmente il gruppo nell'arco della durata del gioco. Viene calcolato moltiplicando la velocità giornaliera del gruppo per i giorni di gioco effettivi."></i>
+            </div><div class="col-sm-6 col-xs-6"> {{calculateKMStimati()}}</div></b></p></div>
             <div class="col-sm-6 col-xs-6">
                 <b>km sfide:</b>
             </div>
@@ -95,7 +97,9 @@
                 	ng-model="currentGame.params.km_bonus" />
             </div>
             <div class="row">
-                <div class="col-sm-6 col-xs-6"><p><b>Km target: </div><div class="col-sm-6 col-xs-6"> {{calculateKMTarget()}}</div></b></p></div>
+                <div class="col-sm-6 col-xs-6"><p><b>Km target:
+                	<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Sono i Km totali percorsi, ed indicano la possibile distanza finale del gioco."></i> 
+                </div><div class="col-sm-6 col-xs-6"> {{calculateKMTarget()}}</div></b></p></div>
             </div>
         </div>
     </fieldset>
