@@ -155,8 +155,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 functionGame = false;
                 infoGames = true;
                 showClasses = false;
-                editClasses = false;
-                deleteClasses = false;
+                editClasses = true;
+                deleteClasses = true;
                 paramInfo = true;
                 calibrationInfo = true;
                 showPlayer = true;
