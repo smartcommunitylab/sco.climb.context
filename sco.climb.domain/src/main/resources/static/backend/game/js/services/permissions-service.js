@@ -140,10 +140,10 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showSchools = true;
                 editSchool = true;
             } else if (role == 'game-editor') {
-                showInstitutes = true;
+                showInstitutes = false;
                 editInstitute = false;
                 deleteInstitute = false;
-                showSchools = true;
+                showSchools = false;
                 editSchool = false;
                 deleteSchool = false;
                 showClass = false;
