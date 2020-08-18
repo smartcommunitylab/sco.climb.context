@@ -40,15 +40,15 @@
     <div class="row">
         <!-- Menu tab -->
         <div class="col-md-2 tabs-menu">
-            <a ng-class="{'active-tab':selectedTab == 'info'}" ui-sref="root.school.info"
+            <a ng-class="{'active-tab':selectedTab == 'info'}" ng-click="goTo('root.school.info')"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">DETTAGLI</a>
-            <a ng-class="{'active-tab':selectedTab == 'lines-list'}" ui-sref="root.school.lines-list"
+            <a ng-class="{'active-tab':selectedTab == 'lines-list'}" ng-click="goTo('root.school.lines-list')"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">LINEE PEDIBUS</a>
-            <a ng-class="{'active-tab':selectedTab == 'children-list'}" ui-sref="root.school.children-list"
+            <a ng-class="{'active-tab':selectedTab == 'children-list'}" ng-click="goTo('root.school.children-list')"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">SCOLARI PEDIBUS</a>
            <!--  <a ng-class="{'active-tab':selectedTab == 'players-list'}" ui-sref="root.school.players-list" 
             	ng-if="PermissionsService.permissionEnabledEditPlayer()">GIOCATORI</a> -->
-            <a ng-class="{'active-tab':selectedTab == 'volunteer-list'}" ui-sref="root.school.volunteer-list"
+            <a ng-class="{'active-tab':selectedTab == 'volunteer-list'}" ng-click="goTo('root.school.volunteer-list')"
             	ng-if="PermissionsService.permissionEnabledEditSchool()">VOLONTARI</a>
         </div>
 

@@ -21,7 +21,7 @@
 
     <div class="col-lg-6 col-xs-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b> </p>
-        <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-model="leg.name"
+        <input ng-class="{error: !leg.name}" class="form-control" type="text" ng-change="changed()"  ng-model="leg.name"
             ng-disabled="currentGame.deployed" ng-required="true" />
     </div>
     <div class="row">
@@ -50,7 +50,7 @@
             </div>
 
         </div>
-        <input type="file" id="upload-featured-img" base-sixty-four-input ng-model="img"
+        <input type="file" id="upload-featured-img" base-sixty-four-input ng-change="changed()"  ng-model="img"
         accept="image/*" ng-show="false" />
         <!-- <div style="display: table; margin-bottom: 10px;">
         <div class="col-lg-5 field" style="display: table-cell">
@@ -115,7 +115,7 @@
                 <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
             </div>
             <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lat}"
-                class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lat"
+                class="form-control coordinates-input" type="number" ng-change="changed()"  ng-model="leg.coordinates.lat"
                 ng-required="true" />
         </div>
         <div class="col-md-6 col-xs-6 field lat-long-filed">
@@ -123,7 +123,7 @@
                 <p><span class="required-sign">*</span> <b>Longitudine:</b></p>
             </div>
             <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}"
-                class="form-control coordinates-input" type="number" ng-model="leg.coordinates.lng"
+                class="form-control coordinates-input" type="number" ng-change="changed()" ng-model="leg.coordinates.lng"
                 ng-required="true" />
         </div>
     </div>
@@ -152,7 +152,7 @@
     </div>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Distanza (Km):</b></p>
-        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-model="leg.score"
+        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-change="changed()"  ng-model="leg.score"
             ng-disabled="currentGame.deployed" ng-required="true" />
     </div>
     <div class="col-lg-12 field">

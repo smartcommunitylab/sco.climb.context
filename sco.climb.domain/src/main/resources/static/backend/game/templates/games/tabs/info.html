@@ -5,7 +5,7 @@
             <span class="required-sign">*</span>
             <b>Nome:</b>
         </p>
-        <input class="form-control col-sm-3" type="text" ng-model="currentGame.gameName" ng-required="true" />
+        <input class="form-control col-sm-3" type="text" ng-change="changed()" ng-model="currentGame.gameName" ng-required="true" />
     </div>
 <!--     Description
     <div class="col-sm-12 field">
@@ -23,7 +23,7 @@
         </p>
         <p class="input-group col-sm-5 col-5" style="display: inline-block">
             <input style="width: 200px" class="form-control"  type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
-                ng-disabled="currentGame.deployed" ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+                ng-disabled="currentGame.deployed" ng-change="changed()" ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
             <span class="input-group-btn">
                 <button ng-disabled="currentGame.deployed" type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true">
@@ -39,7 +39,7 @@
         </p>
         <p class="input-group col-sm-5 col-5" style="display: inline-block">
             <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
-                ng-disabled="currentGame.deployed" ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
+                ng-disabled="currentGame.deployed" ng-change="changed()" ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
             />
             <span class="input-group-btn">
                 <button ng-disabled="currentGame.deployed" type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true">
@@ -55,7 +55,7 @@
                 uib-tooltip="Si tratta di un link precompilato pubblico per accedere al percorso."></i>
     </b>
         </p>
-        <input class="form-control col-sm-4" type="text" ng-model="currentGame.shortName" ng-required="true" />
+        <input class="form-control col-sm-4" type="text" ng-change="changed()" ng-model="currentGame.shortName" ng-required="true" />
     </div>
     <div class="col-sm-12 col-12 field">
         <p class="col-sm-4 col-4 col-xs-4">
@@ -80,7 +80,7 @@
         <div class="row">
                         <b>Aggiungi le classi che parteciperanno al gioco:</b>
                         <div ng-if="addClass" class="pull-right adder"> Aggiungi classe: 
-                            <input type="text" ng-model="new.classe">
+                            <input ng-change="changed()" type="text" ng-model="new.classe">
                             <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a>
                         </div>
                         <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button" ng-click="switchAddClasse()" 
@@ -117,7 +117,7 @@
                 uib-tooltip="Qui puoi dare un nome al team globale che partecipa al gioco."></i>
     </b>
         </p>
-        <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-model="currentGame.globalTeam" ng-required="true" />
+        <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-change="changed()" ng-model="currentGame.globalTeam" ng-required="true" />
     </div>
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
@@ -129,7 +129,7 @@
     <div class="col-sm-12 col-12 ">
         <div   class=" col-12 col-sm-12  " ng-repeat="modality in modalities">
             <label style="font-weight: normal">
-                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-model="modality.selected">{{modality.label}}&ensp;</label>
+                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-change="changed()" ng-model="modality.selected">{{modality.label}}&ensp;</label>
         </div>
     </div>
     <!-- checkbox for days of week -->

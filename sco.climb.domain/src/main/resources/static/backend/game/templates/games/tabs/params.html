@@ -24,11 +24,11 @@
                 </p>
             </div>
             <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" min="0" ng-model="currentGame.params.walk_studenti" 
+                <input class="form-control" type="number" min="0" ng-change="changed()" ng-model="currentGame.params.walk_studenti" 
                 ng-disabled="!isModalityPresent('walk')"/>
             </div>
             <div class="col-lg-4 col-xs-4 col-4" style="margin-bottom: 20px;">
-                <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_walk_distance" 
+                <input class="form-control" type="number" min="0" ng-change="changed()" ng-model="currentGame.params.const_walk_distance" 
                 ng-disabled="!isModalityPresent('walk')"/>
             </div>
         </div>
