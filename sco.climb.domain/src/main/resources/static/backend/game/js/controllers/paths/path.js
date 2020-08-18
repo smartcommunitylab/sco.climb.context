@@ -116,6 +116,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.legs[i].position = i;
                         }
                         $scope.currentPath.legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
+                        $rootScope.modified=false;
                         $state.go('root.paths-list');
 
                         // $scope.saveData('legs', $scope.currentPath).then(
@@ -156,7 +157,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             createDialog('templates/modals/back.html', {
                 id: 'back-dialog',
                 title: 'Sei sicuro di voler uscire senza salvare?',
-                success: { label: 'Conferma', fn: function () { $state.go('root.paths-list'); } }
+                success: { label: 'Conferma', fn: function () {
+                    $rootScope.modified=false;
+                    $state.go('root.paths-list'); 
+                } }
             });
         };
     })

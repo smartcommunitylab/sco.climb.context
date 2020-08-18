@@ -46,7 +46,7 @@
             </p></div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.giorni_chiusi" />
+                ng-change="changed()" ng-model="currentGame.params.giorni_chiusi" />
             </div>
         </div>
         <div class="row">
@@ -54,20 +54,20 @@
             <div class="col-sm-6 col-xs-6">nuovoloso</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control"  string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.const_cloudy_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.const_cloudy_bonus" />
             </div>
         <div class="row">
             <div class="col-sm-6 col-xs-6">pioggia</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.const_rain_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.const_rain_bonus" />
              </div>
             </div>
         <div class="row">
             <div class="col-sm-6 col-xs-6">neve</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.const_snow_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.const_snow_bonus" />
             </div>
        </div>
         <div class="row">
@@ -75,13 +75,13 @@
             <div class="col-sm-6 col-xs-6">giorno impatto zero</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
             </div>
         <div class="row">
           <div class="col-sm-6 col-xs-6">giorno senz'auto</div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.const_NoCarDayClass_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.const_NoCarDayClass_bonus" />
             </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
                 <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                	ng-model="currentGame.params.km_bonus" />
+                ng-change="changed()" ng-model="currentGame.params.km_bonus" />
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-6"><p><b>Km target:

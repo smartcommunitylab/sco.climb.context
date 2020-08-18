@@ -116,7 +116,8 @@ angular.module('consoleControllers.line', [])
                         	$scope.currentSchool.objectId).then(       
                             function(response) {
                                 $scope.currentSchool.lines = response.data;
-                                console.log('Caricamento delle linee a buon fine.');
+								console.log('Caricamento delle linee a buon fine.');
+								$rootScope.modified=false;
                                 $state.go('root.school.lines-list');
                             }, function() {
                                 alert('Errore nel caricamento delle linee.');
@@ -171,7 +172,10 @@ angular.module('consoleControllers.line', [])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$window.history.back();} }
+            success: { label: 'Conferma', fn: function() {
+				$rootScope.modified=false;
+				$window.history.back();
+			} }
         });
     };
     

@@ -7,7 +7,7 @@
     <!-- Name -->
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Nome:</b></p>
-        <input class="form-control" type="text" ng-model="currentPath.name" />
+        <input class="form-control" type="text" ng-change="changed()"  ng-model="currentPath.name" />
         <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="Crea un nome per il tuo percorso che sarà visibile da tutti i giocatori."></i>
     </div>
     <!-- Description -->

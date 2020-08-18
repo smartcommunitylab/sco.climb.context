@@ -24,7 +24,7 @@
             <div ng-if="isAddPlayer" class="pull-right adder"> Aggiungi giocatore:
                 <!-- <input type="text" ng-model="new.classe"> -->
                 <p><span class="required-sign">*</span> <b>Nickname:</b></p>
-                <input class="form-control" type="text" ng-model="selectedPlayer.nickname" ng-required="true" />
+                <input class="form-control" type="text" ng-change="changed()" ng-model="selectedPlayer.nickname" ng-required="true" />
                 <div class="row">
                 <p><span class="required-sign">*</span> <b>Classe:</b></p>
                 <select ng-options="class as class for class in classes" ng-model="selectedPlayer.classRoom"
@@ -43,7 +43,7 @@
                     <div class="row v-center">
                         <div class="col-sm-10">
                             <span ng-if="!isEditEnabled[$index]">{{$index + 1}}. {{player.nickname}}</span>
-                            <input type="text" ng-model="player.nickname" ng-if="isEditEnabled[$index]">
+                            <input type="text" ng-change="changed()" ng-model="player.nickname" ng-if="isEditEnabled[$index]">
                             <!-- <span>{{$index + 1}}. {{player.nickname}}</span> -->
                             <span ng-if="!isEditEnabled[$index]">{{player.classRoom}}</span>
                             <select ng-if="isEditEnabled[$index]" ng-options="class as class for class in classes" ng-model="player.classRoom"

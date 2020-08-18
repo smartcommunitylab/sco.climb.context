@@ -208,6 +208,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
                     } else {
                         if ($scope.schools) $scope.schools.push(response.data);
                     }
+                    $rootScope.modified=false;
                     $state.go('root.schools-list');
                 }, function() {
                     $rootScope.networkProblemDetected('Errore nel salvataggio della scuola!');
@@ -240,7 +241,8 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$state.go('root.schools-list');} }
+            success: { label: 'Conferma', fn: function() {            $rootScope.modified=false;
+                $state.go('root.schools-list');} }
         });
     };
 })
@@ -449,7 +451,8 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$state.go('root.school.children-list');} }
+          success: { label: 'Conferma', fn: function() {            $rootScope.modified=false;
+            $state.go('root.school.children-list');} }
       });
   }
   
@@ -458,6 +461,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
   		$scope.saveData('child', $scope.selectedChild).then(
 				function(response) {
                     console.log('Scolaro salvato.');
+                    $rootScope.modified=false;
                     $state.go('root.school.children-list');
 				},
 				function() {
@@ -621,7 +625,9 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$state.go('root.school.volunteer-list');} }
+          success: { label: 'Conferma', fn: function() {
+            $rootScope.modified=false;
+            $state.go('root.school.volunteer-list');} }
       });
   }
   
@@ -629,7 +635,9 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
   	if (checkFields()) {
   		$scope.saveData('volunteer', $scope.selectedVolunteer).then(
 				function(response) {
-					console.log('Volontario salvato.');
+                    console.log('Volontario salvato.');
+                    $rootScope.modified=false;
+
                     $state.go('root.school.volunteer-list');
 				},
 				function() {

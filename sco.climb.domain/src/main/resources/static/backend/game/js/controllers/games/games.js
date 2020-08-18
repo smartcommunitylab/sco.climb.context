@@ -103,7 +103,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                 title: 'Modificato!',
                 success: {label: 'Ok', fn: null}
             });
-            
+            $rootScope.modified=false;
             //show toast salvataggio
             if ($scope.currentGame.objectId) { //edited
                 if ($scope.games) {
@@ -333,7 +333,10 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
             createDialog('templates/modals/back.html', {
                 id: 'back-dialog',
                 title: 'Sei sicuro di voler uscire senza salvare?',
-                success: { label: 'Conferma', fn: function () { $state.go('root.games-list'); } }
+                success: { label: 'Conferma', fn: function () { 
+                    $rootScope.modified=false;
+                    $state.go('root.games-list'); 
+                } }
             });
         };
     })
@@ -749,6 +752,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
                 DataService.createPlayer($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.selectedPlayer).then(
                     function (response) {
                         console.log('Giocatore salvato.');
+                        $rootScope.modified=false;
                         $state.go('root.game.gamers');
                         //update gamers
                     },
