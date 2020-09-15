@@ -2,6 +2,7 @@ package it.smartcommunitylab.climb.domain.manager;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -23,6 +24,7 @@ import org.springframework.util.FileCopyUtils;
 import it.smartcommunitylab.climb.contextstore.model.Institute;
 import it.smartcommunitylab.climb.contextstore.model.School;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 
 @Service
@@ -119,6 +121,28 @@ public class MailManager {
 		}
 	}
 	
+	public void sendBatteryLowWarning(Institute institute, List<String> messages) {
+		String email = institute.getWarningBatteryLowMail();
+		if(Utils.isNotEmpty(email)) {
+			try {
+				Session session = setMailerSession();
+				StringBuffer msg = new StringBuffer("Nodi con batteria bassa - " + institute.getName() + "\n");
+				for(String s : messages) {
+					msg.append(s);
+				}
+				MimeMessage message = new MimeMessage(session);
+				message.setFrom(new InternetAddress("info@smartcommunitylab.it"));
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));    
+	      message.setSubject("Livello batteria nodi");    
+	      message.setText(msg.toString());    
+	      Transport.send(message);
+	      logger.info("sendBatteryLowWarning mail sent for " + institute.getObjectId());			
+			} catch (Exception e) {
+				logger.warn("sendBatteryLowWarning error:" + e.getMessage());
+			}
+		}
+	}
+	
 	private Session setMailerSession() {
 		Properties props = new Properties();
 		props.put("mail.transport.protocol", "smtps");
@@ -139,4 +163,5 @@ public class MailManager {
 		);
 		return session;
 	}
+	
 }

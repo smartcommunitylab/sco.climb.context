@@ -1214,6 +1214,12 @@ public class RepositoryManager {
 		}
 	}
 
+	public Child getChild(String ownerId, String objectId) {
+		Query query = new Query(Criteria.where("objectId").is(objectId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, Child.class);		
+	}
+	
 	public List<Child> getChildrenBySchool(String ownerId, String instituteId, String schoolId) {
 		Query query = new Query(Criteria.where("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId)
@@ -1225,6 +1231,11 @@ public class RepositoryManager {
 		Query query = new Query(Criteria.where("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId)
 				.and("ownerId").is(ownerId));
+		return mongoTemplate.find(query, Route.class);		
+	}
+	
+	public List<Route> getRoutes() {
+		Query query = new Query();
 		return mongoTemplate.find(query, Route.class);		
 	}
 	
