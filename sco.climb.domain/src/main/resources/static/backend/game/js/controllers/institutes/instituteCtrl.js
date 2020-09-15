@@ -9,6 +9,8 @@ institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $stat
             $scope.currentInstitute = {
                 name: '',
                 address: '',
+                warningBatteryLowMail: '',
+                addPedibusPhoto: false,
                 ownerId: $stateParams.idDomain,
             }
             $scope.saveData = DataService.saveData;

@@ -13,4 +13,12 @@
         <p><span class="required-sign">*</span> <b>Indirizzo:</b></p>
         <input class="form-control" type="text" ng-model="currentInstitute.address" ng-change="changed()" ng-required="true"/>
     </div>
+    <div class="col-lg-12 field">
+        <b>Mail notifica batteria:</b></p>
+        <input class="form-control" type="text" ng-model="currentInstitute.warningBatteryLowMail" ng-change="changed()"/>
+    </div>
+    <div class="col-lg-12">
+        <label><b>aggiungere foto del pedibus:</b>&#160;<input type="checkbox" ng-model="currentInstitute.addPedibusPhoto"/></label>
+    </div>
+    
 </fieldset>

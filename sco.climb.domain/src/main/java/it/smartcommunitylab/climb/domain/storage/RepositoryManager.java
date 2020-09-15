@@ -116,6 +116,7 @@ public class RepositoryManager {
 		update.set("name", school.getName());
 		update.set("address", school.getAddress());
 		update.set("classes", school.getClasses());
+		update.set("volunteerShiftsLink", school.getVolunteerShiftsLink());
 		mongoTemplate.updateFirst(query, update, School.class);
 	}
 
@@ -421,8 +422,9 @@ public class RepositoryManager {
 		update.set("lastUpdate", new Date());
 		update.set("name", institute.getName());
 		update.set("address", institute.getAddress());
-		mongoTemplate.updateFirst(query, update, School.class);
-		
+		update.set("warningBatteryLowMail", institute.getWarningBatteryLowMail());
+		update.set("addPedibusPhoto", institute.isAddPedibusPhoto());
+		mongoTemplate.updateFirst(query, update, Institute.class);
 	}
 
 	public void removeInstitute(String ownerId, String objectId) throws EntityNotFoundException {
