@@ -133,7 +133,7 @@ public class MailManager {
 				MimeMessage message = new MimeMessage(session);
 				message.setFrom(new InternetAddress("info@smartcommunitylab.it"));
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));    
-	      message.setSubject("Livello batteria nodi");    
+	      message.setSubject("Livello batteria nodi Pedibus");    
 	      message.setText(msg.toString());    
 	      Transport.send(message);
 	      logger.info("sendBatteryLowWarning mail sent for " + institute.getObjectId());			
