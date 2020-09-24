@@ -116,6 +116,7 @@ public class RepositoryManager {
 		update.set("name", school.getName());
 		update.set("address", school.getAddress());
 		update.set("classes", school.getClasses());
+		update.set("volunteerShiftsLink", school.getVolunteerShiftsLink());
 		mongoTemplate.updateFirst(query, update, School.class);
 	}
 
@@ -421,8 +422,9 @@ public class RepositoryManager {
 		update.set("lastUpdate", new Date());
 		update.set("name", institute.getName());
 		update.set("address", institute.getAddress());
-		mongoTemplate.updateFirst(query, update, School.class);
-		
+		update.set("warningBatteryLowMail", institute.getWarningBatteryLowMail());
+		update.set("addPedibusPhoto", institute.isAddPedibusPhoto());
+		mongoTemplate.updateFirst(query, update, Institute.class);
 	}
 
 	public void removeInstitute(String ownerId, String objectId) throws EntityNotFoundException {
@@ -1212,6 +1214,12 @@ public class RepositoryManager {
 		}
 	}
 
+	public Child getChild(String ownerId, String objectId) {
+		Query query = new Query(Criteria.where("objectId").is(objectId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, Child.class);		
+	}
+	
 	public List<Child> getChildrenBySchool(String ownerId, String instituteId, String schoolId) {
 		Query query = new Query(Criteria.where("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId)
@@ -1223,6 +1231,11 @@ public class RepositoryManager {
 		Query query = new Query(Criteria.where("instituteId").is(instituteId)
 				.and("schoolId").is(schoolId)
 				.and("ownerId").is(ownerId));
+		return mongoTemplate.find(query, Route.class);		
+	}
+	
+	public List<Route> getRoutes() {
+		Query query = new Query();
 		return mongoTemplate.find(query, Route.class);		
 	}
 	

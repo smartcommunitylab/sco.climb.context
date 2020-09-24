@@ -54,6 +54,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
                 name: '',
                 address: '',
                 classes: [],
+                volunteerShiftsLink: '',
                 instituteId: $stateParams.idInstitute,
                 ownerId: $stateParams.idDomain,
             }
