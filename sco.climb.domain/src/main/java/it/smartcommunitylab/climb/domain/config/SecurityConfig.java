@@ -178,7 +178,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.disable()
 			.requestMatcher(new OrRequestMatcher(
 						        new AntPathRequestMatcher("/game-dashboard/**/*.html"),
-						        new AntPathRequestMatcher("/game-public/**"),
 						        new AntPathRequestMatcher("/login/aacgoogle")))
 				.authorizeRequests()
 					.anyRequest()
