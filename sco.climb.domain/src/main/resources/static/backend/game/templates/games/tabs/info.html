@@ -52,17 +52,17 @@
         <p class="col-sm-4 col-4 col-xs-4">
         	<span class="required-sign ">*</span>
         	<b>Link breve:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
-                uib-tooltip="Si tratta di un link precompilato pubblico per accedere al percorso."></i>
+                uib-tooltip="Si tratta della parte finale del link pubblico del gioco."></i>
     </b>
         </p>
-        <input class="form-control col-sm-4" type="text" ng-change="changed()" ng-model="currentGame.shortName" ng-required="true" />
+        <input class="form-control col-sm-4" type="text" ng-change="changed()" ng-model="currentGame.shortName" ng-required="true"  ng-disabled="!PermissionsService.permissionEnabledShortLink()"/>
     </div>
     <div class="col-sm-12 col-12 field">
         <p class="col-sm-4 col-4 col-xs-4">
         	<span class="required-sign">*</span>
         	<b>Sponsor:</b>
         </p>
-        <select ng-model="currentGame.sponsorTemplate" ng-required="true" style="width: 100px;">
+        <select ng-model="currentGame.sponsorTemplate" ng-required="true" style="width: 100px;" ng-disabled="!PermissionsService.permissionEnabledSponsor()">
         	<option value="trentino">Trentino</option>
         	<option value="ferrara">Ferrara</option>
         	<option value="collecchio">Collecchio</option>
@@ -113,8 +113,8 @@
     <div class="col-sm-12  col-12 field">
         <span class="required-sign">*</span>
         <p>
-            <b>Nome Team globale:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
-                uib-tooltip="Qui puoi dare un nome al team globale che partecipa al gioco."></i>
+            <b>Nome Team di gioco:            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
+                uib-tooltip="E' il nome della squadra che partecipa al gioco e comprende tutte le classi partecipanti. Puoi modificare il nome della squadra per personalizzarlo."></i>
     </b>
         </p>
         <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-change="changed()" ng-model="currentGame.globalTeam" ng-required="true" />
@@ -134,7 +134,7 @@
     </div>
     <!-- checkbox for days of week -->
         <div class="col-sm-12 col-12 ">
-        <h3>Giorni della settimana</h3>
+        <h3>Giorni di gioco</h3>
         <hr style="border-color: black;">
     </div>
     <div class="col-sm-12 col-12 ">
