@@ -15,7 +15,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var showLegs, editLegs, deleteLegs, reorderLegs;
     var showLegsMultimedia, editLegsMultimedia, deleteLegsMultimedia;
     var userRoles;
-
+	var shortLink;
+	var sponsor;
     permissionsService.getProfilePermissions = function () {
         return userRoles;
     }
@@ -60,6 +61,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
+shortLink = true;
+sponsor =true;
             } else if (role == 'owner' || role == 'school-owner') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -97,11 +100,13 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
+shortLink= true;
+sponsor = true;
             } else if (role == 'teacher') {
-                showInstitutes = true;
+                showInstitutes = false;
                 editInstitute = false;
                 deleteInstitute = false;
-                showSchools = true;
+                showSchools = false;
                 editSchool = false;
                 deleteSchool = false;
                 showClass = false;
@@ -134,6 +139,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
+shortLink = false;
+sponsor = false;
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -176,6 +183,8 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
+shortLink = true;
+sponsor = true;
             }
         });
 
@@ -250,6 +259,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     }
     permissionsService.permissionEnabledEditClasses = function () {
         return editClasses;
+    }    
+	permissionsService.permissionEnabledShortLink = function () {
+        return shortLink;
     }
     permissionsService.permissionEnabledDeleteClasses = function () {
         return deleteClasses;
@@ -311,7 +323,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     permissionsService.permissionEnabledDeleteLegsMultimedia = function () {
         return deleteLegsMultimedia;
     }
-
+	permissionsService.permissionEnabledSponsor= function () {
+        return sponsor;
+    }
 
 
 

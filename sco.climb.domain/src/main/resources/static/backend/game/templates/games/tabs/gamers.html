@@ -1,6 +1,7 @@
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditPlayer() || currentGame.deployed">
-    Lista giocatori<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" 
-    uib-tooltip="Crea ciascun giocatore inserendo il soprannome e la classe di appartenenza. Puoi visualizzare sotto la lista di tutti i giocatori già inseriti."></i>
+    Lista giocatori<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
+        tooltip-append-to-body="true"
+        uib-tooltip="Crea ciascun giocatore inserendo il soprannome e la classe di appartenenza. Puoi visualizzare sotto la lista di tutti i giocatori già inseriti."></i>
     <div class="dropdown">
         <!-- <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
             Tutte le classi
@@ -10,9 +11,9 @@
             <li role="presentation" ng-click="selectClass(classe)"><a role="menuitem" tabindex="-1" href="#"
                     ng-repeat="classe in classes track by $index">{{classe}}</a></li>
         </ul> -->
-        <select   class="form-control"  ng-model="gamers.currentClass" style="width: 200px;">
-        	<option value="">Tutte le classi</option>
-        	<option ng-repeat="classe in classes track by $index">{{classe}}</option>
+        <select class="form-control" ng-model="gamers.currentClass" style="width: 200px;">
+            <option value="">Tutte le classi</option>
+            <option ng-repeat="classe in classes track by $index">{{classe}}</option>
         </select>
 
     </div>
@@ -24,30 +25,34 @@
             <div ng-if="isAddPlayer" class="pull-right adder"> Aggiungi giocatore:
                 <!-- <input type="text" ng-model="new.classe"> -->
                 <p><span class="required-sign">*</span> <b>Nickname:</b></p>
-                <input class="form-control" type="text" ng-change="changed()" ng-model="selectedPlayer.nickname" ng-required="true" />
+                <input class="form-control" type="text" ng-change="changed()" ng-model="selectedPlayer.nickname"
+                    ng-required="true" />
                 <div class="row">
-                <p><span class="required-sign">*</span> <b>Classe:</b></p>
-                <select ng-options="class as class for class in classes" ng-model="selectedPlayer.classRoom"
-                    ng-required="true"></select>
+                    <p><span class="required-sign">*</span> <b>Classe:</b></p>
+                    <select ng-options="class as class for class in classes" ng-model="selectedPlayer.classRoom"
+                        ng-required="true"></select>
                 </div>
-                <div class="btn btn-primary btn-lg center-block" role="button" ng-click="addNewPlayer(selectedPlayer)">Aggiungi</div>
+                <div class="btn btn-primary btn-lg center-block" role="button" ng-click="addNewPlayer(selectedPlayer)">
+                    Aggiungi</div>
             </div>
-            <div ng-if="!isAddPlayer"><a class="btn btn-primary btn-lg pull-right" role="button"
+            <div ng-if="!isAddPlayer"><a class="btn btn-primary btn-lg pull-right margin-lg" role="button"
                     ng-click="switchAddPlayer()">Crea nuovo giocatore</a></div>
 
         </div>
         <div class="col-sm-12 search-container">
             <!-- <label class="search-label">Cerca: <input ng-model="searchText"></label> -->
             <ul class="list-group list-categories">
-                <li class="list-group-item gamer" data-ng-repeat="player in players | filter: {classRoom: gamers.currentClass}">
+                <li class="list-group-item gamer"
+                    data-ng-repeat="player in players | filter: {classRoom: gamers.currentClass}">
                     <div class="row v-center">
                         <div class="col-sm-10">
                             <span ng-if="!isEditEnabled[$index]">{{$index + 1}}. {{player.nickname}}</span>
-                            <input type="text" ng-change="changed()" ng-model="player.nickname" ng-if="isEditEnabled[$index]">
+                            <input type="text" ng-change="changed()" ng-model="player.nickname"
+                                ng-if="isEditEnabled[$index]">
                             <!-- <span>{{$index + 1}}. {{player.nickname}}</span> -->
                             <span ng-if="!isEditEnabled[$index]">{{player.classRoom}}</span>
-                            <select ng-if="isEditEnabled[$index]" ng-options="class as class for class in classes" ng-model="player.classRoom"
-                            ng-required="true"></select>
+                            <select ng-if="isEditEnabled[$index]" ng-options="class as class for class in classes"
+                                ng-model="player.classRoom" ng-required="true"></select>
                         </div>
                         <div class="edit-gamer">
                             <a ng-if="!isEditEnabled[$index]" ng-click="enableEdit($index)"

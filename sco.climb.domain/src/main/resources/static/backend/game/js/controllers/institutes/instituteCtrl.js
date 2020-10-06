@@ -1,4 +1,4 @@
-institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $state, $stateParams, DataService, MainDataService, createDialog, PermissionsService) {    
+institutesModule.controller('InstituteCtrl', function ($scope, $timeout, $rootScope, $state, $stateParams, DataService, MainDataService, createDialog, PermissionsService) {    
     $scope.$parent.$parent.mainView = 'institute'; 
     $scope.$parent.selectedTab = 'info';
     
