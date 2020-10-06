@@ -89,7 +89,7 @@ angular.module('climbGame', [
           }
           return ret;
       };
-  }]);
+  }])
 // replace uppercase to regular case
 .filter('humanizeDoc', function () {
   return function (doc) {
