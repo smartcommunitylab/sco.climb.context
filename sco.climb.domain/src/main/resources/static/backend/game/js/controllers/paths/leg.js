@@ -424,6 +424,7 @@ $scope.firstScore =true;
 
                 $scope.saveData('leg', savedLed).then(
                     function(response) {
+                        $rootScope.modified=false;
                         console.log('Salvataggio dati a buon fine.');
                         $scope.leg = response.data;
                         $scope.leg.coordinates = {};
@@ -468,6 +469,7 @@ $scope.firstScore =true;
                                 var backUpLegNext = $scope.legs[modifiedLegIndex + 1];
                                 $scope.saveData('leg', nextLeg).then(
                                     function (response) {
+                                        $rootScope.modified=false;
                                         console.log('Salvataggio dati a buon fine.');
                                         $state.go('root.path.legs');
                                     }, function (error) {
@@ -511,6 +513,7 @@ $scope.firstScore =true;
                                     $scope.saveData('leg', nextLeg).then(
                                         function (response) {
                                             console.log('Salvataggio dati a buon fine.');
+                                            $rootScope.modified=false;
                                             $state.go('root.path.legs');
                                         }, function (error) {
                                             if (backUpLegNext) {
@@ -530,6 +533,7 @@ $scope.firstScore =true;
                                 });
                             }
                         } else {
+                            
                             $state.go('root.path.legs');
                         }
                     }, function (error) {
@@ -577,6 +581,7 @@ $scope.firstScore =true;
       }
       $scope.saveData('leg_content', toSend).then(
           function(response) {
+             $rootScope.modified=false;
               console.log('Salvataggio dati a buon fine.');
               //$state.go('root.path.legs');
           }, function() {
