@@ -52,7 +52,7 @@
 		{
 			"value":"absent",
 			"label": "Assente",
-			"active": true,
+			"active": false,
 			"category": "cat1",
 			"color": "#BDBDBD"
 		}

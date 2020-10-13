@@ -185,7 +185,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                                 category: entry.category,
                                 color: entry.color
                             }
-                            if ($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value)) {
+                            if ($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value) || entry.value=='absent') {
                                 modalityEntry.selected = true;
                             }
                             $scope.modalities.push(modalityEntry);

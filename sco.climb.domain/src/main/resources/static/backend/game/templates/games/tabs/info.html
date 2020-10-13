@@ -129,7 +129,7 @@
     <div class="col-sm-12 col-12 ">
         <div   class=" col-12 col-sm-12  " ng-repeat="modality in modalities">
             <label style="font-weight: normal">
-                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}" ng-disabled="!modality.active || currentGame.deployed" ng-change="changed()" ng-model="modality.selected">{{modality.label}}&ensp;</label>
+                <input type="checkbox" class="checkBoxStyle" value="{{modality.value}}  " ng-disabled="!modality.active || currentGame.deployed || modality.value=='absent'" ng-change="changed()" ng-model="modality.selected">{{modality.label}}&ensp;</label>
         </div>
     </div>
     <!-- checkbox for days of week -->
