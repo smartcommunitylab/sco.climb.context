@@ -184,6 +184,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
                 $scope.leg.coordinates = { lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0] };      // trasformo le coordinate in un formato gestibile da GMaps
                 $scope.leg.score = $scope.leg.score / 1000;
+				$scope.leg.totalDistance = $scope.leg.score;
                 $scope.firstScore = true;
                 $scope.saveData = DataService.editData;
 
