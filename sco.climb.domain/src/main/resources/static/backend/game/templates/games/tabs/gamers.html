@@ -1,4 +1,7 @@
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditPlayer() || currentGame.deployed">
+<div class="col-sm-12">
+        <div class="row">
+        <div class="col-sm-12">
+        <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditPlayer() || currentGame.deployed">
     Lista giocatori<i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
         tooltip-append-to-body="true"
         uib-tooltip="Crea ciascun giocatore inserendo il soprannome e la classe di appartenenza. Puoi visualizzare sotto la lista di tutti i giocatori già inseriti."></i>
@@ -16,6 +19,9 @@
             <option ng-repeat="classe in classes track by $index">{{classe}}</option>
         </select>
 
+    </div>
+    </div>
+    </div>
     </div>
     <!-- <div class="col-sm-12 center field">
         <a class="btn btn-info btn-margin" data-ui-sref="root.game.player({idPlayer: ''})">Crea nuovo</a>

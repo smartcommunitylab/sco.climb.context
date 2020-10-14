@@ -184,7 +184,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
                 $scope.leg.coordinates = { lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0] };      // trasformo le coordinate in un formato gestibile da GMaps
                 $scope.leg.score = $scope.leg.score / 1000;
-				$scope.leg.totalDistance = $scope.leg.score;
+				//$scope.leg.totalDistance = $scope.leg.score;
                 $scope.firstScore = true;
                 $scope.saveData = DataService.editData;
 
@@ -291,6 +291,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }
 
             if ($scope.leg.position === 0) {
+                $scope.leg.score=0;
                 drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, null, $scope.leg.transport);
             } else {
                 if ($scope.newLeg) {
@@ -332,6 +333,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             if (currentLegIndex > 0) {
                 $scope.previousLegScore = $scope.legs[currentLegIndex - 1].score / 1000;
             }
+            $scope.leg.totalDistance = $scope.leg.score + $scope.previousLegScore;
         }
 
 
@@ -365,8 +367,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         // });
         $scope.$on('poiMapTotalKmChanged', function (event, newDistance) {     //total km changed listener for new leg
             if ($scope.newLeg || !$scope.firstScore) {
-                $scope.leg.totalDistance = newDistance;
-                $scope.leg.score = $scope.leg.totalDistance;
+                $scope.leg.score = newDistance;
+                $scope.leg.totalDistance = $scope.previousLegScore + newDistance;
             }
             if (!$scope.newLeg && $scope.firstScore) {
                 $scope.firstScore = false;

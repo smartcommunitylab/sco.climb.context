@@ -146,7 +146,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             var isValidate = true;
             var path = $scope.currentPath;
 
-            if (!path.name || !path.description || path.name === "" || path.description === "")
+            if (!path.name || path.name === "" )
                 isValidate = false;
 
             return isValidate;
