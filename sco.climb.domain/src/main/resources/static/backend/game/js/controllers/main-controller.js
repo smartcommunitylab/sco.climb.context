@@ -44,6 +44,7 @@ angular.module('consoleControllers.mainCtrl', [])
                 });
             }
             else {
+                $rootScope.modelErrors = '';
                 $state.go(state);
             }
         }
