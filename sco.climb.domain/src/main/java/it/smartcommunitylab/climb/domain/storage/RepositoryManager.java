@@ -981,8 +981,7 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
 		List<PedibusItineraryLeg> list = mongoTemplate.find(query, PedibusItineraryLeg.class);
 		for(PedibusItineraryLeg leg : list) {
-			removeMultimediaContentByLegId(ownerId, leg.getObjectId());
-			mongoTemplate.remove(leg);
+			removePedibusItineraryLeg(ownerId, leg.getObjectId());
 		}
 	}
 	
@@ -992,8 +991,7 @@ public class RepositoryManager {
 				.and("itineraryId").is(itineraryId).and("ownerId").is(ownerId));
 		List<PedibusItineraryLeg> list = mongoTemplate.find(query, PedibusItineraryLeg.class);
 		for(PedibusItineraryLeg leg : list) {
-			removeMultimediaContentByLegId(ownerId, leg.getObjectId());
-			mongoTemplate.remove(leg);
+			removePedibusItineraryLeg(ownerId, leg.getObjectId());
 		}
 	}
 	
