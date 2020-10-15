@@ -182,8 +182,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             if ($stateParams.idLeg) { //edit path
                 $scope.newLeg = false;
                 $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
+                $scope.previousLegScoreIndex = $scope.legs.findIndex(function(e){return e.objectId == $stateParams.idLeg});
+                if ($scope.previousLegScoreIndex!=0)
+$scope.previousLegScoreIndex --;
+                $scope.previousLegScore = $scope.legs[$scope.previousLegScoreIndex].score/1000;
                 $scope.leg.coordinates = { lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0] };      // trasformo le coordinate in un formato gestibile da GMaps
-                $scope.leg.score = $scope.leg.score / 1000;
+                $scope.leg.score = $scope.leg.score/1000-$scope.previousLegScore;
 				//$scope.leg.totalDistance = $scope.leg.score;
                 $scope.firstScore = true;
                 $scope.saveData = DataService.editData;
@@ -411,12 +415,12 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }
             //change score from km to meters (better to use a local variable)
             //add all the previous
-            var previousScore = savedLed.score;
-            var score = savedLed.score * 1000;
-            for (var i = 1; i < savedLed.position; i++) {
-                score = score + $scope.legs[i].score;
-            }
-            savedLed.score = score;
+            //  var previousScore = savedLed.score;
+            // var score = savedLed.score * 1000;
+            // for (var i = 1; i < savedLed.position; i++) {
+            //     score = score + $scope.legs[i].score;
+            // }
+            savedLed.score = $scope.leg.totalDistance*1000;
             if (checkFields()) {
                 if (PermissionsService.permissionEnabledEditLegs()) {
                     savedLed.geocoding = [savedLed.coordinates.lng, savedLed.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
@@ -429,7 +433,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                     positon: i
                                 }
                                 $scope.legs[i] = JSON.parse(JSON.stringify(savedLed));
-                                $scope.legs[i].score = previousScore * 1000;
+                                $scope.legs[i].score = savedLed.score;
                                 break;
                             }
                         }
@@ -442,7 +446,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                             console.log('Salvataggio dati a buon fine.');
                             $scope.leg = response.data;
                             $scope.leg.coordinates = {};
-                            $scope.leg.score = previousScore * 1000;
+                            //$scope.leg.score = previousScore * 1000;
                             $scope.leg.coordinates.lat = $scope.leg.geocoding[1];
                             $scope.leg.coordinates.lng = $scope.leg.geocoding[0];
                             if (!$stateParams.idLeg) {

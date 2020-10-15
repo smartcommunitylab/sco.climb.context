@@ -154,10 +154,10 @@
             ng-disabled="currentGame.deployed" ng-required="true" />
     </div>
     <div class="col-lg-12 field">
-        <p><b>Distanza tappa precedente (Km): {{previousLegScore}}</b></p>
+        <p><b>Distanza tappa precedente (Km): {{previousLegScore| number : 3}}</b></p>
     </div>
     <div class="col-lg-12 field">
-        <b>Distanza totale (Km): </b>{{leg.totalDistance}}
+        <b>Distanza totale (Km): </b>{{leg.totalDistance| number : 3}}
     </div>
     <!-- <div style="display: table; margin-bottom: 10px;">
         <div class="col-lg-5 field" style="display: table-cell">

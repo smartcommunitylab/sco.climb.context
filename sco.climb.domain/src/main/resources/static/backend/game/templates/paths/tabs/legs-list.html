@@ -19,7 +19,7 @@
 			<div ng-if="!legs || legs.length ==0" class="empty-list">
 				Nessuna tappa presente
 			</div>
-			<li class="list-group-item" ng-repeat="leg in legs">
+			<li class="list-group-item" ng-repeat="leg in legs track by $index">
 				<div class="row v-center">
 					<div class="col-sm-4 col-xs-4">
 						<a
@@ -44,8 +44,9 @@
 						<h5>Elementi multimediali: {{leg.multimediaContents}}</h5>
 						<!-- <h5>Posizione: Lat. {{leg.geocoding[1].toFixed(5)}}, Long.
 							{{leg.geocoding[0].toFixed(5)}}</h5> -->
-						<h5>Distanza tappa: {{leg.score/1000}} Km</h5>
-					</div>
+							<h5 ng-if="$index==0">Distanza tappa: {{leg.score/1000 | number : 3}} Km</h5>
+							<h5 ng-if="$index!=0">Distanza tappa: {{(legs[$index].score - legs[$index-1].score)/1000 | number : 3}}</h5>
+						</div>
 					<div class="col-md-2 col-xs-2 right">
 						<!--                         <a ng-hide="enableOrder" ui-sref="root.path.leg({idLeg: leg.objectId})" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
  -->
