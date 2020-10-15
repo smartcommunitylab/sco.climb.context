@@ -148,7 +148,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                     school: '',
                     classRooms: [],
                     globalTeam: 'Scuola',
-                    shortName: getSchoolName(),
+                    shortName: getShortName(),
                     ownerId: $stateParams.idDomain,
                     schoolId: $stateParams.idSchool,
                     instituteId: $stateParams.idInstitute,
@@ -319,11 +319,12 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
             return isValidate;
         }
         
-        function getSchoolName() {
+        function getShortName() {
         	var d = new Date()
         	var year = d.getFullYear();
         	if($scope.$parent.selectedSchool) {
-        		return ($scope.$parent.selectedSchool.name + ' ' + year);
+		var name=$scope.$parent.selectedSchool.name.replace(/ /g,"_");
+        		return (name + '_' +year+ '_'+(Math.floor(Math.random()*90000) + 10000));
         	}
         	return ('Scuola ' + year);
         }
