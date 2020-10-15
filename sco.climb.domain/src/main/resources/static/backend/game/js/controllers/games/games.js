@@ -323,7 +323,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
         	var d = new Date()
         	var year = d.getFullYear();
         	if($scope.$parent.selectedSchool) {
-		var name=$scope.$parent.selectedSchool.name.replace(/ /g,"_");
+        		var name=$scope.$parent.selectedSchool.name.replace(/[^a-zA-Z0-9]/g,"_");
         		return (name + '_' +year+ '_'+(Math.floor(Math.random()*90000) + 10000));
         	}
         	return ('Scuola ' + year);
