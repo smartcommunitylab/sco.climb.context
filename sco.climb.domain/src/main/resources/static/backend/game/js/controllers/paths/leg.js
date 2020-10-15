@@ -6,7 +6,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.searchtype = [];
         $scope.searchdistance = null;
         $scope.searchlocalschool = false;
-
+		$scope.positionChanged = false;
         $scope.loadImg = function () {
             if (!$scope.newLeg){
             console.log("log img");
@@ -349,6 +349,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.$on('poiMarkerPosChanged', function (event, newLat, newLng, wipeAirDistance, distance) {     // listener del broadcast che indica il cambiamento della posizione del marker
             $scope.leg.coordinates.lat = newLat;
             $scope.leg.coordinates.lng = newLng;
+			$scope.positionChanged =true;
             // $scope.leg.score = $scope.leg.totalDistance;
             //prendi distanza e cambia la lunghezza
 
@@ -484,6 +485,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                         function (response) {
                                             $rootScope.modified = false;
                                             console.log('Salvataggio dati a buon fine.');
+											$scope.reminder();
                                             $state.go('root.path.legs');
                                         }, function (error) {
                                             if (backUpLegNext) {
@@ -527,6 +529,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                             function (response) {
                                                 console.log('Salvataggio dati a buon fine.');
                                                 $rootScope.modified = false;
+$scope.reminder();
                                                 $state.go('root.path.legs');
                                             }, function (error) {
                                                 if (backUpLegNext) {
@@ -546,7 +549,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                     });
                                 }
                             } else {
-
+$scope.reminder();
                                 $state.go('root.path.legs');
                             }
                         }, function (error) {
@@ -572,7 +575,15 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 //          }, 5000);
             }
         };
-
+		$scope.reminder = function() {
+			if ($scope.positionChanged){
+				           createDialog('templates/modals/leg-changed.html', {
+                id: 'back-dialog',
+                title: 'Attenzione!',
+                success: { label: 'Conferma', fn:null }
+            });
+			}
+		}
         $scope.saveLegLinks = function () {
             var toSend = {
                 ownerId: $stateParams.idDomain,
