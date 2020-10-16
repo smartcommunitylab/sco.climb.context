@@ -46,7 +46,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             console.log('Ciao,Caricamento delle tappe a buon fine.');
                             $scope.legs = response.data;
                             $scope.totalScore = JSON.parse(JSON.stringify($scope.legs[$scope.legs.length - 1].score))
-                            $scope.convertDistance();
+                            // $scope.convertDistance();
                             $scope.$broadcast('legsLoaded');
                         }, function () {
                             alert('Errore nel caricamento delle tappe.');
@@ -94,11 +94,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 }
             }
         };
-        //all the distances referred to the previous one and not to the totale (saving -> total)
-        $scope.convertDistance = function () {
-            for (var i = $scope.legs.length - 1; i > 0; i--)
-                $scope.legs[i].score = $scope.legs[i].score - $scope.legs[i - 1].score
-        }
+        // //all the distances referred to the previous one and not to the totale (saving -> total)
+        // $scope.convertDistance = function () {
+        //     for (var i = $scope.legs.length - 1; i > 0; i--)
+        //         $scope.legs[i].score = $scope.legs[i].score - $scope.legs[i - 1].score
+        // }
         // Save the changes made to the path
         $scope.save = function () {
             if (checkFields()) {
