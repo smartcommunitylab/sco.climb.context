@@ -6,40 +6,40 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
         $scope.searchtype = [];
         $scope.searchdistance = null;
         $scope.searchlocalschool = false;
-		$scope.positionChanged = false;
+        $scope.positionChanged = false;
         $scope.loadImg = function () {
-            if (!$scope.newLeg){
-            console.log("log img");
-            $scope.input = document.getElementById('upload-featured-img');
+            if (!$scope.newLeg) {
+                console.log("log img");
+                $scope.input = document.getElementById('upload-featured-img');
 
-            $scope.input.onchange = function (e) {
+                $scope.input.onchange = function (e) {
 
-                // getting a hold of the file reference
-                var file = e.target.files[0];
+                    // getting a hold of the file reference
+                    var file = e.target.files[0];
 
-                // setting up the reader
-                var reader = new FileReader();
-                reader.readAsText(file, 'UTF-8');
+                    // setting up the reader
+                    var reader = new FileReader();
+                    reader.readAsText(file, 'UTF-8');
 
-                // here we tell the reader what to do when it's done reading...
-                reader.onload = function (readerEvent) {
-                    $scope.img = readerEvent.target.result; // this is the content!
-                    $scope.uploadFeaturedPic()
+                    // here we tell the reader what to do when it's done reading...
+                    reader.onload = function (readerEvent) {
+                        $scope.img = readerEvent.target.result; // this is the content!
+                        $scope.uploadFeaturedPic()
+                    }
+
                 }
 
+                $scope.input.click();
+            } else {
+                createDialog('templates/modals/load-img.html', {
+                    id: 'load-img-dialog',
+                    title: 'Attenzione!',
+                    success: {
+                        label: 'Continua',
+                        fn: null
+                    }
+                });
             }
-
-            $scope.input.click();
-        } else {
-            createDialog('templates/modals/load-img.html', {
-                id: 'load-img-dialog',
-                title: 'Attenzione!',
-                success: {
-                    label: 'Continua',
-                    fn: null
-                }
-            });
-        }
         }
 
         $scope.classListToggle = function (dropdownID) {
@@ -182,13 +182,13 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             if ($stateParams.idLeg) { //edit path
                 $scope.newLeg = false;
                 $scope.leg = angular.copy($scope.legs.find(function (e) { return e.objectId == $stateParams.idLeg }));
-                $scope.previousLegScoreIndex = $scope.legs.findIndex(function(e){return e.objectId == $stateParams.idLeg});
-                if ($scope.previousLegScoreIndex!=0)
-$scope.previousLegScoreIndex --;
-                $scope.previousLegScore = $scope.legs[$scope.previousLegScoreIndex].score/1000;
+                $scope.previousLegScoreIndex = $scope.legs.findIndex(function (e) { return e.objectId == $stateParams.idLeg });
+                if ($scope.previousLegScoreIndex != 0)
+                    $scope.previousLegScoreIndex--;
+                $scope.previousLegScore = $scope.legs[$scope.previousLegScoreIndex].score / 1000;
                 $scope.leg.coordinates = { lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0] };      // trasformo le coordinate in un formato gestibile da GMaps
-                $scope.leg.score = Number(($scope.leg.score/1000-$scope.previousLegScore).toFixed(3));
-				//$scope.leg.totalDistance = $scope.leg.score;
+                $scope.leg.score = Number(($scope.leg.score / 1000 - $scope.previousLegScore).toFixed(3));
+                //$scope.leg.totalDistance = $scope.leg.score;
                 $scope.firstScore = true;
                 $scope.saveData = DataService.editData;
 
@@ -295,7 +295,7 @@ $scope.previousLegScoreIndex --;
             }
 
             if ($scope.leg.position === 0) {
-                $scope.leg.score=0;
+                $scope.leg.score = 0;
                 drawMapLeg.createMap('map-leg', 'geocodeHintInput', null, $scope.leg.coordinates, null, $scope.leg.transport);
             } else {
                 if ($scope.newLeg) {
@@ -353,7 +353,7 @@ $scope.previousLegScoreIndex --;
         $scope.$on('poiMarkerPosChanged', function (event, newLat, newLng, wipeAirDistance, distance) {     // listener del broadcast che indica il cambiamento della posizione del marker
             $scope.leg.coordinates.lat = newLat;
             $scope.leg.coordinates.lng = newLng;
-			$scope.positionChanged =true;
+            $scope.positionChanged = true;
             // $scope.leg.score = $scope.leg.totalDistance;
             //prendi distanza e cambia la lunghezza
 
@@ -372,7 +372,7 @@ $scope.previousLegScoreIndex --;
         // });
         $scope.$on('poiMapTotalKmChanged', function (event, newDistance) {     //total km changed listener for new leg
             if ($scope.newLeg || !$scope.firstScore) {
-                 
+
                 $scope.leg.score = Number(newDistance.toFixed(3));
                 $scope.leg.totalDistance = $scope.previousLegScore + newDistance;
             }
@@ -421,7 +421,7 @@ $scope.previousLegScoreIndex --;
             // for (var i = 1; i < savedLed.position; i++) {
             //     score = score + $scope.legs[i].score;
             // }
-            savedLed.score = ($scope.previousLegScore + $scope.leg.score)*1000;
+            savedLed.score = ($scope.previousLegScore + $scope.leg.score) * 1000;
             if (checkFields()) {
                 if (PermissionsService.permissionEnabledEditLegs()) {
                     savedLed.geocoding = [savedLed.coordinates.lng, savedLed.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
@@ -490,7 +490,7 @@ $scope.previousLegScoreIndex --;
                                         function (response) {
                                             $rootScope.modified = false;
                                             console.log('Salvataggio dati a buon fine.');
-											$scope.reminder();
+                                            $scope.reminder();
                                             $state.go('root.path.legs');
                                         }, function (error) {
                                             if (backUpLegNext) {
@@ -534,7 +534,7 @@ $scope.previousLegScoreIndex --;
                                             function (response) {
                                                 console.log('Salvataggio dati a buon fine.');
                                                 $rootScope.modified = false;
-$scope.reminder();
+                                                $scope.reminder();
                                                 $state.go('root.path.legs');
                                             }, function (error) {
                                                 if (backUpLegNext) {
@@ -554,7 +554,7 @@ $scope.reminder();
                                     });
                                 }
                             } else {
-$scope.reminder();
+                                // $scope.reminder();
                                 $state.go('root.path.legs');
                             }
                         }, function (error) {
@@ -580,15 +580,15 @@ $scope.reminder();
                 //          }, 5000);
             }
         };
-		$scope.reminder = function() {
-			if ($scope.positionChanged){
-				           createDialog('templates/modals/leg-changed.html', {
-                id: 'back-dialog',
-                title: 'Attenzione!',
-                success: { label: 'Conferma', fn:null }
-            });
-			}
-		}
+        $scope.reminder = function () {
+            if ($scope.positionChanged) {
+                createDialog('templates/modals/leg-changed.html', {
+                    id: 'back-dialog',
+                    title: 'Attenzione!',
+                    success: { label: 'Conferma', fn: null }
+                });
+            }
+        }
         $scope.saveLegLinks = function () {
             var toSend = {
                 ownerId: $stateParams.idDomain,
