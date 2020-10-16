@@ -75,7 +75,21 @@ angular.module('climbGame', [
     return (!value) ? '' : value.replace(/ /g, '')
   }
 })
-
+//substitute with dot
+.filter('decimal2comma', [
+  function() {// should be altered to suit your needs
+      return function(input) {
+          var ret=(input)?input.toString().replace(".",","):null;
+          if(ret){
+              var decArr=ret.split(",");
+              if(decArr.length>1){
+                  var dec=decArr[1].length;
+                  if(dec===1){ret+="0";}
+              }//this is to show prices like 12,20 and not 12,2
+          }
+          return ret;
+      };
+  }])
 // replace uppercase to regular case
 .filter('humanizeDoc', function () {
   return function (doc) {

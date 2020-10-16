@@ -19,12 +19,17 @@
         <!-- Name -->
         <div class="row">
             <div class="col-md-2"><p><span class="required-sign">*</span> <b>Nome:</b></p></div>
-            <div class="col-md-10 field"><input class="form-control" type="text" ng-model="currentSchool.name" ng-required="true"/></div>
+            <div class="col-md-10 field"><input class="form-control" type="text" ng-model="currentSchool.name" ng-required="true" ng-change="changed()" /></div>
         </div>
         <!-- Description -->
         <div class="row">
             <div class="col-md-2"><p><span class="required-sign">*</span> <b>Indirizzo:</b></p></div>
-            <div class="col-md-10 field"><input class="form-control" type="text" ng-model="currentSchool.address" ng-required="true"/></div>
+            <div class="col-md-10 field"><input class="form-control" type="text" ng-model="currentSchool.address" ng-required="true" ng-change="changed()" /></div>
+        </div>
+        <!-- Description -->
+        <div class="row">
+            <div class="col-md-2"><p><b>Link turni volontari:</b></p></div>
+            <div class="col-md-10 field"><input class="form-control" type="text" ng-model="currentSchool.volunteerShiftsLink" ng-change="changed()" /></div>
         </div>
         <!-- Classes -->
         <div class="row">
@@ -33,7 +38,7 @@
             </select> -->
             <div class="col-md-7">
                 <tags-input ng-model="currentSchool.classes" display-property="name" placeholder="Aggiungi una classe" 
-                on-tag-removing="removeClasses(currentSchool,$tag)" template="custom-tags-template"></tags-input>
+                on-tag-removing="removeClasses(currentSchool,$tag)" template="custom-tags-template" ng-change="changed()" ></tags-input>
             </div>
             <div class="col-md-3">
                 <a class="btn btn-icon btn-standard" ng-click="addClasses(currentSchool)"><i class="glyphicon glyphicon-plus"></i></a>

@@ -4,17 +4,20 @@
     <div class="col-lg-12 buttons-tab">
         <a href="#/institute/{{selectedOwner}}//info" class="btn btn-info" ng-disabled="!PermissionsService.permissionEnabledEditInstitute()">Crea nuovo</a>
     </div>
-
-    <div class="col-md-10 col-md-offset-1">
+    <div ng-if="!institutesList || institutesList.length ==0" class="empty-list">
+        Nessun istituto presente
+    </div>
+    <div class="col-md-10 col-xs-10 col-md-offset-1">
         <ul class="list-group list-categories">
+            
             <li class="list-group-item" ng-repeat="institute in institutesList">
                 <div class="row v-center">
-                    <div class="col-md-10">
+                    <div class="col-md-10 col-xs-8">
                         <h5>{{institute.name}}</h5>
                     </div>
-                    <div class="col-md-2 right">
-                        <a href="#/institute/{{selectedOwner}}/{{institute.objectId}}/info" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a ng-click="delete(institute)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledEditInstitute()"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <div class="col-md-2  col-xs-4 right">
+                        <a href="#/institute/{{selectedOwner}}/{{institute.objectId}}/info" class="btn btn-icon btn-primary" role="button"><i class="fa fa-pencil" aria-hidden="true" ng-disabled="!PermissionsService.permissionEnabledEditInstitute()"></i></a>
+                        <a ng-click="delete(institute)" class="btn btn-icon btn-danger" role="button" ng-disabled="!PermissionsService.permissionEnabledDeleteInstitute()"><i class="fa fa-trash" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </li>

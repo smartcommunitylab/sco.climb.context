@@ -9,6 +9,7 @@ public class School extends BaseObject {
 	private String instituteId;
 	private List<ClassRoom> classes = new ArrayList<>();
 	private String type;
+	private String volunteerShiftsLink;
 	
 	public String getName() {
 		return name;
@@ -39,5 +40,11 @@ public class School extends BaseObject {
 	}
 	public void setClasses(List<ClassRoom> classes) {
 		this.classes = classes;
+	}
+	public String getVolunteerShiftsLink() {
+		return volunteerShiftsLink;
+	}
+	public void setVolunteerShiftsLink(String volunteerShiftsLink) {
+		this.volunteerShiftsLink = volunteerShiftsLink;
 	}
 }

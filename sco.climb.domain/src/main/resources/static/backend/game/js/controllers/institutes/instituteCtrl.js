@@ -1,4 +1,4 @@
-institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $state, $stateParams, DataService, MainDataService, createDialog, PermissionsService) {    
+institutesModule.controller('InstituteCtrl', function ($scope, $timeout, $rootScope, $state, $stateParams, DataService, MainDataService, createDialog, PermissionsService) {    
     $scope.$parent.$parent.mainView = 'institute'; 
     $scope.$parent.selectedTab = 'info';
     
@@ -9,6 +9,8 @@ institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $stat
             $scope.currentInstitute = {
                 name: '',
                 address: '',
+                warningBatteryLowMail: '',
+                addPedibusPhoto: false,
                 ownerId: $stateParams.idDomain,
             }
             $scope.saveData = DataService.saveData;
@@ -46,6 +48,7 @@ institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $stat
                     } else {
                         if ($scope.institutesList) $scope.institutesList.push(response.data);
                     }
+                    $rootScope.modified=false;
                     $state.go('root.institutes-list');
                 }, function() {
                     alert('Errore nella richiesta.');
@@ -75,7 +78,10 @@ institutesModule.controller('InstituteCtrl', function ($scope, $rootScope, $stat
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$state.go('root.institutes-list');} }
+            success: { label: 'Conferma', fn: function() {
+                $rootScope.modified=false;
+                $state.go('root.institutes-list');
+            } }
         });
     };
 

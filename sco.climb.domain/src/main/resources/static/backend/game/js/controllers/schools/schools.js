@@ -54,6 +54,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
                 name: '',
                 address: '',
                 classes: [],
+                volunteerShiftsLink: '',
                 instituteId: $stateParams.idInstitute,
                 ownerId: $stateParams.idDomain,
             }
@@ -208,6 +209,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
                     } else {
                         if ($scope.schools) $scope.schools.push(response.data);
                     }
+                    $rootScope.modified=false;
                     $state.go('root.schools-list');
                 }, function() {
                     $rootScope.networkProblemDetected('Errore nel salvataggio della scuola!');
@@ -240,7 +242,8 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
         createDialog('templates/modals/back.html',{
             id : 'back-dialog',
             title: 'Sei sicuro di voler uscire senza salvare?',
-            success: { label: 'Conferma', fn: function() {$state.go('root.schools-list');} }
+            success: { label: 'Conferma', fn: function() {            $rootScope.modified=false;
+                $state.go('root.schools-list');} }
         });
     };
 })
@@ -449,7 +452,8 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$state.go('root.school.children-list');} }
+          success: { label: 'Conferma', fn: function() {            $rootScope.modified=false;
+            $state.go('root.school.children-list');} }
       });
   }
   
@@ -458,6 +462,7 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
   		$scope.saveData('child', $scope.selectedChild).then(
 				function(response) {
                     console.log('Scolaro salvato.');
+                    $rootScope.modified=false;
                     $state.go('root.school.children-list');
 				},
 				function() {
@@ -621,7 +626,9 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
       createDialog('templates/modals/back.html',{
           id : 'back-dialog',
           title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$state.go('root.school.volunteer-list');} }
+          success: { label: 'Conferma', fn: function() {
+            $rootScope.modified=false;
+            $state.go('root.school.volunteer-list');} }
       });
   }
   
@@ -629,7 +636,9 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
   	if (checkFields()) {
   		$scope.saveData('volunteer', $scope.selectedVolunteer).then(
 				function(response) {
-					console.log('Volontario salvato.');
+                    console.log('Volontario salvato.');
+                    $rootScope.modified=false;
+
                     $state.go('root.school.volunteer-list');
 				},
 				function() {
@@ -723,92 +732,5 @@ angular.module('consoleControllers.schools', ['ngSanitize', 'ngTagsInput'])
       });
   };
       
-})
-
-.controller('PlayerCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, $window, createDialog, DataService) {
-	$scope.$parent.selectedTab = 'players-list';
-    
-    $scope.initController = function() {
-        DataService.getData('players',
-                $stateParams.idDomain, 
-                $stateParams.idInstitute, 
-                $stateParams.idSchool).then(
-        function(response) {
-            $scope.currentSchool.players = response.data;
-            console.log('Caricamento dei giocatori andato a buon fine.');
-            if ($stateParams.idPlayer) {
-                for (var i = 0; i < $scope.currentSchool.players.length && !$scope.selectedPlayer; i++) {
-                    if ($scope.currentSchool.players[i].objectId == $stateParams.idPlayer) {
-                        $scope.selectedPlayer = angular.copy($scope.currentSchool.players[i]);
-                    }
-                }	
-                $scope.saveData = DataService.editData;
-            } else {
-                $scope.selectedPlayer = {
-                    "nickname": '',
-                    "classRoom": '',
-                    "ownerId": $scope.currentSchool.ownerId,
-                    "instituteId": $scope.currentSchool.instituteId,
-                    "schoolId": $scope.currentSchool.objectId
-                };
-                $scope.saveData = DataService.saveData;
-            }
-        }, function() {
-            $rootScope.networkProblemDetected('Errore nel caricamento dei giocatori!');
-            console.log("Errore nel caricamento dei giocatori.");
-        }
-        );
-    }
-
-    if ($scope.currentSchool) {
-        $scope.initController();
-    } else {
-        $scope.$on('schoolLoaded', function(e) {  
-            $scope.initController();        
-        });
-    }    
-	
-  $scope.isNewPlayer = function() {
-  	return ($stateParams.idPlayer == null || $stateParams.idPlayer == '');
-  }
-  
-  // Exit without saving changes
-  $scope.back = function () {
-      createDialog('templates/modals/back.html',{
-          id : 'back-dialog',
-          title: 'Sei sicuro di voler uscire senza salvare?',
-          success: { label: 'Conferma', fn: function() {$state.go('root.school.players-list');} }
-      });
-  }
-  
-  $scope.save = function () {  
-  	if (checkFields()) {
-  		$scope.saveData('player', $scope.selectedPlayer).then(
-				function(response) {
-                    console.log('Giocatore salvato.');
-                    $state.go('root.school.players-list');
-				},
-				function(err) {
-                    $rootScope.networkProblemDetected('Errore nel salvataggio del giocatore! ' + err.data.errorMsg);
-                    console.log("Errore nel salvataggio del giocatore.");
-				}
-  		);
-  	}
-  }
-  
-  function checkFields() {
-    var allCompiled = true;
-    var invalidFields = $('.ng-invalid');
-    // Get all inputs
-    if (invalidFields.length > 0) {
-        $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco.";
-        $timeout(function () {
-            $rootScope.modelErrors = '';
-        }, 5000);
-        allCompiled = false;
-    }
-    return allCompiled;
-  }
-
 });
 

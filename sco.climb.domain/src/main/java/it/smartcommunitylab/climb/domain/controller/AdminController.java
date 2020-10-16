@@ -237,6 +237,7 @@ public class AdminController extends AuthController {
 			@PathVariable String instituteId,
 			@PathVariable String schoolId,
 			@RequestParam(name="players", required=false) Boolean onlyPlayers,
+			@RequestParam(name="pedibusGameId", required=false) String pedibusGameId,
 			@RequestParam("file") MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
@@ -245,7 +246,7 @@ public class AdminController extends AuthController {
 		List<ExcelError> errors = new ArrayList<ExcelError>();
 		if(onlyPlayers) {
 			Map<String, PedibusPlayer> playersMap = excelConverter.readPlayers(file.getInputStream(), 
-					ownerId, instituteId, schoolId, errors);
+					ownerId, pedibusGameId, errors);
 			if(errors.size() == 0) {
 				for(PedibusPlayer player : playersMap.values()) {
 					storePlayer(player);

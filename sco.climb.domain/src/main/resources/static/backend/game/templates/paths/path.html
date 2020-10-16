@@ -1,7 +1,9 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-8 header-path-category">
-            <h4>{{isNewPath ? 'CREA NUOVO PERCORSO' : 'MODIFICA PERCORSO: ' + currentPath.name}}</h4>
+            <h4>{{isNewPath ? 'CREA NUOVO PERCORSO' : 'MODIFICA PERCORSO: ' + currentPath.name}}
+                <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="In questa sezione puoi modificare il titolo e la descrizione del tuo percorso, creare/modificare le tappe e inserire il materiale multimediale."></i>
+            </h4>
             <mark ng-show="currentGame.deployed">Attenzione! Questo gioco è attualmente in esecuzione</mark>
         </div>
 
@@ -11,10 +13,10 @@
         <!-- Menu tab -->
         <div class="col-md-2 tabs-menu">
             <a ng-if="PermissionsService.permissionEnabledEditLegs()" 
-            ng-class="{'active-tab':selectedTab == 'info'}" ui-sref="root.path.info">INFO</a>
-            <a ng-class="{'active-tab':selectedTab == 'legs'}" ui-sref="root.path.legs">TAPPE</a>
+            ng-class="{'active-tab':selectedTab == 'info'}" ng-click="goTo('root.path.info')">INFO</a>
+            <a ng-class="{'active-tab':selectedTab == 'legs'}" ng-click="goTo('root.path.legs')">TAPPE</a>
             <a ng-if="PermissionsService.permissionEnabledEditLegs()"
-            ng-class="{'active-tab':selectedTab == 'map'}" ui-sref="root.path.map">ITINERARIO</a>
+            ng-class="{'active-tab':selectedTab == 'map'}" ng-click="goTo('root.path.map')">ITINERARIO</a>
         </div>
 
         <!-- Tabs container -->

@@ -43,8 +43,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     $stateParams.idGame,
                     $scope.currentPath.objectId).then(
                         function (response) {
-                            console.log('Caricamento delle tappe a buon fine.');
+                            console.log('Ciao,Caricamento delle tappe a buon fine.');
                             $scope.legs = response.data;
+                            $scope.totalScore = JSON.parse(JSON.stringify($scope.legs[$scope.legs.length - 1].score))
+                            // $scope.convertDistance();
                             $scope.$broadcast('legsLoaded');
                         }, function () {
                             alert('Errore nel caricamento delle tappe.');
@@ -92,7 +94,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 }
             }
         };
-
+        // //all the distances referred to the previous one and not to the totale (saving -> total)
+        // $scope.convertDistance = function () {
+        //     for (var i = $scope.legs.length - 1; i > 0; i--)
+        //         $scope.legs[i].score = $scope.legs[i].score - $scope.legs[i - 1].score
+        // }
         // Save the changes made to the path
         $scope.save = function () {
             if (checkFields()) {
@@ -110,14 +116,17 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.legs[i].position = i;
                         }
                         $scope.currentPath.legs = $scope.legs;        // lo metto all'interno dell'oggetto per comodità nell'invio
-                        $scope.saveData('legs', $scope.currentPath).then(
-                            function (response) {
-                                console.log('Salvataggio dati a buon fine.');
-                                $state.go('root.paths-list');
-                            }, function () {
-                                alert('Errore nel salvataggio delle tappe.');
-                            }
-                        );
+                        $rootScope.modified = false;
+                        $state.go('root.paths-list');
+
+                        // $scope.saveData('legs', $scope.currentPath).then(
+                        //     function (response) {
+                        //         console.log('Salvataggio dati a buon fine.');
+                        //         $state.go('root.paths-list');
+                        //     }, function () {
+                        //         alert('Errore nel salvataggio delle tappe.');
+                        //     }
+                        // );
                     }, function () {
                         alert('Errore nel salvataggio del percorso.');
                     }
@@ -137,7 +146,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             var isValidate = true;
             var path = $scope.currentPath;
 
-            if (!path.name || !path.description || path.name === "" || path.description === "")
+            if (!path.name || path.name === "" )
                 isValidate = false;
 
             return isValidate;
@@ -148,7 +157,12 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             createDialog('templates/modals/back.html', {
                 id: 'back-dialog',
                 title: 'Sei sicuro di voler uscire senza salvare?',
-                success: { label: 'Conferma', fn: function () { $state.go('root.paths-list'); } }
+                success: {
+                    label: 'Conferma', fn: function () {
+                        $rootScope.modified = false;
+                        $state.go('root.paths-list');
+                    }
+                }
             });
         };
     })
@@ -205,9 +219,18 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     // set new list of legs in scope.
                                     $scope.currentPath.legs = $scope.legs;
                                     // update new list of legs.
-                                    DataService.editData('legs', $scope.currentPath).then(
+                                    DataService.deleteStopFromItinerary($scope.currentPath, leg).then(
+                                        /*DataService.editData('legs', $scope.currentPath).then(*/
                                         function () {
                                             console.log('Salvataggio dati a buon fine.');
+                                            createDialog('templates/modals/leg-order-saved.html', {
+                                                id: 'leg-order-saved',
+                                                title: 'Modifica percorsi sulla mappa',
+                                                success: {
+                                                    label: 'Ok', fn: null
+                                                }
+                                            }
+                                            )
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
                                         }
@@ -223,7 +246,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     travelMode: drawMapLine.selectMode(nextLeg.transport)
                                 };
                                 // calculate new route between 'new preious' -> 'next leg and update polyline.'
-                               drawMapLine.route(request).then(function (response) {
+                                drawMapLine.route(request).then(function (response) {
                                     nextLeg.polyline = response.routes[0].overview_polyline;
                                     // delete leg from current list
                                     $scope.legs.splice($scope.legs.indexOf(leg), 1);
@@ -234,14 +257,24 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     // set new list of legs in scope.
                                     $scope.currentPath.legs = $scope.legs;
                                     // update new list of legs.
-                                    DataService.editData('legs', $scope.currentPath).then(
-                                        function () {
+                                    DataService.deleteStopFromItinerary($scope.currentPath, leg).then(
+
+/*                                    DataService.editData('legs', $scope.currentPath).then(
+*/                                        function () {
+                                            createDialog('templates/modals/leg-order-saved.html', {
+                                                id: 'leg-order-saved',
+                                                title: 'Modifica percorsi sulla mappa',
+                                                success: {
+                                                    label: 'Ok', fn: null
+                                                }
+                                            }
+                                            )
                                             console.log('Salvataggio dati a buon fine.');
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
                                         }
                                     );
-                                }, function (error) { 
+                                }, function (error) {
                                     alert(error);
                                 });
                             }
@@ -255,10 +288,20 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     $scope.legs[0].polyline = "";
                                 }
                             }
-                            
+
                             $scope.currentPath.legs = $scope.legs;
-                            DataService.editData('legs', $scope.currentPath).then(
-                                function () {
+                            DataService.deleteStopFromItinerary($scope.currentPath, leg).then(
+
+/*                            DataService.editData('legs', $scope.currentPath).then(
+*/                                function () {
+                                    createDialog('templates/modals/leg-order-saved.html', {
+                                        id: 'leg-order-saved',
+                                        title: 'Modifica percorsi sulla mappa',
+                                        success: {
+                                            label: 'Ok', fn: null
+                                        }
+                                    }
+                                    )
                                     console.log('Salvataggio dati a buon fine.');
                                 }, function () {
                                     alert('Errore nel salvataggio delle tappe.');
@@ -276,19 +319,19 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.saveOrder = function () {
             if ($scope.enableOrder) {
                 $scope.currentPath.legs = $scope.legs;
-                DataService.editData('legs', $scope.currentPath).then(
+                DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
                         console.log('Salvataggio ordine tappe a buon fine.');
                         $scope.enableOrder = false;
                         createDialog('templates/modals/leg-order-saved.html', {
                             id: 'leg-order-saved',
-                            title: 'Modifica percorsi sulla mappa',
+                            title: 'Tappe riordinate. Controlla i dati delle tappe coinvolte!',
                             noCancelBtn: true,
                             success: {
                                 label: 'Conferma', fn: function () {
                                     // logic to modify legs in order.
                                     $scope.legs[0].polyline = '';
-                                   
+
                                     var promises = [];
                                     for (var i = 1; i < $scope.legs.length; i++) {
 
@@ -320,26 +363,27 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                             promises.push(promise);
                                         }
                                     }
-                                        
+
                                     $q.all(promises).then(function (response) {
-                                     
+
                                         for (var i = 0; i < response.length; i++) {
 
                                             if (response[i].routes) { //(walk, drive)
                                                 $scope.legs[i + 1].polyline = response[i].routes[0].overview_polyline;
                                             } else {   // response can be flat line (boat,plane).
                                                 $scope.legs[i + 1].polyline = response[i];
-                                            }                                            
+                                            }
                                         }
 
                                         // update position counter.
                                         for (i = 0; i < $scope.legs.length; i++) {
                                             $scope.legs[i].position = i;
                                         }
-                                        
+
                                         // save the new ordered list only when all promise get resolved.
                                         $scope.currentPath.legs = $scope.legs;
-                                        DataService.editData('legs', $scope.currentPath).then(
+
+                                        DataService.updateStopsPosition($scope.currentPath).then(
                                             function () {
                                                 console.log('Salvataggio dati a buon fine.');
                                             }, function () {
@@ -385,8 +429,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         };
 
         $scope.computeLength = function () {
-            var distanceInMeters = drawMap.getPathLength();
-            return (distanceInMeters / 1000).toFixed(0);
+            // return last score of the leg
+            return $scope.totalScore;
+            // var distanceInMeters = drawMap.getPathLength();
+            // return (distanceInMeters / 1000).toFixed(0);
         };
 
         $scope.toggleMarkers = function () {

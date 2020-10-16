@@ -52,6 +52,12 @@ public class Const {
 	public static final String AUTH_RES_PedibusGame_Link = "PedibusGame-Link";
 	public static final String AUTH_RES_PedibusGame_Calendar = "PedibusGame-Calendar";
 	public static final String AUTH_RES_PedibusGame_Excursion = "PedibusGame-Excursion";
+	public static final String AUTH_RES_PedibusGame_Mobility = "PedibusGame-Mobility";
+	public static final String AUTH_RES_PedibusGame_Tuning = "PedibusGame-Tuning";
+	public static final String AUTH_RES_PedibusGame_Pedibus = "PedibusGame-Pedibus";
+	public static final String AUTH_RES_PedibusGame_Itinerary = "PedibusGame-Itinerary";
+	public static final String AUTH_RES_PedibusGame_Leg = "PedibusGame-Leg";
+	public static final String AUTH_RES_PedibusGame_Player = "PedibusGame-Player";
 	
 	public static final String AUTH_ACCOUNT_NAME = "climb";
 	public static final String AUTH_ATTRIBUTE_NAME = "email";

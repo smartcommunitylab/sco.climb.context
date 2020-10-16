@@ -1,6 +1,6 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $timeout, $location, $state, DataService, $window, MainDataService, PermissionsService)
+.controller('MainCtrl', function ($scope, $rootScope, $timeout,createDialog, $location, $state, DataService, $window, MainDataService, PermissionsService)
     {
         $rootScope.networkProblem = {
             status: false,
@@ -31,7 +31,26 @@ angular.module('consoleControllers.mainCtrl', [])
             }
             return false;
         }
-        
+        $scope.goTo = function(state) {
+            if ($rootScope.modified){
+                createDialog('templates/modals/remember-game.html', {
+                    id: 'remember-dialog',
+                    title: 'Attenzione!',
+                    success: {
+                        label: 'Ok', fn: function () {
+                            // $rootScope.modified=false;
+                        }
+                    }
+                });
+            }
+            else {
+                $rootScope.modelErrors = '';
+                $state.go(state);
+            }
+        }
+        $scope.changed = function() {
+            $rootScope.modified=true;
+        }
         $scope.logout = function() {
           $scope.selectedOwner = '';
           $scope.selectedInstitute = '';

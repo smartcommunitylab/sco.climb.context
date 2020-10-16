@@ -161,6 +161,7 @@ angular.module("climbGame.controllers.map", [])
         containerStyle.left = styleValues.left;
       }
       leafletData.getMap('map').then(function (map) {
+      		map.setMinZoom(3);
           var leftarrow = L.Control.extend({
             options: {
               position: 'topleft'

@@ -339,6 +339,11 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
+		PedibusItinerary itinerary = new PedibusItinerary();
+		itinerary.setOwnerId(ownerId);
+		itinerary.setPedibusGameId(result.getObjectId());
+		itinerary.setName(result.getGameName() + " - itinerario");
+		storage.savePedibusItinerary(itinerary);
 		try {
 			schedulerManager.resetJob(result.getObjectId());
 		} catch (Exception e) {
@@ -376,6 +381,52 @@ public class GamificationController extends AuthController {
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGame[%s]: %s", ownerId, pedibusGameId));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/mobility", method = RequestMethod.PUT)
+	public @ResponseBody PedibusGame updatePedibusGameMobility(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@RequestBody PedibusGame game, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame pedibusGameDb = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(pedibusGameDb == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, pedibusGameDb.getInstituteId(), pedibusGameDb.getSchoolId(), 
+				null, null, Const.AUTH_RES_PedibusGame_Mobility, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		pedibusGameDb.getParams().putAll(game.getParams());
+		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusGameMobility[%s]: %s", ownerId, pedibusGameId));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/tuning", method = RequestMethod.PUT)
+	public @ResponseBody PedibusGame updatePedibusGameTuning(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@RequestBody PedibusGame game, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame pedibusGameDb = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(pedibusGameDb == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, pedibusGameDb.getInstituteId(), pedibusGameDb.getSchoolId(), 
+				null, null, Const.AUTH_RES_PedibusGame_Tuning, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		pedibusGameDb.getParams().putAll(game.getParams());
+		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusGameTuning[%s]: %s", ownerId, pedibusGameId));
 		}
 		return result;
 	}
@@ -426,27 +477,30 @@ public class GamificationController extends AuthController {
 		return game;
 	}
 
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/students", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/students", method = RequestMethod.GET)
 	public @ResponseBody Integer getStudentByClasses(
 			@PathVariable String ownerId,
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
+			@PathVariable String pedibusGameId,
 			@RequestParam List<String> classes,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
-				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}		
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		int result = 0;
-		List<PedibusPlayer> pedibusPlayers = storage.getPedibusPlayers(ownerId, instituteId, schoolId);
+		List<PedibusPlayer> pedibusPlayers = storage.getPedibusPlayers(ownerId, pedibusGameId);
 		for(PedibusPlayer player : pedibusPlayers) {
 			if(classes.contains(player.getClassRoom())) {
 				result++;
 			}
 		}
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("getStudentByClasses[%s]: %s - %s - %s", ownerId, instituteId, schoolId, result));
+			logger.info(String.format("getStudentByClasses[%s]: %s - %s", ownerId, pedibusGameId, result));
 		}
 		return result;
 	}
@@ -539,7 +593,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Itinerary, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		itinerary.setPedibusGameId(pedibusGameId);
@@ -565,7 +619,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Itinerary, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		itinerary.setPedibusGameId(pedibusGameId);
@@ -633,7 +687,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		leg.setPedibusGameId(pedibusGameId);
@@ -664,7 +718,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("pedibus itinerary leg not found");
 		}		
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		leg.setPedibusGameId(pedibusGameId);
@@ -678,6 +732,40 @@ public class GamificationController extends AuthController {
 		return leg;
 	}
 	
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.DELETE)
+	public @ResponseBody List<PedibusItineraryLeg> deletePedibusItineraryLeg(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@PathVariable String legId,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		PedibusItineraryLeg legDb = storage.getPedibusItineraryLeg(ownerId, legId);
+		if(legDb == null) {
+			throw new EntityNotFoundException("pedibus itinerary leg not found");
+		}		
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_DELETE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		storage.removePedibusItineraryLeg(ownerId, legId);
+		List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByItineraryId(itineraryId);
+		Collections.sort(legs);
+		for(int position = 0; position < legs.size(); position++) {
+			PedibusItineraryLeg leg = legs.get(position);
+			leg.setPosition(position);
+			storage.updateLegPosition(leg);
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("deletePedibusItineraryLeg[%s]: %s", ownerId, legId));
+		}
+		return legs;
+	}
+
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs", method = RequestMethod.POST)
 	public @ResponseBody void createPedibusItineraryLegs(
 			@PathVariable String ownerId, 
@@ -692,7 +780,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Collections.sort(legs);
@@ -731,7 +819,7 @@ public class GamificationController extends AuthController {
 			throw new EntityNotFoundException("game not found");
 		}
 		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Collections.sort(legs);
@@ -759,6 +847,34 @@ public class GamificationController extends AuthController {
 		return legs;
 	}
 
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs/positions", method = RequestMethod.PUT)
+	public @ResponseBody List<PedibusItineraryLeg> updatePedibusItineraryLegsPositions(
+			@PathVariable String ownerId, 
+			@PathVariable String pedibusGameId,
+			@PathVariable String itineraryId,
+			@RequestBody List<PedibusItineraryLeg> legs, 
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Leg, Const.AUTH_ACTION_UPDATE, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Collections.sort(legs);
+		for(int position = 0; position < legs.size(); position++) {
+			PedibusItineraryLeg leg = legs.get(position);
+			leg.setPosition(position);
+			storage.updateLegPosition(leg);
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("updatePedibusItineraryLegsPositions[%s]: %s", ownerId, itineraryId));
+		}
+		return legs;
+	}
+	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}/content", 
 			method = RequestMethod.POST)
 	public @ResponseBody MultimediaContent addMultimediaContent(
@@ -1244,7 +1360,7 @@ public class GamificationController extends AuthController {
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
-				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request)) {
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Itinerary, Const.AUTH_ACTION_ADD, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame game = storage.getPedibusGame(pedibusGameId);
@@ -1355,6 +1471,7 @@ public class GamificationController extends AuthController {
 		response.sendRedirect(redirectUrl.toString());
 	}
 	
+	/**
 	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/player/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPedibusPlayerByClassRoom(
 			@PathVariable String ownerId, 
@@ -1373,69 +1490,72 @@ public class GamificationController extends AuthController {
 		}
 		return result;
 	}
+	*/
 	
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/player", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusPlayer> getPedibusPlayerBySchool(
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/player", method = RequestMethod.GET)
+	public @ResponseBody List<PedibusPlayer> getPedibusPlayerByGame(
 			@PathVariable String ownerId, 
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
+			@PathVariable String pedibusGameId,
+			@RequestParam List<String> classes,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
-				null, Const.AUTH_RES_Player, Const.AUTH_ACTION_READ, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}				
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Player, Const.AUTH_ACTION_READ, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		List<PedibusPlayer> result = storage.getPedibusPlayersBySchool(ownerId, instituteId, schoolId);
+		List<PedibusPlayer> result = storage.getPedibusPlayersByClassRooms(ownerId, pedibusGameId, classes);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getPedibusPlayerBySchool[%s]: %s", ownerId, result.size()));
+			logger.info(String.format("getPedibusPlayerByGame[%s]: %s", ownerId, result.size()));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/player", 
-			method = {RequestMethod.POST, RequestMethod.PUT})
-	public @ResponseBody PedibusPlayer savePedibusPlayer(
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/players", method = RequestMethod.POST)
+	public @ResponseBody List<PedibusPlayer> savePedibusPlayers(
 			@PathVariable String ownerId, 
-			@PathVariable String instituteId,
-			@PathVariable String schoolId,
-			@RequestBody PedibusPlayer player,
+			@PathVariable String pedibusGameId,
+			@RequestBody List<PedibusPlayer> players,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		if(!validateAuthorization(ownerId, instituteId, schoolId, null, 
-				null, Const.AUTH_RES_Player, Const.AUTH_ACTION_UPDATE, request)) {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if(game == null) {
+			throw new EntityNotFoundException("game not found");
+		}				
+		if(!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Player, Const.AUTH_ACTION_ADD, request) || 
+				!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+						pedibusGameId, Const.AUTH_RES_PedibusGame_Player, Const.AUTH_ACTION_UPDATE, request) ||
+				!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null, 
+						pedibusGameId, Const.AUTH_RES_PedibusGame_Player, Const.AUTH_ACTION_DELETE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		player.setOwnerId(ownerId);
-		player.setInstituteId(instituteId);
-		player.setSchoolId(schoolId);
-		storage.savePedibusPlayer(player, true);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("savePedibusPlayer[%s]: %s", ownerId, player.getObjectId()));
+		List<PedibusPlayer> existingPlayers = storage.getPedibusPlayers(ownerId, pedibusGameId);
+		for(PedibusPlayer player : existingPlayers) {
+			if(!Utils.containsId(player.getObjectId(), players)) {
+				storage.removePedibusPlayer(ownerId, player.getObjectId());
+			}
 		}
-		return player;
+		for(PedibusPlayer player : players) {
+			player.setOwnerId(ownerId);
+			player.setPedibusGameId(pedibusGameId);
+			if(Utils.isNotEmpty(player.getObjectId())) {
+				storage.savePedibusPlayer(player, true);
+			} else {
+				storage.savePedibusPlayer(player, false);
+			}
+		}
+		existingPlayers = storage.getPedibusPlayers(ownerId, pedibusGameId);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("savePedibusPlayers[%s]: %s - %s", ownerId, pedibusGameId, 
+					existingPlayers.size()));
+		}
+		return existingPlayers;
 	}
 	
-	@RequestMapping(value = "/api/game/{ownerId}/player/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody PedibusPlayer deletePedibusPlayer(
-			@PathVariable String ownerId, 
-			@PathVariable String id,
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
-		PedibusPlayer player = storage.getPedibusPlayer(ownerId, id);
-		if(player == null) {
-			throw new EntityNotFoundException("player not found");
-		}
-		if(!validateAuthorization(ownerId, player.getInstituteId(), player.getSchoolId(), 
-				null, null, Const.AUTH_RES_Player, Const.AUTH_ACTION_DELETE, request)) {
-			throw new UnauthorizedException("Unauthorized Exception: token not valid");
-		}
-		storage.removePedibusPlayer(ownerId, id);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("deletePedibusPlayer[%s]: %s", ownerId, id));
-		}
-		return player;		
-	}
-
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/mctags", method = RequestMethod.GET)
 	public @ResponseBody MultimediaContentTags getMultimediaContentTags(
 			@PathVariable String ownerId,
