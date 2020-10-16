@@ -187,7 +187,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
 $scope.previousLegScoreIndex --;
                 $scope.previousLegScore = $scope.legs[$scope.previousLegScoreIndex].score/1000;
                 $scope.leg.coordinates = { lat: $scope.leg.geocoding[1], lng: $scope.leg.geocoding[0] };      // trasformo le coordinate in un formato gestibile da GMaps
-                $scope.leg.score = $scope.leg.score/1000-$scope.previousLegScore;
+                $scope.leg.score = Number(($scope.leg.score/1000-$scope.previousLegScore).toFixed(3));
 				//$scope.leg.totalDistance = $scope.leg.score;
                 $scope.firstScore = true;
                 $scope.saveData = DataService.editData;
@@ -372,7 +372,8 @@ $scope.previousLegScoreIndex --;
         // });
         $scope.$on('poiMapTotalKmChanged', function (event, newDistance) {     //total km changed listener for new leg
             if ($scope.newLeg || !$scope.firstScore) {
-                $scope.leg.score = newDistance;
+                 
+                $scope.leg.score = Number(newDistance.toFixed(3));
                 $scope.leg.totalDistance = $scope.previousLegScore + newDistance;
             }
             if (!$scope.newLeg && $scope.firstScore) {
@@ -420,7 +421,7 @@ $scope.previousLegScoreIndex --;
             // for (var i = 1; i < savedLed.position; i++) {
             //     score = score + $scope.legs[i].score;
             // }
-            savedLed.score = $scope.leg.totalDistance*1000;
+            savedLed.score = ($scope.previousLegScore + $scope.leg.score)*1000;
             if (checkFields()) {
                 if (PermissionsService.permissionEnabledEditLegs()) {
                     savedLed.geocoding = [savedLed.coordinates.lng, savedLed.coordinates.lat];        // converto le coordinate in modo che possano essere "digerite dal server"
