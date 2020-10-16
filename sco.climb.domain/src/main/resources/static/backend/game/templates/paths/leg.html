@@ -150,14 +150,14 @@
     </div>
     <div class="col-lg-12 field">
         <p><span class="required-sign">*</span> <b>Distanza tappa (Km):</b></p>
-        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0" ng-change="changed()"  ng-model="leg.score"
+        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0"  ng-change="changed()"  ng-model="leg.score"
             ng-disabled="currentGame.deployed" ng-required="true" />
     </div>
     <div class="col-lg-12 field">
         <p><b>Distanza tappa precedente (Km): {{previousLegScore| number : 3}}</b></p>
     </div>
     <div class="col-lg-12 field">
-        <b>Distanza totale (Km): </b>{{leg.totalDistance| number : 3}}
+        <b>Distanza totale (Km): </b>{{previousLegScore + leg.score | number : 3}}
     </div>
     <!-- <div style="display: table; margin-bottom: 10px;">
         <div class="col-lg-5 field" style="display: table-cell">

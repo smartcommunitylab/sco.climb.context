@@ -266,6 +266,8 @@ angular.module('MapsService', [])
                                 directionsDisplay.setOptions({ preserveViewport: true });
                             }
                             directionsDisplay.setDirections(result);
+                             $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(result));
+
                         }
                         else
                             window.alert('Errore nella richiesta: ' + status);
