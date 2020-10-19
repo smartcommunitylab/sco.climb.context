@@ -8,11 +8,11 @@ angular.module('climbGame.controllers.ownerSelection', [])
     		$mdToast.show($mdToast.simple().content($filter('translate')('toast_api_error')))
       } else {
         if(loginService.getOwnerId()) {
-        	$state.go('instituteSelection');
+        	$state.go('instituteSelection', loginService.getParams('instituteSelection'));
         }
         if($scope.ownerIds.length == 1) {
         	loginService.setOwnerId($scope.ownerIds[0]);
-        	$state.go('instituteSelection');
+        	$state.go('instituteSelection',loginService.getParams('instituteSelection'));
         }
       }
       $rootScope.isLoading = false;
@@ -27,7 +27,7 @@ angular.module('climbGame.controllers.ownerSelection', [])
       $scope.select = function () {
         if ($scope.selectedOwnerId) {
           loginService.setOwnerId($scope.selectedOwnerId);
-          $state.go('instituteSelection')
+          $state.go('instituteSelection',loginService.getParams('instituteSelection'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_owner')))
         }

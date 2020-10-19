@@ -7,7 +7,7 @@ angular.module('climbGame.controllers.classSelection', [])
       loginService.setSingleClass($scope.classes.length == 1);
       if($scope.classes.length == 1) {
       	loginService.setClassRoom($scope.classes[0]);
-      	$state.go('home')
+      	$state.go('home', loginService.getParams('home'))
       }
       
       $scope.logout = function () {
@@ -22,7 +22,7 @@ angular.module('climbGame.controllers.classSelection', [])
           CacheSrv.resetLastCheck('calendar')
           CacheSrv.resetLastCheck('notifications')
           loginService.setClassRoom($scope.selectedClass)
-          $state.go('home')
+          $state.go('home',loginService.getParams('home'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_classroom')))
         }
