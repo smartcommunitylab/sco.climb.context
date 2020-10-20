@@ -5,7 +5,7 @@ angular.module('climbGame.controllers.instituteSelection', [])
   		$rootScope.isLoading = true;
   		$scope.institutes = []; 
       if(loginService.getInstituteId()) {
-      	$state.go('schoolSelection')
+      	$state.go('schoolSelection',loginService.getParams('schoolSelection'))
       } else {
         dataService.getInstitute().then(
           	function(data) {
@@ -17,7 +17,7 @@ angular.module('climbGame.controllers.instituteSelection', [])
 								loginService.setSingleInstitute($scope.institutes.length == 1);
 	          		if($scope.institutes.length == 1) {
 	          			loginService.setInstituteId($scope.institutes[0].objectId)
-									$state.go('schoolSelection')
+									$state.go('schoolSelection',loginService.getParams('schoolSelection'))
 	          		}
 							}
           		$rootScope.isLoading = false;
@@ -40,7 +40,7 @@ angular.module('climbGame.controllers.instituteSelection', [])
       $scope.select = function () {
         if ($scope.selectedInstitute) {
           loginService.setInstituteId($scope.selectedInstitute.objectId);
-          $state.go('schoolSelection')
+          $state.go('schoolSelection',loginService.getParams('schoolSelection'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_institute')))
         }

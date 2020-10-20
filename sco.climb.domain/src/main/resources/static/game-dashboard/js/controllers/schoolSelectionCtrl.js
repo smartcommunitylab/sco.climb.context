@@ -5,7 +5,7 @@ angular.module('climbGame.controllers.schoolSelection', [])
   		$rootScope.isLoading = true;
       $scope.schools = []; 
       if(loginService.getSchoolId()) {
-      	$state.go('gameSelection')
+      	$state.go('gameSelection',loginService.getParams('gameSelection'))
       } else {
         dataService.getSchool().then(
           	function(data) {
@@ -16,7 +16,7 @@ angular.module('climbGame.controllers.schoolSelection', [])
   							loginService.setSingleSchool($scope.schools.length == 1);
             		if($scope.schools.length == 1) {
             			loginService.setSchoolId($scope.schools[0].objectId)
-            			$state.go('gameSelection')
+            			$state.go('gameSelection',loginService.getParams('gameSelection'));
             		}
               }
           		$rootScope.isLoading = false;
@@ -39,7 +39,7 @@ angular.module('climbGame.controllers.schoolSelection', [])
       $scope.select = function () {
         if ($scope.selectedSchool) {
           loginService.setSchoolId($scope.selectedSchool.objectId);
-          $state.go('gameSelection')
+          $state.go('gameSelection',loginService.getParams('gameSelection'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_school')))
         }
