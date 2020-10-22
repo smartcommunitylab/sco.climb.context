@@ -477,7 +477,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                     var points = new Array();
                                     // points[0] = [modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]];
                                     // points[1] = [nextLeg.geocoding[1], nextLeg.geocoding[0]];
-                                    //push the first point in the next lag path, then decode next lag path and push all point
+                                    //push the first point in the next leg path, then decode next lag path and push all point
                                     points.push(new google.maps.LatLng(modifiedLeg.geocoding[1], modifiedLeg.geocoding[0]));
                                     var decodedNextLegPath = google.maps.geometry.encoding.decodePath(nextLeg.polyline);
                                     for (i = 0; i < decodedNextLegPath.length; i++) {
