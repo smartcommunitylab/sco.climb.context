@@ -45,7 +45,9 @@
                     ng-click="switchAddPlayer()">Crea nuovo giocatore</a></div>
 
         </div>
-        <div class="col-sm-12 search-container">
+        <div ng-if="players.length && players.length >0">
+
+        <div class="col-sm-12 search-container" >
             <!-- <label class="search-label">Cerca: <input ng-model="searchText"></label> -->
             <ul class="list-group list-categories">
                 <li class="list-group-item gamer"
@@ -74,5 +76,10 @@
                 </li>
             </ul>
         </div>
-        <div class="alert alert-success" role="alert" ng-if="done">Modifica effettuata con successo</div>
+        </div>
+        <div ng-if="!players || players.length == 0">
+            <div class="col-sm-12 search-container">
+                <p class="empty-list">Nessun giocatore presente</p></div>
+        </div>
+        <div class="col-sm-12 alert alert-success" role="alert" ng-if="done">Modifica effettuata con successo</div>
 </fieldset>
