@@ -397,7 +397,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     createDialog('templates/modals/add-class-to-game.html',
                     {
                         id: 'add-class-to-game-dialog',
-                        title: 'Attenzione',
+                        title: 'Attenzione!',
                         success: {
                             label: "Ok",
                             fn: null
@@ -444,7 +444,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 createDialog('templates/modals/delete-class-warning.html',
                     {
                         id: 'delete-class-warning-dialog',
-                        title: 'Attenzione',
+                        title: 'Attenzione!',
                         success: {
                             label: "Conferma",
                             fn: function () {

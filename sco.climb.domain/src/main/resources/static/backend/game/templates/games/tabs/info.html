@@ -158,7 +158,7 @@
     <div class="col-sm-12 col-12 ">
         <div class="col-sm-12 col-12 " ng-repeat="d in currentGame.daysOfWeek track by $index">
             <div>
-                <input type="checkbox" class="checkBoxStyle " value="{{d}}" ng-checked="{{d}}"
+                <input ng-disabled="currentGame.deployed" type="checkbox" class="checkBoxStyle " value="{{d}}" ng-checked="{{d}}"
                     ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
             </div>
             <!--  <div ng-if="$index < 5">
