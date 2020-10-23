@@ -363,16 +363,29 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                             promises.push(promise);
                                         }
                                     }
-
+                                    
                                     $q.all(promises).then(function (response) {
-
+                                        $scope.legs[0].score=0
                                         for (var i = 0; i < response.length; i++) {
-
+                                            var score = 0;
                                             if (response[i].routes) { //(walk, drive)
                                                 $scope.legs[i + 1].polyline = response[i].routes[0].overview_polyline;
                                             } else {   // response can be flat line (boat,plane).
                                                 $scope.legs[i + 1].polyline = response[i];
                                             }
+                                            var decodedPath = google.maps.geometry.encoding.decodePath($scope.legs[i + 1].polyline);
+                                            var polyPath = new google.maps.Polyline({
+                                                path: decodedPath,
+                                                geodesic: true,
+                                                strokeColor: '#2980b9',
+                                                strokeOpacity: 1.0,
+                                                strokeWeight: 4,
+                                                editable: false
+                                            });
+                                            // var length = polyPath.inKm();
+                                            var length = google.maps.geometry.spherical.computeLength(polyPath.getPath())/1000;
+                                            $scope.legs[i + 1].score = $scope.legs[i].score + (length*1000);
+                                            console.log("score single"+length);
                                         }
 
                                         // update position counter.
@@ -430,7 +443,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
         $scope.computeLength = function () {
             // return last score of the leg
-            return $scope.totalScore;
+            return JSON.parse(JSON.stringify($scope.legs[$scope.legs.length - 1].score));
             // var distanceInMeters = drawMap.getPathLength();
             // return (distanceInMeters / 1000).toFixed(0);
         };
