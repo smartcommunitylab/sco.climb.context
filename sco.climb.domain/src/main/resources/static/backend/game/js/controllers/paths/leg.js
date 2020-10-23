@@ -1,7 +1,7 @@
 angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.directives.dirPagination'])
 
     // Edit the leg for the selected path
-    .controller('LegCtrl', function ($scope, $stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, drawMapLine, createDialog) {
+    .controller('LegCtrl', function ($scope, $q,$stateParams, $state, $rootScope, $window, $timeout, DataService, PermissionsService, uploadImageOnImgur, drawMapLeg, drawMapLine, createDialog) {
         $scope.$parent.selectedTab = 'legs';
         $scope.searchtype = [];
         $scope.searchdistance = null;
@@ -468,7 +468,6 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                             }
 
                             var nextLeg = $scope.legs[modifiedLegIndex + 1];
-
                             if (nextLeg) {
                                 var modifiedLeg = $scope.legs[modifiedLegIndex];
                                 // generate simple polyline in case of plane and navetta targetto.                           
@@ -534,8 +533,22 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                                             function (response) {
                                                 console.log('Salvataggio dati a buon fine.');
                                                 $rootScope.modified = false;
-                                                $scope.reminder();
-                                                $state.go('root.path.legs');
+                                                //modifiy score of the next ones
+                                                var changedPoints = savedLed.score -legBackup.value.score; 
+                                                console.log('delta score' + changedPoints);
+                                                var promises = [];
+                                                for (var i = modifiedLegIndex+1; i < $scope.legs.length; i++) {
+                                                    //add promises of saving leg with new value
+                                                    var newLegScore = $scope.legs[i];
+                                                    newLegScore.score = newLegScore.score + changedPoints;
+                                                    var promise = $scope.saveData('leg', newLegScore);
+                                                    promises.push (promise);
+                                                }
+                                                $q.all(promises).then(function (response) {
+                                                    //$scope.reminder();
+                                                    $state.go('root.path.legs');
+                                                })
+
                                             }, function (error) {
                                                 if (backUpLegNext) {
                                                     $scope.legs[backUpLegNext.position] = backUpLegNext.value;

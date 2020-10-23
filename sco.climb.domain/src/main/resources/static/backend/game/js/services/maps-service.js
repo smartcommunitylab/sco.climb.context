@@ -17,21 +17,7 @@ angular.module('MapsService', [])
             });
 
 
-            google.maps.LatLng.prototype.kmTo = function (a) {
-                var e = Math, ra = e.PI / 180;
-                var b = this.lat() * ra, c = a.lat() * ra, d = b - c;
-                var g = this.lng() * ra - a.lng() * ra;
-                var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d / 2), 2) + e.cos(b) * e.cos
-                    (c) * e.pow(e.sin(g / 2), 2)));
-                return f * 6378.137;
-            }
-            google.maps.Polyline.prototype.inKm = function (n) {
-                var a = this.getPath(n), len = a.getLength(), dist = 0;
-                for (var i = 0; i < len - 1; i++) {
-                    dist += a.getAt(i).kmTo(a.getAt(i + 1));
-                }
-                return dist;
-            }
+           
             // Inizialize the polyline on the map
             polyPath = new google.maps.Polyline({
                 geodesic: true,
@@ -266,7 +252,7 @@ angular.module('MapsService', [])
                                 directionsDisplay.setOptions({ preserveViewport: true });
                             }
                             directionsDisplay.setDirections(result);
-                             $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(result));
+                            //  $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(result));
 
                         }
                         else
@@ -279,17 +265,18 @@ angular.module('MapsService', [])
                         polyPath.setPath(google.maps.geometry.encoding.decodePath(customWaypoints));
                         polyPath.setMap(map);
                         //broadcast the new value to the page and update
-                        $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(customWaypoints[0].getPosition().latitude, customWaypoints[0].getPosition().longitude, customWaypoints[customWaypoints.length].latitude, customWaypoints[customWaypoints.length].longitude));
+                        // $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(customWaypoints[0].getPosition().latitude, customWaypoints[0].getPosition().longitude, customWaypoints[customWaypoints.length].latitude, customWaypoints[customWaypoints.length].longitude));
 
                     } else {
                         polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
                         polyPath.setMap(map);
                         //broadcast the new value to the page and update
-                        $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(prevPoiCoordinates.lat, prevPoiCoordinates.lng, thisPoiMarker.position.lat(), thisPoiMarker.position.lng()));
+                        // $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(prevPoiCoordinates.lat, prevPoiCoordinates.lng, thisPoiMarker.position.lat(), thisPoiMarker.position.lng()));
                     }
                 }
             }
         };
+
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
             var R = 6371; // Radius of the earth in km
             var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -316,7 +303,7 @@ angular.module('MapsService', [])
             total = total / 1000;
             return total;
         }
-
+        
         var reloadMarkerPosition = function () {
             // if (!directionChangeListener)
             // {directionChangeListener = directionsDisplay.addListener('directions_changed', function() {
@@ -477,6 +464,69 @@ angular.module('MapsService', [])
                 else
                     window.alert('Errore nella richiesta: ' + status);
             });
+        }
+
+
+        //function that calculate score and direction of a path given indexes of starting and ending points
+        this.recalculateLegs = function (legsArray, starting, ending) {
+            //for every leg of array
+            //recalculate path using points e get the new value and sum it to the previous
+            for (var i=starting; i<ending; i++)
+            if (i != 0)     // se si tratta del 1° LEG salta il ricalcolo
+            {
+                // calcola l'itinerario seguendo le strade
+                if ((legsArray[i].transport === 'foot') || (legsArray[i].transport === 'car')) {
+                    var mapTravelMode = (legsArray[i].transport === 'foot') ? 'WALKING' : 'DRIVING';
+                    var getFormattedWaypoints = function () {
+                        var toRtn = [];
+                        if (legsArray[i].additionalPoints) {
+                            legsArray[i].additionalPoints.forEach(function (waypoint) {
+                                toRtn.push({
+                                    location: new google.maps.LatLng(waypoint.latitude, waypoint.longitude),
+                                    stopover: false
+                                });
+                            });
+                        }
+                        return toRtn;
+                    };
+                    var request = {
+                        origin: { lat: legsArray[i-1].geocoding[1], lng: legsArray[i-1].geocoding[0] },
+                        destination: { lat: legsArray[i].geocoding[1], lng: legsArray[i].geocoding[0] },
+                        travelMode: mapTravelMode,
+                        waypoints: getFormattedWaypoints()
+                    };
+                    directionsService.route(request, function (result, status) {
+                        if (status === 'OK') {
+                            console.log(JSON.stringify(result));
+                            // if (zoomToFit) {
+                            //     directionsDisplay.setOptions({ preserveViewport: false });
+                            // } else {
+                            //     directionsDisplay.setOptions({ preserveViewport: true });
+                            // }
+                            // directionsDisplay.setDirections(result);
+                            //  $rootScope.$broadcast('poiMapTotalKmChanged', computeTotalDistance(result));
+
+                        }
+                        else
+                            window.alert('Errore nella richiesta: ' + status);
+                    });
+                }
+                else {
+                    // calcolo della tratta in linea d'aria
+                    if (legsArray[i].additionalPoints) {
+                        polyPath.setPath(google.maps.geometry.encoding.decodePath(legsArray[i].additionalPoints));
+                        //polyPath.setMap(map);
+                        //broadcast the new value to the page and update
+                        console.log(getDistanceFromLatLonInKm(legsArray[i].additionalPoints[0].latitude, legsArray[i].additionalPoints[0].longitude, legsArray[i].additionalPoints[legsArray[i].additionalPoints.length].latitude, legsArray[i].additionalPoints[legsArray[i].additionalPoints.length].longitude));
+
+                    } else {
+                        polyPath.setPath([{ lat: legsArray[i-1].geocoding[1], lng: legsArray[i-1].geocoding[0] }, { lat: legsArray[i].geocoding[1], lng: legsArray[i].geocoding[0] }]);
+                        // polyPath.setMap(map);
+                        //broadcast the new value to the page and update
+                        console.log( getDistanceFromLatLonInKm(legsArray[i-1].geocoding[1], legsArray[i-1].geocoding[0], legsArray[i].geocoding[1], legsArray[i-1].geocoding[0]));
+                    }
+                }
+            }
         }
 
         this.selectMode = function (sMode) {
