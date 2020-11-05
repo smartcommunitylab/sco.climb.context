@@ -5,7 +5,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
   		$rootScope.isLoading = true;
       $scope.itineraries = []; 
       if(loginService.getItineraryId()) {
-      	$state.go('classSelection')
+      	$state.go('classSelection',loginService.getParams('classSelection'))
       } else {
         dataService.getItinerary().then(
           	function(data) {
@@ -16,7 +16,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
                 loginService.setSingleItinerary($scope.itineraries.length == 1);
             		if($scope.itineraries.length == 1) {
             			loginService.setItineraryId($scope.itineraries[0].objectId)
-            			$state.go('classSelection')
+            			$state.go('classSelection',loginService.getParams('classSelection'))
             		}
           		}
           		$rootScope.isLoading = false;
@@ -40,7 +40,7 @@ angular.module('climbGame.controllers.itinerarySelection', [])
       $scope.select = function () {
         if ($scope.selectedItinerary) {
           loginService.setItineraryId($scope.selectedItinerary.objectId);
-          $state.go('classSelection')
+          $state.go('classSelection',loginService.getParams('classSelection'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_itinerary')))
         }

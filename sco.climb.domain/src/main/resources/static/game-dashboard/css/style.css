@@ -1197,6 +1197,85 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   left: 42%;
   bottom: 28%;
 }
+
+.centerBannerUpLeftLE{
+  position: absolute;
+  width: 50%;
+  left: 40%;
+  margin-top: 20%;
+}
+.centerBannerUpMiddleLE{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+}
+.centerBannerUpRightLE{
+  position: absolute;
+  width: 70%;
+  right: 45%;
+  margin-top: 35%;
+}
+.centerBannerDownLeftLE{
+  position: absolute;
+  width: 60%;
+  left: 50%;
+  bottom: 20%;
+  /* margin: -2% 2%; */
+}
+.centerBannerDownRightLE{
+  position: absolute;
+  width: 50%;
+  left: 50%;
+  bottom: 28%;
+}
+.centerBannerDownLE{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownCH{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftCH{
+  position: absolute;
+  width: 50%;
+  left: 40%;
+  bottom: 20%;
+  /* margin: -2% 2%; */
+}
+.centerBannerDownRightCH{
+  position: absolute;
+  width: 50%;
+  left: 70%;
+  bottom: 30%;
+}
+.centerBannerDownEE{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.centerBannerDownLeftEE{
+  position: absolute;
+  width: 30%;
+  left: 40%;
+    bottom: 20%;
+  
+}
+.centerBannerDownRightEE{
+  position: absolute;
+  width: 30%;
+  left: 70%;
+  bottom: 28%;
+}
 /* for login style */
 .loginLogoUp{
   position: absolute;

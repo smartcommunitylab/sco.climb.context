@@ -5,7 +5,8 @@ angular.module('climbGame.controllers.gameSelection', [])
   		$rootScope.isLoading = true;
       $scope.games = []; 
       if(loginService.getGameId()) {
-      	$state.go('itinerarySelection')
+      	$state.go('itinerarySelection',loginService.getParams('itinerarySelection'))
+
       } else {
         dataService.getGame().then(
           	function(data) {
@@ -17,7 +18,7 @@ angular.module('climbGame.controllers.gameSelection', [])
             		if($scope.games.length == 1) {
             			loginService.setGameId($scope.games[0].objectId)
             			loginService.setAllClasses($scope.games[0].classRooms);
-            			$state.go('itinerarySelection')
+      	$state.go('itinerarySelection',loginService.getParams('itinerarySelection'))
             		}          			
           		}
           		$rootScope.isLoading = false;
@@ -41,7 +42,7 @@ angular.module('climbGame.controllers.gameSelection', [])
         if ($scope.selectedGame) {
           loginService.setGameId($scope.selectedGame.objectId);
           loginService.setAllClasses($scope.selectedGame.classRooms);
-          $state.go('itinerarySelection')
+      	$state.go('itinerarySelection',loginService.getParams('itinerarySelection'))
         } else {
           $mdToast.show($mdToast.simple().content($filter('translate')('choose_game')))
         }

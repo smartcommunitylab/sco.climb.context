@@ -1,7 +1,7 @@
-angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate'])
+angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'])
 
     // Games controller
-    .controller('GamesListCtrl', function ($scope, $rootScope, toaster,DataService, createDialog, PermissionsService) {
+    .controller('GamesListCtrl', function ($scope, $rootScope, toaster, DataService, createDialog, PermissionsService) {
         $scope.$parent.mainView = 'game';
         $scope.PermissionsService = PermissionsService;
 
@@ -101,9 +101,9 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
             createDialog('templates/modals/save.html', {
                 id: 'save-dialog',
                 title: 'Modificato!',
-                success: {label: 'Ok', fn: null}
+                success: { label: 'Ok', fn: null }
             });
-            $rootScope.modified=false;
+            $rootScope.modified = false;
             //show toast salvataggio
             if ($scope.currentGame.objectId) { //edited
                 if ($scope.games) {
@@ -124,20 +124,22 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
         $scope.initController = function () {
             $scope.weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
             if ($scope.currentGame) { //edit game
+                $scope.editGame = true;
                 if ($scope.currentGame.daysOfWeek.length == 0) {
                     $scope.currentGame.daysOfWeek = [1, 1, 1, 1, 1, 0, 0]
                 }
                 $scope.saveData = DataService.editData;
                 // if ($scope.currentGame.usingPedibusData) {
-                    $scope.startDate.setTime($scope.currentGame.from);
-                    $scope.endDate.setTime($scope.currentGame.to);
-                    $scope.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
-                    $scope.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
+                $scope.startDate.setTime($scope.currentGame.from);
+                $scope.endDate.setTime($scope.currentGame.to);
+                $scope.collectFromHour.setHours(Number($scope.currentGame.fromHour.slice(0, 2)), Number($scope.currentGame.fromHour.slice(3, 5)));
+                $scope.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
                 // }
                 if ($scope.currentGame.interval == 0) {
                     $scope.currentGame.interval = 5;
                 }
             } else {
+                $scope.editGame = false;
                 $scope.currentGame = {
                     gameName: '',
                     gameDescription: '',
@@ -160,7 +162,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
             }
             $scope.classes = $scope.currentGame.classRooms.filter(function (el) {
                 return el != null;
-              });
+            });
 
             $scope.$broadcast('gameLoaded');
             var classes = []
@@ -185,7 +187,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                                 category: entry.category,
                                 color: entry.color
                             }
-                            if ($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value) || entry.value=='absent') {
+                            if ($scope.currentGame.modalities && $scope.currentGame.modalities.includes(entry.value) || entry.value == 'absent') {
                                 modalityEntry.selected = true;
                             }
                             $scope.modalities.push(modalityEntry);
@@ -264,7 +266,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                             $scope.manageResponse(response);
                         })
                 } else if ($scope.selectedTab == 'gamers') {
-                    DataService.updatePlayers($scope.currentGame,$scope.players).then(
+                    DataService.updatePlayers($scope.currentGame, $scope.players).then(
                         function (response) {
                             $scope.manageResponse(response);
                         })
@@ -315,39 +317,42 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
 
             if (invalidFields.length > 0 || $scope.endDate.toISOString().localeCompare($scope.startDate.toISOString(), { numeric: true }) <= 0)
                 isValidate = false;
-
+            if (!$scope.classes || $scope.classes.length == 0)
+                isValidate = false;
             return isValidate;
         }
-        
+
         function getShortName() {
-        	var d = new Date()
-        	var year = d.getFullYear();
-        	if($scope.$parent.selectedSchool) {
-        		var name=$scope.$parent.selectedSchool.name.replace(/[^a-zA-Z0-9]/g,"_");
-        		return (name + '_' +year+ '_'+(Math.floor(Math.random()*90000) + 10000));
-        	}
-        	return ('Scuola ' + year);
+            var d = new Date()
+            var year = d.getFullYear();
+            if ($scope.$parent.selectedSchool) {
+                var name = $scope.$parent.selectedSchool.name.replace(/[^a-zA-Z0-9]/g, "_");
+                return (name + '_' + year + '_' + (Math.floor(Math.random() * 90000) + 10000));
+            }
+            return ('Scuola ' + year);
         }
-        
+
         // Back without saving changes
         $scope.back = function () {
             createDialog('templates/modals/back.html', {
                 id: 'back-dialog',
                 title: 'Sei sicuro di voler uscire senza salvare?',
-                success: { label: 'Conferma', fn: function () { 
-                    $rootScope.modified=false;
-                    $state.go('root.games-list'); 
-                } }
+                success: {
+                    label: 'Conferma', fn: function () {
+                        $rootScope.modified = false;
+                        $state.go('root.games-list');
+                    }
+                }
             });
         };
     })
 
 
-    .controller('GameInfoCtrl', function ($scope, DataService) {
+    .controller('GameInfoCtrl', function ($scope,createDialog, MainDataService,DataService) {
         $scope.$parent.selectedTab = 'info';
         // $scope.nrOfStudenti = 0;
         $scope.new = {
-            classe:""
+            classe: ""
         }
         $scope.$on('gameLoaded', function (e) {
             // Variabili per date-picker(fix for refresh issue on parametri page)
@@ -384,12 +389,32 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
             $scope.classToggled();
         }
         $scope.addClasse = function (nomeClasse) {
-            if (nomeClasse){
+            //check if there is a path for this game
+            if ($scope.currentGame && $scope.currentGame.objectId){
+            MainDataService.getItineraries($scope.currentGame.objectId).then(function (response) {
+                var paths = response.data;
+                if (paths && paths.length >0) {
+                    createDialog('templates/modals/add-class-to-game.html',
+                    {
+                        id: 'add-class-to-game-dialog',
+                        title: 'Attenzione!',
+                        success: {
+                            label: "Ok",
+                            fn: null
+        
+                            }
+                        }
+                    )
+                }
+            });
+
+            }
+            if (nomeClasse) {
                 //feedback and clean
                 $scope.$parent.classes.push(nomeClasse);
-                $scope.new.classe="";
+                $scope.new.classe = "";
                 $scope.switchAddClasse();
-                }
+            }
             else {
                 //errore
             }
@@ -397,7 +422,7 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
         $scope.switchAddClasse = function () {
             $scope.addClass = !$scope.addClass;
         }
-        $scope.classToggled = function (name) {
+        var deleteClass = function(name) {
             if (name) {
                 $scope.selectedClasses = [];
                 /*            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
@@ -410,9 +435,34 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
                     }
                 })
                 $scope.$parent.classes = $scope.selectedClasses;
+            }
+        }
+        $scope.classToggled = function (name) {
+            //se modifico => modale
+            if (name){
+            if ($scope.editGame) {
+                createDialog('templates/modals/delete-class-warning.html',
+                    {
+                        id: 'delete-class-warning-dialog',
+                        title: 'Attenzione!',
+                        success: {
+                            label: "Conferma",
+                            fn: function () {
+                                deleteClass(name);
+
+                            },
+                            cancel: {
+                                label: "Chiudi",
+                                fn: null
+                            }
+                        }
+                    })
+            }
+            else {
+                deleteClass(name);
 
             }
-
+        }
 /*            $scope.calculateStudenti($scope.selectedClasses);
 */        }
 
@@ -465,11 +515,11 @@ angular.module('consoleControllers.games', ['ngSanitize','toaster', 'ngAnimate']
         }
         $scope.calculateStudenti = function (classes) {
             //call api and calculate nr.of studenti.
-DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.objectId,classes).then(function(data){
-    $scope.nrOfStudenti = data.data;
-});
-                    // $scope.nrOfStudenti = $scope.$parent.players.length;
-                    // $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
+            DataService.getStudentsByClasses($scope.currentGame.ownerId, $scope.currentGame.objectId, classes).then(function (data) {
+                $scope.nrOfStudenti = data.data;
+            });
+            // $scope.nrOfStudenti = $scope.$parent.players.length;
+            // $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
 
         }
         $scope.$on('gameLoaded', function (e) {
@@ -524,11 +574,11 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
             }
         }
 
-        
+
 
         $scope.isModalityPresent = function (mode) {
             if ($scope.currentGame && $scope.currentGame.modalities)
-            return $scope.currentGame.modalities.includes(mode);
+                return $scope.currentGame.modalities.includes(mode);
             return false
         }
 
@@ -547,15 +597,16 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
         $scope.classes = $scope.$parent.classes;
         $scope.players = $scope.$parent.players;
         $scope.isAddPlayer = false;
-        $scope.gamers= {
-            currentGame : null}
+        $scope.gamers = {
+            currentGame: null
+        }
         $scope.initController = function () {
             DataService.getStudentsByGame(
                 $scope.$parent.currentGame, $scope.$parent.classes).then(
                     function (response) {
                         $scope.$parent.players = response.data;
                         $scope.players = $scope.$parent.players;
-                        for (var i=0;i<$scope.players.length;i++){
+                        for (var i = 0; i < $scope.players.length; i++) {
                             $scope.isEditEnabled.push(false);
                         }
                         console.log('Caricamento dei giocatori andato a buon fine.');
@@ -572,8 +623,8 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
                 $scope.$parent.players.push(obj);
                 $scope.isAddPlayer = !$scope.isAddPlayer;
                 $scope.selectedPlayer = {
-                    nickname:"",
-                    classRoom:""
+                    nickname: "",
+                    classRoom: ""
 
                 }
             }
@@ -633,9 +684,9 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
         //     $scope.initController();        
         // });
         // }
- $scope.selectClass = function(classe) {
-	console.log(classe);
-}
+        $scope.selectClass = function (classe) {
+            console.log(classe);
+        }
     })
     .controller('GameCalibrationCtrl', function ($scope) {
         $scope.$parent.selectedTab = 'calibration';
@@ -673,7 +724,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
                     $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
                 }
             }
-            
+
         }
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
@@ -689,7 +740,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
 
         $scope.calculateKMTarget = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
-            	var km = $scope.kmStimati + Number($scope.currentGame.params.km_bonus);
+                var km = $scope.kmStimati + Number($scope.currentGame.params.km_bonus);
                 return km;
             }
         }
@@ -706,7 +757,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
                 currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
             }
             return numWorkDays;
-        } 
+        }
         $scope.$on('gameLoaded', function (e) {
             // Variabili per date-picker(fix for refresh issue on parametri page)
             // $scope.$parent.dateFormat = 'dd/MM/yyyy';
@@ -753,7 +804,7 @@ DataService.getStudentsByClasses($scope.currentGame.ownerId,$scope.currentGame.o
                 DataService.createPlayer($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.selectedPlayer).then(
                     function (response) {
                         console.log('Giocatore salvato.');
-                        $rootScope.modified=false;
+                        $rootScope.modified = false;
                         $state.go('root.game.gamers');
                         //update gamers
                     },
