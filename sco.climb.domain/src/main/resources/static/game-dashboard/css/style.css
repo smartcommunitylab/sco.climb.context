@@ -1187,7 +1187,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerDownLeftFR{
   position: absolute;
   width: 60%;
-  left: 40%;
+  left: 50%;
   bottom: 20%;
   /* margin: -2% 2%; */
 }
@@ -1225,7 +1225,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerDownRightLE{
   position: absolute;
   width: 50%;
-  left: 50%;
+  left: 60%;
   bottom: 28%;
 }
 .centerBannerDownLE{
@@ -1252,7 +1252,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerDownRightCH{
   position: absolute;
   width: 50%;
-  left: 70%;
+  left: 65%;
   bottom: 30%;
 }
 .centerBannerDownEE{
@@ -1267,13 +1267,13 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   position: absolute;
   width: 30%;
   left: 40%;
-    bottom: 20%;
+    bottom: -40px;
   
 }
 .centerBannerDownRightEE{
   position: absolute;
   width: 30%;
-  left: 70%;
+  left: 65%;
   bottom: 28%;
 }
 /* for login style */
