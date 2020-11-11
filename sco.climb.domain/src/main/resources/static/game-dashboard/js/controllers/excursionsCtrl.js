@@ -6,6 +6,7 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.datepickerisOpen = false
       $scope.excursions = null
       $scope.sendingData = false
+      $scope.isExcursion = true;
 
       /* excursion example
       {
@@ -43,6 +44,13 @@ angular.module('climbGame.controllers.excursions', [])
       }
 
       $scope.refreshExcursions()
+      
+      $scope.changeExcursion = function() {
+      	if(!$scope.isExcursion) {
+      		$scope.newExcursion.children = 1;
+      		$scope.newExcursion.meteo = 'sunny';
+      	}
+      }
 
       $scope.scroll = function (direction) {
         if (direction === 'up') {
