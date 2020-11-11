@@ -135,8 +135,9 @@ angular.module('climbGame.controllers.excursions', [])
       }
 
       $scope.resetForm = function () {
-        $scope.newExcursion = angular.copy(emptyExcursion)
-        $scope.excursionForm.$setPristine()
-        $scope.excursionForm.$setUntouched()
+        $scope.newExcursion = angular.copy(emptyExcursion);
+        $scope.changeExcursion();
+        $scope.excursionForm.$setPristine();
+        $scope.excursionForm.$setUntouched();
       }
     })
