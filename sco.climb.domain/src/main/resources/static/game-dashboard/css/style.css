@@ -1115,10 +1115,15 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   width: 45%;
   left: 40%;
 }
+.centerBannerDownCenterTN{
+  position: absolute;
+  width: 100%;
+  right: 0%;
+}
 .centerBannerDownRightTN{
   position: absolute;
-  width: 70%;
   right: 30%;
+    width: 52%;
 }
 .centerBannerRowFooterTN{
   position: absolute;
