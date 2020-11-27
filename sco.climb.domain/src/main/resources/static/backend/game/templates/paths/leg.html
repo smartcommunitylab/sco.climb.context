@@ -26,7 +26,11 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-xs-12 pull-right">
-         <div class="center warning-img">Attenzione! I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.</div>
+
+         <div class="center warning-img">
+            Attenzione! I file devono essere privi di copyright e rispettare la legge sul trattamento dei dati personali.
+            <i class="center glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top" tooltip-append-to-body="true" uib-tooltip="La dimensione massima consentita per il caricamento dell'immagine é di 10MB.            "></i>
+        </div>
 
         <div ng-click="loadImg()">
             <div class="load-img" ng-if="!leg.imageUrl" >
