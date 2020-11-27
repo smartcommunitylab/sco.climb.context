@@ -953,6 +953,7 @@ public class RepositoryManager {
       update.set("daysOfWeek", game.getDaysOfWeek());
       update.set("modalities", game.getModalities());
       update.set("sponsorTemplate", game.getSponsorTemplate());
+      update.set("roundTrip", game.isRoundTrip());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with id " + game.getObjectId());
