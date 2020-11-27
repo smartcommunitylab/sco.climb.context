@@ -332,7 +332,8 @@ public class DashboardController extends AuthController {
 			@RequestParam String meteo, 
 			@RequestParam Long date, 
 			@RequestParam Integer children, 
-			@RequestParam Double distance, 
+			@RequestParam Double distance,
+			@RequestParam boolean goodAction,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
 		if(game == null) {
@@ -344,7 +345,7 @@ public class DashboardController extends AuthController {
 		}
 		Date day = new Date(date);
 		storage.saveExcursion(ownerId, pedibusGameId, classRoom, name, children, 
-				distance, day, meteo);
+				distance, day, meteo, goodAction);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, 
 					pedibusGameId, classRoom, children, distance));
