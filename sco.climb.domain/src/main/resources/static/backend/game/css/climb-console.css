@@ -52,9 +52,12 @@ a:hover {
 
 #map-leg {
 	height: 330px;
-	width: 100%
-}
+	width: 100%;
 
+}
+.click-disabled {
+	pointer-events:none;
+}
 #map-line {
 	height: 400px;
 	width: 90%;

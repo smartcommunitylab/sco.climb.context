@@ -7,7 +7,7 @@
 
     <div class="col-md-4 right" ng-if="PermissionsService.permissionEnabledEditLegs()">
         <a ng-click="saveLeg()" class="btn btn-save btn-margin" role="button"
-            ng-disabled="$parent.selectedGame.deployed">Salva tappa</a>
+            >Salva tappa</a>
         <a ng-click="back()" class="btn btn-danger" role="button">Annulla</a>
     </div>
 </div>
@@ -102,11 +102,11 @@
             <div class="geocode-hint">
                 <p><b>Cerca posizione:</b></p>
             </div>
-            <input class="form-control geocode-hint-input" type="text" id="geocodeHintInput" />
+            <input class="form-control geocode-hint-input" type="text" id="geocodeHintInput" ng-disabled="currentGame.deployed"/>
         </div>
     </div>
     <div class="col-md-12 col-xs-12">
-        <div id="map-leg"></div>
+        <div id="map-leg" ng-class="{'click-disabled':currentGame.deployed}"></div>
     </div>
     <!-- <div class="col-md-5"> -->
     <div class="row">
