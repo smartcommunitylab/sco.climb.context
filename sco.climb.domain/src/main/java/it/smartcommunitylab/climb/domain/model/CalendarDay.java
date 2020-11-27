@@ -12,6 +12,7 @@ public class CalendarDay extends BaseObject {
 	private String classRoom;
 	private String meteo;
 	private Map<String, String> modeMap = new HashMap<String, String>();
+	private Map<String, String> modeMapReturnTrip = new HashMap<String, String>();
 	private boolean closed = false;
 	
 	public Date getDay() {
@@ -49,6 +50,12 @@ public class CalendarDay extends BaseObject {
 	}
 	public void setPedibusGameId(String pedibusGameId) {
 		this.pedibusGameId = pedibusGameId;
+	}
+	public Map<String, String> getModeMapReturnTrip() {
+		return modeMapReturnTrip;
+	}
+	public void setModeMapReturnTrip(Map<String, String> modeMapReturnTrip) {
+		this.modeMapReturnTrip = modeMapReturnTrip;
 	}
 	
 	
