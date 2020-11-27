@@ -36,6 +36,7 @@ public class PedibusGame extends BaseObject {
 	private List<Boolean> daysOfWeek = new ArrayList<>();
 	private List<String> modalities = new ArrayList<>();
 	private String sponsorTemplate;
+	private boolean roundTrip = false;
 
 	public String getSchoolId() {
 		return schoolId;
@@ -219,6 +220,14 @@ public class PedibusGame extends BaseObject {
 
 	public void setSponsorTemplate(String sponsorTemplate) {
 		this.sponsorTemplate = sponsorTemplate;
+	}
+
+	public boolean isRoundTrip() {
+		return roundTrip;
+	}
+
+	public void setRoundTrip(boolean roundTrip) {
+		this.roundTrip = roundTrip;
 	}
 
 }
