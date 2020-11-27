@@ -115,6 +115,7 @@
               <md-card-title-media>
                 <div class="md-media-sm card-media">
                   <i ng-if="isExcursion(ex)" class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
+                  <i ng-if="!isExcursion(ex)" class="meteo icon-trip"></i>
                 </div>
               </md-card-title-media>
             </md-card-title>
