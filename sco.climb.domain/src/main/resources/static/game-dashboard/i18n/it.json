@@ -27,6 +27,7 @@
   "excursions_history": "Storico gite scolastiche / buone azioni",
   "excursion_distance": "km a piedi",
   "excursion_children": "Hanno partecipato {{children}} bambini",
+  "excursion_children_ga": "Guadagnati per questa buona azione",
   "excursion_form_name_placeholder": "Inserisci il nome della gita",
   "excursion_form_name_error_required": "Il nome della gita è necessario",
   "excursion_form_name_placeholder_ga": "Inserisci il nome della buona azione",
