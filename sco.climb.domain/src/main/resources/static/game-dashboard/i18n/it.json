@@ -96,5 +96,8 @@
   "challenge_KmSettimanali": "Sfida di {{TargetTeam}}: Fate almeno {{target}} Km questa settimana per vincere {{VirtualPrize}}",
   "challenge_ViaggiGiornalieri": "Sfida di scuola: fate almeno {{_target_numTrips_}} viaggi a piedi, in bici o in pedibus in un giorno per vincere {{VirtualPrize}}",
   "map_your_position": "Voi siete qui",
-  "cal_challenge_empty": "Non ci sono sfide in corso"
+  "cal_challenge_empty": "Non ci sono sfide in corso",
+  "cal_header_andataritorno":"Andata/Ritorno",
+  "cal_header_andata":"Andata",
+  "cal_header_ritorno":"Ritorno"
 }
