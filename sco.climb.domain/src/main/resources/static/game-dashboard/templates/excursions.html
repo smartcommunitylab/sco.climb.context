@@ -2,20 +2,20 @@
   <div layout="column" flex="33" class="form-column">
     <h1 class="md-title">
 	  	<md-input-container class="md-block">
-	  		<md-select ng-model="isExcursion" ng-change="changeExcursion()">
-	  			<md-option ng-value="true">Gita scolastica</md-option>
-	  			<md-option ng-value="false">Buona azione</md-option>
+	  		<md-select ng-model="newExcursion.goodAction" ng-change="changeExcursion()">
+	  			<md-option ng-value="false">Gita scolastica</md-option>
+	  			<md-option ng-value="true">Buona azione</md-option>
 	  		</md-select>
 	  	</md-input-container>
     </h1>
     <form novalidate name="excursionForm">
       <!-- Name -->
       <md-input-container class="md-block">
-        <label>{{(isExcursion ? 'excursion_form_name_placeholder' : 'excursion_form_name_placeholder_ga') | translate}}</label>
+        <label>{{(isExcursion(newExcursion) ? 'excursion_form_name_placeholder' : 'excursion_form_name_placeholder_ga') | translate}}</label>
         <input name="name" type="text" ng-model="newExcursion.name" required />
         <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
         <div ng-messages="excursionForm.name.$error" ng-if="!showHints && excursionForm.name.$touched">
-          <div ng-message="required">{{(isExcursion ? 'excursion_form_name_error_required' : 'excursion_form_name_error_required_ga') | translate}}</div>
+          <div ng-message="required">{{(isExcursion(newExcursion) ? 'excursion_form_name_error_required' : 'excursion_form_name_error_required_ga') | translate}}</div>
           <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
         </div>
       </md-input-container>
@@ -32,11 +32,11 @@
       </md-input-container>
       <div layout="row">
         <!-- Numero bambini -->
-        <md-input-container class="md-block" ng-if="isExcursion">
+        <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_children_placeholder' | translate}}</label>
           <input name="children" type="number" min="1" max="100" ng-model="newExcursion.children" 
-          	ng-disabled="!isExcursion" required />
+          	ng-disabled="newExcursion.goodAction" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
             <div ng-message="required">{{'excursion_form_children_error_required' | translate}}</div>
@@ -44,7 +44,7 @@
           </div>
         </md-input-container>
         <!-- Distanza -->
-        <md-input-container class="md-block" ng-if="isExcursion">
+        <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder' | translate}}</label>
           <input name="distance" type="number" min="1" max="20" ng-model="newExcursion.distance" required />
@@ -54,7 +54,7 @@
             <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
           </div>
         </md-input-container>
-        <md-input-container class="md-block" ng-if="!isExcursion">
+        <md-input-container class="md-block" ng-if="!isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder_ga' | translate}}</label>
           <input name="distance_ga" type="number" min="1" max="1000" ng-model="newExcursion.distance" required />
@@ -79,26 +79,26 @@
           </div>
         </md-input-container>
         -->
-      <label ng-if="isExcursion">{{'excursion_form_weather' | translate}}</label>
-      <md-radio-group ng-model="newExcursion.meteo" ng-if="isExcursion" layout-padding>
+      <label ng-if="isExcursion(newExcursion)">{{'excursion_form_weather' | translate}}</label>
+      <md-radio-group ng-model="newExcursion.meteo" ng-if="isExcursion(newExcursion)" layout-padding>
         <div layout="row">
-          <md-radio-button flex="25" value="sunny" class="md-primary" ng-disabled="!isExcursion">
+          <md-radio-button flex="25" value="sunny" class="md-primary">
             <i ng-class="{'icon-sun_outline': newExcursion.meteo !== 'sunny', 'icon-sun': newExcursion.meteo === 'sunny'}"></i>
           </md-radio-button>
-          <md-radio-button flex="25" value="cloudy" class="md-primary" ng-disabled="!isExcursion">
+          <md-radio-button flex="25" value="cloudy" class="md-primary">
             <i ng-class="{'icon-cloudy_outline': newExcursion.meteo !== 'cloudy', 'icon-cloudy': newExcursion.meteo === 'cloudy'}"></i>
           </md-radio-button>
-          <md-radio-button flex="25" value="rain" class="md-primary" ng-disabled="!isExcursion">
+          <md-radio-button flex="25" value="rain" class="md-primary">
             <i ng-class="{'icon-rain_outline': newExcursion.meteo !== 'rain', 'icon-rain': newExcursion.meteo === 'rain'}"></i>
           </md-radio-button>
-          <md-radio-button flex="25" value="snow" class="md-primary" ng-disabled="!isExcursion">
+          <md-radio-button flex="25" value="snow" class="md-primary">
             <i ng-class="{'icon-snow_outline': newExcursion.meteo !== 'snow', 'icon-snow': newExcursion.meteo === 'snow'}"></i>
           </md-radio-button>
         </div>
       </md-radio-group>
     </form>
     <md-button class="md-raised" ng-click="createExcursion(excursionForm)">
-      {{(isExcursion ? 'excursion_form_send' : 'excursion_form_send_ga') | translate}}
+      {{(isExcursion(newExcursion) ? 'excursion_form_send' : 'excursion_form_send_ga') | translate}}
     </md-button>
   </div>
   <div layout="column" flex>
@@ -114,14 +114,16 @@
               </md-card-title-text>
               <md-card-title-media>
                 <div class="md-media-sm card-media">
-                  <i class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
+                  <i ng-if="isExcursion(ex)" class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
+                  <i ng-if="!isExcursion(ex)" class="meteo icon-trip"></i>
                 </div>
               </md-card-title-media>
             </md-card-title>
             <md-card-content>
               <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}}
                 {{'excursion_distance' | translate}}</p>
-              <p class="md-subhead">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
+              <p class="md-subhead" ng-if="isExcursion(ex)">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
+              <p class="md-subhead" ng-if="!isExcursion(ex)">{{'excursion_children_ga' | translate}}</p>
             </md-card-content>
           </md-card>
         </div>

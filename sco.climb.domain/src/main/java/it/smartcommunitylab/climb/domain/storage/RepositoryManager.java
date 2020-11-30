@@ -872,6 +872,7 @@ public class RepositoryManager {
 				Update update = new Update();
 				update.set("meteo", calendarDay.getMeteo());
 				update.set("modeMap", calendarDay.getModeMap());
+				update.set("modeMapReturnTrip", calendarDay.getModeMapReturnTrip());
 				update.set("closed", Boolean.TRUE);
 				update.set("lastUpdate", now);
 				mongoTemplate.updateFirst(query, update, CalendarDay.class);				
@@ -953,6 +954,7 @@ public class RepositoryManager {
       update.set("daysOfWeek", game.getDaysOfWeek());
       update.set("modalities", game.getModalities());
       update.set("sponsorTemplate", game.getSponsorTemplate());
+      update.set("roundTrip", game.isRoundTrip());
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with id " + game.getObjectId());
@@ -1084,7 +1086,7 @@ public class RepositoryManager {
 
 	
 	public void saveExcursion(String ownerId, String pedibusGameId, String classRoom, 
-			String name, Integer children, Double distance, Date day, String meteo) {
+			String name, Integer children, Double distance, Date day, String meteo, boolean goodAction) {
 		Excursion excursion = new Excursion();
 		Date now = new Date();
 		excursion.setOwnerId(ownerId);
@@ -1098,6 +1100,7 @@ public class RepositoryManager {
 		excursion.setDistance(distance);
 		excursion.setMeteo(meteo);
 		excursion.setName(name);
+		excursion.setGoodAction(goodAction);
 		mongoTemplate.save(excursion);
 	}
 	

@@ -154,6 +154,19 @@
                     ng-change="changed()" ng-model="modality.selected">{{modality.label}}&ensp;</label>
         </div>
     </div>
+    
+    <!--  andata e ritorno -->
+    <div class="col-sm-12 col-12 ">
+        <h3>Modalità di compilazione calendario</h3>
+        <hr style="border-color: black;">
+    </div>
+    <div class="col-sm-12 col-12 ">
+	    	<div class="col-sm-12 col-12">
+	    		<input ng-disabled="currentGame.deployed" type="checkbox" class="checkBoxStyle " ng-model="currentGame.roundTrip">
+	    			Andata e ritorno</input>
+	    	</div>    
+    </div>
+
     <!-- checkbox for days of week -->
     <div class="col-sm-12 col-12 ">
         <h3>Giorni di gioco</h3>
