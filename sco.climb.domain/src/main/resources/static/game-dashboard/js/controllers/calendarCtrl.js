@@ -608,16 +608,16 @@ angular.module('climbGame.controllers.calendar', [])
           if (calendar[k]) {
             // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
             if (checkDayOfTheWeek(calendar[k], i)) {
-              for (var property in calendar[k].modeMap) {
+              for (var property in calendar[k].modeMapReturnTrip) {
                 $scope.weekDataReturn[i][property] = {
-                  mean: calendar[k].modeMap[property]
+                  mean: calendar[k].modeMapReturnTrip[property]
                 }
-                // $scope.weekDataReturn[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMap[property])
-                $scope.weekDataReturn[i][property].color = $scope.mapModalities.find(val=>{return val.value==calendar[k].modeMap[property];}).color
-                if (!$scope.weekDataReturn[i][calendar[k].modeMap[property]]) {
-                  $scope.weekDataReturn[i][calendar[k].modeMap[property]] = 0
+                // $scope.weekDataReturn[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMapReturnTrip[property])
+                $scope.weekDataReturn[i][property].color = $scope.mapModalities.find(val=>{return val.value==calendar[k].modeMapReturnTrip[property];}).color
+                if (!$scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]]) {
+                  $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = 0
                 }
-                $scope.weekDataReturn[i][calendar[k].modeMap[property]] = $scope.weekDataReturn[i][calendar[k].modeMap[property]] + 1
+                $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] + 1
               }
               if (calendar[k].meteo) {
                 $scope.weekDataReturn[i].meteo = calendar[k].meteo
@@ -627,7 +627,7 @@ angular.module('climbGame.controllers.calendar', [])
               k++
             } else {
               // add entire day of null data
-              for (var prop in calendar[k].modeMap) {
+              for (var prop in calendar[k].modeMapReturnTrip) {
                 $scope.weekDataReturn[i][prop] = {}
               }
             }
