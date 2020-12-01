@@ -697,6 +697,16 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             DataService.uploadFileContent(element).then(function (response) {
                 $scope.leg.imageUrl = response.data.link;
                 $scope.img = null;
+            },function(err){
+                console.log('error upload'+err);
+                createDialog('templates/modals/img-too-big.html', {
+                    id: 'img-too-big-dialog',
+                    title: 'Attenzione!',
+                    success: {
+                        label: 'Ok'
+                    }
+                });
+                $scope.img = null;
             });
         };
 
