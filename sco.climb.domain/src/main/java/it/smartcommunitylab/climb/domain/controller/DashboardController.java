@@ -257,7 +257,7 @@ public class DashboardController extends AuthController {
 				actionParams.put(mode, actionParams.get(mode) + 1);
 			}
 			for(String playerId : calendarDay.getModeMapReturnTrip().keySet()) {
-				String mode = calendarDay.getModeMap().get(playerId);
+				String mode = calendarDay.getModeMapReturnTrip().get(playerId);
 				actionParams.put(mode, actionParams.get(mode) + 1);
 			}
 			ExecutionDataDTO ed = new ExecutionDataDTO();
