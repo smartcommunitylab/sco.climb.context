@@ -26,6 +26,7 @@
   "excursions_new": "Nuova gita scolastica",
   "excursions_history": "Storico gite scolastiche / buone azioni",
   "excursion_distance": "km a piedi",
+  "excursion_distance_ga": "km bonus",
   "excursion_children": "Hanno partecipato {{children}} bambini",
   "excursion_children_ga": "guadagnati per questa buona azione",
   "excursion_form_name_placeholder": "Inserisci il nome della gita",
