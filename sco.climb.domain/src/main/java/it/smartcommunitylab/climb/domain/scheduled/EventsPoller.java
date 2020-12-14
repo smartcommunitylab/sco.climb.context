@@ -106,7 +106,7 @@ public class EventsPoller {
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
-					Map<String, Boolean> updateClassScores = updateCalendarDayFromPedibus(game, childrenStatus);
+					Map<String, Boolean> updateClassScores = updateCalendarDayFromPedibus(game, routeId, childrenStatus);
 					sendScores(childrenStatus, updateClassScores, game);
 					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.TRUE);
 				}
@@ -291,7 +291,7 @@ public class EventsPoller {
 	}
 	
 	private Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 
-			Collection<ChildStatus> childrenStatus) {
+			String routeId, Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
 		Map<String, Boolean> classUpdateScoreMap = new HashMap<String, Boolean>();
@@ -321,7 +321,7 @@ public class EventsPoller {
 				for(String classRoom : classModeMap.keySet()) {
 					Map<String, String> modeMap = classModeMap.get(classRoom);
 					Boolean update = storage.updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), 
-							classRoom, day, modeMap);
+							routeId, classRoom, day, modeMap);
 					classUpdateScoreMap.put(classRoom, update);
 				}
 			} catch (ParseException e) {
