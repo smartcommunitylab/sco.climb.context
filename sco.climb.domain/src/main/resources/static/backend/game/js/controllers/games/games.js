@@ -596,9 +596,12 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.isEditEnabled = [];
         $scope.classes = $scope.$parent.classes;
         $scope.players = $scope.$parent.players;
-        $scope.isAddPlayer = false;
         $scope.gamers = {
             currentGame: null
+        }
+        $scope.selectedPlayer = {
+        		nickname: null,
+        		classRoom: null
         }
         $scope.initController = function () {
             DataService.getStudentsByGame(
@@ -617,22 +620,32 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 );
         }
 
-        $scope.addNewPlayer = function (player) {
-            if (player) {
-                let obj = Object.assign({}, player);
+        $scope.addNewPlayer = function () {
+            if ($scope.selectedPlayer) {
+                let obj = Object.assign({}, $scope.selectedPlayer);
                 $scope.$parent.players.push(obj);
-                $scope.isAddPlayer = !$scope.isAddPlayer;
-                $scope.selectedPlayer = {
-                    nickname: "",
-                    classRoom: ""
-
-                }
+                $scope.selectedPlayer.nickname = null;
             }
             else {
                 //errore
                 alert("nome player vuoto");
             }
         }
+        
+        $scope.changeCurrentClass = function () {
+        	$scope.selectedPlayer.classRoom = $scope.gamers.currentClass
+        }
+        
+        $scope.isNewPlayerCompleted = function () {
+        	var result = false;
+        	if ($scope.selectedPlayer) {
+        		if($scope.selectedPlayer.nickname && $scope.selectedPlayer.classRoom) {
+        			result = true;
+        		}
+        	}
+        	return result;
+        }
+        
         $scope.switchAddPlayer = function () {
             $scope.isAddPlayer = !$scope.isAddPlayer;
         }

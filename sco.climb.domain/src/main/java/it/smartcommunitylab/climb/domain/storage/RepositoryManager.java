@@ -181,6 +181,7 @@ public class RepositoryManager {
 		update.set("to", route.getTo());
 		update.set("distance", route.getDistance());
 		update.set("volunteerList", route.getVolunteerList());
+		update.set("returnTrip", route.isReturnTrip());
 		mongoTemplate.updateFirst(query, update, Route.class);
 	}
 
@@ -883,8 +884,13 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public boolean updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String classRoom, 
-			Date day, Map<String, String> modeMap) {
+	public boolean updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String routeId, 
+			String classRoom, Date day, Map<String, String> modeMap) {
+		Route route = getRouteById(ownerId, routeId);
+		boolean returnTrip = false;
+		if(route != null) {
+			returnTrip = route.isReturnTrip();
+		}
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId)
 				.and("classRoom").is(classRoom).and("day").is(day));
 		CalendarDay calendarDayDB = mongoTemplate.findOne(query, CalendarDay.class);
@@ -898,16 +904,25 @@ public class RepositoryManager {
 			calendarDay.setPedibusGameId(pedibusGameId);
 			calendarDay.setClassRoom(classRoom);
 			calendarDay.setDay(day);
-			calendarDay.setModeMap(modeMap);
+			if(returnTrip) {
+				calendarDay.setModeMapReturnTrip(modeMap);
+			} else {
+				calendarDay.setModeMap(modeMap);
+			}
 			mongoTemplate.save(calendarDay);
 			return true;
 		} else {
 			if(calendarDayDB.isClosed()) {
 				return false;
 			} else {
-				calendarDayDB.getModeMap().putAll(modeMap);
 				Update update = new Update();
-				update.set("modeMap", calendarDayDB.getModeMap());
+				if(returnTrip) {
+					calendarDayDB.getModeMapReturnTrip().putAll(modeMap);
+					update.set("modeMapReturnTrip", calendarDayDB.getModeMapReturnTrip());
+				} else {
+					calendarDayDB.getModeMap().putAll(modeMap);
+					update.set("modeMap", calendarDayDB.getModeMap());
+				}
 				update.set("lastUpdate", now);
 				mongoTemplate.updateFirst(query, update, CalendarDay.class);
 				return true;
@@ -1233,6 +1248,12 @@ public class RepositoryManager {
 				.and("schoolId").is(schoolId)
 				.and("ownerId").is(ownerId));
 		return mongoTemplate.find(query, Route.class);		
+	}
+	
+	public Route getRouteById(String ownerId, String routeId) {
+		Query query = new Query(Criteria.where("objectId").is(routeId)
+				.and("ownerId").is(ownerId));
+		return mongoTemplate.findOne(query, Route.class);				
 	}
 	
 	public List<Route> getRoutes() {
