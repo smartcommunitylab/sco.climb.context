@@ -685,6 +685,13 @@ to {
 	margin: -1px 8px 0px -22px !important;
 }
 
+.checkBoxForm {
+	width: 20px;
+	height: 20px;
+	padding-right: 5px;
+	vertical-align: bottom;
+}
+
 .cbStyle {
 	width: 20px;
 	height: 20px;
@@ -894,6 +901,11 @@ hr.cBlue {
 .row {
 	margin-right: 0;
 	margin-left: 0;
+}
+
+.spacerow {
+	padding-top: 2px;
+	padding-bottom: 2px;	
 }
 
 .searchResultSelectedRow {

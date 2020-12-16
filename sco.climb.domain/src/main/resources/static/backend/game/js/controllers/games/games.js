@@ -590,15 +590,18 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
 
     })
-    .controller('GameGamersCtrl', function ($scope, $stateParams, $rootScope, DataService) {
+    .controller('GameGamersCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
         $scope.$parent.selectedTab = 'gamers';
         //get players
-        $scope.isEditEnabled = [];
+        $scope.isEditEnabledArray = [];
         $scope.classes = $scope.$parent.classes;
         $scope.players = $scope.$parent.players;
-        $scope.isAddPlayer = false;
         $scope.gamers = {
             currentGame: null
+        }
+        $scope.selectedPlayer = {
+        		nickname: null,
+        		classRoom: null
         }
         $scope.initController = function () {
             DataService.getStudentsByGame(
@@ -607,7 +610,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                         $scope.$parent.players = response.data;
                         $scope.players = $scope.$parent.players;
                         for (var i = 0; i < $scope.players.length; i++) {
-                            $scope.isEditEnabled.push(false);
+                            $scope.isEditEnabledArray.push(false);
                         }
                         console.log('Caricamento dei giocatori andato a buon fine.');
                     }, function () {
@@ -617,57 +620,63 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 );
         }
 
-        $scope.addNewPlayer = function (player) {
-            if (player) {
-                let obj = Object.assign({}, player);
+        $scope.addNewPlayer = function () {
+            if ($scope.selectedPlayer) {
+                let obj = Object.assign({}, $scope.selectedPlayer);
                 $scope.$parent.players.push(obj);
-                $scope.isAddPlayer = !$scope.isAddPlayer;
-                $scope.selectedPlayer = {
-                    nickname: "",
-                    classRoom: ""
-
-                }
+                $scope.selectedPlayer.nickname = null;
+                $scope.changed();
             }
             else {
                 //errore
                 alert("nome player vuoto");
             }
         }
+        
+        $scope.changeCurrentClass = function () {
+        	$scope.selectedPlayer.classRoom = $scope.gamers.currentClass
+        }
+        
+        $scope.isNewPlayerCompleted = function () {
+        	var result = false;
+        	if ($scope.selectedPlayer) {
+        		if($scope.selectedPlayer.nickname && $scope.selectedPlayer.classRoom) {
+        			result = true;
+        		}
+        	}
+        	return result;
+        }
+        
         $scope.switchAddPlayer = function () {
             $scope.isAddPlayer = !$scope.isAddPlayer;
         }
-        // $scope.isEditEnabled = function (index) {
-        //     return 
-        // }
-        $scope.enableEdit = function (index) {
-            $scope.isEditEnabled[index] = !$scope.isEditEnabled[index];
+        $scope.isEditEnabled = function (player) {
+        	var index = getPlayerIndex(player);
+          return $scope.isEditEnabledArray[index];
         }
-        $scope.saveEdit = function (index) {
-            $scope.isEditEnabled[index] = !$scope.isEditEnabled[index];
+        $scope.enableEdit = function (player) {
+        	var index = getPlayerIndex(player);
+          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
         }
-        $scope.remove = function (index) {
-            $scope.done = true;
-            $scope.$parent.players.splice(index, 1);
-            // $scope.$parent.players = response.data;
-            $scope.players = $scope.$parent.players;
-            // DataService.deleteGamer(player).then(function () {
-            //     //refresh list
-            //     //update players
-            //     DataService.getStudentsByGame($scope.$parent.currentGame, $scope.$parent.classes).then(
-            //         function (response) {
-            //             $scope.$parent.players = response.data;
-            //             $scope.players = $scope.$parent.players;
-            //             setTimeout(function () {
-            //                 $scope.done = false;
-            //             }, 1000);
-
-            //         }
-            //     )
-            // }, function (err) {
-            //     //error
-            //     $scope.done = false;
-
-            // })
+        $scope.saveEdit = function (player) {
+        	var index = getPlayerIndex(player);
+          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
+        }
+        $scope.remove = function (player) {
+        		var index = getPlayerIndex(player);
+        		if(index >= 0) {
+              createDialog('templates/modals/delete-player.html', {
+                id: 'delete-dialog',
+                title: 'Attenzione!',
+                success: {
+                	label: 'Conferma', fn: function () {
+                		$scope.$parent.players.splice(index, 1);
+                		$scope.players = $scope.$parent.players;
+                		$scope.changed();
+                  }
+                }
+              });
+        		}
         }
 
         // if ($scope.currentSchool) {
@@ -686,6 +695,38 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         // }
         $scope.selectClass = function (classe) {
             console.log(classe);
+        }
+        
+        $scope.readTextFile = function (file) {
+        	var fileInput = document.getElementById('upload-file');
+        	var reader = new FileReader();
+        	reader.onload = function() {
+        		var text = reader.result;
+        		var list = text.split(/\r\n|\r|\n/);
+        		for (var i = 0; i < list.length; i++) {
+        			var nick = list[i].trim();
+        			if(nick) {
+                var player = {
+                		nickname: list[i],
+                		classRoom: $scope.gamers.currentClass
+                }
+                $scope.$parent.players.push(player);
+                $scope.changed();        				
+        			}
+        		}
+        		$scope.players = $scope.$parent.players;
+        		$scope.$apply();
+        	};
+        	reader.readAsText(fileInput.files[0]);
+        }
+        
+        function getPlayerIndex(player) {
+        	for (var i = 0; i < $scope.players.length; i++) {
+        		if(($scope.players[i].nickname === player.nickname) && ($scope.players[i].classRoom === player.classRoom)) {
+        			return i;
+        		}
+        	}
+        	return -1;
         }
     })
     .controller('GameCalibrationCtrl', function ($scope) {

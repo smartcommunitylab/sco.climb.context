@@ -121,7 +121,7 @@
             </md-card-title>
             <md-card-content>
               <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}}
-                {{'excursion_distance' | translate}}</p>
+                {{(isExcursion(ex) ? 'excursion_distance' : 'excursion_distance_ga') | translate}}</p>
               <p class="md-subhead" ng-if="isExcursion(ex)">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
               <p class="md-subhead" ng-if="!isExcursion(ex)">{{'excursion_children_ga' | translate}}</p>
             </md-card-content>
