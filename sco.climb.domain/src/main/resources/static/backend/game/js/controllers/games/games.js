@@ -593,7 +593,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
     .controller('GameGamersCtrl', function ($scope, $stateParams, $rootScope, createDialog, DataService) {
         $scope.$parent.selectedTab = 'gamers';
         //get players
-        $scope.isEditEnabled = [];
+        $scope.isEditEnabledArray = [];
         $scope.classes = $scope.$parent.classes;
         $scope.players = $scope.$parent.players;
         $scope.gamers = {
@@ -610,7 +610,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                         $scope.$parent.players = response.data;
                         $scope.players = $scope.$parent.players;
                         for (var i = 0; i < $scope.players.length; i++) {
-                            $scope.isEditEnabled.push(false);
+                            $scope.isEditEnabledArray.push(false);
                         }
                         console.log('Caricamento dei giocatori andato a buon fine.');
                     }, function () {
@@ -652,15 +652,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         $scope.isEditEnabled = function (player) {
         	var index = getPlayerIndex(player);
-          return $scope.isEditEnabled[index];
+          return $scope.isEditEnabledArray[index];
         }
         $scope.enableEdit = function (player) {
         	var index = getPlayerIndex(player);
-          $scope.isEditEnabled[index] = !$scope.isEditEnabled[index];
+          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
         }
         $scope.saveEdit = function (player) {
         	var index = getPlayerIndex(player);
-          $scope.isEditEnabled[index] = !$scope.isEditEnabled[index];
+          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
         }
         $scope.remove = function (player) {
         		var index = getPlayerIndex(player);
@@ -704,12 +704,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         		var text = reader.result;
         		var list = text.split(/\r\n|\r|\n/);
         		for (var i = 0; i < list.length; i++) {
-              var player = {
-              		nickname: list[i],
-              		classRoom: $scope.gamers.currentClass
-              }
-              $scope.$parent.players.push(player);
-              $scope.changed();
+        			var nick = list[i].trim();
+        			if(nick) {
+                var player = {
+                		nickname: list[i],
+                		classRoom: $scope.gamers.currentClass
+                }
+                $scope.$parent.players.push(player);
+                $scope.changed();        				
+        			}
         		}
         		$scope.players = $scope.$parent.players;
         		$scope.$apply();
