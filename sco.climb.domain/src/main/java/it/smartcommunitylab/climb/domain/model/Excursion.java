@@ -12,6 +12,7 @@ public class Excursion extends BaseObject {
 	private Integer children;
 	private Double distance;
 	private String name;
+	private boolean goodAction = false;
 	
 	public Date getDay() {
 		return day;
@@ -54,5 +55,11 @@ public class Excursion extends BaseObject {
 	}
 	public void setPedibusGameId(String pedibusGameId) {
 		this.pedibusGameId = pedibusGameId;
+	}
+	public boolean isGoodAction() {
+		return goodAction;
+	}
+	public void setGoodAction(boolean goodAction) {
+		this.goodAction = goodAction;
 	}
 }

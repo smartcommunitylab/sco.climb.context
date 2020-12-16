@@ -561,6 +561,16 @@ main.layout-row.flex {
   height: 100%;
   margin: 1px 1px 1px 1px;
 }
+.roundtrip-col {
+	width: 50%;
+}
+.cal-baby-cell-round {
+	  height: 100%;
+  margin: 1px 1px 1px 1px;
+  width:98%;
+  min-width: 0px;
+/*   min-width:none;
+ */}
 
 .cal-header {
   background-color: #f2f2f2;

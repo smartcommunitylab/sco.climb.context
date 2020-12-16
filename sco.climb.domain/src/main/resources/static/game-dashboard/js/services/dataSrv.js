@@ -209,6 +209,13 @@ angular.module('climbGame.services.data', [])
 
     dataService.sendData = function (data) {
       var deferred = $q.defer()
+      var payload= {
+        'day': data.day,
+        'meteo': data.meteo,
+        'modeMap': data.modeMap
+      }
+      if (data.modeMapReturnTrip)
+      payload.modeMapReturnTrip = data.modeMapReturnTrip
       $http({
         method: 'POST',
         url: configService.getURL() + '/api/game/calendar/' 
@@ -219,11 +226,7 @@ angular.module('climbGame.services.data', [])
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()
         },
-        data: {
-          'day': data.day,
-          'meteo': data.meteo,
-          'modeMap': data.modeMap
-        },
+        data: payload ,
         timeout: configService.httpTimout()
       }).then(function (response) {
         deferred.resolve(response.data)
@@ -296,7 +299,7 @@ angular.module('climbGame.services.data', [])
     dataService.postExcursion = function (params) {
       var deferred = $q.defer()
 
-      if (!params || !params.name || !params.date || !params.children || !params.distance || !params.meteo) {
+      if (!params || !params.name || !params.date || !params.children || !params.distance || !params.meteo || !params.hasOwnProperty('goodAction')) {
         deferred.reject('Invalid or missing data')
         return deferred.promise
       }
@@ -317,7 +320,8 @@ angular.module('climbGame.services.data', [])
           date: params.date,
           children: params.children,
           distance: params.distance,
-          meteo: params.meteo
+          meteo: params.meteo,
+          goodAction: params.goodAction
         }
       }).then(function (response) {
         deferred.resolve(response.data)

@@ -1,6 +1,6 @@
 angular.module('consoleControllers.leg')
 
-.controller('CreateNewMultimediaElementDialogCtrl', function ($scope, addElementsFunction, saveFunction, dataService, leg) {
+.controller('CreateNewMultimediaElementDialogCtrl', function ($scope,createDialog, addElementsFunction, saveFunction, dataService, leg) {
 	$scope.errorMsg;
     $scope.newMedia = {type: ''};
 	$scope.loading = false;
@@ -148,6 +148,18 @@ angular.module('consoleControllers.leg')
 			function (error) {
 				$scope.errorMsg = "Errore di comunicazione con il sistema";
 				$scope.loading = false;
+				$scope.file = null;
+
+					createDialog('templates/modals/img-too-big.html', {
+						id: 'img-too-big-dialog',
+						title: 'Attenzione!',
+						success: {
+							label: 'Ok',
+							fn: function () {
+								$scope.file = null;
+							}
+						}
+					});
 			}
 		);
     };

@@ -12,6 +12,7 @@ public class Route extends BaseObject {
 	private Date to;
 	private double distance;
 	private List<String> volunteerList = new ArrayList<String>();
+	private boolean returnTrip = false;
 	
 	public String getName() {
 		return name;
@@ -54,5 +55,11 @@ public class Route extends BaseObject {
 	}
 	public void setVolunteerList(List<String> volunteerList) {
 		this.volunteerList = volunteerList;
+	}
+	public boolean isReturnTrip() {
+		return returnTrip;
+	}
+	public void setReturnTrip(boolean returnTrip) {
+		this.returnTrip = returnTrip;
 	}
 }

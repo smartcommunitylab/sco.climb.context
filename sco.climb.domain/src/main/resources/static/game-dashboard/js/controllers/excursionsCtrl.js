@@ -6,7 +6,6 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.datepickerisOpen = false
       $scope.excursions = null
       $scope.sendingData = false
-      $scope.isExcursion = true;
 
       /* excursion example
       {
@@ -23,6 +22,13 @@ angular.module('climbGame.controllers.excursions', [])
         ownerId: 'VELA'
       }
       */
+      
+      $scope.isExcursion = function (ex) {
+      	if(ex && ex.hasOwnProperty('goodAction') && ex.goodAction) {
+      		return false;
+      	}
+      	return true;
+      }
 
       $scope.refreshExcursions = function () {
       	dataService.getGameById().then(
@@ -46,7 +52,7 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.refreshExcursions()
       
       $scope.changeExcursion = function() {
-      	if(!$scope.isExcursion) {
+      	if($scope.newExcursion.goodAction) {
       		$scope.newExcursion.children = 1;
       		$scope.newExcursion.meteo = 'sunny';
       	}
@@ -66,7 +72,8 @@ angular.module('climbGame.controllers.excursions', [])
         date: null,
         children: null,
         distance: null,
-        meteo: 'sunny'
+        meteo: 'sunny',
+        goodAction: false
       }
 
       $scope.newExcursion = angular.copy(emptyExcursion)
@@ -75,14 +82,13 @@ angular.module('climbGame.controllers.excursions', [])
 
       $scope.createExcursion = function () {
 
-
-
         var params = {
           name: $scope.newExcursion.name,
           date: $scope.newExcursion.date.getTime(),
           children: $scope.newExcursion.children,
           distance: $scope.newExcursion.distance * 1000,
-          meteo: $scope.newExcursion.meteo
+          meteo: $scope.newExcursion.meteo,
+          goodAction: $scope.newExcursion.goodAction
         }
 
         if (!params.name || !params.date || !params.children || !params.distance || !params.meteo) {
