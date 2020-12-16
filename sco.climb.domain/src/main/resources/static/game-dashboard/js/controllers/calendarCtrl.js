@@ -101,6 +101,7 @@ angular.module('climbGame.controllers.calendar', [])
             //roundtrip
             if (data.game.roundTrip){
               $scope.roundTrip=true;
+				setClassSize();
             }
             //check the number of modalities and set color
             if(data.game.modalities.length > 0){
@@ -551,7 +552,7 @@ angular.module('climbGame.controllers.calendar', [])
           // x = w.innerWidth || e.clientWidth || g.clientWidth,
         var y = w.innerHeight || e.clientHeight || g.clientHeight
         if (document.getElementById('table')) {
-          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50) + 'px')
+          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50 -($scope.roundTrip? 50: 0)) + 'px')
         }
       }
 
