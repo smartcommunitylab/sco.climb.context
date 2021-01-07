@@ -1,6 +1,7 @@
 package it.smartcommunitylab.climb.domain.scheduled;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,7 +48,7 @@ public class SchedulerManager {
 		// init scheduler
 		Properties properties = new Properties();
 		properties.setProperty("org.quartz.scheduler.instanceName", "ClimbScheduler");
-		properties.setProperty("org.quartz.threadPool.threadCount", "25");
+		properties.setProperty("org.quartz.threadPool.threadCount", "125");
 		SchedulerFactory schedFact = new StdSchedulerFactory(properties);
 	  scheduler = schedFact.getScheduler();
 	  scheduler.start();
@@ -55,34 +56,43 @@ public class SchedulerManager {
 		// set task for specific game
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
-			addJob(game);
+			try {
+				addJob(game);
+			} catch (Exception e) {
+				logger.warn(String.format("initJob[%s] error:%s", game.getObjectId(), e.getMessage()));
+			}			
 		}
 	}
 
 	private void addJob(PedibusGame game) throws InvalidParametersException {
 		if((game != null) && game.isDeployed() && game.isUsingPedibusData()) {
 			try {
-				if(Utils.isNotEmpty(game.getFromHour()) 
-						&& Utils.isNotEmpty(game.getToHour())
-						&& (game.getInterval() > 0)) {
-					String[] fromH = game.getFromHour().split(":");
-					String[] toH = game.getToHour().split(":");
-					Trigger trigger = TriggerBuilder.newTrigger()
-							.withIdentity("gameId-" + game.getObjectId())
-							.withSchedule(DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
-								.startingDailyAt(new TimeOfDay(Integer.parseInt(fromH[0]), Integer.parseInt(fromH[1])))
-								.endingDailyAt(new TimeOfDay(Integer.parseInt(toH[0]), Integer.parseInt(toH[1])))
-								.withIntervalInMinutes(game.getInterval()))
-							.build();
-					JobDetail job = JobBuilder.newJob(GameEventJob.class)
-							.withIdentity("gameId-" + game.getObjectId()).build();
-					scheduler.getContext().put("RepositoryManager", storage);
-					scheduler.getContext().put("EventsPoller", eventsPoller);
-					scheduler.getContext().put("pedibusGameId", game.getObjectId());
-					scheduler.scheduleJob(job, trigger);
-					jobList.add(game.getObjectId());
+				Date now = new Date();
+				if(game.getTo().after(now)) {
+					if(Utils.isNotEmpty(game.getFromHour()) 
+							&& Utils.isNotEmpty(game.getToHour())
+							&& (game.getInterval() > 0)) {
+						String[] fromH = game.getFromHour().split(":");
+						String[] toH = game.getToHour().split(":");
+						Trigger trigger = TriggerBuilder.newTrigger()
+								.withIdentity("gameId-" + game.getObjectId())
+								.withSchedule(DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
+									.startingDailyAt(new TimeOfDay(Integer.parseInt(fromH[0]), Integer.parseInt(fromH[1])))
+									.endingDailyAt(new TimeOfDay(Integer.parseInt(toH[0]), Integer.parseInt(toH[1])))
+									.withIntervalInMinutes(game.getInterval()))
+								.build();
+						JobDetail job = JobBuilder.newJob(GameEventJob.class)
+								.withIdentity("gameId-" + game.getObjectId()).build();
+						scheduler.getContext().put("RepositoryManager", storage);
+						scheduler.getContext().put("EventsPoller", eventsPoller);
+						scheduler.getContext().put("pedibusGameId", game.getObjectId());
+						scheduler.scheduleJob(job, trigger);
+						jobList.add(game.getObjectId());
+						logger.info(String.format("addJob:%s", game.getObjectId()));
+					}
 				}
 			} catch (Exception e) {
+				logger.warn(String.format("addJob[%s] error:%s", game.getObjectId(), e.getMessage()));
 				throw new InvalidParametersException(e.getMessage());
 			}
 		}
