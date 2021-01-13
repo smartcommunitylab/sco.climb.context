@@ -19,7 +19,7 @@ public class GameEventJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
 			SchedulerContext schedulerContext = context.getScheduler().getContext();
-			String pedibusGameId = schedulerContext.getString("pedibusGameId");
+			String pedibusGameId = context.getJobDetail().getKey().getName().replace("gameId-", "");
 			RepositoryManager storage = (RepositoryManager) schedulerContext.get("RepositoryManager");
 			EventsPoller eventsPoller = (EventsPoller) schedulerContext.get("EventsPoller");
 			PedibusGame game = storage.getPedibusGame(pedibusGameId);
