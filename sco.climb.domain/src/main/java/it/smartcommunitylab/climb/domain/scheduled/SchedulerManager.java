@@ -85,7 +85,6 @@ public class SchedulerManager {
 								.withIdentity("gameId-" + game.getObjectId()).build();
 						scheduler.getContext().put("RepositoryManager", storage);
 						scheduler.getContext().put("EventsPoller", eventsPoller);
-						scheduler.getContext().put("pedibusGameId", game.getObjectId());
 						scheduler.scheduleJob(job, trigger);
 						jobList.add(game.getObjectId());
 						logger.info(String.format("addJob:%s", game.getObjectId()));
