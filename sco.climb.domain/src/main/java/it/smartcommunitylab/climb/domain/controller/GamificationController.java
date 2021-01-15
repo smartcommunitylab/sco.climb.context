@@ -318,7 +318,13 @@ public class GamificationController extends AuthController {
 			} catch (Exception e) {
 				logger.warn("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
 			}				
-		}		
+		}
+		try {
+			schedulerManager.resetJob(game.getObjectId());
+		} catch (Exception e) {
+			logger.warn(String.format("deployGame[%s]: error in reset job for %s", 
+					ownerId, game.getObjectId()));
+		}
 		if (logger.isInfoEnabled()) {
 			logger.info("deployGame:" + game.getObjectId());
 		}
