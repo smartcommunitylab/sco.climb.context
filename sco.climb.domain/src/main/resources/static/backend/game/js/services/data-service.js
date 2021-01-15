@@ -242,6 +242,8 @@ function ($q, $http, $rootScope, $timeout) {
             var deferred = $q.defer();
             $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
                 deferred.resolve(data);
+            },err => {
+                deferred.reject(err);
             })
             return deferred.promise;
         },
