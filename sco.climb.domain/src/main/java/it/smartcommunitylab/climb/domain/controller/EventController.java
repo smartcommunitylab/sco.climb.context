@@ -145,7 +145,7 @@ public class EventController extends AuthController {
 			//StatsLogger.logEvent(ownerId, route.getInstituteId(), route.getSchoolId(), routeId, event);
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("addEvents[%s]:%d", ownerId, events.size()));
+			logger.info(String.format("addEvents[%s]:%s - %d", ownerId, routeId, events.size()));
 		}
 		return "{\"status\":\"OK\"}";
 	}
