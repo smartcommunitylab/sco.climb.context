@@ -284,7 +284,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $lo
 		+ "?dateFrom=" + dateFrom + "&dateTo=" + dateTo;
 		
 		//console.log("urlSearch:" + urlSearch);
-		$http.get(urlSearch, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(encodeURI(urlSearch), {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 		function (response) {
 			$scope.events = response.data;
 			$window.spinner.stop();
