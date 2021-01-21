@@ -289,7 +289,7 @@ var searchTableCtrl = searchTableApp.controller('userCtrl', function($scope, $lo
 		}
 		
 		//console.log("urlSearch:" + urlSearch);
-		$http.get(urlSearch, {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
+		$http.get(encodeURI(urlSearch), {headers: {'Authorization': 'Bearer ' + $scope.profile.token}}).then(
 		function (response) {
 			$scope.events = response.data;
 			$window.spinner.stop();
