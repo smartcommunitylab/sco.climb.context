@@ -235,6 +235,8 @@ function ($q, $http, $rootScope, $timeout) {
             };
             $http.jsonp('https://it.wikipedia.org/w/api.php',config).then(function(data){
                 deferred.resolve(data);
+            },err => {
+                deferred.reject(err);
             })
             return deferred.promise;
         },
@@ -251,6 +253,8 @@ function ($q, $http, $rootScope, $timeout) {
             var deferred = $q.defer();
             $http.get('https://www.googleapis.com/customsearch/v1?key=' + googleApiKey + '&cx=' + googleImagesApiKey + (start ? ("&start="+start) : '') + '&num=9&searchType=image&alt=json&q=' + query).then(function(data){
                 deferred.resolve(data);
+            },err => {
+                deferred.reject(err);
             })
             return deferred.promise;
         },
