@@ -643,9 +643,7 @@ angular.module('climbGame.controllers.calendar', [])
           }
         }
         }
-        console.log("weekData::",$scope.weekDataReturn);
-        console.log("$scope.weekDataReturn[2].bike::",$scope.weekDataReturn[2].bike);
-        console.log("todayData::",$scope.todayData);
+       
         $scope.isLoadingCalendar = false; 
       }
       /*
