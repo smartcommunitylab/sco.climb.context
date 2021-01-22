@@ -236,6 +236,7 @@ public class DashboardController extends AuthController {
 				null, pedibusGameId, Const.AUTH_RES_PedibusGame_Calendar, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
+		calendarDay.setClassRoom(classRoom);
 		Map<String, Boolean> result = storage.saveCalendarDay(ownerId, pedibusGameId, 
 				classRoom, calendarDay);
 		if(logger.isInfoEnabled()) {
@@ -262,7 +263,7 @@ public class DashboardController extends AuthController {
 			}
 			ExecutionDataDTO ed = new ExecutionDataDTO();
 			ed.setGameId(game.getGameId());
-			ed.setPlayerId(calendarDay.getClassRoom());
+			ed.setPlayerId(classRoom);
 			ed.setActionId(actionCalendar);
 			ed.setExecutionMoment(calendarDay.getDay());
 			
