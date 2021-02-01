@@ -35,6 +35,16 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-2">
+                                    <label>Account:</label>
+                                </div>
+                                <div class="col-md-5 form-group">
+                                    <label>{{email}}</label>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
                                     <label>Nome:</label>
                                 </div>
                                 <div class="col-md-5 form-group">
@@ -92,8 +102,11 @@
                             <!-- </form> -->
                         </div>
                         <div class="panel-footer">
+
                             <button class="btn btn-primary" ng-disabled="!checkSend()" 
                             ng-click="userRegistration()">Invia richiesta di registrazione</button>
+                                                                                    <button class="btn btn-primary" 
+                                    ng-click="logout()">Esci</button>
                         </div>
                     </div>
                 </div>
