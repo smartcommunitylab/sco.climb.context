@@ -1,27 +1,26 @@
 angular.module('consoleControllers.mainCtrl', [])
 
-.controller('MainCtrl', function ($scope, $rootScope, $timeout,createDialog, $location, $state, DataService, $window, MainDataService, PermissionsService)
-    {
+    .controller('MainCtrl', function ($scope, $rootScope, $timeout, createDialog, $location, $state, DataService, $window, MainDataService, PermissionsService) {
         $rootScope.networkProblem = {
             status: false,
             msg: ''
         }
-        $rootScope.networkProblemDetected = function(msg) {
+        $rootScope.networkProblemDetected = function (msg) {
             $rootScope.networkProblem.status = true;
             $rootScope.networkProblem.msg = msg;
-            
-            $timeout(function() {
+
+            $timeout(function () {
                 $rootScope.networkProblem.status = false;
             }, 10 * 1000);
         }
 
         $scope.PermissionsService = PermissionsService;
 
-        $scope.getLocation = function() {
+        $scope.getLocation = function () {
             return $location.url()
         };
 
-        $scope.isDropdownAvailable = function(location, dropdownType) {
+        $scope.isDropdownAvailable = function (location, dropdownType) {
             if (dropdownType == 'institute') {
                 return location != '/institutes-list';
             } else if (dropdownType == 'school') {
@@ -31,8 +30,8 @@ angular.module('consoleControllers.mainCtrl', [])
             }
             return false;
         }
-        $scope.goTo = function(state) {
-            if ($rootScope.modified){
+        $scope.goTo = function (state) {
+            if ($rootScope.modified) {
                 createDialog('templates/modals/remember-game.html', {
                     id: 'remember-dialog',
                     title: 'Attenzione!',
@@ -48,79 +47,85 @@ angular.module('consoleControllers.mainCtrl', [])
                 $state.go(state);
             }
         }
-        $scope.changed = function() {
-            $rootScope.modified=true;
+        $scope.changed = function () {
+            $rootScope.modified = true;
         }
-        $scope.logout = function() {
-          $scope.selectedOwner = '';
-          $scope.selectedInstitute = '';
-          $scope.selectedSchool = '';
-          $scope.institutesList = [];
-          $scope.selectedGame = '';
-          $scope.profile = null;
-          localStorage.clear();
-          sessionStorage.clear();
-          var logoutUrl = DataService.getBaseUrl();
-          var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
-          logoutUrl += '/logout?target=' + baseAppUrl;
-          $window.location.href = logoutUrl;
+        $scope.logout = function () {
+            $scope.selectedOwner = '';
+            $scope.selectedInstitute = '';
+            $scope.selectedSchool = '';
+            $scope.institutesList = [];
+            $scope.selectedGame = '';
+            $scope.profile = null;
+            localStorage.clear();
+            sessionStorage.clear();
+            var logoutUrl = DataService.getBaseUrl();
+            var baseAppUrl = $location.$$absUrl.replace($location.$$path, '');
+            logoutUrl += '/logout?target=' + baseAppUrl;
+            $window.location.href = logoutUrl;
         }
 
         $scope.showRegi = false;
         $scope.showNoti = false;
-        $scope.acceptTerms = function() {
+        $scope.acceptTerms = function () {
             //call api "/console/user/accept-terms" to accept
-          DataService.updateTerms().success(function (data) {
-          	$window.location.href = $location.$$absUrl.replace($location.$$path,'');
-          	$window.location.reload();
-          }).error(function(error) {
-          	$scope.errorMsg = error.errorMsg;
-          });
+            DataService.updateTerms().success(function (data) {
+                $window.location.href = $location.$$absUrl.replace($location.$$path, '');
+                $window.location.reload();
+            }).error(function (error) {
+                $scope.errorMsg = error.errorMsg;
+            });
         }
-        
-        $scope.userRegistration = function() {
+
+        $scope.userRegistration = function () {
             //call api "//public/api/registration" to registration
             var data = {
-                "cf":$scope.normalProfile.cf,
-                "name":$scope.normalProfile.name,
-                "surname":$scope.normalProfile.surname,
-                "email":$scope.normalProfile.email
+                "cf": $scope.normalProfile.cf,
+                "name": $scope.normalProfile.name,
+                "surname": $scope.normalProfile.surname,
+                "email": $scope.normalProfile.email
             }
-            DataService.registration(data).success(function (data){
+            DataService.registration(data).success(function (data) {
                 //registration successfully
-                setTimeout(function(){
+                setTimeout(function () {
                     // DataService.updateTerms();
                     // $state.go('root.institutes-list');
                     $scope.acceptTerms();
                 }, 500);
-            }).error(function(error){
+            }).error(function (error) {
                 $scope.showNoti = true;
                 $scope.errorMsg = error.errorMsg;
             });
         }
-        
-        $scope.init = function() {
-          MainDataService.getDomains().then(function (p) {
-            $scope.normalProfile = p;
-            if(!p.ownerIds || (p.ownerIds.length == 0)) {
-            	var baseUrl = DataService.getBaseUrl();
-            	$window.location.href = baseUrl + '/public/registration.html';
-            }
-            else if(!p.termUsage.acceptance){
-                $state.go('root.terms');
-            }else if(p.termUsage.acceptance){
-                $scope.profile = p;
-                PermissionsService.setProfilePermissions($scope.profile.roles);
-                if ($scope.profile.ownerIds.length == 1) {
-                    MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
-                    $scope.selectedOwner = $scope.profile.ownerIds[0];
-                    $scope.loadInstitutesList($scope.profile.ownerIds[0]);
-                }  
-            }
-          });
+
+
+        $scope.init = function () {
+            MainDataService.getDomains().then(function (p) {
+                $scope.normalProfile = p;
+                console.log(JSON.stringify(p));
+                if (!p.ownerIds || (p.ownerIds.length == 0)) {
+                    var baseUrl = DataService.getBaseUrl();
+                    var param = ''
+                    if (p.email)
+                        param = '?email=' + p.email
+
+                    $window.location.href = baseUrl + '/public/registration.html' + param;
+                }
+                else if (!p.termUsage.acceptance) {
+                    $state.go('root.terms');
+                } else if (p.termUsage.acceptance) {
+                    $scope.profile = p;
+                    PermissionsService.setProfilePermissions($scope.profile.roles);
+                    if ($scope.profile.ownerIds.length == 1) {
+                        MainDataService.setSelectedDomain($scope.profile.ownerIds[0]);
+                        $scope.selectedOwner = $scope.profile.ownerIds[0];
+                        $scope.loadInstitutesList($scope.profile.ownerIds[0]);
+                    }
+                }
+            });
         }
 
-        $scope.loadInstitutesList = function(owner) {
+        $scope.loadInstitutesList = function (owner) {
             if (!owner) return;
             MainDataService.getInstitutes(owner).then(function (response) {
                 $scope.institutesList = response.data;
@@ -131,18 +136,18 @@ angular.module('consoleControllers.mainCtrl', [])
             });
         };
 
-        $scope.loadSchoolsList = function(institute) {
-            if (!institute) return;          
+        $scope.loadSchoolsList = function (institute) {
+            if (!institute) return;
             MainDataService.getSchools(institute.objectId).then(function (response) {
                 $scope.schools = response.data;
                 if ($scope.schools.length == 1) {
                     $scope.selectedSchool = $scope.schools[0];
                     $scope.loadGames($scope.schools[0]);
                 }
-            });  
+            });
         };
-        
-        $scope.loadGames = function(school) {
+
+        $scope.loadGames = function (school) {
             if (!school) return;
             $scope.gamesConfigs = [];
             MainDataService.getGames(school.objectId).then(function (response) {
@@ -154,9 +159,9 @@ angular.module('consoleControllers.mainCtrl', [])
             });
             // $scope.reloadGamesConfig(school.objectId);
         };
-        
-        $scope.loadItineraries = function(game) {
-            if (!game) return;          
+
+        $scope.loadItineraries = function (game) {
+            if (!game) return;
             MainDataService.getItineraries(game.objectId).then(function (response) {
                 $scope.paths = response.data;
             });
@@ -190,8 +195,8 @@ angular.module('consoleControllers.mainCtrl', [])
         $scope.exportPaths = function () {
             window.open('console/exportexcel', '_blank');
         };
-        
+
         $scope.init();
 
     }
-);
+    );
