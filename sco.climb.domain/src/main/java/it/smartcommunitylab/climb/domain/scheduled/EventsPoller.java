@@ -107,7 +107,9 @@ public class EventsPoller {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
 					Map<String, Boolean> updateClassScores = updateCalendarDayFromPedibus(game, routeId, childrenStatus);
-					sendScores(childrenStatus, updateClassScores, game);
+					if(!game.isUseCalendar()) {
+						sendScores(childrenStatus, updateClassScores, game);
+					}
 					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.TRUE);
 				}
 			}

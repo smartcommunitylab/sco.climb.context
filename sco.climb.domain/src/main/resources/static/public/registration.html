@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
 <html ng-app="regisApp">
-  <head>
+
+<head>
     <title>Registrazione a KGG</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,101 +11,118 @@
     <script src="js/registration.js"></script>
     <link rel="stylesheet" href="css/registration.css">
     <link rel="stylesheet" href="css/bootstrap.min3.4.css">
-  </head>
-  <body>
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.35);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .message-container {
+            padding: 24px;
+        }
+
+        .registration-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 50%;
+            min-height: 50%;
+            font-size: medium;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .registration {
+            margin: 8px 0px;
+            background-color: #00C86E !important;
+            border-color: #00C86E !important;
+
+        }
+
+        .logout {
+            margin: 8px 0px;
+
+        }
+
+        .login-or {
+            position: relative;
+            color: #aaa;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .span-or {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: -2px;
+            margin-left: -25px;
+            background-color: #fff;
+            width: 50px;
+            text-align: center;
+        }
+
+        .hr-or {
+            height: 1px;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+
+        .box-choosing {
+            margin-top: 48px;
+            padding: 44px;
+            border: solid 2px #aaa;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+
+<body>
     <div ng-controller="RegistrationController as regis">
         <div class="container">
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">Richiesta di registrazione a KGG; prego inserire le seguenti informazioni:</div>
+                    <div class="panel panel-primary registration-panel">
+                        <div class="panel-heading" style="text-align:center">ACCOUNT NON ABILITATO</div>
                         <div class="panel-body">
-                            <!-- <form name="myForm"> -->
-                            <div class="row" ng-show="showNoti">
-                                <div class="col-md-12" ng-if="errorMsg">
-                                    <div class="alert alert-danger">
-                                        <strong>{{errorMsg}}</strong> 
+
+                            <div class="row">
+                                <div class="message-container">
+                                    <div>Attenzione! L'account <b>{{email}} </b>non risulta essere abilitato
+                                        all'accesso.
+                                        <div class="box-choosing">
+                                            <div class="col">Premi qui se vuoi cambiare account.
+                                                <button class="btn btn-primary btn-block  logout"
+                                                    ng-click="logout()">Esci</button>
+                                            </div>
+                                            <div class="col-md-12 ">
+                                                <div class="login-or">
+                                                    <hr class="hr-or">
+                                                    <span class="span-or">oppure</span>
+                                                </div>
+                                            </div>
+                                            <div class="col">Premi qui se vuoi
+                                                maggiori informazioni per l'accesso alla piattaforma Kids Go
+                                                Green.<button class="btn btn-primary btn-block  registration"
+                                                    ng-click="askRegistration()">Kids Go Green</button></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12" ng-if="successMsg">
-                                    <div class="alert alert-success">
-                                        <strong>{{successMsg}}</strong> 
-                                    </div>
-                                </div>
+
                             </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Nome:</label>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <input type="text" class="form-control" name="user" ng-model="normalProfile.name" required>
-                                </div>
-                                <div class="col-md-5"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Cognome:</label>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <input type="text" class="form-control" name="surname" ng-model="normalProfile.surname" required>
-                                </div>
-                                <div class="col-md-5"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Email:</label>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <input type="text" class="form-control" name="email" ng-model="normalProfile.email" required>
-                                </div>
-                                <div class="col-md-5"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Codice Fiscale:</label>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <input type="text" class="form-control" name="cf" ng-model="normalProfile.cf" required>
-                                </div>
-                                <div class="col-md-5"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Plesso scolastico:</label>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <input type="text" class="form-control" name="plessoScolastico" ng-model="normalProfile.plessoScolastico" required>
-                                </div>
-                                <div class="col-md-5"></div>
-                            </div>
-                            <div class="row">
-                                    <div class="col-md-12">
-                                    Richiesta di accesso alle soluzioni Kids Go Green, per la progettazione dei percorsi, l’inserimento del materiale didattico multimediale e l’accesso alla Web App di gioco.</br>
-																		Ai sensi dell'art.13 del Regolamento EU n. 2016/679 (GDPR), i dati personali forniti saranno trattati per poter dare riscontro alla sua richiesta tramite strumenti manuali, informatici e telematici, comunque idonei a garantire la sicurezza e la riservatezza dei dati stessi. L'informativa Privacy completa è disponibile al seguente link <a href="Informativa-registrazione insegnanti.pdf">LINK PRIVACY</a>. Richiedendo l’accesso, dichiaro di aver letto e compreso l’informativa sul trattamento dei dati personali.
-                                    </div>
-                                </div>
-                                <!--<div class="row">
-                                    <div class="col-md-12 checkbox">
-                                        <label><input class="checkBoxStyle" type="checkbox" value="" ng-model="checked" >I agree all terms.</label>
-                                    </div>
-                                </div>-->
-                            <!-- </form> -->
+
                         </div>
-                        <div class="panel-footer">
-                            <button class="btn btn-primary" ng-disabled="!checkSend()" 
-                            ng-click="userRegistration()">Invia richiesta di registrazione</button>
-                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-1"></div>
             </div>
         </div>
     </div>
-  </body>
+</body>
+
 </html>
-
-
-
-
-    
