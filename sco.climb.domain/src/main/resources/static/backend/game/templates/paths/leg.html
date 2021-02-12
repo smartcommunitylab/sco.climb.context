@@ -77,7 +77,7 @@
             <p><b>Icona da visualizzare:</b></p>
             <div isteven-multi-select input-model="viewIconsModels" output-model="selectedIconToView"
                 button-label="icon name" item-label="icon name" tick-property="ticked" selection-mode="single"
-                helper-elements="" style="display:inline-block;" />
+                helper-elements="" style="display:inline-block;" is-disabled="currentGame.deployed"/>
             <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
                 tooltip-append-to-body="true"
                 uib-tooltip="É il simbolo che rispecchia il mezzo scelto per raggiungere questa tappa e verrà mostrato in corrispondenza alla posizione della tappa sulla mappa."></i>
@@ -92,7 +92,7 @@
     <div class="col-md-6  col-xs-6 field" ng-if="leg.position > 0">
         <p><b>Mezzo di arrivo:</b></p>
         <select class="form-control" style="width: 200px" ng-model="leg.transport"
-            ng-change="updateTravelType(leg.transport)">
+            ng-change="updateTravelType(leg.transport)" ng-disabled="currentGame.deployed">
             <option value="foot">A piedi</option>
             <option value="car">In macchina</option>
             <option value="plane">Aereo</option>
