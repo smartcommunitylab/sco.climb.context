@@ -1138,7 +1138,8 @@ public class RepositoryManager {
 		mongoTemplate.remove(query, Excursion.class);
 	}
 
-	public void savePedibusItineraryLeg(PedibusItineraryLeg leg, String ownerId, boolean canUpdate) throws StorageException {
+	public void savePedibusItineraryLeg(PedibusItineraryLeg leg, String ownerId, 
+			boolean canUpdate, boolean deployed) throws StorageException {
 		Query query = new Query(new Criteria("pedibusGameId").is(leg.getPedibusGameId())
 				.and("itineraryId").is(leg.getItineraryId()).and("objectId").is(leg.getObjectId())
 				.and("ownerId").is(ownerId));
@@ -1154,15 +1155,18 @@ public class RepositoryManager {
 			mongoTemplate.save(leg);
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("name", leg.getName());
-			update.set("description", leg.getDescription());
-			update.set("position", leg.getPosition());
-			update.set("geocoding", leg.getGeocoding());
 			update.set("imageUrl", leg.getImageUrl());
-			update.set("polyline", leg.getPolyline());
-			update.set("score", leg.getScore());
-			update.set("icon", leg.getIcon());
-			update.set("transport", leg.getTransport());
+			if(!deployed) {
+				update.set("name", leg.getName());
+				update.set("description", leg.getDescription());
+				update.set("position", leg.getPosition());
+				update.set("geocoding", leg.getGeocoding());
+				update.set("polyline", leg.getPolyline());
+				update.set("score", leg.getScore());
+				update.set("transport", leg.getTransport());	
+				update.set("additionalPoints", leg.getAdditionalPoints());
+				update.set("icon", leg.getIcon());
+			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 		} else {
