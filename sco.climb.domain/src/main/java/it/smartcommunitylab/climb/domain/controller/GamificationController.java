@@ -699,7 +699,7 @@ public class GamificationController extends AuthController {
 		leg.setPedibusGameId(pedibusGameId);
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
-		storage.savePedibusItineraryLeg(leg, ownerId, false);
+		storage.savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusItineraryLeg[%s]: %s", ownerId, itineraryId));
 		}
@@ -731,7 +731,7 @@ public class GamificationController extends AuthController {
 		leg.setItineraryId(itineraryId);
 		leg.setOwnerId(ownerId);
 		leg.setObjectId(legId);
-		storage.savePedibusItineraryLeg(leg, ownerId, true);
+		storage.savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusItineraryLeg[%s]: %s", ownerId, legId));
 		}
@@ -801,7 +801,7 @@ public class GamificationController extends AuthController {
 					sumValue += leg.getScore();
 					leg.setScore(sumValue);
 				}
-				storage.savePedibusItineraryLeg(leg, ownerId, false);
+				storage.savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("createPedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
@@ -842,7 +842,7 @@ public class GamificationController extends AuthController {
 					sumValue += leg.getScore();
 					leg.setScore(sumValue);
 				}
-				storage.savePedibusItineraryLeg(leg, ownerId, false);
+				storage.savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
@@ -1411,7 +1411,7 @@ public class GamificationController extends AuthController {
 			leg.setTransport(legToClone.getTransport());
 			leg.setIcon(legToClone.getIcon());
 			leg.setAdditionalPoints(legToClone.getAdditionalPoints());
-			storage.savePedibusItineraryLeg(leg, ownerId, false);
+			storage.savePedibusItineraryLeg(leg, ownerId, false, false);
 			//clone multimedia content
 			List<MultimediaContent> mcListToClone = storage.getMultimediaContentByLeg(
 					legToClone.getOwnerId(), legToClone.getObjectId());

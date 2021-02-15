@@ -129,7 +129,7 @@ public class JsonConverter {
 					JsonNode rootNode = jp.readValueAsTree();
 					PedibusItineraryLeg leg = parseItineraryLeg(ownerId, instituteId, schoolId, rootNode);
 					if(storage.existsPedibusItinerary(leg.getItineraryId())) {
-						storage.savePedibusItineraryLeg(leg, ownerId, true);
+						storage.savePedibusItineraryLeg(leg, ownerId, true, false);
 						List<MultimediaContent> contents = parseMultimediaContent(ownerId, instituteId, schoolId, 
 								leg, rootNode);
 						for(MultimediaContent content : contents) {

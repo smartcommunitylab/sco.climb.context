@@ -262,16 +262,17 @@ angular.module('MapsService', [])
                 else {
                     // calcolo della tratta in linea d'aria
                     if (customWaypoints) {
-                        polyPath.setPath(google.maps.geometry.encoding.decodePath(customWaypoints));
+                        var decoded =google.maps.geometry.encoding.decodePath(customWaypoints);
+                        polyPath.setPath(decoded);
                         polyPath.setMap(map);
                         //broadcast the new value to the page and update
-                        // $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(customWaypoints[0].getPosition().latitude, customWaypoints[0].getPosition().longitude, customWaypoints[customWaypoints.length].latitude, customWaypoints[customWaypoints.length].longitude));
+                         $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(decoded[0].lat, decoded[0].lng, decoded[decoded.length-1].lat, decoded[decoded.length-1].lng));
 
                     } else {
                         polyPath.setPath([prevPoiCoordinates, thisPoiMarker.getPosition()]);
                         polyPath.setMap(map);
                         //broadcast the new value to the page and update
-                        // $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(prevPoiCoordinates.lat, prevPoiCoordinates.lng, thisPoiMarker.position.lat(), thisPoiMarker.position.lng()));
+                         $rootScope.$broadcast('poiMapTotalKmChanged', getDistanceFromLatLonInKm(prevPoiCoordinates.lat, prevPoiCoordinates.lng, thisPoiMarker.position.lat(), thisPoiMarker.position.lng()));
                     }
                 }
             }

@@ -51,6 +51,8 @@ public class SchedulerManager {
 		properties.setProperty("org.quartz.threadPool.threadCount", "125");
 		SchedulerFactory schedFact = new StdSchedulerFactory(properties);
 	  scheduler = schedFact.getScheduler();
+		scheduler.getContext().put("RepositoryManager", storage);
+		scheduler.getContext().put("EventsPoller", eventsPoller);
 	  scheduler.start();
 	  
 		// set task for specific game
@@ -83,8 +85,6 @@ public class SchedulerManager {
 								.build();
 						JobDetail job = JobBuilder.newJob(GameEventJob.class)
 								.withIdentity("gameId-" + game.getObjectId()).build();
-						scheduler.getContext().put("RepositoryManager", storage);
-						scheduler.getContext().put("EventsPoller", eventsPoller);
 						scheduler.scheduleJob(job, trigger);
 						jobList.add(game.getObjectId());
 						logger.info(String.format("addJob:%s", game.getObjectId()));
@@ -104,16 +104,14 @@ public class SchedulerManager {
 	}
 	
 	public void removeJob(String pedibusGameId) {
-		if(jobList.contains(pedibusGameId)) {
-			try {
-				TriggerKey triggerKey = new TriggerKey("gameId-" +  pedibusGameId);
-				scheduler.unscheduleJob(triggerKey);
-				JobKey jobKey = new JobKey("gameId-" +  pedibusGameId);
-				scheduler.deleteJob(jobKey);
-				jobList.remove(pedibusGameId);
-			} catch (SchedulerException e) {
-				logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
-			}
+		try {
+			TriggerKey triggerKey = new TriggerKey("gameId-" +  pedibusGameId);
+			scheduler.unscheduleJob(triggerKey);
+			JobKey jobKey = new JobKey("gameId-" +  pedibusGameId);
+			scheduler.deleteJob(jobKey);
+			jobList.remove(pedibusGameId);
+		} catch (SchedulerException e) {
+			logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
 		}
 	}
 }
