@@ -884,8 +884,9 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public boolean updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String routeId, 
+	public List<String> updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String routeId, 
 			String classRoom, Date day, Map<String, String> modeMap) {
+		List<String> newPlayers = new ArrayList<>();
 		Route route = getRouteById(ownerId, routeId);
 		boolean returnTrip = false;
 		if(route != null) {
@@ -910,22 +911,35 @@ public class RepositoryManager {
 				calendarDay.setModeMap(modeMap);
 			}
 			mongoTemplate.save(calendarDay);
-			return true;
+			newPlayers.addAll(modeMap.keySet());
+			return newPlayers;
 		} else {
 			if(calendarDayDB.isClosed()) {
-				return false;
+				return newPlayers;
 			} else {
+				Map<String, String> calendarModeMap = null;
+				if(returnTrip) {
+					calendarModeMap = calendarDayDB.getModeMapReturnTrip();
+				} else {
+					calendarModeMap = calendarDayDB.getModeMap();
+				}
+				for(String playerId : modeMap.keySet()) {
+					if(calendarModeMap != null) {
+						if(!calendarModeMap.containsKey(playerId)) {
+							calendarModeMap.put(playerId, modeMap.get(playerId));
+							newPlayers.add(playerId);
+						}
+					}
+				}
 				Update update = new Update();
 				if(returnTrip) {
-					calendarDayDB.getModeMapReturnTrip().putAll(modeMap);
 					update.set("modeMapReturnTrip", calendarDayDB.getModeMapReturnTrip());
 				} else {
-					calendarDayDB.getModeMap().putAll(modeMap);
 					update.set("modeMap", calendarDayDB.getModeMap());
 				}
 				update.set("lastUpdate", now);
 				mongoTemplate.updateFirst(query, update, CalendarDay.class);
-				return true;
+				return newPlayers;
 			}
 		}
 	}

@@ -106,9 +106,9 @@ public class EventsPoller {
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
-					Map<String, Boolean> updateClassScores = updateCalendarDayFromPedibus(game, routeId, childrenStatus);
+					List<String> newPlayers = updateCalendarDayFromPedibus(game, routeId, childrenStatus);
 					if(!game.isUseCalendar()) {
-						sendScores(childrenStatus, updateClassScores, game);
+						sendScores(childrenStatus, newPlayers, game);
 					}
 					storage.updatePollingFlag(game.getOwnerId(), game.getObjectId(), routeId, Boolean.TRUE);
 				}
@@ -157,11 +157,11 @@ public class EventsPoller {
 					String routeId = route.getObjectId();
 					logger.info("pollGameEvents: Reading route " + routeId + " events.");
 					
-					Boolean pollingFlag = game.getPollingFlagMap().get(routeId);
-					if((pollingFlag != null) && (pollingFlag == Boolean.FALSE)) {
-						logger.info("pollGameEvents: Events already managed for route " + routeId);
-						continue;
-					}
+//					Boolean pollingFlag = game.getPollingFlagMap().get(routeId);
+//					if((pollingFlag != null) && (pollingFlag == Boolean.FALSE)) {
+//						logger.info("pollGameEvents: Events already managed for route " + routeId);
+//						continue;
+//					}
 					
 					List<Integer> eventTypeList = Lists.newArrayList();
 					List<String> nodeIdList = Lists.newArrayList();
@@ -218,7 +218,7 @@ public class EventsPoller {
 	}
 	
 	private void sendScores(Collection<ChildStatus> childrenStatus, 
-			Map<String, Boolean> updateClassScores, PedibusGame game) {
+			List<String> newPlayers, PedibusGame game) {
 		String address = gamificationURL + "/gengine/execute";
 		if(childrenStatus == null) { 
 			return;
@@ -236,10 +236,6 @@ public class EventsPoller {
 					if(!game.getClassRooms().contains(child.getClassRoom())) {
 						continue;
 					}
-					Boolean updateClassScore = updateClassScores.get(child.getClassRoom());
-					if((updateClassScore == null) || (!updateClassScore)) {
-						continue;
-					}
 				} catch (ClassNotFoundException e) {
 					logger.warn("sendScores:" + e.getMessage());
 					continue;
@@ -247,6 +243,9 @@ public class EventsPoller {
 				PedibusPlayer player = storage.getPedibusPlayer(game.getOwnerId(), game.getObjectId(),
 						childStatus.getNickname(), childStatus.getClassRoom());
 				if(player == null) {
+					continue;
+				}
+				if(!newPlayers.contains(player.getObjectId())) {
 					continue;
 				}
 				String playerId = childStatus.getClassRoom();
@@ -292,14 +291,14 @@ public class EventsPoller {
 		}		
 	}
 	
-	private Map<String, Boolean> updateCalendarDayFromPedibus(PedibusGame game, 
+	private List<String> updateCalendarDayFromPedibus(PedibusGame game, 
 			String routeId, Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
-		Map<String, Boolean> classUpdateScoreMap = new HashMap<String, Boolean>();
+		List<String> newPlayers = new ArrayList<>();
 		
 		if(childrenStatus == null) {
-			return classUpdateScoreMap;
+			return newPlayers;
 		}
 		for(ChildStatus childStatus : childrenStatus) {
 			if(childStatus.isArrived() && Utils.isNotEmpty(childStatus.getNickname()) 
@@ -322,15 +321,19 @@ public class EventsPoller {
 				Date day = Utils.getStartOfTheDay(sdf.parse(game.getLastDaySeen()));
 				for(String classRoom : classModeMap.keySet()) {
 					Map<String, String> modeMap = classModeMap.get(classRoom);
-					Boolean update = storage.updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), 
+					List<String> listPlayers = storage.updateCalendarDayFromPedibus(game.getOwnerId(), game.getObjectId(), 
 							routeId, classRoom, day, modeMap);
-					classUpdateScoreMap.put(classRoom, update);
+					for(String playerId : listPlayers) {
+						if(!newPlayers.contains(playerId)) {
+							newPlayers.add(playerId);
+						}
+					}
 				}
 			} catch (ParseException e) {
 				logger.warn(e.getMessage());
 			}
 		}
-		return classUpdateScoreMap;
+		return newPlayers;
 	}
 	
 	private boolean isEmptyResponse(Collection<ChildStatus> childrenStatus) {

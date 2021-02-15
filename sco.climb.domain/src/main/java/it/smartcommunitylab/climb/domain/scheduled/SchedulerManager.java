@@ -51,6 +51,8 @@ public class SchedulerManager {
 		properties.setProperty("org.quartz.threadPool.threadCount", "125");
 		SchedulerFactory schedFact = new StdSchedulerFactory(properties);
 	  scheduler = schedFact.getScheduler();
+		scheduler.getContext().put("RepositoryManager", storage);
+		scheduler.getContext().put("EventsPoller", eventsPoller);
 	  scheduler.start();
 	  
 		// set task for specific game
@@ -83,8 +85,6 @@ public class SchedulerManager {
 								.build();
 						JobDetail job = JobBuilder.newJob(GameEventJob.class)
 								.withIdentity("gameId-" + game.getObjectId()).build();
-						scheduler.getContext().put("RepositoryManager", storage);
-						scheduler.getContext().put("EventsPoller", eventsPoller);
 						scheduler.scheduleJob(job, trigger);
 						jobList.add(game.getObjectId());
 						logger.info(String.format("addJob:%s", game.getObjectId()));
