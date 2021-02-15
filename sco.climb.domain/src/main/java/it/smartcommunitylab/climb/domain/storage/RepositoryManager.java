@@ -963,27 +963,29 @@ public class RepositoryManager {
 			mongoTemplate.save(game);
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("instituteId", game.getInstituteId());
-			update.set("schoolId", game.getSchoolId());
-			update.set("classRooms", game.getClassRooms());
-			update.set("gameId", game.getGameId());
 			update.set("gameName", game.getGameName());
-			update.set("gameDescription", game.getGameDescription());
-			update.set("from", game.getFrom());
-			update.set("to", game.getTo());
-			update.set("globalTeam", game.getGlobalTeam());
-			update.set("fromHour", game.getFromHour());
-			update.set("toHour", game.getToHour());
-			update.set("interval", game.getInterval());
-			update.set("lateSchedule", game.isLateSchedule());
-			update.set("usingPedibusData", game.isUsingPedibusData());
-			update.set("params", game.getParams());
 			update.set("shortName", game.getShortName());
-			update.set("lastUpdate", now);
-      update.set("daysOfWeek", game.getDaysOfWeek());
-      update.set("modalities", game.getModalities());
       update.set("sponsorTemplate", game.getSponsorTemplate());
-      update.set("roundTrip", game.isRoundTrip());
+			if(!gameDB.isDeployed()) {
+				update.set("instituteId", game.getInstituteId());
+				update.set("schoolId", game.getSchoolId());
+				update.set("classRooms", game.getClassRooms());
+				update.set("gameId", game.getGameId());
+				update.set("gameDescription", game.getGameDescription());
+				update.set("from", game.getFrom());
+				update.set("to", game.getTo());
+				update.set("globalTeam", game.getGlobalTeam());
+				update.set("fromHour", game.getFromHour());
+				update.set("toHour", game.getToHour());
+				update.set("interval", game.getInterval());
+				update.set("lateSchedule", game.isLateSchedule());
+				update.set("usingPedibusData", game.isUsingPedibusData());
+				update.set("params", game.getParams());
+	      update.set("daysOfWeek", game.getDaysOfWeek());
+	      update.set("modalities", game.getModalities());
+	      update.set("roundTrip", game.isRoundTrip());				
+			}
+			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with id " + game.getObjectId());

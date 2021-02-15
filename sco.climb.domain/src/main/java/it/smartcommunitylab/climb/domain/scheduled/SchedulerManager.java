@@ -104,16 +104,14 @@ public class SchedulerManager {
 	}
 	
 	public void removeJob(String pedibusGameId) {
-		if(jobList.contains(pedibusGameId)) {
-			try {
-				TriggerKey triggerKey = new TriggerKey("gameId-" +  pedibusGameId);
-				scheduler.unscheduleJob(triggerKey);
-				JobKey jobKey = new JobKey("gameId-" +  pedibusGameId);
-				scheduler.deleteJob(jobKey);
-				jobList.remove(pedibusGameId);
-			} catch (SchedulerException e) {
-				logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
-			}
+		try {
+			TriggerKey triggerKey = new TriggerKey("gameId-" +  pedibusGameId);
+			scheduler.unscheduleJob(triggerKey);
+			JobKey jobKey = new JobKey("gameId-" +  pedibusGameId);
+			scheduler.deleteJob(jobKey);
+			jobList.remove(pedibusGameId);
+		} catch (SchedulerException e) {
+			logger.warn(String.format("removeJob[%s] error:%s", pedibusGameId, e.getMessage()));
 		}
 	}
 }
