@@ -884,8 +884,9 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public boolean updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String routeId, 
+	public List<String> updateCalendarDayFromPedibus(String ownerId, String pedibusGameId, String routeId, 
 			String classRoom, Date day, Map<String, String> modeMap) {
+		List<String> newPlayers = new ArrayList<>();
 		Route route = getRouteById(ownerId, routeId);
 		boolean returnTrip = false;
 		if(route != null) {
@@ -910,22 +911,35 @@ public class RepositoryManager {
 				calendarDay.setModeMap(modeMap);
 			}
 			mongoTemplate.save(calendarDay);
-			return true;
+			newPlayers.addAll(modeMap.keySet());
+			return newPlayers;
 		} else {
 			if(calendarDayDB.isClosed()) {
-				return false;
+				return newPlayers;
 			} else {
+				Map<String, String> calendarModeMap = null;
+				if(returnTrip) {
+					calendarModeMap = calendarDayDB.getModeMapReturnTrip();
+				} else {
+					calendarModeMap = calendarDayDB.getModeMap();
+				}
+				for(String playerId : modeMap.keySet()) {
+					if(calendarModeMap != null) {
+						if(!calendarModeMap.containsKey(playerId)) {
+							calendarModeMap.put(playerId, modeMap.get(playerId));
+							newPlayers.add(playerId);
+						}
+					}
+				}
 				Update update = new Update();
 				if(returnTrip) {
-					calendarDayDB.getModeMapReturnTrip().putAll(modeMap);
 					update.set("modeMapReturnTrip", calendarDayDB.getModeMapReturnTrip());
 				} else {
-					calendarDayDB.getModeMap().putAll(modeMap);
 					update.set("modeMap", calendarDayDB.getModeMap());
 				}
 				update.set("lastUpdate", now);
 				mongoTemplate.updateFirst(query, update, CalendarDay.class);
-				return true;
+				return newPlayers;
 			}
 		}
 	}
@@ -949,27 +963,29 @@ public class RepositoryManager {
 			mongoTemplate.save(game);
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("instituteId", game.getInstituteId());
-			update.set("schoolId", game.getSchoolId());
-			update.set("classRooms", game.getClassRooms());
-			update.set("gameId", game.getGameId());
 			update.set("gameName", game.getGameName());
-			update.set("gameDescription", game.getGameDescription());
-			update.set("from", game.getFrom());
-			update.set("to", game.getTo());
-			update.set("globalTeam", game.getGlobalTeam());
-			update.set("fromHour", game.getFromHour());
-			update.set("toHour", game.getToHour());
-			update.set("interval", game.getInterval());
-			update.set("lateSchedule", game.isLateSchedule());
-			update.set("usingPedibusData", game.isUsingPedibusData());
-			update.set("params", game.getParams());
 			update.set("shortName", game.getShortName());
-			update.set("lastUpdate", now);
-      update.set("daysOfWeek", game.getDaysOfWeek());
-      update.set("modalities", game.getModalities());
       update.set("sponsorTemplate", game.getSponsorTemplate());
-      update.set("roundTrip", game.isRoundTrip());
+			if(!gameDB.isDeployed()) {
+				update.set("instituteId", game.getInstituteId());
+				update.set("schoolId", game.getSchoolId());
+				update.set("classRooms", game.getClassRooms());
+				update.set("gameId", game.getGameId());
+				update.set("gameDescription", game.getGameDescription());
+				update.set("from", game.getFrom());
+				update.set("to", game.getTo());
+				update.set("globalTeam", game.getGlobalTeam());
+				update.set("fromHour", game.getFromHour());
+				update.set("toHour", game.getToHour());
+				update.set("interval", game.getInterval());
+				update.set("lateSchedule", game.isLateSchedule());
+				update.set("usingPedibusData", game.isUsingPedibusData());
+				update.set("params", game.getParams());
+	      update.set("daysOfWeek", game.getDaysOfWeek());
+	      update.set("modalities", game.getModalities());
+	      update.set("roundTrip", game.isRoundTrip());				
+			}
+			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
 			logger.warn("Cannot update existing PedibusGame with id " + game.getObjectId());
@@ -1124,7 +1140,8 @@ public class RepositoryManager {
 		mongoTemplate.remove(query, Excursion.class);
 	}
 
-	public void savePedibusItineraryLeg(PedibusItineraryLeg leg, String ownerId, boolean canUpdate) throws StorageException {
+	public void savePedibusItineraryLeg(PedibusItineraryLeg leg, String ownerId, 
+			boolean canUpdate, boolean deployed) throws StorageException {
 		Query query = new Query(new Criteria("pedibusGameId").is(leg.getPedibusGameId())
 				.and("itineraryId").is(leg.getItineraryId()).and("objectId").is(leg.getObjectId())
 				.and("ownerId").is(ownerId));
@@ -1140,15 +1157,18 @@ public class RepositoryManager {
 			mongoTemplate.save(leg);
 		} else if (canUpdate) {
 			Update update = new Update();
-			update.set("name", leg.getName());
-			update.set("description", leg.getDescription());
-			update.set("position", leg.getPosition());
-			update.set("geocoding", leg.getGeocoding());
 			update.set("imageUrl", leg.getImageUrl());
-			update.set("polyline", leg.getPolyline());
-			update.set("score", leg.getScore());
-			update.set("icon", leg.getIcon());
-			update.set("transport", leg.getTransport());
+			if(!deployed) {
+				update.set("name", leg.getName());
+				update.set("description", leg.getDescription());
+				update.set("position", leg.getPosition());
+				update.set("geocoding", leg.getGeocoding());
+				update.set("polyline", leg.getPolyline());
+				update.set("score", leg.getScore());
+				update.set("transport", leg.getTransport());	
+				update.set("additionalPoints", leg.getAdditionalPoints());
+				update.set("icon", leg.getIcon());
+			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 		} else {
