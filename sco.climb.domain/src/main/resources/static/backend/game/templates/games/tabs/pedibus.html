@@ -41,4 +41,11 @@
 	    <input class="form-control" style="width: 75px" type="number" min="1" max="30" step="1" 
 	    	ng-disabled="!currentGame.usingPedibusData" ng-change="changed()" ng-model="currentGame.interval"/>
     </div>
+    <div class="col-lg-12">
+	    <p>
+	    	<b>Utilizza il calendario:</b>
+	    	<input type="checkbox" ng-change="changed()" 
+  	  		ng-disabled="!currentGame.usingPedibusData" ng-model="currentGame.useCalendar">
+	    </p>
+    </div>
     </fieldset>

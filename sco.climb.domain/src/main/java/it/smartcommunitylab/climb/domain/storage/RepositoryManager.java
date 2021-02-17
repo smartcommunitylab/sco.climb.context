@@ -983,7 +983,8 @@ public class RepositoryManager {
 				update.set("params", game.getParams());
 	      update.set("daysOfWeek", game.getDaysOfWeek());
 	      update.set("modalities", game.getModalities());
-	      update.set("roundTrip", game.isRoundTrip());				
+	      update.set("roundTrip", game.isRoundTrip());
+	      update.set("useCalendar", game.isUseCalendar());
 			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
