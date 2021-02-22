@@ -699,13 +699,22 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                 $scope.img = null;
             },function(err){
                 console.log('error upload'+err);
-                createDialog('templates/modals/img-too-big.html', {
+                if (err.status == -1){
+                    createDialog('templates/modals/connection-timeout.html', {
+                        id: 'connection-timout-dialog',
+                        title: 'Timeout della connessione!',
+                        success: {
+                            label: 'Ok'
+                        }
+                    })
+                }
+                else { createDialog('templates/modals/img-too-big.html', {
                     id: 'img-too-big-dialog',
                     title: 'Attenzione!',
                     success: {
                         label: 'Ok'
                     }
-                });
+                });}
                 $scope.img = null;
             });
         };
