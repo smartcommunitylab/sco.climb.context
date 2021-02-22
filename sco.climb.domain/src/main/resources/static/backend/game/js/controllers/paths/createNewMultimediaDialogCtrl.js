@@ -149,17 +149,28 @@ angular.module('consoleControllers.leg')
 				$scope.errorMsg = "Errore di comunicazione con il sistema";
 				$scope.loading = false;
 				$scope.file = null;
-
-					createDialog('templates/modals/img-too-big.html', {
-						id: 'img-too-big-dialog',
-						title: 'Attenzione!',
-						success: {
+                if (error.status == -1){
+                    createDialog('templates/modals/connection-timeout.html', {
+                        id: 'connection-timout-dialog',
+                        title: 'Timeout della connessione!',
+                        success: {
 							label: 'Ok',
 							fn: function () {
 								$scope.file = null;
 							}
 						}
-					});
+                    })
+                }
+                else { createDialog('templates/modals/img-too-big.html', {
+                    id: 'img-too-big-dialog',
+                    title: 'Attenzione!',
+                    success: {
+						label: 'Ok',
+						fn: function () {
+							$scope.file = null;
+						}
+					}
+                });}
 			}
 		);
     };
