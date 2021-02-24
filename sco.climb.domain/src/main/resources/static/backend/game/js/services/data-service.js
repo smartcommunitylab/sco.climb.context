@@ -187,7 +187,7 @@ function ($q, $http, $rootScope, $timeout) {
             + element.itineraryId + '/leg/' + element.legId + '/file';
             return $http.post(postUrl, element.formdata, 
                 {
-                    timeout: 30000,
+                    timeout: 60000,
                     headers: {
                         'Authorization': 'Bearer ' + profileToken,
                         'Content-Type': undefined 
