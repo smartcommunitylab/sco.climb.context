@@ -12,6 +12,7 @@ angular.module('climbGame', [
 	'climbGame.controllers.home',
 	'climbGame.controllers.map',
 	'climbGame.controllers.calendar',
+	'climbGame.controllers.homepage',
 	'climbGame.controllers.stats',
 	'climbGame.controllers.excursions',
 	'climbGame.controllers.notifications',
@@ -182,7 +183,19 @@ angular.module('climbGame', [
 					}
 				}
 			})
-						.state('home.class', {
+			
+			
+			.state('home.homepage', {
+				url: 'class/:owner/:institute/:school/:game/:itinerary/:class',
+				views: {
+					'content@home': {
+						templateUrl: 'templates/homepage.html',
+						controller: 'homepageCtrl'
+					}
+				}
+			})
+			
+			.state('home.class', {
 				url: 'class/:owner/:institute/:school/:game/:itinerary/:class',
 				views: {
 					'content@home': {
@@ -191,6 +204,8 @@ angular.module('climbGame', [
 					}
 				}
 			})
+			
+			
 			.state('home.map', {
 				url: 'map/:owner/:institute/:school/:game/:itinerary/:class',
 				views: {

@@ -2,7 +2,7 @@
 angular.module('climbGame.controllers.home', [])
   .controller('HomeCtrl', function ($rootScope, $scope, $log, $state, $mdToast, $filter, $mdSidenav, 
   		$timeout, $location, $window, loginService, CacheSrv) {
-       $state.go('home.class')
+       $state.go('home.homepage')
        //$state.go('home.stats')
 
       $scope.go = function (path) {
