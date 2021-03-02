@@ -681,6 +681,11 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   margin: 10px;
 }
 
+.cal-dialog-text .big_txt {
+	font-size: 38px;
+	color: #4153a0;
+}
+
 .cal-dialog-game-finisched .cal-dialog-title {
   color: #4153a0;
   text-align: center;

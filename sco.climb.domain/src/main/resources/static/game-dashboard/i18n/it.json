@@ -37,7 +37,7 @@
   "excursion_form_date_error_required": "La data è necessaria",
   "excursion_form_children_placeholder": "Numero di bambini",
   "excursion_form_children_error_required": "Il numero è necessario",
-  "excursion_form_distance_placeholder": "Km bonus",
+  "excursion_form_distance_placeholder": "Km bonus per bimbo/a",
   "excursion_form_distance_placeholder_ga": "Km bonus",
   "excursion_form_distance_error_required": "La distanza è necessaria",
   "excursion_form_weather": "Seleziona il meteo:",

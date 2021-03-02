@@ -32,10 +32,10 @@
       </md-input-container>
       <div layout="row">
         <!-- Numero bambini -->
-        <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
+        <md-input-container flex="33" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_children_placeholder' | translate}}</label>
-          <input name="children" type="number" min="1" max="100" ng-model="newExcursion.children" 
+          <input name="children" type="number" min="1" max="30" ng-model="newExcursion.children" 
           	ng-disabled="newExcursion.goodAction" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
@@ -44,7 +44,7 @@
           </div>
         </md-input-container>
         <!-- Distanza -->
-        <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
+        <md-input-container flex="33" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder' | translate}}</label>
           <input name="distance" type="number" min="1" max="20" ng-model="newExcursion.distance" required />
@@ -54,7 +54,7 @@
             <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
           </div>
         </md-input-container>
-        <md-input-container class="md-block" ng-if="!isExcursion(newExcursion)">
+        <md-input-container flex="33" ng-if="!isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder_ga' | translate}}</label>
           <input name="distance_ga" type="number" min="1" max="1000" ng-model="newExcursion.distance" required />
@@ -63,6 +63,9 @@
             <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
             <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
           </div>
+        </md-input-container>
+        <md-input-container fles="33" ng-if="isExcursion(newExcursion)">
+        	<input type="text" disabled value=" {{newExcursion.distance * newExcursion.children}} Km totali"/>
         </md-input-container>
       </div>
       <!--

@@ -6,22 +6,6 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.datepickerisOpen = false
       $scope.excursions = null
       $scope.sendingData = false
-
-      /* excursion example
-      {
-        children: 12,
-        classRoom: '1^',
-        creationDate: 1486042491236,
-        day: 1485385200000,
-        distance: 750,
-        gameId: '588889c0e4b0464e16ac40a0',
-        lastUpdate: 1486042491236,
-        meteo: 'cloudy',
-        name: 'test1',
-        objectId: 'c219c822-35af-4e34-ad81-b39591dd36a2',
-        ownerId: 'VELA'
-      }
-      */
       
       $scope.isExcursion = function (ex) {
       	if(ex && ex.hasOwnProperty('goodAction') && ex.goodAction) {
@@ -29,7 +13,7 @@ angular.module('climbGame.controllers.excursions', [])
       	}
       	return true;
       }
-
+      
       $scope.refreshExcursions = function () {
       	dataService.getGameById().then(
             function (game) {
@@ -70,10 +54,10 @@ angular.module('climbGame.controllers.excursions', [])
       var emptyExcursion = {
         name: null,
         date: null,
-        children: null,
+        children: 1,
         distance: null,
         meteo: 'sunny',
-        goodAction: false
+        goodAction: true
       }
 
       $scope.newExcursion = angular.copy(emptyExcursion)
@@ -99,8 +83,10 @@ angular.module('climbGame.controllers.excursions', [])
           scope: $scope, // use parent scope in template
           preserveScope: true, // do not forget this if use parent scope
           template: '<md-dialog>' +
-            '  <div class="cal-dialog-title">{{\'cal_save_popup_title\'|translate}}</div><md-divider></md-divider>' +
-            '  <div class="cal-dialog-text">{{\'cal_save_popup_content\'|translate}}</div>' +
+            '  <div class="cal-dialog-title">Invio dati</div><md-divider></md-divider>' +
+            '  <div class="cal-dialog-text">' +
+            '			Si stanno per aggiungere <span class="big_txt">{{newExcursion.distance * newExcursion.children}}</span> Km ' + 
+            '     per questa {{(isExcursion(newExcursion)) ? \'gita\' : \'buona azione\'}}. Confermate l\'operazione?</div>' +
             '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class="send-dialog-delete">' +
             '      Annulla' +
             '   </div> </md-button>' +
