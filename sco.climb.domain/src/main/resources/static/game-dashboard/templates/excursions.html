@@ -32,7 +32,7 @@
       </md-input-container>
       <div layout="row">
         <!-- Numero bambini -->
-        <md-input-container flex="33" ng-if="isExcursion(newExcursion)">
+        <md-input-container flex="30" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_children_placeholder' | translate}}</label>
           <input name="children" type="number" min="1" max="30" ng-model="newExcursion.children" 
@@ -40,32 +40,35 @@
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
             <div ng-message="required">{{'excursion_form_children_error_required' | translate}}</div>
-            <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
+            <div ng-message="max">il limite massimo è 30</div>
+            <div ng-message="min">il limite minimo è 1</div>
           </div>
         </md-input-container>
         <!-- Distanza -->
-        <md-input-container flex="33" ng-if="isExcursion(newExcursion)">
+        <md-input-container flex="45" ng-if="isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder' | translate}}</label>
           <input name="distance" type="number" min="1" max="20" ng-model="newExcursion.distance" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
           <div ng-messages="excursionForm.distance.$error" ng-if="!showHints && excursionForm.distance.$touched">
             <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
-            <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
+            <div ng-message="max">il limite massimo è 20</div>
+            <div ng-message="min">il limite minimo è 1</div>
           </div>
         </md-input-container>
-        <md-input-container flex="33" ng-if="!isExcursion(newExcursion)">
+        <md-input-container flex="45" ng-if="!isExcursion(newExcursion)">
           <!--md-no-float-->
           <label>{{'excursion_form_distance_placeholder_ga' | translate}}</label>
-          <input name="distance_ga" type="number" min="1" max="1000" ng-model="newExcursion.distance" required />
+          <input name="distance_ga" type="number" min="1" max="2000" ng-model="newExcursion.distance" required />
           <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
-          <div ng-messages="excursionForm.distance.$error" ng-if="!showHints && excursionForm.distance.$touched">
+          <div ng-messages="excursionForm.distance_ga.$error" ng-if="!showHints && excursionForm.distance_ga.$touched">
             <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
-            <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
+            <div ng-message="max">il limite massimo è 2000</div>
+            <div ng-message="min">il limite minimo è 1</div>
           </div>
         </md-input-container>
-        <md-input-container fles="33" ng-if="isExcursion(newExcursion)">
-        	<input type="text" disabled value=" {{newExcursion.distance * newExcursion.children}} Km totali"/>
+        <md-input-container fles="25" ng-if="isExcursion(newExcursion)">
+        	<input type="text" disabled value=" {{(newExcursion.distance || 0) * (newExcursion.children || 0)}} Km totali"/>
         </md-input-container>
       </div>
       <!--
@@ -125,7 +128,7 @@
             <md-card-content>
               <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}}
                 {{(isExcursion(ex) ? 'excursion_distance' : 'excursion_distance_ga') | translate}}</p>
-              <p class="md-subhead" ng-if="isExcursion(ex)">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
+              <p class="md-subhead" ng-if="isExcursion(ex)">{{'excursion_children' | translate:'{children: ' + ex.children + ', total: ' + (ex.children * ex.distance / 1000) + '}'}}</p>
               <p class="md-subhead" ng-if="!isExcursion(ex)">{{'excursion_children_ga' | translate}}</p>
             </md-card-content>
           </md-card>

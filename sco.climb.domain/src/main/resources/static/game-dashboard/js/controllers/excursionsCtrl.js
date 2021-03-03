@@ -36,10 +36,8 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.refreshExcursions()
       
       $scope.changeExcursion = function() {
-      	if($scope.newExcursion.goodAction) {
-      		$scope.newExcursion.children = 1;
-      		$scope.newExcursion.meteo = 'sunny';
-      	}
+      	$scope.newExcursion.children = null;
+      	$scope.newExcursion.distance = null;
       }
 
       $scope.scroll = function (direction) {
@@ -54,7 +52,7 @@ angular.module('climbGame.controllers.excursions', [])
       var emptyExcursion = {
         name: null,
         date: null,
-        children: 1,
+        children: null,
         distance: null,
         meteo: 'sunny',
         goodAction: true
@@ -66,6 +64,11 @@ angular.module('climbGame.controllers.excursions', [])
 
       $scope.createExcursion = function () {
 
+        if($scope.newExcursion.goodAction) {
+        	$scope.newExcursion.children = 1;
+        	$scope.newExcursion.meteo = 'sunny';
+        }
+        
         var params = {
           name: $scope.newExcursion.name,
           date: $scope.newExcursion.date.getTime(),
@@ -73,7 +76,7 @@ angular.module('climbGame.controllers.excursions', [])
           distance: $scope.newExcursion.distance * 1000,
           meteo: $scope.newExcursion.meteo,
           goodAction: $scope.newExcursion.goodAction
-        }
+        }        
 
         if (!params.name || !params.date || !params.children || !params.distance || !params.meteo) {
           return
@@ -94,6 +97,7 @@ angular.module('climbGame.controllers.excursions', [])
             '      Invia' +
             '    </md-button></div>' +
             '</div></md-dialog>',
+            
           controller: function DialogController($scope, $mdDialog) {
             $scope.closeDialog = function () {
               $mdDialog.hide()
@@ -128,7 +132,6 @@ angular.module('climbGame.controllers.excursions', [])
 
       $scope.resetForm = function () {
         $scope.newExcursion = angular.copy(emptyExcursion);
-        $scope.changeExcursion();
         $scope.excursionForm.$setPristine();
         $scope.excursionForm.$setUntouched();
       }
