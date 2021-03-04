@@ -1,5 +1,5 @@
 <div class="excursions" layout="row" layout-padding>
-  <div layout="column" flex="33" class="form-column">
+  <div layout="column" flex="25" class="form-column">
     <h1 class="md-title">
 	  	<md-input-container class="md-block">
 	  		<md-select ng-model="newExcursion.goodAction" ng-change="changeExcursion()">
@@ -30,47 +30,45 @@
           <!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
         </div>
       </md-input-container>
-      <div layout="row">
-        <!-- Numero bambini -->
-        <md-input-container flex="30" ng-if="isExcursion(newExcursion)">
-          <!--md-no-float-->
-          <label>{{'excursion_form_children_placeholder' | translate}}</label>
-          <input name="children" type="number" min="1" max="30" ng-model="newExcursion.children" 
-          	ng-disabled="newExcursion.goodAction" required />
-          <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
-          <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
-            <div ng-message="required">{{'excursion_form_children_error_required' | translate}}</div>
-            <div ng-message="max">il limite massimo è 30</div>
-            <div ng-message="min">il limite minimo è 1</div>
-          </div>
-        </md-input-container>
-        <!-- Distanza -->
-        <md-input-container flex="45" ng-if="isExcursion(newExcursion)">
-          <!--md-no-float-->
-          <label>{{'excursion_form_distance_placeholder' | translate}}</label>
-          <input name="distance" type="number" min="1" max="20" ng-model="newExcursion.distance" required />
-          <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
-          <div ng-messages="excursionForm.distance.$error" ng-if="!showHints && excursionForm.distance.$touched">
-            <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
-            <div ng-message="max">il limite massimo è 20</div>
-            <div ng-message="min">il limite minimo è 1</div>
-          </div>
-        </md-input-container>
-        <md-input-container flex="45" ng-if="!isExcursion(newExcursion)">
-          <!--md-no-float-->
-          <label>{{'excursion_form_distance_placeholder_ga' | translate}}</label>
-          <input name="distance_ga" type="number" min="1" max="2000" ng-model="newExcursion.distance" required />
-          <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
-          <div ng-messages="excursionForm.distance_ga.$error" ng-if="!showHints && excursionForm.distance_ga.$touched">
-            <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
-            <div ng-message="max">il limite massimo è 2000</div>
-            <div ng-message="min">il limite minimo è 1</div>
-          </div>
-        </md-input-container>
-        <md-input-container fles="25" ng-if="isExcursion(newExcursion)">
-        	<input type="text" disabled value=" {{(newExcursion.distance || 0) * (newExcursion.children || 0)}} Km totali"/>
-        </md-input-container>
-      </div>
+      <!-- Numero bambini -->
+      <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
+        <!--md-no-float-->
+        <label>{{'excursion_form_children_placeholder' | translate}}</label>
+        <input name="children" type="number" min="1" max="30" ng-model="newExcursion.children" 
+        	ng-disabled="newExcursion.goodAction" required />
+        <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
+        <div ng-messages="excursionForm.children.$error" ng-if="!showHints && excursionForm.children.$touched">
+          <div ng-message="required">{{'excursion_form_children_error_required' | translate}}</div>
+          <div ng-message="max">il limite massimo è 30</div>
+          <div ng-message="min">il limite minimo è 1</div>
+        </div>
+      </md-input-container>
+      <!-- Distanza -->
+      <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
+        <!--md-no-float-->
+        <label>{{'excursion_form_distance_placeholder' | translate}}</label>
+        <input name="distance" type="number" min="1" max="20" ng-model="newExcursion.distance" required />
+        <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
+        <div ng-messages="excursionForm.distance.$error" ng-if="!showHints && excursionForm.distance.$touched">
+          <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
+          <div ng-message="max">il limite massimo è 20</div>
+          <div ng-message="min">il limite minimo è 1</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block" ng-if="!isExcursion(newExcursion)">
+        <!--md-no-float-->
+        <label>{{'excursion_form_distance_placeholder_ga' | translate}}</label>
+        <input name="distance_ga" type="number" min="1" max="2000" ng-model="newExcursion.distance" required />
+        <!--<div class="hint" ng-if="showHints">This is a hint</div>-->
+        <div ng-messages="excursionForm.distance_ga.$error" ng-if="!showHints && excursionForm.distance_ga.$touched">
+          <div ng-message="required">{{'excursion_form_distance_error_required' | translate}}</div>
+          <div ng-message="max">il limite massimo è 2000</div>
+          <div ng-message="min">il limite minimo è 1</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block" ng-if="isExcursion(newExcursion)">
+      	<input type="text" disabled value=" {{(newExcursion.distance || 0) * (newExcursion.children || 0)}} Km totali"/>
+      </md-input-container>      
       <!--
         <md-input-container md-no-float class="md-block">
           <label>{{'excursion_form_weather' | translate}}</label>
