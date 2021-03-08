@@ -964,6 +964,9 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   background-color: #F39C12;
 }
 
+.excursions md-input-container {
+	margin: 10px;
+}
 
 /* Notifications */
 
