@@ -1299,6 +1299,17 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   left: 65%;
   bottom: 28%;
 }
+.centerBannerDownLeftURF {
+  position: relative;
+  width: 60%;
+  left: 20%;
+}
+.centerBannerDownRightURF{
+  position: relative;
+  width: 40%;
+  bottom: 40px;
+  left: 20%;
+}
 /* for login style */
 .loginLogoUp{
   position: absolute;
