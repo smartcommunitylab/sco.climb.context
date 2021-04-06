@@ -230,7 +230,7 @@
 	<repositories>
 		<repository>
 			<id>SmartCommunity-releases</id>
-			<url>http://repository.smartcommunitylab.it/content/repositories/releases</url>
+			<url>https://repository.smartcommunitylab.it/content/repositories/releases</url>
 		</repository>
 	</repositories>
 
