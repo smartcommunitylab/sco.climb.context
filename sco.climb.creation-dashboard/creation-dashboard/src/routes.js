@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from "./pages/login/Login.vue";
+import Login from "@/pages/login/Login.vue";
+import NotFound from '@/pages/NotFound.vue';
 Vue.use(Router);
 const routes = [
     {
@@ -8,7 +9,7 @@ const routes = [
       redirect: '/login' 
     },
     {
-      path: '/',
+      path: '/login',
       name: 'login',
       component: Login
   },
@@ -20,11 +21,12 @@ const routes = [
   {
       path: '/home',
       name: 'home',
-      component: () => import('./pages/Home.vue')
+      component: () => import('./pages/home/Home.vue')
   },
     { 
         path: '/404', 
-        component: NotFound 
+        component: NotFound
+
     },  
     { 
         path: '*', 
