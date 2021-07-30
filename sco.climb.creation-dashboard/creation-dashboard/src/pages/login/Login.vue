@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1 class="text-xl">Login</h1>
+    <h2 class="text-xl">  <p>{{ $t('hello') }}</p>
+</h2>
   </div>
 </template>
 

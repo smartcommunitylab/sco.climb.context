@@ -8,16 +8,17 @@ const state = user
 
 const actions = {
 
-    login({ dispatch, commit }, { username, password }) {
-        commit('loginRequest', { username });
+    login({ dispatch, commit }) {
+        commit('loginRequest');
 
-        userService.login(username, password)
+        userService.login()
             .then(
                 token => {
                     //todo reset old values
                     commit('loginSuccess', token);
                     userService.getAccount().then(user => {
                         commit('userLogged', user);
+                        dispatch('alert/error', "Utente entrato con successo", { root: true });
                         dispatch('navigation/changePage','/home', { root: true });
                         router.push('/home');
                     })
@@ -40,9 +41,8 @@ const actions = {
 
 const mutations = {
 
-    loginRequest(state, user) {
+    loginRequest(state) {
         state.status = { loggingIn: true };
-        state.user = user;
     },
     loginSuccess(state, token) {
         console.log('logged and token')

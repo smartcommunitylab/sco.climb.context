@@ -19,10 +19,15 @@ const routes = [
       component: () => import('./pages/about/About.vue')
   },
   {
-      path: '/home',
-      name: 'home',
-      component: () => import('./pages/home/Home.vue')
-  },
+    path: '/home',
+    name: 'home',
+    component: () => import('./pages/home/Home.vue')
+},
+{
+  path: '/classDefinition',
+  name: 'classDefinition',
+  component: () => import('./pages/classDefinition/classDefinition.vue')
+},
     { 
         path: '/404', 
         component: NotFound
@@ -38,15 +43,15 @@ const routes = [
   export const router = new Router({
     mode: 'history',
     routes})
-    router.beforeEach((to, from, next) => {
-      // redirect to login page if not logged in and trying to access a restricted page
-      const publicPages = ['/login'];
-      const authRequired = !publicPages.includes(to.path);
-      const loggedIn = localStorage.getItem('user');
+    // router.beforeEach((to, from, next) => {
+    //   // redirect to login page if not logged in and trying to access a restricted page
+    //   const publicPages = ['/login'];
+    //   const authRequired = !publicPages.includes(to.path);
+    //   const loggedIn = localStorage.getItem('user');
     
-      if (authRequired && !loggedIn && to.name!='resetpwd') {
-        return next('/login');
-      }
+    //   if (authRequired && !loggedIn && to.name!='resetpwd') {
+    //     return next('/login');
+    //   }
     
-      next();
-    })
+    //   next();
+    // })

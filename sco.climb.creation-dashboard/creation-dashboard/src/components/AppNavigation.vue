@@ -8,7 +8,8 @@
       <v-spacer class="hidden-md-and-up"></v-spacer>
       <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
       <v-spacer class="hidden-sm-and-down"></v-spacer>
-      <v-btn text class="hidden-sm-and-down" @click="login">Accedi</v-btn>
+      <v-btn text class="hidden-sm-and-down" @click="login" v-if="!status.loggedIn">Accedi</v-btn>
+      <v-btn text class="hidden-sm-and-down" @click="logout" v-else>Logout</v-btn>
     </v-app-bar>
     <v-navigation-drawer
       class="hidden-md-and-up"
@@ -55,12 +56,17 @@ computed: {
     ],
   }),
   methods: {
-      ...mapActions("account", ["login", "logout"]),
+      ...mapActions("account", {loginAction:"login", logoutAction:"logout"}),
       navigate(method) {
           this[method]();
       },
     login() {
-      this.$router.push("/home");
+        this.loginAction();
+    //   this.$router.push("/home");
+    },
+    logout() {
+        this.logoutAction();
+    //   this.$router.push("/home");
     },
   },
 };
