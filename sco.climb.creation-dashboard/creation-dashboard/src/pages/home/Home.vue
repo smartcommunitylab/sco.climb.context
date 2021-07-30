@@ -23,10 +23,10 @@
                       <v-list-item color="rgba(0, 0, 0, .4)">
                         <v-list-item-content>
                           <v-list-item-title class="text-h6">
-                            Francesca Russo
+                            {{profilo.nome}}
                           </v-list-item-title>
                           <v-list-item-subtitle class="text-h8"
-                            >Insegnante</v-list-item-subtitle
+                            >{{profilo.ruolo}}</v-list-item-subtitle
                           >
                         </v-list-item-content>
                       </v-list-item>
@@ -81,6 +81,10 @@ export default {
       territorioIcon: mdiMapMarker, 
       istitutoIcon: mdiBookEducationOutline ,
       scuolaIcon: mdiSchoolOutline,
+      profilo:{
+        nome:'Francesca Russo',
+        ruolo:'Insegnante'
+      }
     };
   },
   methods: {
