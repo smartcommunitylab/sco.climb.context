@@ -38,7 +38,13 @@ public class PedibusGame extends BaseObject {
 	private String sponsorTemplate;
 	private boolean roundTrip = false;
 	private boolean useCalendar = true;
-
+	
+	private boolean catalog = false;
+	private String imageLink;
+	private String geographicArea;
+	private List<String> disciplines = new ArrayList<>();
+	private List<String> ageRange = new ArrayList<>();
+	
 	public String getSchoolId() {
 		return schoolId;
 	}
@@ -237,6 +243,46 @@ public class PedibusGame extends BaseObject {
 
 	public void setUseCalendar(boolean useCalendar) {
 		this.useCalendar = useCalendar;
+	}
+
+	public boolean isCatalog() {
+		return catalog;
+	}
+
+	public void setCatalog(boolean catalog) {
+		this.catalog = catalog;
+	}
+
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
+	}
+
+	public String getGeographicArea() {
+		return geographicArea;
+	}
+
+	public void setGeographicArea(String geographicArea) {
+		this.geographicArea = geographicArea;
+	}
+
+	public List<String> getDisciplines() {
+		return disciplines;
+	}
+
+	public void setDisciplines(List<String> disciplines) {
+		this.disciplines = disciplines;
+	}
+
+	public List<String> getAgeRange() {
+		return ageRange;
+	}
+
+	public void setAgeRange(List<String> ageRange) {
+		this.ageRange = ageRange;
 	}
 
 }
