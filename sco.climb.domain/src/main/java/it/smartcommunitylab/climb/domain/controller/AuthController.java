@@ -194,6 +194,21 @@ public class AuthController {
 		return false;
 	}
 	
+	public boolean validateRole(String role, String ownerId, String instituteId, String schoolId, User user) {
+		if(user != null) {
+			for(String authKey : user.getRoles().keySet()) {
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getRole().equals(role) && auth.getOwnerId().equals(ownerId)
+							&& auth.getInstituteId().equals(instituteId) && auth.getSchoolId().equals(schoolId)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;		
+	}
+	
 	public boolean validateRole(String role, HttpServletRequest request) throws Exception {
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
 		if(accountByEmail == null) {

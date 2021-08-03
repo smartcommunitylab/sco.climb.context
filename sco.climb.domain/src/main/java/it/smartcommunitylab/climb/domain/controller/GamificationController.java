@@ -57,6 +57,7 @@ import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.manager.RoleManager;
 import it.smartcommunitylab.climb.domain.model.Gamified;
 import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
@@ -115,6 +116,9 @@ public class GamificationController extends AuthController {
 	
 	@Autowired
 	private DocumentManager documentManager;
+	
+	@Autowired
+	private RoleManager roleManager;
 
 	@Autowired
 	private GEngineUtils gengineUtils;
@@ -359,6 +363,15 @@ public class GamificationController extends AuthController {
 		} catch (Exception e) {
 			logger.warn(String.format("createPedibusGame[%s]: error in reset job for %s", 
 					ownerId, result.getObjectId()));
+		}
+		User user = getUserByEmail(request);
+		if(validateRole(Const.ROLE_SUPER_TEACHER, ownerId, game.getInstituteId(), game.getSchoolId(), user)) {
+			Institute institute = storage.getInstitute(ownerId, game.getInstituteId());
+			School school = storage.getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+			if((institute == null) || (school == null)) {
+				throw new EntityNotFoundException("institute or school not found");
+			}
+			roleManager.addSuperTeacher(ownerId, user.getEmail(), institute, school);
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusGame[%s]: %s", ownerId, game.getObjectId()));
