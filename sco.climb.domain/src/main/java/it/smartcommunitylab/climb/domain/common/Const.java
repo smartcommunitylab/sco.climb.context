@@ -29,6 +29,7 @@ public class Const {
 	public static final String ROLE_TEACHER = "teacher";
 	public static final String ROLE_OWNER = "owner";
 	public static final String ROLE_SCHOOL_OWNER = "school-owner";
+	public static final String ROLE_SUPER_TEACHER = "super-teacher";
 	
 	public static final String AUTH_ACTION_READ = "READ";
 	public static final String AUTH_ACTION_ADD = "ADD";

@@ -126,6 +126,29 @@ public class RoleController extends AuthController {
 		return auths;
 	}
 
+	@RequestMapping(value = "/api/role/{ownerId}/super-teacher", method = RequestMethod.POST)
+	public @ResponseBody List<Authorization> addSuperTeacher(
+			@PathVariable String ownerId,
+			@RequestParam String email,
+			@RequestParam String instituteId,
+			@RequestParam String schoolId,
+			HttpServletRequest request) throws Exception {
+		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		Institute institute = storage.getInstitute(ownerId, instituteId);
+		School school = storage.getSchool(ownerId, instituteId, schoolId);
+		if((institute == null) || (school == null)) {
+			throw new EntityNotFoundException("institute or school not found");
+		}
+		List<Authorization> auths = roleManager.addSuperTeacher(ownerId, email, institute, school);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("addSuperTeacher: %s - %s - %s - %s", ownerId, email, 
+					instituteId, schoolId));
+		}
+		return auths;
+	}
+	
 	@RequestMapping(value = "/api/role/{ownerId}/teacher", method = RequestMethod.POST)
 	public @ResponseBody List<Authorization> addTeacher(
 			@PathVariable String ownerId,
