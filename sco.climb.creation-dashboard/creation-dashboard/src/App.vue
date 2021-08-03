@@ -2,11 +2,11 @@
   <v-app>
     <Loader v-if="loading" />
 
-    <app-navigation></app-navigation>
+    <app-navigation ></app-navigation>
 
     <v-main>
       <v-container fluid>
-        <status-bar></status-bar>
+        <status-bar v-if="status.loggedIn"></status-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
             {{ alert.message }}
