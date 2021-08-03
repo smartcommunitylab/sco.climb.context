@@ -166,6 +166,39 @@ public class RoleManager {
 		return auths;
 	}
 	
+	public List<Authorization> addSuperTeacher(String ownerId, String email, 
+			Institute institute, School school) throws EntityNotFoundException {
+		List<Authorization> auths = new ArrayList<Authorization>();
+		
+		Authorization auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_READ);
+		auth.setRole(Const.ROLE_SUPER_TEACHER);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(institute.getObjectId());
+		auth.setSchoolId(school.getObjectId());
+		auth.setRouteId("*");
+		auth.setGameId("*");
+		auth.getResources().add(Const.AUTH_RES_Institute);
+		auth.getResources().add(Const.AUTH_RES_School);
+		auth.getResources().add(Const.AUTH_RES_Image);		
+		auths.add(auth);
+		
+		auth = new Authorization();
+		auth.getActions().add(Const.AUTH_ACTION_ADD);
+		auth.setRole(Const.ROLE_SUPER_TEACHER);
+		auth.setOwnerId(ownerId);
+		auth.setInstituteId(institute.getObjectId());
+		auth.setSchoolId(school.getObjectId());
+		auth.setRouteId("*");
+		auth.setGameId("*");
+		auth.getResources().add(Const.AUTH_RES_PedibusGame);
+		auths.add(auth);
+
+		storage.addUserRole(email, 
+				Utils.getAuthKey(ownerId, Const.ROLE_SUPER_TEACHER, institute.getObjectId(), school.getObjectId()), auths);
+		return auths;
+	}
+	
 	public List<Authorization> addTeacher(String ownerId, String email, 
 			Institute institute, School school, PedibusGame pedibusGame) throws EntityNotFoundException {
 		List<Authorization> auths = new ArrayList<Authorization>();

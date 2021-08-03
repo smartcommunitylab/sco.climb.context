@@ -985,6 +985,11 @@ public class RepositoryManager {
 	      update.set("modalities", game.getModalities());
 	      update.set("roundTrip", game.isRoundTrip());
 	      update.set("useCalendar", game.isUseCalendar());
+	      update.set("catalog", game.isCatalog());
+	      update.set("imageLink", game.getImageLink());
+	      update.set("geographicArea", game.getGeographicArea());
+	      update.set("disciplines", game.getDisciplines());
+	      update.set("ageRange", game.getAgeRange());
 			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);

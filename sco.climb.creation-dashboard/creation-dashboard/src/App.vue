@@ -5,6 +5,7 @@
     <app-navigation></app-navigation>
     <v-main>
       <v-container fluid>
+        <status-bar></status-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
             {{ alert.message }}
@@ -21,16 +22,16 @@
 import AppNavigation from "@/components/AppNavigation";
 import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
-// import Footer from "@/components/Footer";
-/*import CardPercorso from "@/components/Footer";*/
+import Footer from "@/components/Footer";
+import StatusBar from './components/StatusBar.vue';
 export default {
   name: "App",
 
   components: {
     AppNavigation,
     Loader,
-    // "app-footer": Footer,
-    /*"card-percorso": CardPercorso */
+    "app-footer": Footer,
+    StatusBar
   },
 
   data: () => ({
