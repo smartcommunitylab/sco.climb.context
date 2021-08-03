@@ -15,7 +15,7 @@
         <router-view></router-view>
       </v-container>
     </v-main>
-   <app-footer />
+   <!-- <app-footer /> -->
   </v-app>
 </template>
 
@@ -23,7 +23,7 @@
 import AppNavigation from "@/components/AppNavigation";
 import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import StatusBar from './components/StatusBar.vue';
 export default {
   name: "App",
@@ -31,7 +31,7 @@ export default {
   components: {
     AppNavigation,
     Loader,
-    "app-footer": Footer,
+    // "app-footer": Footer,
     StatusBar
   },
 

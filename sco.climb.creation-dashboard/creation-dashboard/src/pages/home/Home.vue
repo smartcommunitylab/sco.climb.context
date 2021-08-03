@@ -55,15 +55,15 @@
           <div
             class="col-sm-4 col-md-3 col-12"
             v-for="item in items"
-            :key="item.message"
+            :key="item.id"
           >
-            <Card-Percorso :free="false">
-              {{ item }}
+            <Card-Percorso :percorso="item">
             </Card-Percorso>
           </div>
 
           <div class="col-sm-4 col-md-3 col-12" @click="goToClassDefinition()">
-            <Card-Percorso :free="true"></Card-Percorso>
+            <Card-Percorso>
+            </Card-Percorso>
           </div>
         </v-row>
       </div>
@@ -85,7 +85,16 @@ export default {
   },
   data() {
     return {
-      items: ["Il giro del mediterraneo", "Le tradizioni italiane"],
+      items: [{
+        id:'1',
+        title:"Il giro del mediterraneo",
+        length:"1845 Km",
+        start:'Trento'}, {
+          id:'2',
+        title:"Le tradizioni italiane",
+        length:"245 Km",
+        start:'Pescara'}
+          ],
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
