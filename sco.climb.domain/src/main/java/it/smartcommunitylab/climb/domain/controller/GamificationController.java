@@ -27,6 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +60,7 @@ import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
 import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
+import it.smartcommunitylab.climb.domain.model.PedibusGameCatalog;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
 import it.smartcommunitylab.climb.domain.model.PedibusItinerary;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
@@ -559,6 +563,42 @@ public class GamificationController extends AuthController {
 			logger.info(String.format("getPedibusGameReports: %s", result.size()));
 		}
 		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/catalog", method = RequestMethod.GET)
+	public @ResponseBody Page<PedibusGameCatalog> getPedibusGameCatalog(
+			Pageable pageRequest) throws Exception {
+		List<PedibusGameCatalog> result = new ArrayList<>();
+		List<PedibusGame> games = storage.getPedibusGames();
+		int countGame = 0;
+		for(PedibusGame game : games) {
+			if(game.isCatalog()) {
+				List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+				if(itineraryList.size() > 0) {
+					PedibusItinerary pedibusItinerary = itineraryList.get(0);
+					List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
+							pedibusItinerary.getObjectId());
+					if(legs.size() > 0) {
+						countGame++;
+						PedibusGameCatalog report = new PedibusGameCatalog(game);
+						report.setItineraryId(pedibusItinerary.getObjectId());
+						report.setLegs(legs.size());
+						report.setFirstLeg(legs.get(0).getName());
+						report.setFinalLeg(legs.get(legs.size() - 1).getName());
+						report.setFinalScore(legs.get(legs.size() - 1).getScore());
+						result.add(report);					
+					}					
+				}
+			}
+		}
+		int firstResult = pageRequest.getPageNumber() * pageRequest.getPageSize();
+		int maxResult = pageRequest.getPageSize();
+		List<PedibusGameCatalog> subList = result.subList(firstResult, firstResult + maxResult);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getPedibusGameCatalog: %s", result.size()));
+		}
+		Page<PedibusGameCatalog> page = new PageImpl<>(subList, pageRequest, countGame);
+		return page;
 	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
