@@ -3,7 +3,6 @@
     <Loader v-if="loading" />
 
     <app-navigation></app-navigation>
-
     <v-main>
       <v-container fluid>
         <transition name="fade">
@@ -14,7 +13,7 @@
         <router-view></router-view>
       </v-container>
     </v-main>
-    <app-footer />
+    <!-- app-footer /-->
   </v-app>
 </template>
 
@@ -22,14 +21,16 @@
 import AppNavigation from "@/components/AppNavigation";
 import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
+/*import CardPercorso from "@/components/Footer";*/
 export default {
   name: "App",
 
   components: {
     AppNavigation,
     Loader,
-    "app-footer": Footer,
+    // "app-footer": Footer,
+    /*"card-percorso": CardPercorso */
   },
 
   data: () => ({
