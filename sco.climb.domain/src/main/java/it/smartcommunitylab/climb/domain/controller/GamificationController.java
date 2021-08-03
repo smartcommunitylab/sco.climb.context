@@ -371,7 +371,7 @@ public class GamificationController extends AuthController {
 			if((institute == null) || (school == null)) {
 				throw new EntityNotFoundException("institute or school not found");
 			}
-			roleManager.addSuperTeacher(ownerId, user.getEmail(), institute, school);
+			roleManager.addTeacher(ownerId, user.getEmail(), institute, school, result);
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("createPedibusGame[%s]: %s", ownerId, game.getObjectId()));
