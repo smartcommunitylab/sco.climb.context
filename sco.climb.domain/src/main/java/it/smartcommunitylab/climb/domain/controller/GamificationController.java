@@ -341,7 +341,8 @@ public class GamificationController extends AuthController {
 	
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.POST)
 	public @ResponseBody PedibusGame createPedibusGame(
-			@PathVariable String ownerId, 
+			@PathVariable String ownerId,
+			@RequestParam(required = false) boolean skipItinerary,
 			@RequestBody PedibusGame game, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
@@ -353,11 +354,13 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
-		PedibusItinerary itinerary = new PedibusItinerary();
-		itinerary.setOwnerId(ownerId);
-		itinerary.setPedibusGameId(result.getObjectId());
-		itinerary.setName(result.getGameName() + " - itinerario");
-		storage.savePedibusItinerary(itinerary);
+		if(!skipItinerary) {
+			PedibusItinerary itinerary = new PedibusItinerary();
+			itinerary.setOwnerId(ownerId);
+			itinerary.setPedibusGameId(result.getObjectId());
+			itinerary.setName(result.getGameName() + " - itinerario");
+			storage.savePedibusItinerary(itinerary);			
+		}
 		try {
 			schedulerManager.resetJob(result.getObjectId());
 		} catch (Exception e) {
