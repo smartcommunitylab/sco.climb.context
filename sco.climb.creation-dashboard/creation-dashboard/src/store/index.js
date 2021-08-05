@@ -5,6 +5,7 @@ import { account } from './account.module';
 import { navigation } from './navigation.module';
 import { alert } from './alert.module';
 import { loader } from './loader.module';
+import { game } from './game.module';
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -14,7 +15,8 @@ export const store = new Vuex.Store({
         account,
         navigation,
         alert,
-        loader
+        loader,
+        game
     },
     plugins: [createPersistedState({
         storage: window.sessionStorage

@@ -51,13 +51,13 @@
           <v-col cols="12" sm="1"></v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="myGames.items">
           <div
             class="col-sm-4 col-md-3 col-12"
-            v-for="item in items"
-            :key="item.id"
+            v-for="game in myGames.items"
+            :key="game.id"
           >
-            <Card-Percorso :percorso="item">
+            <Card-Percorso :percorso="game">
             </Card-Percorso>
           </div>
 
@@ -66,6 +66,7 @@
             </Card-Percorso>
           </div>
         </v-row>
+
       </div>
     </v-card>
   </v-container>
@@ -77,6 +78,7 @@ import {
   mdiSchoolOutline,
   mdiBookEducationOutline,
 } from "@mdi/js";
+import { mapState, mapActions } from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "Home",
@@ -85,16 +87,17 @@ export default {
   },
   data() {
     return {
-      items: [{
-        id:'1',
-        title:"Il giro del mediterraneo",
-        length:"1845 Km",
-        start:'Trento'}, {
-          id:'2',
-        title:"Le tradizioni italiane",
-        length:"245 Km",
-        start:'Pescara'}
-          ],
+      // items: [{
+      //   id:'1',
+      //   title:"Il giro del mediterraneo",
+      //   length:"1845 Km",
+      //   start:'Trento'}, {
+      //     id:'2',
+      //   title:"Le tradizioni italiane",
+      //   length:"245 Km",
+      //   start:'Pescara'}
+      //     ],
+      // games:[],
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
@@ -109,20 +112,19 @@ export default {
       kilometers: "12424",
     };
   },
+    computed: {
+    ...mapState("game", ["myGames"])
+  },
   methods: {
     goToClassDefinition() {
       this.$router.push("classDefinition");
     },
+    ...mapActions("game", {
+      getAllMyGames: "getAllMyGames",
+    })
   },
   mounted() {
-    let loader = this.$loading.show({
-      canCancel: false,
-      backgroundColor: "#000",
-      color: "#fff",
-    });
-    setTimeout(() => {
-      loader.hide();
-    }, 500);
+    this.getAllMyGames();
   },
 };
 </script>

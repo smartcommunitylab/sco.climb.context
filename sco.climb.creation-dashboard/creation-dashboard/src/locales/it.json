@@ -1,5 +1,7 @@
 {
-  "hello": "ciao i18n !!",
-  "numStud": "numero degli studenti",
+  "home": {
+    "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
+    },
+      "numStud": "numero degli studenti",
   "createPath":"+"
 }

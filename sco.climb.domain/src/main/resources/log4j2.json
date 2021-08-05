@@ -12,8 +12,8 @@
 			"RollingFile": [
 				{
 				  "name": "RollingFile-Appender",
-				  "fileName": "/home/climb/app/logs/domain.log",
-				  "filePattern": "/home/climb/app/logs/domain.log.%d{yyyy-MM-dd-hh-mm}",
+				  "fileName": "/tmp/climb/domain.log",
+				  "filePattern": "/tmp/climb/domain.log.%d{yyyy-MM-dd-hh-mm}",
 				  "PatternLayout": {
 				    "pattern": "%d{MM-dd@HH:mm:ss} %-5p [%c] - %m%n"
 				  },
@@ -28,8 +28,8 @@
 				},    
 				{
 				  "name": "LogstashFile-Appender",
-				  "fileName": "/home/climb/app/logs/domain-logstash.log",
-				  "filePattern": "/home/climb/app/logs/domain-logstash.log.%d{yyyy-MM-dd-hh-mm}",
+				  "fileName": "/tmp/climb/domain-logstash.log",
+				  "filePattern": "/tmp/climb/domain-logstash.log.%d{yyyy-MM-dd-hh-mm}",
 				  "PatternLayout": {
 				    "pattern": "%m%n"
 				  },

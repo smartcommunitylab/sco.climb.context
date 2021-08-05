@@ -1,0 +1,27 @@
+ [
+    {
+       "ownerId":"TEST",
+       "objectId":"ec7084c5-ff47-42e1-b9b2-6631096caba2",
+       "creationDate":1593530136579,
+       "lastUpdate":1594903463612,
+       "name":"Scuola Media Pergola",
+       "address":"Via Chini, 26",
+       "instituteId":"6a2b1a05-6338-4780-b193-120dc4a48186",
+       "classes":[
+          {
+             "name":"1A",
+             "schoolYear":"2020"
+          },
+          {
+             "name":"2a",
+             "schoolYear":"2000"
+          },
+          {
+             "name":"3a",
+             "schoolYear":"2020"
+          }
+       ],
+       "type":null,
+       "volunteerShiftsLink":null
+    }
+ ]

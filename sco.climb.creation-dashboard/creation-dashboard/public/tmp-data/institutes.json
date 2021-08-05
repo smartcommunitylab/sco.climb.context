@@ -1,0 +1,23 @@
+
+    [
+        {
+           "ownerId":"TEST",
+           "objectId":"6a2b1a05-6338-4780-b193-120dc4a48186",
+           "creationDate":1593530091525,
+           "lastUpdate":1593530091525,
+           "name":"Istituto Superiore Sant'Anna",
+           "address":"Via Matteotti 27, Roma",
+           "warningBatteryLowMail":null,
+           "addPedibusPhoto":false
+        },
+        {
+           "ownerId":"TEST",
+           "objectId":"775280e9-d8f5-481b-bc7b-910f5fce66b7",
+           "creationDate":1601912285796,
+           "lastUpdate":1601912285796,
+           "name":"prova ist",
+           "address":"prova",
+           "warningBatteryLowMail":null,
+           "addPedibusPhoto":false
+        }
+     ]

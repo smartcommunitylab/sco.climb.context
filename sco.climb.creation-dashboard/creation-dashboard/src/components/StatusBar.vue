@@ -28,12 +28,6 @@ export default {
   data: () => ({
     items: [
       {
-        text: "Login",
-        disabled: false,
-        class: "login",
-        href: "login",
-      },
-      {
         text: "Home",
         disabled: false,
         class: "home",
@@ -45,6 +39,18 @@ export default {
         class: "classDefinition",
         href: "classDefinition",
       },
+      {
+        text: "habitsDefinition",
+        disabled: false,
+        class: "habitsDefinition",
+        href: "habitsDefinition",
+      },
+            {
+        text: "routesSuggestion",
+        disabled: false,
+        class: "routesSuggestion",
+        href: "routesSuggestion",
+      },
     ],
   }),
   methods: {},
@@ -55,13 +61,17 @@ export default {
     color: white;
 
 }
-.login {
-    background-color: aqua;
-}
+
 .home {
-    background-color: red;
+    background-color: lightgreen;
 }
 .classDefinition {
-    background-color: brown;
+    background-color: #FF7D60;
+}
+.habitsDefinition {
+    background-color: #8BDCF5;
+}
+.routesSuggestion {
+    background-color: #BDB1FF;
 }
 </style>

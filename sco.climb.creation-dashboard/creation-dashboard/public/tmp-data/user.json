@@ -1,0 +1,13 @@
+{
+  "ownerIds": ["TEST"],
+  "roles": ["user", "teacher", "super-teacher"],
+  "subject": "1827",
+  "name": "Matteo",
+  "surname": "Chini",
+  "email": "matteo.chini@gmail.com",
+  "cf": null,
+  "token": "8a91b08b-6500-4b6b-b2d9-248a3956ed36",
+  "expiration": 1628193010842,
+  "refreshToken": null,
+  "termUsage": { "acceptance": true, "acceptanceDate": 1601988927902 }
+}

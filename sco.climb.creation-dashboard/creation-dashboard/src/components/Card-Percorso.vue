@@ -2,7 +2,7 @@
   <div style="height: 240px" class="my-3">
     <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
       <div  v-if="percorso">
-        {{ percorso.title }}
+        {{ percorso.pedibusGame.gameDescription }}
         {{ percorso.length }}
         {{ percorso.start }}
       </div>
