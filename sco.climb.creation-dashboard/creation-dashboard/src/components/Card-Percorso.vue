@@ -1,14 +1,21 @@
 <template>
   <div style="height: 240px" class="my-3">
     <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
-      <div  v-if="percorso">
-        {{ percorso.title }}
-        {{ percorso.length }}
-        {{ percorso.start }}
+      <div v-if="percorso">
+        <v-col cols="12" sm="12">
+          <v-img
+            v-bind:src="percorso.imgsource"
+            max-width="200"
+            min-height="150"
+          />
+        </v-col>
+        <div>
+          <div>{{ percorso.title }}</div>
+          <div>{{ percorso.length }}</div>
+          <div>{{ percorso.start }}</div>
+        </div>
       </div>
-      <div v-else>
-        +
-      </div>
+      <div v-else>+</div>
       <slot />
     </v-card>
   </div>
@@ -57,7 +64,7 @@ export default {
   transition: 0.5s all;
 }
 .add-card {
-  border: 2px dashed #ccc!important;
+  border: 2px dashed #ccc !important;
   font-size: 42px !important;
   color: #cbcbcb !important;
 }

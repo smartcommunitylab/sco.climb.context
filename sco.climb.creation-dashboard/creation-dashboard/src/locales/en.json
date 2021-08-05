@@ -1,5 +1,6 @@
 {
     "hello": "hello i18n !!",
     "numStud": "numbers of students",
+    "class": "Class",
     "createPath":"+"
 }

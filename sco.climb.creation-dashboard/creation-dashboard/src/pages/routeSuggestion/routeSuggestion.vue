@@ -24,7 +24,8 @@
                 >
               </v-tooltip>
             </h4>
-            <v-row class="">
+            
+            <v-row>
               <div
                 class="col-sm-4 col-md-3 col-12"
                 v-for="item in items"
@@ -37,7 +38,7 @@
                   {{ item }}
                 </Card-Percorso>
               </div>
-            </v-row>
+         </v-row>
 
             <div class="row py-6">
               <div class="col-sm-1"></div>
