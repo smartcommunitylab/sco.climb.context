@@ -28,8 +28,68 @@
           </div>
 
           <div class="align-center text-center">
+            <v-row>
+              <div class="col-sm-2">In Bici</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+
+              <div class="col-sm-2">A piedi</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+            </v-row>
+
+            <v-row>
+              <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+
+              <div class="col-sm-2">Pedibus</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+            </v-row>
+
+            <v-row>
+              <div class="col-sm-2">In auto fino alla piazzola di sosta</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+
+              <div class="col-sm-2">Car pooling</div>
+              <div class="col-sm-4">
+                <v-text-field
+                  :label="$t('numStud')"
+                  outlined
+                  dense
+                ></v-text-field>
+              </div>
+            </v-row>
+
             <div class="row">
-              <div class="col-sm-4">In Bici</div>
+              <div class="col-sm-2">In auto fino a scuola</div>
               <div class="col-sm-4">
                 <v-text-field
                   :label="$t('numStud')"
@@ -40,72 +100,7 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-4">A piedi</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-4">Scuolabus o trasporto pubblico</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">Pedibus</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-4">In auto fino alla piazzola di sosta</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-4">Car pooling</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-4">In auto fino a scuola</div>
-              <div class="col-sm-4">
-                <v-text-field
-                  :label="$t('numStud')"
-                  outlined
-                  dense
-                ></v-text-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-4">Abitudini rilevate dagli studenti</div>
+              <div class="col-sm-2">Abitudini rilevate dagli studenti</div>
               <div class="col-sm-4">
                 <v-text-field></v-text-field>
               </div>
@@ -124,54 +119,48 @@
           </div>
 
           <div class="align-center text-center">
-            <div class="row">
-              <div class="col-sm-4">In Bici</div>
+            <v-row>
+              <div class="col-sm-2">In Bici</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-sm-4">A piedi</div>
+              <div class="col-sm-2">A piedi</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
+            </v-row>
 
-            <div class="row">
-              <div class="col-sm-4">Scuolabus o trasporto pubblico</div>
+            <v-row>
+              <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-sm-4">Pedibus</div>
+              <div class="col-sm-2">Pedibus</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
+            </v-row>
 
-            <div class="row">
-              <div class="col-sm-4">In auto fino alla piazzola di sosta</div>
+            <v-row>
+              <div class="col-sm-2">In auto fino alla piazzola di sosta</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-sm-4">Car pooling</div>
+              <div class="col-sm-2">Car pooling</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
+            </v-row>
 
-            <div class="row">
+            <v-row>
               <div class="col-sm-4">In auto fino a scuola</div>
               <div class="col-sm-4">
                 <v-checkbox></v-checkbox>
               </div>
-            </div>
+            </v-row>
           </div>
 
           <div class="pa-7">
@@ -181,14 +170,11 @@
               <div class="row">
                 <div class="col-sm-4">Data di inizio</div>
                 <div class="col-sm-4">
-                  <v-tooltip v-model="show" right
-                    ><template v-slot:activator="{ on, attrs }">
-                      <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon color="grey lighten-1"> mdi-calendar </v-icon>
-                      </v-btn>
-                    </template>
-                    <span><v-date-picker></v-date-picker></span>
-                  </v-tooltip>
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1" @click="openCalendarStart()">
+                      mdi-calendar
+                    </v-icon>
+                  </v-btn>
                 </div>
               </div>
             </div>
@@ -197,14 +183,13 @@
               <div class="row">
                 <div class="col-sm-4">Data di fine</div>
                 <div class="col-sm-4">
-                  <v-tooltip v-model="show" right
-                    ><template v-slot:activator="{ on, attrs }">
-                      <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon color="grey lighten-1"> mdi-calendar </v-icon>
-                      </v-btn>
-                    </template>
-                    <span><v-date-picker></v-date-picker></span>
-                  </v-tooltip>
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1" @click="openCalendarEnd()">
+                      mdi-calendar
+                    </v-icon>
+                  </v-btn>
+
+                  <!-- <v-date-picker></v-date-picker> -->
                 </div>
               </div>
             </div>
@@ -268,6 +253,8 @@ export default {
     goToClassDefinition() {
       this.$router.push("classDefinition");
     },
+    openCalendarStart() {},
+    openCalendarEnd() {},
   },
   mounted() {
     let loader = this.$loading.show({

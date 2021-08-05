@@ -91,13 +91,14 @@ export default {
       //   id:'1',
       //   title:"Il giro del mediterraneo",
       //   length:"1845 Km",
-      //   start:'Trento'}, {
+      //   start:'Trento',
+      //   imgsource: 'https://i.picsum.photos/id/1026/4621/3070.jpg?hmac=OJ880cIneqAKIwHbYgkRZxQcuMgFZ4IZKJasZ5c5Wcw'}, {
       //     id:'2',
       //   title:"Le tradizioni italiane",
       //   length:"245 Km",
-      //   start:'Pescara'}
+      //   start:'Pescara',
+      //   imgsource: 'https://i.picsum.photos/id/1043/5184/3456.jpg?hmac=wsz2e0aFKEI0ij7mauIr2nFz2pzC8xNlgDHWHYi9qbc'}
       //     ],
-      // games:[],
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,

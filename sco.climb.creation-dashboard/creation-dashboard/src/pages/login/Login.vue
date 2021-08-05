@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-xl"><p v-html="$t('home.welcome')"></p></h2>
+    <h2 class="text-xl"><p v-html="$t('login.welcome')"></p></h2>
      <v-btn color="primary"  @click="login" v-if="!status.loggedIn">Accedi</v-btn>
       <v-btn color="primary"  @click="logout" v-else>Logout</v-btn>
   </div>

@@ -12,7 +12,7 @@
               di campi dove potranno essere inseriti i nicknames scelti dagli
               alunni e che servirà per la compilazione quotidiana del diario di
               mobilità. Questa modifica non è obbligatoria e può essere fatta a
-              percorso già iniziato. 
+              percorso già iniziato.
               <v-tooltip v-model="show" right
                 ><template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
@@ -20,29 +20,33 @@
                   </v-btn>
                 </template>
                 <span>See more</span>
-              </v-tooltip> </h4>
-
-             
+              </v-tooltip>
+            </h4>
           </div>
 
-          <div class="row">
+          <div class="row ma-0">
             <div class="col-sm-1"></div>
             <div class="col-xs-10 col-sm-4 c-card-layout">
               <div class="row mx-0">
-                <div class="col-12 col-xs-12">
-                  <label for="">Class:</label>
-                  <input type="text" class="c-input-field" />
+                <div class="col-12 col-xs-12 pa-1">
+                  <v-text-field
+                    :label="$t('class')"
+                    outlined
+                    dense
+                  ></v-text-field>
                 </div>
                 <div class="col-12 col-sm-4">
                   <label for="">No. Student:</label>
-                  <input
+                  <v-text-field
                     class="c-input-field"
                     type="number"
                     min="0"
-                    value="14"
+                    value="15"
                     v-model="studentsNum"
                     @change="updateStudentsFields(studentsNum)"
-                  />
+                    outlined
+                    dense
+                  ></v-text-field>
                 </div>
                 <div
                   class="col-12 col-xs-12"
@@ -50,11 +54,16 @@
                   :key="student.id"
                 >
                   <label>{{ student.id }}</label>
-                  <input
+                  <v-text-field
                     class="c-input-field"
                     type="text"
+                    min="0"
+                    value="15"
                     v-model="student.inputVal"
-                  />
+                    @change="updateStudentsFields(studentsNum)"
+                    outlined
+                    dense
+                  ></v-text-field>
                 </div>
               </div>
             </div>
@@ -133,10 +142,9 @@ export default {
 
 <style>
 .c-input-field {
-  border: 1px solid #000;
-  border-radius: 5px;
+  padding: 0 !important;
+  margin: 0 !important;
 }
-
 .c-card-layout {
   background: #f4f2f2;
   border-radius: 8px;
