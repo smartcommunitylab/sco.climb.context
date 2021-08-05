@@ -27,6 +27,7 @@
   "user_list_teacher": "Insegnante",
   "user_list_editor": "Game Editor Contenuti",
   "user_list_volunteer": "Volontario",
+  "user_list_super_teacher": "Super Insegnante",
   "user_list_norole": "Nessun ruolo",
   "user_list_csvrole": "Upload csv",
   "user_delete_error_msg": "Errore nella rimozione!",

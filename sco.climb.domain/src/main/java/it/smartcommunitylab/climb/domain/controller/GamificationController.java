@@ -341,7 +341,8 @@ public class GamificationController extends AuthController {
 	
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.POST)
 	public @ResponseBody PedibusGame createPedibusGame(
-			@PathVariable String ownerId, 
+			@PathVariable String ownerId,
+			@RequestParam(required = false) boolean skipItinerary,
 			@RequestBody PedibusGame game, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
@@ -353,11 +354,13 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		PedibusGame result = storage.savePedibusGame(game, ownerId, false);
-		PedibusItinerary itinerary = new PedibusItinerary();
-		itinerary.setOwnerId(ownerId);
-		itinerary.setPedibusGameId(result.getObjectId());
-		itinerary.setName(result.getGameName() + " - itinerario");
-		storage.savePedibusItinerary(itinerary);
+		if(!skipItinerary) {
+			PedibusItinerary itinerary = new PedibusItinerary();
+			itinerary.setOwnerId(ownerId);
+			itinerary.setPedibusGameId(result.getObjectId());
+			itinerary.setName(result.getGameName() + " - itinerario");
+			storage.savePedibusItinerary(itinerary);			
+		}
 		try {
 			schedulerManager.resetJob(result.getObjectId());
 		} catch (Exception e) {
@@ -580,33 +583,71 @@ public class GamificationController extends AuthController {
 	
 	@RequestMapping(value = "/api/game/catalog", method = RequestMethod.GET)
 	public @ResponseBody Page<PedibusGameCatalog> getPedibusGameCatalog(
+			@RequestParam(required = false) boolean catalog,
+			@RequestParam(required = false) List<String> disciplines,
+			@RequestParam(required = false) String geographicArea,
+			@RequestParam(required = false) Integer minScore,
+			@RequestParam(required = false) Integer maxScore,
 			Pageable pageRequest) throws Exception {
 		List<PedibusGameCatalog> result = new ArrayList<>();
 		List<PedibusGame> games = storage.getPedibusGames();
 		int countGame = 0;
 		for(PedibusGame game : games) {
-			if(game.isCatalog()) {
-				List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
-				if(itineraryList.size() > 0) {
-					PedibusItinerary pedibusItinerary = itineraryList.get(0);
-					List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
-							pedibusItinerary.getObjectId());
-					if(legs.size() > 0) {
-						countGame++;
-						PedibusGameCatalog report = new PedibusGameCatalog(game);
-						report.setItineraryId(pedibusItinerary.getObjectId());
-						report.setLegs(legs.size());
-						report.setFirstLeg(legs.get(0).getName());
-						report.setFinalLeg(legs.get(legs.size() - 1).getName());
-						report.setFinalScore(legs.get(legs.size() - 1).getScore());
-						result.add(report);					
-					}					
+			logger.info("valuta gioco:" + game.getObjectId());
+			if(catalog) {
+				if(!game.isCatalog()) {
+					continue;
 				}
+			}
+			List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+			if(itineraryList.size() > 0) {
+				PedibusItinerary pedibusItinerary = itineraryList.get(0);
+				List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
+						pedibusItinerary.getObjectId());
+				if(legs.size() > 0) {
+					PedibusItineraryLeg finalLeg = legs.get(legs.size() - 1);
+					if((minScore != null) && (minScore > 0)) {
+						if(finalLeg.getScore() < minScore) {
+							continue;
+						}
+					}
+					if((maxScore != null) && (maxScore > 0)) {
+						if(finalLeg.getScore() > maxScore) {
+							continue;
+						}						
+					}
+					if(Utils.isNotEmpty(geographicArea)) {
+						if(!geographicArea.equals(game.getGeographicArea())) {
+							continue;
+						}
+					}
+					if((disciplines != null) && (disciplines.size() > 0)) {
+						boolean found = false;
+						for(String discipline : disciplines) {
+							if(game.getDisciplines().contains(discipline)) {
+								found = true;
+								break;
+							}
+						}
+						if(!found) {
+							continue;
+						}
+					}
+					countGame++;
+					PedibusGameCatalog report = new PedibusGameCatalog(game);
+					report.setItineraryId(pedibusItinerary.getObjectId());
+					report.setLegs(legs.size());
+					report.setFirstLeg(legs.get(0).getName());
+					report.setFinalLeg(finalLeg.getName());
+					report.setFinalScore(finalLeg.getScore());
+					result.add(report);					
+				}					
 			}
 		}
 		int firstResult = pageRequest.getPageNumber() * pageRequest.getPageSize();
 		int maxResult = pageRequest.getPageSize();
-		List<PedibusGameCatalog> subList = result.subList(firstResult, firstResult + maxResult);
+		int maxCount = result.size() > (firstResult + maxResult) ? (firstResult + maxResult) : result.size();
+		List<PedibusGameCatalog> subList = Utils.subList(result, firstResult, maxCount);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("getPedibusGameCatalog: %s", result.size()));
 		}
@@ -636,6 +677,47 @@ public class GamificationController extends AuthController {
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("getPedibusGamesBySchool[%s]: %s", ownerId, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/catalog", method = RequestMethod.GET)
+	public @ResponseBody List<PedibusGameCatalog> getPedibusGameCatalogBySchool(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,			
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		User user = getUserByEmail(request);
+		List<PedibusGameCatalog> result = new ArrayList<>();
+		List<PedibusGame> list = storage.getPedibusGames(ownerId, instituteId, schoolId);
+		for(PedibusGame game : list) {
+			if(validateAuthorization(ownerId, instituteId, schoolId, null, game.getObjectId(),
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, user)) {
+				PedibusGameCatalog report = new PedibusGameCatalog(game);
+				List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+				if(itineraryList.size() > 0) {
+					PedibusItinerary pedibusItinerary = itineraryList.get(0);
+					report.setItineraryId(pedibusItinerary.getObjectId());
+					List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
+							pedibusItinerary.getObjectId());
+					report.setLegs(legs.size());
+					if(legs.size() > 0) {
+						PedibusItineraryLeg finalLeg = legs.get(legs.size() - 1);
+						report.setFirstLeg(legs.get(0).getName());
+						report.setFinalLeg(finalLeg.getName());
+						report.setFinalScore(finalLeg.getScore());						
+					}
+				}
+				result.add(report);
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getPedibusGameCatalogBySchool[%s]: %s", ownerId, result.size()));
 		}
 		return result;
 	}

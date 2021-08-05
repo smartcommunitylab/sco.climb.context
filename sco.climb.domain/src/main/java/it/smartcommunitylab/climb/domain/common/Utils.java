@@ -25,6 +25,7 @@ import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.model.PedibusGameCatalog;
 import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.scheduled.ChildStatus;
 
@@ -267,6 +268,17 @@ public class Utils {
 				result = true;
 				break;
 			}
+		}
+		return result;
+	}
+	
+	public static List<PedibusGameCatalog> subList(List<PedibusGameCatalog> list, int fromIndex, int toIndex) {
+		List<PedibusGameCatalog> result = new ArrayList<>();
+		if((fromIndex < 0) || (toIndex > list.size()) || (fromIndex > toIndex)) {
+			return result;
+		}
+		for(; fromIndex < toIndex; fromIndex++) {
+			result.add(list.get(fromIndex));
 		}
 		return result;
 	}
