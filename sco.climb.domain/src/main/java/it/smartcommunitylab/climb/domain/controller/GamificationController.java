@@ -681,6 +681,47 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/api/game/{ownerId}/{instituteId}/{schoolId}/catalog", method = RequestMethod.GET)
+	public @ResponseBody List<PedibusGameCatalog> getPedibusGameCatalogBySchool(
+			@PathVariable String ownerId,
+			@PathVariable String instituteId,
+			@PathVariable String schoolId,			
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		User user = getUserByEmail(request);
+		List<PedibusGameCatalog> result = new ArrayList<>();
+		List<PedibusGame> list = storage.getPedibusGames(ownerId, instituteId, schoolId);
+		for(PedibusGame game : list) {
+			if(validateAuthorization(ownerId, instituteId, schoolId, null, game.getObjectId(),
+				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, user)) {
+				PedibusGameCatalog report = new PedibusGameCatalog(game);
+				List<PedibusItinerary> itineraryList = storage.getPedibusItineraryByGameId(game.getOwnerId(), game.getObjectId());
+				if(itineraryList.size() > 0) {
+					PedibusItinerary pedibusItinerary = itineraryList.get(0);
+					report.setItineraryId(pedibusItinerary.getObjectId());
+					List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(game.getOwnerId(), game.getObjectId(), 
+							pedibusItinerary.getObjectId());
+					report.setLegs(legs.size());
+					if(legs.size() > 0) {
+						PedibusItineraryLeg finalLeg = legs.get(legs.size() - 1);
+						report.setFirstLeg(legs.get(0).getName());
+						report.setFinalLeg(finalLeg.getName());
+						report.setFinalScore(finalLeg.getScore());						
+					}
+				}
+				result.add(report);
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("getPedibusGameCatalogBySchool[%s]: %s", ownerId, result.size()));
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary", method = RequestMethod.POST)
 	public @ResponseBody PedibusItinerary createItinerary(
 			@PathVariable String ownerId, 
