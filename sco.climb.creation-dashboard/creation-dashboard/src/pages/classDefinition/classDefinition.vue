@@ -59,6 +59,7 @@
                     type="text"
                     min="0"
                     value="15"
+                    :label="$t('class')"
                     v-model="student.inputVal"
                     @change="updateStudentsFields(studentsNum)"
                     outlined
@@ -92,6 +93,7 @@
 
 <script>
 import CardPercorso from "@/components/Card-Percorso.vue";
+import { mapActions,mapState } from 'vuex';
 export default {
   name: "classDefinition",
   components: {
@@ -104,7 +106,13 @@ export default {
       students: [],
     };
   },
+  computed: {
+    ...mapState("game", ["currentGame"]),
+  },
   methods: {
+    ...mapActions("game", {
+      createClass: "createClass",
+    }),
     updateStudentsFields(num) {
       if (this.students?.length > num) {
         this.students.splice(0, this.students.length - num);
@@ -115,7 +123,7 @@ export default {
         }
         const tobeAdded = num - this.students.length;
         for (let i = 0; i < tobeAdded; i++) {
-          this.students.push({ inputVal: "name", id: lastM + 1 + i });
+          this.students.push({ inputVal: "", id: lastM + 1 + i });
         }
       }
     },
@@ -124,6 +132,7 @@ export default {
     },
     goNext() {
       this.$router.push("habitsDefinition");
+      this.createClass({nome:"ciao",students:this.students})
     },
   },
   mounted() {

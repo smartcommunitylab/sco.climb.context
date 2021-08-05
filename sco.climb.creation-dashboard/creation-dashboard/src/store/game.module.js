@@ -14,12 +14,18 @@ const actions = {
                 games => {
                     //todo reset old values
                     commit('getAllMyGamesSuccess', games);
+                    dispatch('alert/success', "Recuperati i tuoi giochi.", { root: true });
+
                 },
                 error => {
                     commit('getAllMyGamesFailure', error);
                     dispatch('alert/error', "Errore nel recupero delle informazioni.", { root: true });
                 }
             );
+    },
+    createClass({ commit }, classDefinition ) {
+        commit('setClassDefinition',classDefinition);
+        
     }
 
 
@@ -36,6 +42,10 @@ const mutations = {
     getAllMyGamesFailure(state, error) {
         state.myGames = { error };
     },
+    setClassDefinition(state,classDefinition){
+        state.currentGame = {classDefinition:classDefinition};
+    }
+    
 };
 
 export const game = {

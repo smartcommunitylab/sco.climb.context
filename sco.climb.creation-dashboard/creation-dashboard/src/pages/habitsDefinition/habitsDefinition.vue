@@ -8,6 +8,10 @@
             <hr />
             <h2>Abitudini di mobilità degli alunni</h2>
             <h4>
+              {{currentGame.classDefinition.nome}}
+              <div v-for="student in currentGame.classDefinition.students" :key="student.id">
+                {{student.inputVal}}
+              </div>
               Come si recano a scuola attualmente gli alunni che intendono
               partecipare al percorso Kids Go Green?<v-tooltip
                 v-model="show"
@@ -239,12 +243,16 @@
 </template>
 
 <script>
+import {mapState} from "vuex"
 export default {
   name: "habitsDefinition",
   data() {
     return {
       nomepagina: "habitsDefinition",
     };
+  },
+    computed: {
+    ...mapState("game", ["currentGame"]),
   },
   methods: {
     goToRouteSuggestion() {

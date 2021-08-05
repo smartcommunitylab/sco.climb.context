@@ -15,8 +15,8 @@
                     "5^"
                 ],
                 "gameId": null,
-                "gameName": "Test game",
-                "gameDescription": "Test game",
+                "gameName": "Test game 1",
+                "gameDescription": "Test game desc 1",
                 "from": 1475272800000,
                 "to": 1504216800000,
                 "globalTeam": "Scuola Test",
@@ -37,7 +37,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": null,
+                "imageLink": "https://picsum.photos/id/1005/5760/3840.jpg?hmac=2acSJCOwz9q_dKtDZdSB-OIK1HUcwBeXco_RMMTUgfY",
                 "geographicArea": null,
                 "disciplines": [],
                 "ageRange": []
@@ -64,8 +64,8 @@
                     "5^"
                 ],
                 "gameId": null,
-                "gameName": "Test game",
-                "gameDescription": "Test game",
+                "gameName": "Giro del mediterraneo",
+                "gameDescription": "Giro del mediterraneo",
                 "from": 1475272800000,
                 "to": 1504216800000,
                 "globalTeam": "Scuola Test",
@@ -86,7 +86,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": null,
+                "imageLink": "https://picsum.photos/id/1005/5760/3840.jpg?hmac=2acSJCOwz9q_dKtDZdSB-OIK1HUcwBeXco_RMMTUgfY",
                 "geographicArea": null,
                 "disciplines": [],
                 "ageRange": []

@@ -16,9 +16,7 @@
                 <v-list-item-title class="text-h6">
                   {{ username }}
                 </v-list-item-title>
-                <v-list-item-subtitle class="text-h8">{{
-                  role
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text-h8">{{ role }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-col>
@@ -57,27 +55,20 @@
             v-for="game in myGames.items"
             :key="game.id"
           >
-            <Card-Percorso :percorso="game">
-            </Card-Percorso>
+            <Card-Percorso :percorso="game"> </Card-Percorso>
           </div>
 
           <div class="col-sm-4 col-md-3 col-12" @click="goToClassDefinition()">
-            <Card-Percorso>
-            </Card-Percorso>
+            <Card-Percorso> </Card-Percorso>
           </div>
         </v-row>
-
       </div>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import {
-  mdiMapMarker,
-  mdiSchoolOutline,
-  mdiBookEducationOutline,
-} from "@mdi/js";
+import { mdiMapMarker, mdiSchoolOutline, mdiBookEducationOutline } from "@mdi/js";
 import { mapState, mapActions } from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
@@ -87,18 +78,6 @@ export default {
   },
   data() {
     return {
-      // items: [{
-      //   id:'1',
-      //   title:"Il giro del mediterraneo",
-      //   length:"1845 Km",
-      //   start:'Trento',
-      //   imgsource: 'https://i.picsum.photos/id/1026/4621/3070.jpg?hmac=OJ880cIneqAKIwHbYgkRZxQcuMgFZ4IZKJasZ5c5Wcw'}, {
-      //     id:'2',
-      //   title:"Le tradizioni italiane",
-      //   length:"245 Km",
-      //   start:'Pescara',
-      //   imgsource: 'https://i.picsum.photos/id/1043/5184/3456.jpg?hmac=wsz2e0aFKEI0ij7mauIr2nFz2pzC8xNlgDHWHYi9qbc'}
-      //     ],
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
@@ -113,8 +92,8 @@ export default {
       kilometers: "12424",
     };
   },
-    computed: {
-    ...mapState("game", ["myGames"])
+  computed: {
+    ...mapState("game", ["myGames"]),
   },
   methods: {
     goToClassDefinition() {
@@ -122,7 +101,7 @@ export default {
     },
     ...mapActions("game", {
       getAllMyGames: "getAllMyGames",
-    })
+    }),
   },
   mounted() {
     this.getAllMyGames();
@@ -141,4 +120,3 @@ export default {
   height: 100%;
 }
 </style>
-

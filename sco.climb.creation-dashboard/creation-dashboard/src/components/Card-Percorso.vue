@@ -2,15 +2,13 @@
   <div style="height: 240px" class="my-3">
     <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
       <div v-if="percorso">
-        <v-col cols="12" sm="12">
           <v-img
-            v-bind:src="percorso.imgsource"
+            v-bind:src="percorso.pedibusGame.imageLink"
             max-width="200"
             min-height="150"
           />
-        </v-col>
         <div>
-        {{ percorso.pedibusGame.gameDescription }}
+        {{ percorso.pedibusGame.gameName }}
         {{ percorso.length }}
         {{ percorso.start }}
         </div>
