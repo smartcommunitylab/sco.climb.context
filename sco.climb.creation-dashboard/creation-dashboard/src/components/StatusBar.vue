@@ -4,7 +4,7 @@
       <v-col col="12">
         <v-breadcrumbs :items="items" divider="">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
+            <v-breadcrumbs-item :href="item.href" :disabled="item.disabled" active-class="link-disabled" :class="{'actual':isActualPath(item)}">
               <div class="col breadcrumb" :class="item.class">
                 <span>{{ item.text.toUpperCase() }}</span>
               </div>
@@ -22,6 +22,9 @@ export default {
   name: "StatusBar",
   computed: {
     ...mapState("navigation", ["page"]),
+    currentRouteName() {
+        return this.$route.name;
+    }
   },
   created() {},
   data: () => ({
@@ -52,19 +55,23 @@ export default {
       },
       {
         text: "Personalizzazione percorsi",
-        disabled: false,
+        disabled: true,
         class: "personalize",
         href: "personalize",
       },
       {
         text: "Riepilogo",
-        disabled: false,
+        disabled: true,
         class: "summary",
         href: "summary",
       },
     ],
   }),
-  methods: {},
+  methods: {
+    isActualPath(path){
+      return this.currentRouteName===path.href
+    }
+  },
 };
 </script>
 <style>
@@ -165,4 +172,18 @@ export default {
 .v-breadcrumbs__divider {
   padding: 0px !important;
 }
+.link-disabled .breadcrumb{
+  background-color: grey;
+}
+.link-disabled .breadcrumb:after{
+  border-left: 20px solid grey;
+}
+.link-disabled .breadcrumb:before{
+  border-top: 22px solid grey;
+  border-bottom: 22px solid grey;
+  border-right: 22px solid grey;
+  border-left: 22px solid transparent;}
+.actual {
+    background-color:blue;
+  }
 </style>
