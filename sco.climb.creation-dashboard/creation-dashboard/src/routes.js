@@ -39,6 +39,16 @@ const routes = [
     component: () => import('./pages/routeSuggestion/routeSuggestion.vue')
   },
   {
+    path: '/personalize',
+    name: 'personalize',
+    component: () => import('./pages/personalize/personalize.vue')
+  },
+  {
+    path: '/summary',
+    name: 'summary',
+    component: () => import('./pages/summary/summary.vue')
+  },
+  {
     path: '/404',
     component: NotFound
 
