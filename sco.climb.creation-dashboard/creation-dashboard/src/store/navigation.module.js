@@ -30,9 +30,9 @@
       },
       {
         step:5,
-        text: "Personalizzazione percorsi",
+        text: "Creazione percorso",
         class: "personalize",
-        href: "personalize",
+        href: "routeCreation",
         disabled:true
       },
       {
@@ -43,7 +43,7 @@
         disabled:true
       },
     ]
-const state = { 
+    const state = { 
      page: null,
      currentStep:1,
      items: JSON.parse(JSON.stringify(items))}

@@ -24,30 +24,25 @@
             </h4>
           </div>
 
-          <div class="row ma-0">
-            <Card-Class></Card-Class>
+          <div class="row ma-5" v-for="schoolClass in schoolClasses" v-bind:key="schoolClass">
+            <Card-Class :schoolClass="schoolClass"></Card-Class>
             <div class="col-sm-1"></div>
+
+            <!-- <v-expand-transition>
+              <Card-Class v-show="expand"></Card-Class>
+            </v-expand-transition> -->
+
+            <div class="col-sm-1"></div>
+          </div>
             <v-btn
               class="ma-2"
               height="50px"
               width="200px"
               color="primary"
-              @click="
-                expand = !expand;
-                isHidden = !isHidden;
-              "
-              v-show="isHidden"
+              @click="addNewClass"
             >
               Add another class
             </v-btn>
-
-            <v-expand-transition>
-              <Card-Class v-show="expand"></Card-Class>
-            </v-expand-transition>
-
-            <div class="col-sm-1"></div>
-          </div>
-
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
@@ -65,6 +60,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import CardClass from "@/components/Card-Class.vue";
 export default {
   name: "classDefinition",
@@ -77,8 +73,13 @@ export default {
       expand2: false,
       isHidden: true,
       nomepagina: "Class Definition",
-      studentsNum: 5,
-      students: [],
+      schoolClasses:[{
+        className:'',
+        studentsNum:5,
+        students: []
+      }]
+      // studentsNum: 5,
+      // students: [],
     };
   },
   computed: {},
@@ -86,29 +87,36 @@ export default {
     ...mapActions("game", {
       createClass: "createClass",
     }),
-        ...mapActions("navigation", {
+     ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
-    updateStudentsFields(num) {
-      if (this.students?.length > num) {
-        this.students.splice(0, this.students.length - num);
-      } else {
-        let lastM = 0;
-        if (this.students?.length > 0) {
-          lastM = this.students[this.students.length - 1].id;
-        }
-        const tobeAdded = num - this.students.length;
-        for (let i = 0; i < tobeAdded; i++) {
-          this.students.push({ inputVal: "", id: lastM + 1 + i });
-        }
-      }
+    // updateStudentsFields(num) {
+    //   if (this.students?.length > num) {
+    //     this.students.splice(0, this.students.length - num);
+    //   } else {
+    //     let lastM = 0;
+    //     if (this.students?.length > 0) {
+    //       lastM = this.students[this.students.length - 1].id;
+    //     }
+    //     const tobeAdded = num - this.students.length;
+    //     for (let i = 0; i < tobeAdded; i++) {
+    //       this.students.push({ inputVal: "", id: lastM + 1 + i });
+    //     }
+    //   }
+    // },
+    addNewClass() {
+        this.schoolClasses.push({
+        className:'',
+        studentsNum:5,
+        students: []
+      })
     },
     navigateHome() {
       this.$router.push("home");
     },
     goNext() {
       this.$router.push("habitsDefinition");
-      this.createClass({nome:"ciao",students:this.students})
+      this.createClass(this.schoolClasses)
       this.nextStep();
     },
   },

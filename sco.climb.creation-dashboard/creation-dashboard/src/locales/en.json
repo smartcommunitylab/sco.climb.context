@@ -7,5 +7,6 @@
     "students": "students,",
     "class": "Class",
     "createPath":"+",
-    "numKms": "kilometers"
+    "numKms": "kilometers",
+    "nickname":"Nickname"
 }

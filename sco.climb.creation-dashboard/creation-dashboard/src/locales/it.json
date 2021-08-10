@@ -6,5 +6,6 @@
     "students": "studenti,",
   "class": "Classe",
   "createPath":"+",
-  "numKms": "chilometri"
+  "numKms": "chilometri",
+  "nickname":"Nickname"
 }
