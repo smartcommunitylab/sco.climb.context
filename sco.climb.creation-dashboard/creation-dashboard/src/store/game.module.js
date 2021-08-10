@@ -1,8 +1,8 @@
 import { gameService } from '../services';
 
 const state = {
-    myGames:null,
-    currentGame:null
+    myGames: null,
+    currentGame: null
 }
 
 const actions = {
@@ -23,9 +23,11 @@ const actions = {
                 }
             );
     },
-    createClass({ commit }, classDefinition ) {
-        commit('setClassDefinition',classDefinition);
-        
+
+    createClass({ commit }, classDefinition) {
+        commit('setClassDefinition', classDefinition);
+    
+
     }
 
 
@@ -42,10 +44,10 @@ const mutations = {
     getAllMyGamesFailure(state, error) {
         state.myGames = { error };
     },
-    setClassDefinition(state,classDefinition){
-        state.currentGame = {classDefinition:classDefinition};
+    setClassDefinition(state, classDefinition) {
+        state.currentGame = { classDefinition: classDefinition };
     }
-    
+
 };
 
 export const game = {

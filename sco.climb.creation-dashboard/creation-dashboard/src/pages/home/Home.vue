@@ -70,6 +70,7 @@
 <script>
 import { mdiMapMarker, mdiSchoolOutline, mdiBookEducationOutline } from "@mdi/js";
 import { mapState, mapActions } from "vuex";
+import institutes from '../../../public/tmp-data/institutes.json'
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "Home",
@@ -78,6 +79,7 @@ export default {
   },
   data() {
     return {
+      institutesJson: institutes,
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
@@ -88,7 +90,6 @@ export default {
       role: "Insegnante",
       username: "Francesca Russo",
       departure: "Trento",
-      titleCard: "Il giro del Mediterraneo",
       kilometers: "12424",
     };
   },

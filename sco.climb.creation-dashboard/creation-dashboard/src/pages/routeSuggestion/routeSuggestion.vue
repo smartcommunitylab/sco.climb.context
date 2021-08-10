@@ -24,21 +24,16 @@
                 >
               </v-tooltip>
             </h4>
-            
-            <v-row>
+
+            <v-row v-if="myGames.items">
               <div
                 class="col-sm-4 col-md-3 col-12"
-                v-for="item in items"
-                :key="item.message"
+                v-for="game in myGames.items"
+                :key="game.id"
               >
-                <Card-Percorso
-                  :free="false"
-                  @click="goToRoutePersonalization()"
-                >
-                  {{ item }}
-                </Card-Percorso>
+                <Card-Percorso :percorso="game" @click="gotoRoutePersonalization()"> </Card-Percorso>
               </div>
-         </v-row>
+            </v-row>
 
             <div class="row py-6">
               <div class="col-sm-1"></div>
@@ -62,6 +57,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "routeSuggestion",
@@ -70,17 +66,21 @@ export default {
   },
   data() {
     return {
-      items: ["Il giro del mediterraneo", "Le tradizioni italiane"],
       nomepagina: "routeSuggestion",
-      titleCard: "Il giro del Mediterraneo",
     };
+  },
+computed: {
+    ...mapState("game", ["myGames"]),
   },
   methods: {
     goToRouteCreation() {
-      this.$router.push("");
+      this.$router.push("routeCreation");
     },
+    ...mapActions("game", {
+      getAllMyGames: "getAllMyGames",
+    }),
     goToRoutePersonalization() {
-      this.$router.push("");
+      this.$router.push("routePersonalization");
     },
     goToHabitsDefinition() {
       this.$router.push("habitsDefinition");
@@ -88,6 +88,7 @@ export default {
   },
 
   mounted() {
+    this.getAllMyGames();
     let loader = this.$loading.show({
       canCancel: false,
       backgroundColor: "#000",

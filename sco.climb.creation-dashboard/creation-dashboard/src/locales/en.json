@@ -2,7 +2,10 @@
     "login": {
         "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
     },
+    
     "numStud": "numbers of students",
+    "students": "students,",
     "class": "Class",
-    "createPath":"+"
+    "createPath":"+",
+    "numKms": "kilometers"
 }

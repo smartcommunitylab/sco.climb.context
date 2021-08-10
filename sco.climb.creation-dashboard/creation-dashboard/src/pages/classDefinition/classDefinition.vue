@@ -25,53 +25,26 @@
           </div>
 
           <div class="row ma-0">
+            <Card-Class></Card-Class>
             <div class="col-sm-1"></div>
-            <div class="col-xs-10 col-sm-4 c-card-layout">
-              <div class="row mx-0">
-                <div class="col-12 col-xs-12 pa-1">
-                  <v-text-field
-                    :label="$t('class')"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </div>
-                <div class="col-12 col-sm-4">
-                  <label for="">No. Student:</label>
-                  <v-text-field
-                    class="c-input-field"
-                    type="number"
-                    min="0"
-                    value="15"
-                    v-model="studentsNum"
-                    @change="updateStudentsFields(studentsNum)"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </div>
-                <div
-                  class="col-12 col-xs-12"
-                  v-for="student in students"
-                  :key="student.id"
-                >
-                  <label>{{ student.id }}</label>
-                  <v-text-field
-                    class="c-input-field"
-                    type="text"
-                    min="0"
-                    value="15"
-                    :label="$t('class')"
-                    v-model="student.inputVal"
-                    @change="updateStudentsFields(studentsNum)"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <!-- Transistion Card goes here-->
-              <Card-Percorso :free="true"></Card-Percorso>
-            </div>
+            <v-btn
+              class="ma-2"
+              height="50px"
+              width="200px"
+              color="primary"
+              @click="
+                expand = !expand;
+                isHidden = !isHidden;
+              "
+              v-show="isHidden"
+            >
+              Add another class
+            </v-btn>
+
+            <v-expand-transition>
+              <Card-Class v-show="expand"></Card-Class>
+            </v-expand-transition>
+
             <div class="col-sm-1"></div>
           </div>
 
@@ -92,47 +65,29 @@
 </template>
 
 <script>
-import CardPercorso from "@/components/Card-Percorso.vue";
-import { mapActions,mapState } from 'vuex';
+import CardClass from "@/components/Card-Class.vue";
 export default {
   name: "classDefinition",
   components: {
-    "Card-Percorso": CardPercorso,
+    "Card-Class": CardClass,
   },
   data() {
     return {
+      expand: false,
+      expand2: false,
+      isHidden: true,
       nomepagina: "Class Definition",
       studentsNum: 5,
       students: [],
     };
   },
-  computed: {
-    ...mapState("game", ["currentGame"]),
-  },
+  computed: {},
   methods: {
-    ...mapActions("game", {
-      createClass: "createClass",
-    }),
-    updateStudentsFields(num) {
-      if (this.students?.length > num) {
-        this.students.splice(0, this.students.length - num);
-      } else {
-        let lastM = 0;
-        if (this.students?.length > 0) {
-          lastM = this.students[this.students.length - 1].id;
-        }
-        const tobeAdded = num - this.students.length;
-        for (let i = 0; i < tobeAdded; i++) {
-          this.students.push({ inputVal: "", id: lastM + 1 + i });
-        }
-      }
-    },
     navigateHome() {
       this.$router.push("home");
     },
     goNext() {
       this.$router.push("habitsDefinition");
-      this.createClass({nome:"ciao",students:this.students})
     },
   },
   mounted() {
@@ -141,7 +96,6 @@ export default {
       backgroundColor: "#000",
       color: "#fff",
     });
-    this.updateStudentsFields(this.studentsNum);
     setTimeout(() => {
       loader.hide();
     }, 500);
