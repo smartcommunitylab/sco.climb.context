@@ -98,10 +98,14 @@ export default {
   methods: {
     goToClassDefinition() {
       this.$router.push("classDefinition");
+      this.nextStep();
     },
     ...mapActions("game", {
-      getAllMyGames: "getAllMyGames",
+      getAllMyGames: "getAllMyGames"
     }),
+        ...mapActions("navigation", {
+      nextStep: "nextStep"
+    })
   },
   mounted() {
     this.getAllMyGames();

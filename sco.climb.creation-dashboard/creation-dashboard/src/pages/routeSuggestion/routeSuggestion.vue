@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "routeSuggestion",
@@ -76,11 +77,16 @@ export default {
     };
   },
   methods: {
+  ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
     goToRouteCreation() {
       this.$router.push("");
+      this.nextStep();
     },
     goToRoutePersonalization() {
-      this.$router.push("");
+      this.$router.push("personalize");
+      this.nextStep();
     },
     goToHabitsDefinition() {
       this.$router.push("habitsDefinition");

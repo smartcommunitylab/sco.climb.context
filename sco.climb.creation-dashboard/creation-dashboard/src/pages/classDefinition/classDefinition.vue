@@ -113,6 +113,9 @@ export default {
     ...mapActions("game", {
       createClass: "createClass",
     }),
+        ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
     updateStudentsFields(num) {
       if (this.students?.length > num) {
         this.students.splice(0, this.students.length - num);
@@ -133,6 +136,7 @@ export default {
     goNext() {
       this.$router.push("habitsDefinition");
       this.createClass({nome:"ciao",students:this.students})
+      this.nextStep();
     },
   },
   mounted() {

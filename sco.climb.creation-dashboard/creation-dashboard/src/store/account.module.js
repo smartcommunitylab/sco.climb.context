@@ -32,8 +32,8 @@ const actions = {
     logout({ commit, dispatch }) {
         userService.logout();
         commit('logout');
+        dispatch('navigation/logout',null,{ root: true });
         dispatch('alert/success', "Utente uscito con successo", { root: true });
-        dispatch('navigation/changePage','/login', { root: true });
         router.push('/login');
     },
 

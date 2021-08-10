@@ -21,56 +21,17 @@ import { mapState } from "vuex";
 export default {
   name: "StatusBar",
   computed: {
-    ...mapState("navigation", ["page"]),
+    ...mapState("navigation", ["page","items"]),
+    ...mapState("game", ["currentGame"]),
     currentRouteName() {
         return this.$route.name;
     }
   },
   created() {},
-  data: () => ({
-    items: [
-      {
-        text: "Home",
-        disabled: false,
-        class: "home",
-        href: "home",
-      },
-      {
-        text: "Gruppo partecipanti",
-        disabled: false,
-        class: "classDefinition",
-        href: "classDefinition",
-      },
-      {
-        text: "Abitudine mobilitá",
-        disabled: false,
-        class: "habitsDefinition",
-        href: "habitsDefinition",
-      },
-      {
-        text: "Percorsi consigliati",
-        disabled: false,
-        class: "routeSuggestion",
-        href: "routeSuggestion",
-      },
-      {
-        text: "Personalizzazione percorsi",
-        disabled: true,
-        class: "personalize",
-        href: "personalize",
-      },
-      {
-        text: "Riepilogo",
-        disabled: true,
-        class: "summary",
-        href: "summary",
-      },
-    ],
-  }),
   methods: {
     isActualPath(path){
       return this.currentRouteName===path.href
-    }
+    },
   },
 };
 </script>
@@ -184,6 +145,6 @@ export default {
   border-right: 22px solid grey;
   border-left: 22px solid transparent;}
 .actual {
-    background-color:blue;
+    border-bottom:solid 1px grey;;
   }
 </style>
