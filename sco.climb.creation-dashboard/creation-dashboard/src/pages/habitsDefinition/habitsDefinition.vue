@@ -330,7 +330,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState,mapActions} from "vuex"
 export default {
   name: "habitsDefinition",
   data() {
@@ -359,8 +359,12 @@ export default {
     },
   },
   methods: {
+    ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
     goToRouteSuggestion() {
       this.$router.push("routeSuggestion");
+      this.nextStep();
     },
     goToClassDefinition() {
       this.$router.push("classDefinition");

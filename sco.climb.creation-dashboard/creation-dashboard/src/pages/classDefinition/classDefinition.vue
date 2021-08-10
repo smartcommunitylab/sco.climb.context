@@ -83,11 +83,33 @@ export default {
   },
   computed: {},
   methods: {
+    ...mapActions("game", {
+      createClass: "createClass",
+    }),
+        ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
+    updateStudentsFields(num) {
+      if (this.students?.length > num) {
+        this.students.splice(0, this.students.length - num);
+      } else {
+        let lastM = 0;
+        if (this.students?.length > 0) {
+          lastM = this.students[this.students.length - 1].id;
+        }
+        const tobeAdded = num - this.students.length;
+        for (let i = 0; i < tobeAdded; i++) {
+          this.students.push({ inputVal: "", id: lastM + 1 + i });
+        }
+      }
+    },
     navigateHome() {
       this.$router.push("home");
     },
     goNext() {
       this.$router.push("habitsDefinition");
+      this.createClass({nome:"ciao",students:this.students})
+      this.nextStep();
     },
   },
   mounted() {

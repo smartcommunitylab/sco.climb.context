@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import {mapActions} from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "routeSuggestion",
@@ -73,14 +73,19 @@ computed: {
     ...mapState("game", ["myGames"]),
   },
   methods: {
+  ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
     goToRouteCreation() {
       this.$router.push("routeCreation");
+      this.nextStep();
     },
     ...mapActions("game", {
       getAllMyGames: "getAllMyGames",
     }),
     goToRoutePersonalization() {
       this.$router.push("routePersonalization");
+      this.nextStep();
     },
     goToHabitsDefinition() {
       this.$router.push("habitsDefinition");

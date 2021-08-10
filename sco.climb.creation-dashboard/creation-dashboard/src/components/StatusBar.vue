@@ -1,20 +1,19 @@
 <template>
-  <v-container>
+  <div>
     <v-row class="text-center">
       <v-col col="12">
-        <v-breadcrumbs :items="items">
+        <v-breadcrumbs :items="items" divider="">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :href="item.href" :disabled="item.disabled" >
+            <v-breadcrumbs-item :href="item.href" :disabled="item.disabled" active-class="link-disabled" :class="{'actual':isActualPath(item)}">
               <div class="col breadcrumb" :class="item.class">
-                {{ item.text.toUpperCase() }}
+                <span>{{ item.text.toUpperCase() }}</span>
               </div>
-              </v-breadcrumbs-item
-            >
+            </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -22,56 +21,130 @@ import { mapState } from "vuex";
 export default {
   name: "StatusBar",
   computed: {
-    ...mapState("navigation", ["page"]),
+    ...mapState("navigation", ["page","items"]),
+    ...mapState("game", ["currentGame"]),
+    currentRouteName() {
+        return this.$route.name;
+    }
   },
   created() {},
-  data: () => ({
-    items: [
-      {
-        text: "Home",
-        disabled: false,
-        class: "home",
-        href: "home",
-      },
-      {
-        text: "classDefinition",
-        disabled: false,
-        class: "classDefinition",
-        href: "classDefinition",
-      },
-      {
-        text: "habitsDefinition",
-        disabled: false,
-        class: "habitsDefinition",
-        href: "habitsDefinition",
-      },
-            {
-        text: "routesSuggestion",
-        disabled: false,
-        class: "routesSuggestion",
-        href: "routesSuggestion",
-      },
-    ],
-  }),
-  methods: {},
+  methods: {
+    isActualPath(path){
+      return this.currentRouteName===path.href
+    },
+  },
 };
 </script>
-<style scoped>
-.breadcrumb{
-    color: white;
-
+<style>
+.breadcrumb {
+  color: white;
+  position: relative;
+  margin: 25px;
 }
-
+.breadcrumb:after {
+  content: "";
+  position: absolute;
+  right: -43px;
+  top: 0%;
+  height: 100%;
+  border: 23px solid transparent;
+}
+.breadcrumb:before {
+  position: absolute;
+  content: "";
+  left: -40px;
+  top: 0%;
+  height: 100%;
+}
 .home {
-    background-color: lightgreen;
+  background-color: lightcoral;
 }
+
+.home:after {
+  border-left: 20px solid lightcoral;
+}
+
 .classDefinition {
-    background-color: #FF7D60;
+  background-color: #3ec28f;
+}
+.classDefinition:after {
+  border-left: 20px solid #3ec28f;
+}
+.classDefinition:before {
+  border-top: 22px solid #3ec28f;
+  border-bottom: 22px solid #3ec28f;
+  border-right: 22px solid #3ec28f;
+  border-left: 22px solid transparent;
 }
 .habitsDefinition {
-    background-color: #8BDCF5;
+  background-color: #8bdcf5;
 }
-.routesSuggestion {
-    background-color: #BDB1FF;
+.habitsDefinition:after {
+  border-left: 20px solid #8bdcf5;
 }
+.habitsDefinition:before {
+  border-top: 22px solid #8bdcf5;
+  border-bottom: 22px solid #8bdcf5;
+  border-right: 22px solid #8bdcf5;
+  border-left: 22px solid transparent;
+}
+.routeSuggestion {
+  background-color: #bdb1ff;
+}
+.routeSuggestion:before {
+  border-top: 22px solid #bdb1ff;
+  border-bottom: 22px solid #bdb1ff;
+  border-right: 22px solid #bdb1ff;
+  border-left: 22px solid transparent;
+}
+.routeSuggestion:after {
+  border-left: 20px solid #bdb1ff;
+}
+.personalize {
+  background-color: #ffc490;
+}
+.personalize:before {
+  border-top: 22px solid #ffc490;
+  border-bottom: 22px solid #ffc490;
+  border-right: 22px solid #ffc490;
+  border-left: 22px solid transparent;
+}
+.personalize:after {
+  border-left: 20px solid #ffc490;
+}
+/* .classDefinition:before {
+  border-top: 20px solid #3ec28f;
+  border-bottom: 20px solid #3ec28f;
+  border-right: 20px solid #3ec28f;
+  border-left: 20px solid transparent;
+} */
+.summary {
+  background-color: #bdb1ff;
+}
+.summary:before {
+  border-top: 22px solid #bdb1ff;
+  border-bottom: 22px solid #bdb1ff;
+  border-right: 22px solid #bdb1ff;
+  border-left: 22px solid transparent;
+}
+.summary:after {
+  border-left: 20px solid #bdb1ff;
+}
+.v-breadcrumbs__divider {
+  padding: 0px !important;
+}
+.link-disabled .breadcrumb{
+  background-color: grey;
+}
+.link-disabled .breadcrumb:after{
+  border-left: 20px solid grey;
+}
+.link-disabled .breadcrumb:before{
+  border-top: 22px solid grey;
+  border-bottom: 22px solid grey;
+  border-right: 22px solid grey;
+  border-left: 22px solid transparent;}
+.actual {
+    border-bottom:solid 1px grey;;
+  }
 </style>
