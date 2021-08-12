@@ -37,19 +37,20 @@
           <div class="align-center text-center">
             <div class="col-sm-12">
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">In Bici</div>
-                <v-form ref="form" @submit.prevent="submit">
-                  <div class="col-sm-2">
-                    <v-text-field
-                      v-model="form.inbici"
-                      type="number"
-                      color="blue darken-2"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                
+
+                <div class="col-sm-2">
+                  <v-text-field
+                    v-model="form.inbici"
+                    type="number"
+                    color="blue darken-2"
+                    :label="$t('numStud')"
+                    outlined
+                    dense
+                  ></v-text-field>
+                </div>
+
                 <div class="col-sm-2">
                   <v-text-field
                     type="number"
@@ -58,12 +59,13 @@
                     dense
                   ></v-text-field>
                 </div>
-                </v-form>
               </v-row>
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">A piedi</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.apiedi"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -81,9 +83,11 @@
               </v-row>
 
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.scuolabus"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -100,9 +104,11 @@
                 </div>
               </v-row>
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">Pedibus</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.pedibus"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -120,9 +126,11 @@
               </v-row>
 
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">In auto fino alla piazzola di sosta</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.sosta"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -139,9 +147,11 @@
                 </div>
               </v-row>
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">Car pooling</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.carpooling"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -158,9 +168,11 @@
                 </div>
               </v-row>
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">In auto fino a scuola</div>
                 <div class="col-sm-2">
                   <v-text-field
+                    v-model="form.auto"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -178,14 +190,13 @@
               </v-row>
 
               <v-row>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-2">Abitudini rilevate dagli studenti</div>
-                <div class="col-sm-2">
-                  <v-text-field></v-text-field>
-                </div>
+                <div class="col-sm-2">0/0</div>
               </v-row>
             </div>
 
-            <v-btn @click="saveInfo()"></v-btn>
+            <!-- <v-btn @click="saveInfo()"></v-btn> -->
           </div>
 
           <div class="pa-7">
@@ -201,48 +212,54 @@
 
           <div class="align-center text-center">
             <v-row>
-              <div class="col-sm-2">In Bici</div>
-              <div class="col-sm-4">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">In Bici</div>
+              <div class="col-sm-1 pa-1">
+                <v-checkbox></v-checkbox>
+              </div>
+
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">A piedi</div>
+              <div class="col-sm-1 pa-1 checkbox">
                 <v-checkbox></v-checkbox>
               </div>
             </v-row>
 
             <v-row>
-              <div class="col-sm-2">A piedi</div>
-              <div class="col-sm-4">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">Scuolabus o trasporto pubblico</div>
+              <div class="col-sm-1 pa-1">
                 <v-checkbox></v-checkbox>
               </div>
-            </v-row>
-            <v-row>
-              <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
-              <div class="col-sm-4">
+
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">Pedibus</div>
+              <div class="col-sm-1 pa-1">
                 <v-checkbox></v-checkbox>
               </div>
             </v-row>
 
             <v-row>
-              <div class="col-sm-2">Pedibus</div>
-              <div class="col-sm-4">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">
+                In auto fino alla piazzola di sosta
+              </div>
+              <div class="col-sm-1 pa-1">
+                <v-checkbox></v-checkbox>
+              </div>
+
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">Car pooling</div>
+
+              <div class="col-sm-1 pa-1">
                 <v-checkbox></v-checkbox>
               </div>
             </v-row>
 
             <v-row>
-              <div class="col-sm-2">In auto fino alla piazzola di sosta</div>
-              <div class="col-sm-4">
-                <v-checkbox></v-checkbox>
-              </div>
-            </v-row>
-
-            <v-row>
-              <div class="col-sm-2">Car pooling</div>
-              <div class="col-sm-4">
-                <v-checkbox></v-checkbox>
-              </div>
-            </v-row>
-            <v-row>
-              <div class="col-sm-2">In auto fino a scuola</div>
-              <div class="col-sm-4">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2 pa-1">In auto fino a scuola</div>
+              <div class="col-sm-1 pa-1">
                 <v-checkbox></v-checkbox>
               </div>
             </v-row>
@@ -252,6 +269,7 @@
             <h2>Calibrazione del percorso</h2>
 
             <div class="row">
+              <div class="col-sm-1"></div>
               <div class="col-sm-4">Data di inizio</div>
               <div class="col-sm-4">
                 <v-btn
@@ -266,6 +284,7 @@
             </div>
 
             <div class="row">
+              <div class="col-sm-1"></div>
               <div class="col-sm-4">Data di fine</div>
               <div class="col-sm-4">
                 <v-btn
@@ -287,6 +306,7 @@
 
             <h4>Gli alunni vanno a scuola di sabato?</h4>
             <div class="row">
+              <div class="col-sm-1"></div>
               <div class="col-sm-4">
                 <v-radio-group v-model="row" row>
                   <v-radio label="Sì" value="radio-1"></v-radio>
@@ -300,6 +320,7 @@
               scuola?
             </h4>
             <div class="row">
+              <div class="col-sm-1"></div>
               <div class="col-sm-4">
                 <v-radio-group v-model="row" row>
                   <v-radio label="Sì" value="radio-1"></v-radio>
@@ -330,12 +351,18 @@
 </template>
 
 <script>
-import {mapState,mapActions} from "vuex"
+import { mapState, mapActions } from "vuex";
 export default {
   name: "habitsDefinition",
   data() {
     const habitsForm = Object.freeze({
       inbici: 0,
+      apiedi: 0,
+      scuolabus: 0,
+      pedibus: 0,
+      auto: 0,
+      carpooling: 0,
+      sosta: 0,
     });
     return {
       form: Object.assign({}, habitsForm),
@@ -390,5 +417,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.checkboxstyle {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.checkbox {
+  float: left;
+}
+.col-sm-2 {
+  padding: 8px !important;
+}
+</style>
 

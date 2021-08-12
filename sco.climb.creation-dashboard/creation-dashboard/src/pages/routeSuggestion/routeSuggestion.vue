@@ -25,13 +25,25 @@
               </v-tooltip>
             </h4>
 
+            <v-row class="pa-7">
+              <div class="col-sm-2"></div>
+              <v-btn 
+                >Filtri <v-icon>mdi-filter-outline </v-icon></v-btn
+              ></v-row
+            >
+
             <v-row v-if="myGames.items">
+              <div class="col-sm-3"></div>
               <div
                 class="col-sm-4 col-md-3 col-12"
                 v-for="game in myGames.items"
                 :key="game.id"
               >
-                <Card-Percorso :percorso="game" @click="gotoRoutePersonalization()"> </Card-Percorso>
+                <Card-Percorso
+                  :percorso="game"
+                  @click="gotoRoutePersonalization()"
+                >
+                </Card-Percorso>
               </div>
             </v-row>
 
@@ -44,7 +56,7 @@
               </div>
               <div class="col-sm-5">
                 <v-btn class="float-right" @click="goToRouteCreation()"
-                  >Avanti</v-btn
+                  >Salta e crea percorso</v-btn
                 >
               </div>
               <div class="col-sm-1"></div>
@@ -57,7 +69,7 @@
 </template>
 
 <script>
-import {mapActions,mapState} from "vuex";
+import { mapActions, mapState } from "vuex";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "routeSuggestion",
@@ -69,11 +81,11 @@ export default {
       nomepagina: "routeSuggestion",
     };
   },
-computed: {
+  computed: {
     ...mapState("game", ["myGames"]),
   },
   methods: {
-  ...mapActions("navigation", {
+    ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
     goToRouteCreation() {
