@@ -1,0 +1,94 @@
+[
+    {
+       "ownerId":"TEST",
+       "objectId":"5c615791-89e5-4a65-8a6e-066059542857",
+       "creationDate":1569585147211,
+       "lastUpdate":1569929543207,
+       "instituteId":"fe21135b-991d-4f1e-ae0f-3d15e15b4ee7",
+       "instituteName":"Istituto test",
+       "schoolId":"418184aa-26df-4a25-a026-c8511db469b2",
+       "schoolName":"Scuola test",
+       "itineraryId":"fa51e9fc-9d5a-49a4-a861-95ee0d382ff8",
+       "itineraryName":"testv3",
+       "legId":"f1c2b945-09a1-4938-bfc3-c62f98e973fc",
+       "legName":"partenza",
+       "name":"Elezioni provinciali Trentino 2018: veleni e alleanze nel Trentino ...",
+       "link":"https://www.periodicodaily.com/wp-content/uploads/2018/09/Palazzo_pretorio_di_Trento.jpg",
+       "type":"image",
+       "geocoding":[
+          11.1217486,
+          46.0747793
+       ],
+       "subjects":[
+          "Geografia",
+          "Storia",
+          "Arte"
+       ],
+       "schoolYears":[
+          "1° SP",
+          "2° SP",
+          "3° SP",
+          "4° SP",
+          "5° SP"
+       ],
+       "classes":[
+          "2B"
+       ],
+       "sharable":true,
+       "publicLink":true,
+       "disabled":false,
+       "previewUrl":null,
+       "contentOwner":{
+          "name":"Michele Nori",
+          "userId":"9fa12d5a-3e0d-48e0-b3e2-cad65d7d8039"
+       },
+       "contentReferenceId":null,
+       "position":1
+    },
+    {
+        "ownerId":"TEST",
+        "objectId":"5c615791-89e5-4a65-8a6e-066059542857",
+        "creationDate":1569585147211,
+        "lastUpdate":1569929543207,
+        "instituteId":"fe21135b-991d-4f1e-ae0f-3d15e15b4ee7",
+        "instituteName":"Istituto test",
+        "schoolId":"418184aa-26df-4a25-a026-c8511db469b2",
+        "schoolName":"Scuola test",
+        "itineraryId":"fa51e9fc-9d5a-49a4-a861-95ee0d382ff8",
+        "itineraryName":"testv3",
+        "legId":"f1c2b945-09a1-4938-bfc3-c62f98e973fc",
+        "legName":"partenza",
+        "name":"Elezioni provinciali Trentino 2018: veleni e alleanze nel Trentino ...",
+        "link":"https://www.periodicodaily.com/wp-content/uploads/2018/09/Palazzo_pretorio_di_Trento.jpg",
+        "type":"image",
+        "geocoding":[
+           11.1217486,
+           46.0747793
+        ],
+        "subjects":[
+           "Geografia",
+           "Storia",
+           "Arte"
+        ],
+        "schoolYears":[
+           "1° SP",
+           "2° SP",
+           "3° SP",
+           "4° SP",
+           "5° SP"
+        ],
+        "classes":[
+           "2B"
+        ],
+        "sharable":true,
+        "publicLink":true,
+        "disabled":false,
+        "previewUrl":null,
+        "contentOwner":{
+           "name":"Michele Nori",
+           "userId":"9fa12d5a-3e0d-48e0-b3e2-cad65d7d8039"
+        },
+        "contentReferenceId":null,
+        "position":1
+     }
+ ]

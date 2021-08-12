@@ -9,8 +9,7 @@
           />
         <div>
         {{ percorso.pedibusGame.gameName }}
-        {{ percorso.length }}
-        {{ percorso.start }}
+        Da: {{ percorso.pedibusGame.from }}
         </div>
       </div>
       <div v-else>+</div>

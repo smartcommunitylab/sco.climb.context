@@ -6,7 +6,16 @@ import { store } from './store'
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import i18n from './i18n'
+import VueLuxon from "vue-luxon";
+
 Vue.use(Loading);
+Vue.use(VueLuxon,{
+  input: {
+      zone: "utc",
+      format: "iso"
+  },
+  output: "short"
+});
 Vue.config.productionTip = false
 
 new Vue({
