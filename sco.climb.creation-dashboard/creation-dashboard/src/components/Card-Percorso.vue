@@ -2,16 +2,22 @@
   <div style="height: 240px" class="my-3">
     <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
       <div v-if="percorso">
-          <v-img
-            v-bind:src="percorso.pedibusGame.imageLink"
-            max-width="200"
-            min-height="150"
-          />
-        <div>
         {{ percorso.pedibusGame.gameName }}
+        <v-img
+          v-bind:src="percorso.pedibusGame.imageLink"
+          max-width="200"
+          min-height="150"
+        />
+
+        {{ percorso.length }}
+        <!--length e start non ci sono -->
+        {{ percorso.start }}
         Da: {{ percorso.pedibusGame.from }}
-        </div>
+
+        <!--bottoni per actions -->
+      <!-- <div align="right"><v-btn>Esplora</v-btn></div> -->
       </div>
+      
       <div v-else>+</div>
       <slot />
     </v-card>
@@ -50,6 +56,7 @@ export default {
   align-content: center;
   justify-content: center;
   align-items: center;
+  text-align: left;
   margin: auto;
   cursor: pointer;
   transition: 0.5s all;

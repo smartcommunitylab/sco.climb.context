@@ -24,16 +24,8 @@
             </h4>
           </div>
 
-          <div class="row ma-5" v-for="schoolClass in schoolClasses" v-bind:key="schoolClass">
-            <Card-Class :schoolClass="schoolClass"></Card-Class>
-            <div class="col-sm-1"></div>
-
-            <!-- <v-expand-transition>
-              <Card-Class v-show="expand"></Card-Class>
-            </v-expand-transition> -->
-
-            <div class="col-sm-1"></div>
-          </div>
+          <div class="row ma-2">
+            <div class="col-9"></div>
             <v-btn
               class="ma-2"
               height="50px"
@@ -43,6 +35,20 @@
             >
               Add another class
             </v-btn>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div
+              class="col-5"
+              v-for="schoolClass in schoolClasses"
+              v-bind:key="schoolClass"
+            >
+              <Card-Class :schoolClass="schoolClass"></Card-Class>
+              <div class="col-sm-1"></div>
+            </div>
+          </div>
+
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
@@ -60,7 +66,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from "vuex";
 import CardClass from "@/components/Card-Class.vue";
 export default {
   name: "classDefinition",
@@ -73,11 +79,13 @@ export default {
       expand2: false,
       isHidden: true,
       nomepagina: "Class Definition",
-      schoolClasses:[{
-        className:'',
-        studentsNum:5,
-        students: []
-      }]
+      schoolClasses: [
+        {
+          className: "",
+          studentsNum: 1,
+          students: [],
+        },
+      ],
       // studentsNum: 5,
       // students: [],
     };
@@ -87,7 +95,7 @@ export default {
     ...mapActions("game", {
       createClass: "createClass",
     }),
-     ...mapActions("navigation", {
+    ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
     // updateStudentsFields(num) {
@@ -105,18 +113,18 @@ export default {
     //   }
     // },
     addNewClass() {
-        this.schoolClasses.push({
-        className:'',
-        studentsNum:5,
-        students: []
-      })
+      this.schoolClasses.push({
+        className: "",
+        studentsNum: 1,
+        students: [],
+      });
     },
     navigateHome() {
       this.$router.push("home");
     },
     goNext() {
       this.$router.push("habitsDefinition");
-      this.createClass(this.schoolClasses)
+      this.createClass(this.schoolClasses);
       this.nextStep();
     },
   },

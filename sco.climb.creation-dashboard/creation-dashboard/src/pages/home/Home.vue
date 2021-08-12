@@ -1,8 +1,6 @@
 <template>
   <v-container class="grey lighten-5">
     <v-card class="pa-1" outlined tile>
-      <p class="text-center text-h3 my-1">{{ nomepagina }}</p>
-      <hr />
       <div class="align-center text-center mt-4">
         <v-row justify="center" align="center">
           <v-col cols="12" sm="4">
@@ -16,7 +14,9 @@
                 <v-list-item-title class="text-h6">
                   {{ username }}
                 </v-list-item-title>
-                <v-list-item-subtitle class="text-h8">{{ role }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text-h8">{{
+                  role
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-col>
@@ -47,20 +47,25 @@
             <p class="text-h5 text-left">Crea percorsi</p>
           </v-col>
           <v-col cols="12" sm="1"></v-col>
-        </v-row>
 
-        <v-row v-if="myGames.items">
-          <div
-            class="col-sm-4 col-md-3 col-12"
-            v-for="game in myGames.items"
-            :key="game.id"
-          >
-            <Card-Percorso :percorso="game"> </Card-Percorso>
-          </div>
+          <v-row justify="left" align="center" v-if="myGames.items">
+            <v-col cols="12" sm="1"></v-col>
+            <div
+              class="col-sm-10 col-md-3"
+              v-for="game in myGames.items"
+              :key="game.id"
+            >
+              <Card-Percorso :percorso="game"> </Card-Percorso>
+            </div>
 
-          <div class="col-sm-4 col-md-3 col-12" @click="goToClassDefinition()">
-            <Card-Percorso> </Card-Percorso>
-          </div>
+            <div
+              class="col-sm-4 col-md-3 col-12"
+              @click="goToClassDefinition()"
+            >
+              <Card-Percorso> </Card-Percorso>
+            </div>
+            <v-col cols="12" sm="1"></v-col>
+          </v-row>
         </v-row>
       </div>
     </v-card>
@@ -68,9 +73,13 @@
 </template>
 
 <script>
-import { mdiMapMarker, mdiSchoolOutline, mdiBookEducationOutline } from "@mdi/js";
+import {
+  mdiMapMarker,
+  mdiSchoolOutline,
+  mdiBookEducationOutline,
+} from "@mdi/js";
 import { mapState, mapActions } from "vuex";
-import institutes from '../../../public/tmp-data/institutes.json'
+import institutes from "../../../public/tmp-data/institutes.json";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "Home",
@@ -102,11 +111,11 @@ export default {
       this.nextStep();
     },
     ...mapActions("game", {
-      getAllMyGames: "getAllMyGames"
+      getAllMyGames: "getAllMyGames",
     }),
-        ...mapActions("navigation", {
-      nextStep: "nextStep"
-    })
+    ...mapActions("navigation", {
+      nextStep: "nextStep",
+    }),
   },
   mounted() {
     this.getAllMyGames();
@@ -115,9 +124,10 @@ export default {
 </script>
 
 <style>
-.pr {
-  padding-left: 25px;
+.col-md-3 {
+  padding: 8px;
 }
+
 .pa-0 {
   padding-bottom: 135px;
 }
