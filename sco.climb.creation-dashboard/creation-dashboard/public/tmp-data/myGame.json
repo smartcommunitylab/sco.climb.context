@@ -26,7 +26,7 @@
                 "lastDaySeen": null,
                 "lateSchedule": false,
                 "usingPedibusData": false,
-                "deployed": false,
+                "deployed": true,
                 "confTemplateId": null,
                 "params": {},
                 "shortName": null,

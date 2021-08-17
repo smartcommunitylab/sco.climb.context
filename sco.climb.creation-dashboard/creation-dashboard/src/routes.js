@@ -54,6 +54,11 @@ const routes = [
     component: () => import('./pages/summary/summary.vue')
   },
   {
+    path: '/createDeparture',
+    name: 'createDeparture',
+    component: () => import('./pages/createDeparture/createDeparture.vue')
+  },
+  {
     path: '/404',
     component: NotFound
 

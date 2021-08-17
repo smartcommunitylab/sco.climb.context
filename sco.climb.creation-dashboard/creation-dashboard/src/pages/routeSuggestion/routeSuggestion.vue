@@ -27,9 +27,23 @@
 
             <v-row class="pa-7">
               <div class="col-sm-2"></div>
-              <v-btn 
+              <v-btn @click="expand = !expand" class="ma-2" color="primary"
                 >Filtri <v-icon>mdi-filter-outline </v-icon></v-btn
-              ></v-row
+              > <!-- disciplines in catalogGames.json-->
+
+              <v-expand-transition>
+                <v-card v-show="expand" height="150" width="500" color="primary">
+                  <v-row class="pa-4">
+                    <v-col cols="1"></v-col>
+                    <div>Materia:  </div></v-row
+                  >
+
+                  <v-row class="pa-4">
+                    <v-col cols="1"></v-col>
+                    <div>Area Geografica:  </div>
+                  </v-row>
+                </v-card>
+              </v-expand-transition></v-row
             >
 
             <v-row v-if="myGames.items">
@@ -41,7 +55,7 @@
               >
                 <Card-Percorso
                   :percorso="game"
-                  @click="gotoRoutePersonalization()"
+                  @click.native="goToRoutePersonalization()"
                 >
                 </Card-Percorso>
               </div>
@@ -79,6 +93,7 @@ export default {
   data() {
     return {
       nomepagina: "routeSuggestion",
+      expand: false,
     };
   },
   computed: {
