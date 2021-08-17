@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from "@/pages/login/Login.vue";
 import NotFound from '@/pages/NotFound.vue';
+import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
+import { store } from './store'
+
 Vue.use(Router);
 const routes = [
   {
@@ -54,6 +57,11 @@ const routes = [
     component: () => import('./pages/summary/summary.vue')
   },
   {
+    path: '/oidc-callback', // Needs to match redirectUri (redirect_uri if you use snake case) in you oidcSettings
+    name: 'oidcCallback',
+    component: () => import('./pages/OidcCallback.vue')
+  },
+  {
     path: '/404',
     component: NotFound
 
@@ -69,6 +77,8 @@ export const router = new Router({
   mode: 'history',
   routes
 })
+router.beforeEach(vuexOidcCreateRouterMiddleware(store))
+
     // router.beforeEach((to, from, next) => {
     //   // redirect to login page if not logged in and trying to access a restricted page
     //   const publicPages = ['/login'];
