@@ -4,24 +4,6 @@
       <div v-if="percorso">
         {{ percorso.pedibusGame.gameName }}
 
-        <div>
-          <v-chip
-            class="ma-1"
-            color="green"
-            label
-            text-color="white"
-            v-if="percorso.pedibusGame.deployed"
-          >
-            <v-icon left> mdi-label </v-icon>
-            deployed
-          </v-chip>
-
-          <v-chip class="ma-1" color="red" label text-color="white" v-else>
-            <v-icon left> mdi-label </v-icon>
-            not deployed
-          </v-chip>
-        </div>
-
         <v-img
           v-bind:src="percorso.pedibusGame.imageLink"
           max-width="200"
@@ -33,8 +15,9 @@
         {{ percorso.start }}
         Da: {{ percorso.pedibusGame.from }}
 
-        <!--bottoni per actions -->
-        <!-- <div align="right"><v-btn>Esplora</v-btn></div> -->
+        <div align="right">
+          <v-btn @click.native="goToRoutePersonalization()">Esplora</v-btn>
+        </div>
       </div>
 
       <div v-else>+</div>
@@ -53,11 +36,14 @@ export default {
   namespaced: true,
   props: {
     percorso: Object,
-
   },
   methods: {
     openTab(url) {
       window.open(url, "_blank");
+    },
+    goToRoutePersonalization() {
+      this.$router.push("routePersonalization");
+      this.nextStep();
     },
   },
 };

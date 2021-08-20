@@ -2,6 +2,7 @@ import { gameService } from '../services';
 
 const state = {
     myGames: null,
+    catalogGames: null,
     currentGame: null
 }
 
@@ -24,11 +25,32 @@ const actions = {
             );
     },
 
+
+    getCatalogGames({ dispatch, commit }) {
+        commit('getCatalogGamesRequest');
+        gameService.getCatalogGames()
+            .then(
+                games => {
+                    //todo reset old values
+                    commit('getCatalogGamesSuccess', games["content"]);
+                    dispatch('alert/success', "Recuperati i tuoi giochi.", { root: true });
+
+                },
+                error => {
+                    commit('getCatalogGamesFailure', error);
+                    dispatch('alert/error', "Errore nel recupero delle informazioni.", { root: true });
+                }
+            );
+    },
+
+
     createClass({ commit }, classDefinition) {
         commit('setClassDefinition', classDefinition);
-    
+    },
 
-    }
+    createHabits({ commit }, habitsDefinition) {
+        commit('setHabitsDefinition', habitsDefinition);
+    },
 
 
 };
@@ -44,9 +66,25 @@ const mutations = {
     getAllMyGamesFailure(state, error) {
         state.myGames = { error };
     },
+
+    getCatalogGamesRequest(state) {
+        state.catalogGames = { loading: true };
+    },
+    getCatalogGamesSuccess(state, catalogGames) {
+        state.catalogGames = { items: catalogGames };
+    },
+    getCatalogGamesFailure(state, error) {
+        state.catalogGames = { error };
+    },
+
     setClassDefinition(state, classDefinition) {
         state.currentGame = { classDefinition: classDefinition };
-    }
+    },
+
+    setHabitsDefinition(state, habitsDefinition) {
+        state.currentGame = { habitsDefinition: habitsDefinition };
+    },
+
 
 };
 

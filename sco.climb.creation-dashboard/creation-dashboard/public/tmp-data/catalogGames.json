@@ -40,7 +40,7 @@
                 "catalog": true,
                 "imageLink": null,
                 "geographicArea": null,
-                "disciplines": [],
+                "disciplines": ["storia", "geografia", "matematica"],
                 "ageRange": []
             },
             "finalScore": 12476,
@@ -89,7 +89,7 @@
                 "catalog": true,
                 "imageLink": null,
                 "geographicArea": null,
-                "disciplines": [],
+                "disciplines": ["storia", "geografia"],
                 "ageRange": []
             },
             "finalScore": 12476,

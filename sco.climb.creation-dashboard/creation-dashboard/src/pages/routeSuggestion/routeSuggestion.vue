@@ -29,35 +29,37 @@
               <div class="col-sm-2"></div>
               <v-btn @click="expand = !expand" class="ma-2" color="primary"
                 >Filtri <v-icon>mdi-filter-outline </v-icon></v-btn
-              > <!-- disciplines in catalogGames.json-->
+              >
+              <!-- disciplines in catalogGames.json-->
 
               <v-expand-transition>
-                <v-card v-show="expand" height="150" width="500" color="primary">
+                <v-card
+                  v-show="expand"
+                  height="150"
+                  width="500"
+                  color="primary"
+                >
                   <v-row class="pa-4">
                     <v-col cols="1"></v-col>
-                    <div>Materia:  </div></v-row
+                    <div>Materia:</div></v-row
                   >
 
                   <v-row class="pa-4">
                     <v-col cols="1"></v-col>
-                    <div>Area Geografica:  </div>
+                    <div>Area Geografica:</div>
                   </v-row>
                 </v-card>
               </v-expand-transition></v-row
             >
 
-            <v-row v-if="myGames.items">
+            <v-row v-if="catalogGames.items">
               <div class="col-sm-3"></div>
               <div
                 class="col-sm-4 col-md-3 col-12"
-                v-for="game in myGames.items"
+                v-for="game in catalogGames.items"
                 :key="game.id"
               >
-                <Card-Percorso
-                  :percorso="game"
-                  @click.native="goToRoutePersonalization()"
-                >
-                </Card-Percorso>
+                <Card-Suggestion :percorso="game"> </Card-Suggestion>
               </div>
             </v-row>
 
@@ -84,11 +86,11 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import CardPercorso from "@/components/Card-Percorso.vue";
+import CardSuggestion from "@/components/Card-Suggestion.vue";
 export default {
   name: "routeSuggestion",
   components: {
-    "Card-Percorso": CardPercorso,
+    "Card-Suggestion": CardSuggestion,
   },
   data() {
     return {
@@ -97,7 +99,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("game", ["myGames"]),
+    ...mapState("game", ["catalogGames"]),
   },
   methods: {
     ...mapActions("navigation", {
@@ -108,19 +110,15 @@ export default {
       this.nextStep();
     },
     ...mapActions("game", {
-      getAllMyGames: "getAllMyGames",
+      getCatalogGames: "getCatalogGames",
     }),
-    goToRoutePersonalization() {
-      this.$router.push("routePersonalization");
-      this.nextStep();
-    },
     goToHabitsDefinition() {
       this.$router.push("habitsDefinition");
     },
   },
 
   mounted() {
-    this.getAllMyGames();
+    this.getCatalogGames();
     let loader = this.$loading.show({
       canCancel: false,
       backgroundColor: "#000",

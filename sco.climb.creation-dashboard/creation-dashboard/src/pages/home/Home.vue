@@ -55,7 +55,7 @@
               v-for="game in myGames.items"
               :key="game.id"
             >
-              <Card-Percorso :percorso="game"> </Card-Percorso>
+              <Card-Percorso :percorso="game" :catalog="false"> </Card-Percorso>
             </div>
 
             <div

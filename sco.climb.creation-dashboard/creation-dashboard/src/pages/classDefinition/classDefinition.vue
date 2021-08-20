@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import CardClass from "@/components/Card-Class.vue";
 export default {
   name: "classDefinition",
@@ -90,7 +90,9 @@ export default {
       // students: [],
     };
   },
-  computed: {},
+  computed: {
+    ...mapState("game", ["currentGame"]),
+  },
   methods: {
     ...mapActions("game", {
       createClass: "createClass",
@@ -98,20 +100,6 @@ export default {
     ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
-    // updateStudentsFields(num) {
-    //   if (this.students?.length > num) {
-    //     this.students.splice(0, this.students.length - num);
-    //   } else {
-    //     let lastM = 0;
-    //     if (this.students?.length > 0) {
-    //       lastM = this.students[this.students.length - 1].id;
-    //     }
-    //     const tobeAdded = num - this.students.length;
-    //     for (let i = 0; i < tobeAdded; i++) {
-    //       this.students.push({ inputVal: "", id: lastM + 1 + i });
-    //     }
-    //   }
-    // },
     addNewClass() {
       this.schoolClasses.push({
         className: "",
@@ -129,6 +117,9 @@ export default {
     },
   },
   mounted() {
+    if (this.currentGame.classDefinition != null) {
+      this.schoolClasses = this.currentGame.classDefinition;
+    }
     let loader = this.$loading.show({
       canCancel: false,
       backgroundColor: "#000",

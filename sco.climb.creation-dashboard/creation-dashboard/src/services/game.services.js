@@ -1,23 +1,23 @@
 import axios from "axios";
 export const gameService = {
     getAllMyGames,
-    getProposedGames,
+    getCatalogGames,
     addGame,
     updateGame,
     deleteGame,
-    
+
 };
 
-function getAllMyGames() { 
-    return axios.get('tmp-data/myGame.json',{
+function getAllMyGames() {
+    return axios.get('tmp-data/myGame.json', {
         params: {
-          size: 1200
+            size: 1200
         }
-      }).then(
+    }).then(
         res => {
             if (res) {
                 console.log(res.data)
-                return Promise.resolve(res.data);                
+                return Promise.resolve(res.data);
             }
             else return Promise.reject(null);
         }, err => {
@@ -26,9 +26,25 @@ function getAllMyGames() {
 
     )
 }
-function getProposedGames() {
-    // todo ...
 
+
+function getCatalogGames() {
+    return axios.get('tmp-data/catalogGames.json', {
+        params: {
+            size: 1200
+        }
+    }).then(
+        res => {
+            if (res) {
+                console.log(res.data)
+                return Promise.resolve(res.data);
+            }
+            else return Promise.reject(null);
+        }, err => {
+            return Promise.reject(err);
+        }
+
+    )
 }
 
 function addGame() {
