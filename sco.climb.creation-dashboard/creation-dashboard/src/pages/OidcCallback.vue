@@ -14,13 +14,14 @@ export default {
     ])
   },
   mounted () {
+    alert('ciao');
     this.oidcSignInCallback()
       .then((redirectPath) => {
         this.$router.push(redirectPath)
       })
       .catch((err) => {
         console.error(err)
-        this.$router.push('/oidc-callback-error') // Handle errors any way you want
+        this.$router.push('/oidc-callback-error') 
       })
   }
 }

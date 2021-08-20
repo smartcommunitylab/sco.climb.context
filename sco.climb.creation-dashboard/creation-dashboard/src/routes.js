@@ -57,9 +57,14 @@ const routes = [
     component: () => import('./pages/summary/summary.vue')
   },
   {
-    path: '/oidc-callback', // Needs to match redirectUri (redirect_uri if you use snake case) in you oidcSettings
+    path: '/oidc-callback',
     name: 'oidcCallback',
     component: () => import('./pages/OidcCallback.vue')
+  },
+  {
+    path: '/oidc-callback-error',
+    name: 'oidcCallbackError',
+    component: () => import('./pages/OidcCallbackError.vue')
   },
   {
     path: '/404',
