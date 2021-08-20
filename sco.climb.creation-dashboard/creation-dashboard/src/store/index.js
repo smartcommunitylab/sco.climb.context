@@ -14,7 +14,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     modules: {
         account,
-        oidcStore: vuexOidcCreateStoreModule(oidcSettings),
+        oidcStore: vuexOidcCreateStoreModule(oidcSettings, {publicRoutePaths: ['/', '/oidc-callback-error']}),
         navigation,
         alert,
         loader,

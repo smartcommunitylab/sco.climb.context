@@ -14,7 +14,10 @@ export default {
     ])
   },
   mounted () {
-    alert('ciao');
+    // workaround: problem with non-standard id_token response
+    let idx = window.location.hash.indexOf('id_token=');
+    window.location.hash = window.location.hash.substring(0,idx);
+
     this.oidcSignInCallback()
       .then((redirectPath) => {
         this.$router.push(redirectPath)

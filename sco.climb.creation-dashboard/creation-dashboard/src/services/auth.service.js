@@ -3,5 +3,6 @@ export const oidcSettings = {
   clientId: '202e666e-ee54-4143-b92b-e4b65ab00d1d',
   redirectUri: 'http://localhost:8080/oidc-callback',
   responseType: 'token',
-  scope: 'profile.basicprofile.me'
+  scope: 'profile.basicprofile.me',
+  loadUserInfo: false
 }
