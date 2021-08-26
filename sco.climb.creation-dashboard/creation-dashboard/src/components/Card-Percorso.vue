@@ -29,18 +29,25 @@
         />
 
         {{ percorso.length }}
-        <!--length e start non ci sono -->
         {{ percorso.start }}
-        Da: {{ percorso.pedibusGame.from }}
 
-        <!--bottoni per actions -->
-        <!-- <div align="right"><v-btn>Esplora</v-btn></div> -->
+        Da: {{ getTimestamp(percorso.pedibusGame.from) }}
       </div>
 
       <div v-else>+</div>
       <slot />
     </v-card>
   </div>
+  <!--length e start non ci sono -->
+  <!-- this.$luxon(percorso.pedibusGame.from)  1475272800000
+         let timestamp = 1615065599.426264
+          undefined
+          > new Date(timestamp).toJSON()
+          '1970-01-19T16:37:45.599Z'
+          > new Date(timestamp * 1000).toJSON()
+        
+        getTimestamp()
+         -->
 </template>
 
 <script>
@@ -53,9 +60,11 @@ export default {
   namespaced: true,
   props: {
     percorso: Object,
-
   },
   methods: {
+    getTimestamp(timestamp) {
+      return this.$luxon(new Date(timestamp).toJSON());
+    },
     openTab(url) {
       window.open(url, "_blank");
     },

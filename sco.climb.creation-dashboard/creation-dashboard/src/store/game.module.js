@@ -6,6 +6,7 @@ const state = {
     currentGame: null
 }
 
+
 const actions = {
 
     getAllMyGames({ dispatch, commit }) {
@@ -24,11 +25,12 @@ const actions = {
                 }
             );
     },
-
-
-    getCatalogGames({ dispatch, commit }) {
+    
+    /*disciplines, geographicArea, minScore, maxScore*/
+    getCatalogGames({ dispatch, commit }, filter) {
+        console.log("filter", filter);
         commit('getCatalogGamesRequest');
-        gameService.getCatalogGames()
+        gameService.getCatalogGames(filter)
             .then(
                 games => {
                     //todo reset old values

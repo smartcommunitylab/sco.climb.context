@@ -39,8 +39,8 @@
                 "useCalendar": true,
                 "catalog": true,
                 "imageLink": null,
-                "geographicArea": null,
-                "disciplines": ["storia", "geografia", "matematica"],
+                "geographicArea": ["mondo"],
+                "disciplines": ["storia", "geografia"],
                 "ageRange": []
             },
             "finalScore": 12476,
@@ -88,8 +88,8 @@
                 "useCalendar": true,
                 "catalog": true,
                 "imageLink": null,
-                "geographicArea": null,
-                "disciplines": ["storia", "geografia"],
+                "geographicArea": ["italia"],
+                "disciplines": ["italiano"],
                 "ageRange": []
             },
             "finalScore": 12476,

@@ -2,7 +2,7 @@
   <v-container class="grey lighten-5">
     <v-card class="pa-1" outlined tile>
       <div class="align-center text-center mt-4">
-        <v-row justify="center" align="center">
+        <v-row align="center">
           <v-col cols="12" sm="4">
             <v-avatar rounded="100" class="profile" color="grey" size="148">
               <v-img
@@ -41,14 +41,14 @@
           </v-col>
         </v-row>
 
-        <v-row justify="center" align="center">
+        <v-row align="center">
           <v-col cols="12" sm="1"></v-col>
           <v-col cols="12" sm="10">
             <p class="text-h5 text-left">Crea percorsi</p>
           </v-col>
           <v-col cols="12" sm="1"></v-col>
 
-          <v-row justify="left" align="center" v-if="myGames.items">
+          <v-row  align="center" v-if="myGames.items">
             <v-col cols="12" sm="1"></v-col>
             <div
               class="col-sm-10 col-md-3"

@@ -13,7 +13,7 @@
         {{ percorso.length }}
         <!--length e start non ci sono -->
         {{ percorso.start }}
-        Da: {{ percorso.pedibusGame.from }}
+        Da: {{ getTimestamp(percorso.pedibusGame.from) }}
 
         <div align="right">
           <v-btn @click.native="goToRoutePersonalization()">Esplora</v-btn>
@@ -38,6 +38,9 @@ export default {
     percorso: Object,
   },
   methods: {
+    getTimestamp(timestamp) {
+      return this.$luxon(new Date(timestamp).toJSON());
+    },
     openTab(url) {
       window.open(url, "_blank");
     },

@@ -8,7 +8,6 @@
             <hr />
             <h2>Abitudini di mobilità degli alunni</h2>
             <h4>
-             
               Come si recano a scuola attualmente gli alunni che intendono
               partecipare al percorso Kids Go Green?
               <v-icon color="grey lighten-1"> mdi-information-outline </v-icon>
@@ -29,7 +28,7 @@
           </div>
 
           <div
-            v-if="appData.habits && appData.habits.length > 0"
+            v-if="habitsData.habits && habitsData.habits.length > 0"
             class="align-center text-center"
           >
             <div class="col-sm-12">
@@ -38,7 +37,7 @@
                 <div class="col-sm-2">In Bici</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[0].numStud"
+                    v-model="habitsData.habits[0].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -47,7 +46,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[0].chilometri"
+                    v-model="habitsData.habits[0].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -61,7 +60,7 @@
                 <div class="col-sm-2">A piedi</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[1].numStud"
+                    v-model="habitsData.habits[1].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -70,7 +69,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[1].chilometri"
+                    v-model="habitsData.habits[1].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -84,7 +83,7 @@
                 <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[2].numStud"
+                    v-model="habitsData.habits[2].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -93,7 +92,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[2].chilometri"
+                    v-model="habitsData.habits[2].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -106,7 +105,7 @@
                 <div class="col-sm-2">Pedibus</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[3].numStud"
+                    v-model="habitsData.habits[3].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -115,7 +114,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[3].chilometri"
+                    v-model="habitsData.habits[3].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -129,7 +128,7 @@
                 <div class="col-sm-2">In auto fino alla piazzola di sosta</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[4].numStud"
+                    v-model="habitsData.habits[4].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -138,7 +137,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[4].chilometri"
+                    v-model="habitsData.habits[4].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -151,7 +150,7 @@
                 <div class="col-sm-2">Car pooling</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[5].numStud"
+                    v-model="habitsData.habits[5].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -160,7 +159,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[5].chilometri"
+                    v-model="habitsData.habits[5].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -173,7 +172,7 @@
                 <div class="col-sm-2">In auto fino a scuola</div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[6].numStud"
+                    v-model="habitsData.habits[6].numStud"
                     type="number"
                     :label="$t('numStud')"
                     outlined
@@ -182,7 +181,7 @@
                 </div>
                 <div class="col-sm-2">
                   <v-text-field
-                    v-model="appData.habits[6].chilometri"
+                    v-model="habitsData.habits[6].chilometri"
                     type="number"
                     :label="$t('numKms')"
                     outlined
@@ -213,19 +212,19 @@
 
           <div
             class="align-center text-center"
-            v-if="appData.habits && appData.habits.length > 0"
+            v-if="habitsData.habits && habitsData.habits.length > 0"
           >
             <v-row>
               <div class="col-sm-2"></div>
               <div class="col-sm-2 pa-1">In Bici</div>
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[0].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[0].checked"></v-checkbox>
               </div>
 
               <div class="col-sm-1"></div>
               <div class="col-sm-2 pa-1">A piedi</div>
               <div class="col-sm-1 pa-1 checkbox">
-                <v-checkbox v-model="appData.habits[1].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[1].checked"></v-checkbox>
               </div>
             </v-row>
 
@@ -233,13 +232,13 @@
               <div class="col-sm-2"></div>
               <div class="col-sm-2 pa-1">Scuolabus o trasporto pubblico</div>
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[2].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[2].checked"></v-checkbox>
               </div>
 
               <div class="col-sm-1"></div>
               <div class="col-sm-2 pa-1">Pedibus</div>
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[3].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[3].checked"></v-checkbox>
               </div>
             </v-row>
 
@@ -249,14 +248,14 @@
                 In auto fino alla piazzola di sosta
               </div>
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[4].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[4].checked"></v-checkbox>
               </div>
 
               <div class="col-sm-1"></div>
               <div class="col-sm-2 pa-1">Car pooling</div>
 
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[5].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[5].checked"></v-checkbox>
               </div>
             </v-row>
 
@@ -264,7 +263,7 @@
               <div class="col-sm-2"></div>
               <div class="col-sm-2 pa-1">In auto fino a scuola</div>
               <div class="col-sm-1 pa-1">
-                <v-checkbox v-model="appData.habits[6].checked"></v-checkbox>
+                <v-checkbox v-model="habitsData.habits[6].checked"></v-checkbox>
               </div>
             </v-row>
           </div>
@@ -280,9 +279,11 @@
                   <v-icon color="grey lighten-1"> mdi-calendar </v-icon>
                 </v-btn>
               </div>
+              <v-date-picker
+                v-show="expandStart"
+                v-model="pickerStart"
+              ></v-date-picker>
             </v-row>
-            <!--v-bind="attrs"
-                  v-on="on" -->
             <div class="row">
               <div class="col-sm-1"></div>
               <div class="col-sm-4">Data di fine</div>
@@ -294,19 +295,16 @@
             </div>
 
             <v-date-picker
-              v-show="expandStart"
-              v-model="pickerStart"
-            ></v-date-picker>
-            <v-date-picker
               v-show="expandEnd"
               v-model="pickerEnd"
             ></v-date-picker>
+
             <div class="col-sm-12"></div>
             <h4>Gli alunni vanno a scuola di sabato?</h4>
             <div class="row">
               <div class="col-sm-1"></div>
               <div class="col-sm-4">
-                <v-radio-group v-model="appData.saturdaySchool">
+                <v-radio-group v-model="habitsData.saturdaySchool">
                   <v-radio
                     name="saturdaySchool"
                     label="Sì"
@@ -328,14 +326,13 @@
             <div class="row">
               <div class="col-sm-1"></div>
               <div class="col-sm-4">
-                <v-radio-group v-model="appData.roundtrip">
+                <v-radio-group v-model="habitsData.roundtrip">
                   <v-radio name="roundtrip" label="Sì" value="si"></v-radio>
                   <v-radio name="roundtrip" label="No" value="no"></v-radio>
                 </v-radio-group>
               </div>
             </div>
 
-  
             <div class="row py-6">
               <div class="col-sm-1"></div>
               <div class="col-sm-5">
@@ -364,25 +361,19 @@ export default {
   name: "habitsDefinition",
   data() {
     return {
-      appData: {
+      habitsData: {
         habits: [],
         saturdaySchool: "no",
         roundtrip: "no",
-        pickerStart: 0,
-        pickerEnd: 0,
+        diffDays: 0,
       },
       row: null,
       nomepagina: "habitsDefinition",
       expandStart: false,
-      show: false,
+      show: true,
       expandEnd: false,
-      pickerStart: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-
-      pickerEnd: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      pickerStart: 0,
+      pickerEnd: 0,
     };
   },
   computed: {
@@ -390,83 +381,75 @@ export default {
   },
   methods: {
     initHabitsArray: function () {
-      //const storedValue = localStorage.getItem("saveHabits");
       if (this.currentGame.habitsDefinition == null) {
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "inBici",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "aPiedi",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "scuolabus",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "pedibus",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "autososta",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "carpooling",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
-        this.appData.habits.push({
+        this.habitsData.habits.push({
           name: "autoscuola",
           numStud: 0,
           chilometri: 0,
           checked: false,
         });
 
-        this.appData.pickerStart = new Date(
-          Date.now() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .substr(0, 10);
-
-        this.appData.pickerEnd = new Date(
-          Date.now() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .substr(0, 10);
-
-        this.appData.saturdaySchool = "no";
-        this.appData.roundtrip = "no";
+        //aggiungere pickenEnd e pickerStart con luxon?
+        this.habitsData.diffDays = 0;
+        this.habitsData.saturdaySchool = "no";
+        this.habitsData.roundtrip = "no";
       } else {
-        this.appData = this.currentGame.habitsDefinition;
+        this.habitsData = this.currentGame.habitsDefinition;
       }
     },
-    /*addHabit: function () {
-      const str = JSON.stringify(this.appData);
-      localStorage.setItem("saveHabits", str);
-      console.log(this.appData);
-    },*/
-     ...mapActions("game", {
+    ...mapActions("game", {
       createHabits: "createHabits",
     }),
     ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
 
+    getDays() {
+      const date1 = new Date(this.pickerStart);
+      const date2 = new Date(this.pickerEnd);
+      const diffTime = Math.abs(date2 - date1);
+      this.habitsData.diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return this.habitsData.diffDays;
+    },
     goToRouteSuggestion() {
-      this.createHabits(this.appData);
+      this.getDays();
+      this.createHabits(this.habitsData);
       this.$router.push("routeSuggestion");
       this.nextStep();
     },

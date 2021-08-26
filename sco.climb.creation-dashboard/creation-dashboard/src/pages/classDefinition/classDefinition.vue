@@ -13,7 +13,7 @@
               alunni e che servirà per la compilazione quotidiana del diario di
               mobilità. Questa modifica non è obbligatoria e può essere fatta a
               percorso già iniziato.
-              <v-tooltip v-model="show" right
+              <v-tooltip v-model="show" right @click="show=!show"
                 ><template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon color="grey lighten-1"> mdi-open-in-new </v-icon>
@@ -31,7 +31,7 @@
               height="50px"
               width="200px"
               color="primary"
-              @click="addNewClass"
+              @click="addNewClass()"
             >
               Add another class
             </v-btn>
@@ -77,6 +77,7 @@ export default {
     return {
       expand: false,
       expand2: false,
+      show: false,
       isHidden: true,
       nomepagina: "Class Definition",
       schoolClasses: [
@@ -86,8 +87,6 @@ export default {
           students: [],
         },
       ],
-      // studentsNum: 5,
-      // students: [],
     };
   },
   computed: {

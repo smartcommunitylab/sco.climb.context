@@ -10,7 +10,7 @@
             <h4>
               Il catalogo di Kids Go Green offre questi percorsi per i gruppi
               simili al suo
-              <v-tooltip v-model="show" right
+              <v-tooltip v-model="show" right @click="show=!show"
                 ><template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon color="grey lighten-1">
@@ -30,24 +30,71 @@
               <v-btn @click="expand = !expand" class="ma-2" color="primary"
                 >Filtri <v-icon>mdi-filter-outline </v-icon></v-btn
               >
+
+              <!-- @RequestParam(required = false) boolean catalog,
+@RequestParam(required = false) List<String> disciplines,
+@RequestParam(required = false) String geographicArea,
+@RequestParam(required = false) Integer minScore,
+@RequestParam(required = false) Integer maxScore, -->
               <!-- disciplines in catalogGames.json-->
 
               <v-expand-transition>
-                <v-card
-                  v-show="expand"
-                  height="150"
-                  width="500"
-                  color="primary"
-                >
+                <v-card v-show="expand" height="200" width="500" elevation="2">
                   <v-row class="pa-4">
+                    Materia:
                     <v-col cols="1"></v-col>
-                    <div>Materia:</div></v-row
-                  >
+                    <div>
+                      <!-- v for -->
+                      <v-checkbox
+                        v-model="filter.selectedDisciplines"
+                        label="Italiano"
+                        value="italiano"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-sm-1"></div>
+
+                    <div>
+                      <v-checkbox
+                        v-model="filter.selectedDisciplines"
+                        label="Geografia"
+                        value="geografia"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-sm-1"></div>
+
+                    <div>
+                      <v-checkbox
+                        v-model="filter.selectedDisciplines"
+                        label="Storia"
+                        value="storia"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-sm-1"></div>
+                  </v-row>
 
                   <v-row class="pa-4">
+                    Area geografica:
                     <v-col cols="1"></v-col>
-                    <div>Area Geografica:</div>
+                    <div>
+                      <v-checkbox
+                        v-model="filter.selectedGeographicArea"
+                        label="Italia"
+                        value="italia"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-sm-1"></div>
+
+                    <div>
+                      <v-checkbox
+                        v-model="filter.selectedGeographicArea"
+                        label="Mondo"
+                        value="mondo"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-sm-1"></div>
                   </v-row>
+
+                  <v-btn @click="acceptFilters()" color="primary">Ok</v-btn>
                 </v-card>
               </v-expand-transition></v-row
             >
@@ -87,6 +134,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import CardSuggestion from "@/components/Card-Suggestion.vue";
+import { gameService } from "../../services";
 export default {
   name: "routeSuggestion",
   components: {
@@ -94,12 +142,17 @@ export default {
   },
   data() {
     return {
+      filter: {
+        selectedDisciplines: [],
+        selectedGeographicArea: [],
+      },
       nomepagina: "routeSuggestion",
       expand: false,
+      show: false,
     };
   },
   computed: {
-    ...mapState("game", ["catalogGames"]),
+    ...mapState("game", ["catalogGames", "currentGame"]),
   },
   methods: {
     ...mapActions("navigation", {
@@ -115,10 +168,16 @@ export default {
     goToHabitsDefinition() {
       this.$router.push("habitsDefinition");
     },
+    acceptFilters() {
+      this.filter.minScore = gameService.getMinScore(this.currentGame);
+      this.filter.maxScore = gameService.getMaxScore(this.currentGame);
+      this.getCatalogGames(this.filter);
+    },
   },
 
   mounted() {
-    this.getCatalogGames();
+    this.getCatalogGames(this.filter);
+
     let loader = this.$loading.show({
       canCancel: false,
       backgroundColor: "#000",
