@@ -4,8 +4,10 @@
 
     <app-navigation ></app-navigation>
 
-    <v-main>
+    <v-main >
       <v-container fluid>
+      <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
+      <a v-else href @click.prevent="authenticateOidc">Sign in</a>
         <status-bar v-if="status.loggedIn"></status-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
@@ -21,7 +23,7 @@
 
 <script>
 import AppNavigation from "@/components/AppNavigation";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState,mapGetters } from "vuex";
 import Loader from "./components/Loader";
 // import Footer from "@/components/Footer";
 import StatusBar from './components/StatusBar.vue';
@@ -46,9 +48,34 @@ export default {
     ...mapState("loader", ["loading"]),
     ...mapState("account", ["status"]),
     ...mapState("alert", ["message"]),
+    ...mapState("oidcStore", ["access_token"]),
+    ...mapGetters('oidcStore', [
+      'oidcIsAuthenticated'
+    ]),
+    hasAccess: function () {
+      return this.oidcIsAuthenticated || this.$route.meta.isPublic
+    }
   },
   methods: {
     ...mapActions("alert", { clearAlert: "clear" }),
+     ...mapActions('oidcStore', [
+      'authenticateOidc',
+      'removeOidcUser'
+    ]),
+    userLoaded: function (e) {
+      console.log('I am listening to the user loaded event in vuex-oidc', e.detail)
+    },
+    oidcError: function (e) {
+      console.log('I am listening to the oidc oidcError event in vuex-oidc', e.detail)
+    },
+    automaticSilentRenewError: function (e) {
+      console.log('I am listening to the automaticSilentRenewError event in vuex-oidc', e.detail)
+    },
+    signOut: function () {
+      this.removeOidcUser().then(() => {
+        this.$router.push('/')
+      })
+    }
   },
   watch: {
     // eslint-disable-next-line no-unused-vars
@@ -61,6 +88,16 @@ export default {
       setTimeout(() => this.clearAlert(), 2500);
     },
   },
+  mounted () {
+    window.addEventListener('vuexoidc:userLoaded', this.userLoaded)
+    window.addEventListener('vuexoidc:oidcError', this.oidcError)
+    window.addEventListener('vuexoidc:automaticSilentRenewError', this.automaticSilentRenewError)
+  },
+  destroyed () {
+    window.removeEventListener('vuexoidc:userLoaded', this.userLoaded)
+    window.removeEventListener('vuexoidc:oidcError', this.oidcError)
+    window.removeEventListener('vuexoidc:automaticSilentRenewError', this.automaticSilentRenewError)
+  }
 };
 </script>
 <style scoped>
@@ -83,3 +120,5 @@ export default {
   background-color: #dc3545;
 }
 </style>
+
+

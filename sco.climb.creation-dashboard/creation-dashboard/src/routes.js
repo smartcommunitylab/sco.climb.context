@@ -9,12 +9,18 @@ Vue.use(Router);
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/login',
+    meta: {
+      isPublic: true
+    }
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {
+      isPublic: true
+    }
   },
   {
     path: '/about',
@@ -59,12 +65,20 @@ const routes = [
   {
     path: '/oidc-callback',
     name: 'oidcCallback',
-    component: () => import('./pages/OidcCallback.vue')
+    component: () => import('./pages/auth/OidcCallback.vue')
   },
   {
     path: '/oidc-callback-error',
     name: 'oidcCallbackError',
-    component: () => import('./pages/OidcCallbackError.vue')
+    component: () => import('./pages/auth/OidcCallbackError.vue'),
+    meta: {
+      isPublic: true
+    }
+  },
+  {
+    path: '/oidc-popup-callback',
+    name: 'oidcPopupCallback',
+    component: () => import('./pages/auth/OidcPopupCallback.vue')
   },
   {
     path: '/404',
@@ -82,7 +96,7 @@ export const router = new Router({
   mode: 'history',
   routes
 })
-router.beforeEach(vuexOidcCreateRouterMiddleware(store))
+router.beforeEach(vuexOidcCreateRouterMiddleware(store,'oidcStore'))
 
     // router.beforeEach((to, from, next) => {
     //   // redirect to login page if not logged in and trying to access a restricted page

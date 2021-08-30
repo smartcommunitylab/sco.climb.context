@@ -9,7 +9,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'OidcCallback',
   methods: {
-    ...mapActions([
+      ...mapActions('oidcStore', [
       'oidcSignInCallback'
     ])
   },
@@ -19,8 +19,10 @@ export default {
     window.location.hash = window.location.hash.substring(0,idx);
 
     this.oidcSignInCallback()
+        // eslint-disable-next-line no-unused-vars
       .then((redirectPath) => {
-        this.$router.push(redirectPath)
+        // this.$router.push(redirectPath)
+        this.$router.push({ name: 'home' });
       })
       .catch((err) => {
         console.error(err)

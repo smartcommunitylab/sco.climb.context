@@ -1,6 +1,6 @@
 <template>
   <div>
-    Errore
+        <h1>Error in authentication</h1>
   </div>
 </template>
 

@@ -8,8 +8,10 @@
       <v-spacer class="hidden-md-and-up"></v-spacer>
       <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
       <v-spacer class="hidden-sm-and-down"></v-spacer>
-      <v-btn text class="hidden-sm-and-down" @click="login" v-if="!status.loggedIn">Accedi</v-btn>
-      <v-btn text class="hidden-sm-and-down" @click="logout" v-else>Logout</v-btn>
+      <!-- <v-btn text class="hidden-sm-and-down" @click="login" v-if="!status.loggedIn">Accedi</v-btn>
+      <v-btn text class="hidden-sm-and-down" @click="logout" v-else>Logout</v-btn> -->
+      <v-btn text class="hidden-sm-and-down"  v-if="oidcIsAuthenticated" href @click.prevent="signOut">Sign out</v-btn>
+      <v-btn text class="hidden-sm-and-down"  v-else href @click.prevent="authenticateOidcPopup">Sign in</v-btn>
     </v-app-bar>
     <v-navigation-drawer
       class="hidden-md-and-up"
