@@ -1,74 +1,88 @@
 <template>
-  <div class="col-xs-10 col-sm-10 c-card-layout">
-    <!-- v-for="(card, index) in schoolClassCards.cards" :key="card.id" -->
+  <div class="c-card-layout pa-4">
     <v-row>
-      <!-- button to delete class -->
       <v-col cols="10"></v-col>
-      <v-btn icon color="red">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-row>
-
-    <v-row>
-      <v-col cols="12">
-        <!-- class input -->
-        <v-text-field
-          :label="$t('class')"
-          v-model="schoolClass.className"
-          outlined
-          dense
-        ></v-text-field>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col cols="12">
-        Nicknames
-        <v-tooltip v-model="show" right @click="show = !show"
-          ><template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on">
-              <v-icon color="grey lighten-1"> mdi-help-circle-outline </v-icon>
+      <v-col cols="1" class="pull-right">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              color="red"
+              v-bind="attrs"
+              v-on="on"
+              @click="onDeleteBtnClick(schoolClass)"
+            >
+              <v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
-          <span
-            >Ogni numero è associato al nickname di uno studente e non è
-            modificabile</span
-          >
+          <span>Permette di eliminare la scheda corrente</span>
         </v-tooltip>
       </v-col>
     </v-row>
-    <v-row v-for="(student, index) in schoolClass.students" :key="student.id">
-      <v-col cols="2 pa-0" align="center">
-        <label align-item="center">{{ index }}</label>
-      </v-col>
 
-      <v-col cols="6 pa-0">
-        <v-text-field
-          type="text"
-          min="1"
-          value="15"
-          :label="$t('nickname')"
-          v-model="student.inputVal"
-          outlined
-          dense
-        ></v-text-field>
-      </v-col>
+    <v-row>
+      <v-col cols="12">
+        <v-form ref="form" lazy-validation>
+          <v-text-field
+            v-model="schoolClass.className"
+            :label="$t('class')"
+            :rules="classNameRules"
+            required
+            outlined
+            dense
+          ></v-text-field>
+          Nicknames
 
-      <v-col cols="2 pa-1">
-        <v-btn
-          class="mx-2"
-          color="primary"
-          rounded
-          small
-          @click="deleteStudent()"
-        >
-          <v-icon> mdi-minus </v-icon>
-        </v-btn>
+          <v-tooltip v-model="show" right @click="show = !show"
+            ><template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon color="grey lighten-1">
+                  mdi-help-circle-outline
+                </v-icon>
+              </v-btn>
+            </template>
+            <span
+              >Ogni numero è associato al nickname di uno studente e non è
+              modificabile</span
+            >
+          </v-tooltip>
+          <v-row
+            class="ma-0"
+            v-for="(student, index) in schoolClass.students"
+            :key="student.id"
+          >
+            <v-col cols="2" align="center">
+              <label align-item="center">{{ index + 1 }}</label>
+            </v-col>
+            <v-col cols="8" class="pa-0">
+              <v-text-field
+                :label="$t('nickname')"
+                v-model="student.inputVal"
+                :rules="nicknameRules"
+                required
+                outlined
+                dense
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                class="mx-2"
+                color="primary"
+                rounded
+                small
+                text
+                @click="deleteStudent()"
+              >
+                <v-icon color="black"> mdi-minus </v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols="8"></v-col>
+      <v-col cols="10"></v-col>
       <v-col cols="2 pa-1">
         <v-btn class="mx-2" color="indigo" rounded small @click="addStudent()">
           <v-icon color="white"> mdi-plus </v-icon>
@@ -83,20 +97,32 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      index: 1,
-      expand: false,
-      expand2: false,
       show: false,
+      classNameRules: [
+        (v) => !!v || "Il nome della classe è richiesto!",
+        (v) =>
+          (v && v.length >= 2) ||
+          "Il nome della classe deve essere lungo più di 1 carattere",
+      ],
+      nicknameRules: [
+        (v) =>
+          (v && v.length >= 3) ||
+          "Il nickname deve essere più lungo di 3 caratteri",
+      ],
     };
   },
   namespaced: true,
   props: {
     schoolClass: Object,
+    cardIdx: Number,
   },
   computed: {
     ...mapState("game", ["currentGame"]),
   },
   methods: {
+    onDeleteBtnClick() {
+      this.$emit("removeClassCard", this.cardIdx);
+    },
     deleteStudent(index) {
       this.schoolClass.students.splice(index, 1);
     },
@@ -113,8 +139,9 @@ export default {
     },
   },
   mounted() {
-    this.updateStudentsFields(this.schoolClass.studentsNum);
-    // this.createClass({ students: this.schoolClasses.students });
+    if (this.schoolClass) {
+      this.schoolClass.form = this.$refs.form;
+    }
   },
 };
 </script>

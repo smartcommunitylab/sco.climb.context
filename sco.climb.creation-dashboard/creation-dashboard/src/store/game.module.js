@@ -3,9 +3,9 @@ import { gameService } from '../services';
 const state = {
     myGames: null,
     catalogGames: null,
-    currentGame: null
+    currentGame: null,
+    currentFilters: null
 }
-
 
 const actions = {
 
@@ -25,18 +25,17 @@ const actions = {
                 }
             );
     },
-    
+
     /*disciplines, geographicArea, minScore, maxScore*/
     getCatalogGames({ dispatch, commit }, filter) {
-        console.log("filter", filter);
         commit('getCatalogGamesRequest');
         gameService.getCatalogGames(filter)
             .then(
-                games => {
+                res => {
                     //todo reset old values
-                    commit('getCatalogGamesSuccess', games["content"]);
+                    commit('getCatalogGamesSuccess', res["content"]);
+                    commit('getFiltersSuccess', res.filter);
                     dispatch('alert/success', "Recuperati i tuoi giochi.", { root: true });
-
                 },
                 error => {
                     commit('getCatalogGamesFailure', error);
@@ -77,6 +76,10 @@ const mutations = {
     },
     getCatalogGamesFailure(state, error) {
         state.catalogGames = { error };
+    },
+
+    getFiltersSuccess(state, filters) {
+        state.currentFilters = filters;
     },
 
     setClassDefinition(state, classDefinition) {

@@ -4,8 +4,6 @@
       <v-col>
         <v-card class="pa-2" outlined tile>
           <div class="pa-7">
-            <p class="text-center text-h3">{{ nomepagina }}</p>
-            <hr />
             <h2>Classi</h2>
             <h4>
               Inserendo il numero totale degli alunni verrà generata una lista
@@ -13,42 +11,45 @@
               alunni e che servirà per la compilazione quotidiana del diario di
               mobilità. Questa modifica non è obbligatoria e può essere fatta a
               percorso già iniziato.
-              <v-tooltip v-model="show" right @click="show=!show"
+              <v-tooltip v-model="show" right @click="show = !show"
                 ><template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon color="grey lighten-1"> mdi-open-in-new </v-icon>
                   </v-btn>
                 </template>
-                <span>See more</span>
+                <span>Vedi altro</span>
               </v-tooltip>
             </h4>
           </div>
 
           <div class="row ma-2">
             <div class="col-9"></div>
-            <v-btn
-              class="ma-2"
-              height="50px"
-              width="200px"
-              color="primary"
-              @click="addNewClass()"
-            >
-              Add another class
-            </v-btn>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-1"></div>
-            <div
-              class="col-5"
-              v-for="schoolClass in schoolClasses"
-              v-bind:key="schoolClass"
-            >
-              <Card-Class :schoolClass="schoolClass"></Card-Class>
-              <div class="col-sm-1"></div>
+            <div class="col-3">
+              <v-btn
+                class="ma-2"
+                height="50px"
+                width="200px"
+                color="primary"
+                @click="addNewClass()"
+              >
+                Add another class
+              </v-btn>
             </div>
           </div>
 
+          <div class="row pa-4">
+            <div
+              class="col-6 pa-5"
+              v-for="(schoolClass, idx) in schoolClasses"
+              v-bind:key="schoolClass"
+            >
+              <Card-Class
+                @removeClassCard="onCardRemoveBtnClick"
+                :schoolClass="schoolClass"
+                :cardIdx="idx"
+              ></Card-Class>
+            </div>
+          </div>
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
@@ -62,6 +63,17 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <div class="text-center ma-2">
+      <v-snackbar v-model="snackbar">
+        {{ snackBarText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+            Chiudi
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </v-container>
 </template>
 
@@ -75,24 +87,35 @@ export default {
   },
   data() {
     return {
-      expand: false,
-      expand2: false,
+      snackbar: false,
+      snackBarText: "Kill Me!",
       show: false,
       isHidden: true,
       nomepagina: "Class Definition",
-      schoolClasses: [
-        {
-          className: "",
-          studentsNum: 1,
-          students: [],
-        },
-      ],
+      schoolClasses: [this.createCardClassObj()],
     };
   },
   computed: {
     ...mapState("game", ["currentGame"]),
   },
   methods: {
+    onCardRemoveBtnClick: function (index) {
+      if (this.schoolClasses?.length <= index) {
+        return;
+      }
+      if (this.schoolClasses?.length === 1) {
+        this.snackBarText = "At least one class should be defined!";
+        this.snackbar = true;
+        return;
+      }
+      this.schoolClasses.splice(index, 1);
+    },
+    createCardClassObj() {
+      return {
+        className: "",
+        students: [],
+      };
+    },
     ...mapActions("game", {
       createClass: "createClass",
     }),
@@ -100,23 +123,37 @@ export default {
       nextStep: "nextStep",
     }),
     addNewClass() {
-      this.schoolClasses.push({
-        className: "",
-        studentsNum: 1,
-        students: [],
-      });
+      this.schoolClasses.push(this.createCardClassObj());
     },
     navigateHome() {
       this.$router.push("home");
     },
+    checkFormValidations() {
+      let areAllFormValid = true;
+      this.schoolClasses.forEach((ele) => {
+        if (!ele.form.validate()) {
+          areAllFormValid = false;
+        }
+      });
+      return areAllFormValid;
+    },
     goNext() {
+      const areFormsValid = this.checkFormValidations();
+      if (!areFormsValid) {
+        this.snackBarText = "Please check your inserted information!";
+        this.snackbar = true;
+        return;
+      }
+      let tempArr = this.schoolClasses.map((x) => {
+        return { className: x.className, students: x.students };
+      });
+      this.createClass(tempArr);
       this.$router.push("habitsDefinition");
-      this.createClass(this.schoolClasses);
       this.nextStep();
     },
   },
   mounted() {
-    if (this.currentGame.classDefinition != null) {
+    if (this.currentGame && this.currentGame.classDefinition != null) {
       this.schoolClasses = this.currentGame.classDefinition;
     }
     let loader = this.$loading.show({

@@ -10,7 +10,7 @@
             <h4>
               Il catalogo di Kids Go Green offre questi percorsi per i gruppi
               simili al suo
-              <v-tooltip v-model="show" right @click="show=!show"
+              <v-tooltip v-model="show" right @click="show = !show"
                 ><template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon color="grey lighten-1">
@@ -31,67 +31,36 @@
                 >Filtri <v-icon>mdi-filter-outline </v-icon></v-btn
               >
 
-              <!-- @RequestParam(required = false) boolean catalog,
-@RequestParam(required = false) List<String> disciplines,
-@RequestParam(required = false) String geographicArea,
-@RequestParam(required = false) Integer minScore,
-@RequestParam(required = false) Integer maxScore, -->
-              <!-- disciplines in catalogGames.json-->
-
               <v-expand-transition>
                 <v-card v-show="expand" height="200" width="500" elevation="2">
                   <v-row class="pa-4">
-                    Materia:
-                    <v-col cols="1"></v-col>
+                    Materia:<v-col cols="1"></v-col>
                     <div>
-                      <!-- v for -->
-                      <v-checkbox
-                        v-model="filter.selectedDisciplines"
-                        label="Italiano"
-                        value="italiano"
-                      ></v-checkbox>
+                      <div
+                        v-for="discipline in currentFilters.disciplines"
+                        :key="discipline.value"
+                      >
+                        <v-checkbox
+                          v-model="filter.selectedDisciplines"
+                          :label="discipline.label"
+                          :value="discipline.value"
+                        ></v-checkbox>
+                      </div>
                     </div>
-                    <div class="col-sm-1"></div>
-
+                    Area Geografica: <v-col cols="1"></v-col>
                     <div>
-                      <v-checkbox
-                        v-model="filter.selectedDisciplines"
-                        label="Geografia"
-                        value="geografia"
-                      ></v-checkbox>
-                    </div>
-                    <div class="col-sm-1"></div>
-
-                    <div>
-                      <v-checkbox
-                        v-model="filter.selectedDisciplines"
-                        label="Storia"
-                        value="storia"
-                      ></v-checkbox>
-                    </div>
-                    <div class="col-sm-1"></div>
-                  </v-row>
-
-                  <v-row class="pa-4">
-                    Area geografica:
-                    <v-col cols="1"></v-col>
-                    <div>
+                    <div
+                      v-for="ga in currentFilters.geographicArea"
+                      :key="ga.value"
+                    >
                       <v-checkbox
                         v-model="filter.selectedGeographicArea"
-                        label="Italia"
-                        value="italia"
+                        :label="ga.label"
+                        :value="ga.value"
                       ></v-checkbox>
                     </div>
-                    <div class="col-sm-1"></div>
-
-                    <div>
-                      <v-checkbox
-                        v-model="filter.selectedGeographicArea"
-                        label="Mondo"
-                        value="mondo"
-                      ></v-checkbox>
                     </div>
-                    <div class="col-sm-1"></div>
+                    <v-col cols="1"></v-col>
                   </v-row>
 
                   <v-btn @click="acceptFilters()" color="primary">Ok</v-btn>
@@ -152,7 +121,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("game", ["catalogGames", "currentGame"]),
+    ...mapState("game", ["catalogGames", "currentGame", "currentFilters"]),
   },
   methods: {
     ...mapActions("navigation", {
@@ -171,12 +140,14 @@ export default {
     acceptFilters() {
       this.filter.minScore = gameService.getMinScore(this.currentGame);
       this.filter.maxScore = gameService.getMaxScore(this.currentGame);
-      this.getCatalogGames(this.filter);
+      const prom = this.getCatalogGames(this.filter);
+      console.log("prom", prom);
     },
   },
 
   mounted() {
-    this.getCatalogGames(this.filter);
+    const prom = this.getCatalogGames(this.filter);
+    console.log("prom", prom);
 
     let loader = this.$loading.show({
       canCancel: false,

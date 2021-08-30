@@ -7,7 +7,6 @@ export const gameService = {
     addGame,
     updateGame,
     deleteGame,
-
 };
 
 function getAllMyGames() {
@@ -62,30 +61,37 @@ function getCatalogGames(filter) {
         }
     }).then(
         res => {
-            var result = Promise.resolve(res.data);
             if (res) {
-                if(filter.selectedDisciplines.includes("italiano")){
-                    //var json = JSON.parse(res.data);
-                    //returns content - pedibusGame - disciplines --> italiano
-                    return result;
-                }
-
-                if(filter.selectedGeographicArea.includes("mondo")){
-                    //var json = JSON.parse(res.data);
-                    //returns content - pedibusGame - disciplines --> italiano
-                    return result;
-                }
+                // res.data.filter() per filtri
                 console.log(res.data)
-                return result;
+                return Promise.resolve(returnCatalogFilterGames(res.data));
             }
             else return Promise.reject(null);
         }, err => {
             return Promise.reject(err);
         }
-
     )
 }
 
+
+function returnCatalogFilterGames(games) {
+    let returnGames = games;
+    const arrayDisciplines = games["content"].map(x => x.pedibusGame.disciplines);
+    const arrayGeographicArea = games["content"].map(y => y.pedibusGame.geographicArea);
+    returnGames.filter = { disciplines: [], geographicArea: [] };
+    for (let i = 0; i < arrayDisciplines.length; i++) {
+        for (let k = 0; k < arrayDisciplines[i].length; k++) {
+            returnGames.filter.disciplines.push({ label: arrayDisciplines[i][k], value: arrayDisciplines[i][k] });
+        }
+    }
+    for (let i = 0; i < arrayGeographicArea.length; i++) {
+        for (let k = 0; k < arrayGeographicArea[i].length; k++) {
+            returnGames.filter.geographicArea.push({ label: arrayGeographicArea[i][k], value: arrayGeographicArea[i][k] });
+        }
+    }
+    console.log(returnGames);
+    return returnGames;
+}
 function addGame() {
 }
 function updateGame() {
