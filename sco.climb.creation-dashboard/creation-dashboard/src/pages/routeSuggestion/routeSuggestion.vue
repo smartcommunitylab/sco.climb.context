@@ -4,8 +4,6 @@
       <v-col cols="12" sm="12">
         <v-card class="pa-2" outlined tile>
           <div class="pa-7">
-            <p class="text-center">{{ nomepagina }}</p>
-            <hr />
             <h2>Percorsi consigliati</h2>
             <h4>
               Il catalogo di Kids Go Green offre questi percorsi per i gruppi
@@ -49,16 +47,16 @@
                     </div>
                     Area Geografica: <v-col cols="1"></v-col>
                     <div>
-                    <div
-                      v-for="ga in currentFilters.geographicArea"
-                      :key="ga.value"
-                    >
-                      <v-checkbox
-                        v-model="filter.selectedGeographicArea"
-                        :label="ga.label"
-                        :value="ga.value"
-                      ></v-checkbox>
-                    </div>
+                      <div
+                        v-for="ga in currentFilters.geographicArea"
+                        :key="ga.value"
+                      >
+                        <v-checkbox
+                          v-model="filter.selectedGeographicArea"
+                          :label="ga.label"
+                          :value="ga.value"
+                        ></v-checkbox>
+                      </div>
                     </div>
                     <v-col cols="1"></v-col>
                   </v-row>

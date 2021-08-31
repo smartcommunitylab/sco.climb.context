@@ -4,14 +4,25 @@
       <v-row no-gutters>
         <v-col cols="12" sm="12">
           <v-card class="pa-2" outlined tile>
+
             <div class="pa-7">
               <h2>Abitudini di mobilità degli alunni</h2>
               <h4>
                 Come si recano a scuola attualmente gli alunni che intendono
                 partecipare al percorso Kids Go Green?
-                <v-icon color="grey lighten-1">
-                  mdi-information-outline
-                </v-icon>
+                <v-tooltip v-model="show2" bottom @click="show2 = !show2"
+                  ><template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on">
+                      <v-icon color="grey lighten-1">
+                        mdi-information-outline
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <span
+                    >Assicurarsi che il numero totale dei partecipanti
+                    corrisponda al numero delle abitudini rilevate
+                  </span>
+                </v-tooltip>
                 <div
                   class="text-center d-flex align-center justify-space-around"
                 ></div>
@@ -20,8 +31,7 @@
 
             <div
               v-if="habitsData.habits && habitsData.habits.length > 0"
-              class="align-center text-center"
-            >
+              class="align-center text-center">
               <div class="col-sm-12">
                 <v-row>
                   <div class="col-sm-2"></div>
@@ -187,7 +197,12 @@
                 <v-row>
                   <div class="col-sm-2"></div>
                   <div class="col-sm-2">Abitudini rilevate dagli studenti</div>
-                  <div class="col-sm-2"  > <span v-bind:class="{'red--text': hasStudentsError }">{{totStud}}</span>/<span>{{totHabits}}</span></div>
+                  <div class="col-sm-2">
+                    <span v-bind:class="{ 'red--text': hasStudentsError }">{{
+                      totStud
+                    }}</span
+                    >/<span>{{ totHabits }}</span>
+                  </div>
                 </v-row>
               </div>
             </div>
@@ -280,17 +295,17 @@
               <div class="col-sm-12"></div>
 
               <v-row>
-                <v-col cols="6">
+               <v-col cols="6">
                   <v-dialog
                     ref="dialog"
-                    v-model="modal"
-                    :return-value.sync="pickerStart"
+                    v-model="modalStart"
+                    :return-value.sync="habitsData.pickerStart"
                     persistent
                     width="290px"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        v-model="pickerStart"
+                        v-model="habitsData.pickerStart"
                         label="Data di inizio"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -298,15 +313,15 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="pickerStart" scrollable>
+                    <v-date-picker v-model="habitsData.pickerStart" scrollable>
                       <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="modal = false">
-                        Cancel
+                      <v-btn text color="primary" @click="modalStart = false">
+                        Cancella
                       </v-btn>
                       <v-btn
                         text
                         color="primary"
-                        @click="$refs.dialog.save(pickerStart)"
+                        @click="$refs.dialog.save(habitsData.pickerStart)"
                       >
                         OK
                       </v-btn>
@@ -315,17 +330,16 @@
                 </v-col>
                 <v-spacer></v-spacer>
                 <v-col cols="6">
-                  <v-menu
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
+                  <v-dialog
+                    ref="dialogEnd"
+                    v-model="modalEnd"
+                    :return-value.sync="habitsData.pickerEnd"
+                    persistent
+                    width="290px"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        v-model="pickerEnd"
+                        v-model="habitsData.pickerEnd"
                         label="Data di fine"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -333,11 +347,20 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker
-                      v-model="pickerEnd"
-                      @input="menu2 = false"
-                    ></v-date-picker>
-                  </v-menu>
+                    <v-date-picker v-model="habitsData.pickerEnd" scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modalEnd = false">
+                        Cancella
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialogEnd.save(habitsData.pickerEnd)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-dialog>
                 </v-col>
               </v-row>
 
@@ -437,39 +460,32 @@ export default {
         habits: [],
         saturdaySchool: "no",
         roundtrip: "no",
-        //passa anche start date and end date
+        pickerStart: 0,
+        pickerEnd: 0,
         diffDays: 0,
       },
       row: null,
-      modal: false,
-      modal2: false,
-      menu2: false,
+      modalStart: false,
+      modalEnd: false,
       valid: true,
       nomepagina: "habitsDefinition",
-      expandStart: false,
+      show2: false,
       show: true,
-      expandEnd: false,
-      pickerStart: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      pickerEnd: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
     };
   },
   computed: {
     ...mapState("game", ["currentGame"]),
-    hasStudentsError(){
+    hasStudentsError() {
       //if totStud == studenti di classDef
       return true;
     },
-    //hasError if totHabits 
-    totStud(){
-      return 4 ; //currentGame.stud in classDef 
+    //hasError if totHabits
+    totStud() {
+      return 4; //currentGame.stud in classDef
     },
-    totHabits(){
+    totHabits() {
       return 10;
-    }
+    },
   },
   methods: {
     initHabitsArray: function () {
@@ -518,6 +534,16 @@ export default {
         });
 
         //aggiungere pickenEnd e pickerStart con luxon?
+        this.habitsData.pickerStart = (new Date(
+          Date.now() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .substr(0, 10)),
+        this.habitsData.pickerEnd = (new Date(
+          Date.now() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .substr(0, 10)),
         this.habitsData.diffDays = 0;
         this.habitsData.saturdaySchool = "no";
         this.habitsData.roundtrip = "no";
@@ -539,8 +565,8 @@ export default {
 const diff = date1.diff(date2, ["years", "months", "days", "hours"])
 
 console.log(diff.toObject())*/
-      const date1 = new Date(this.pickerStart);
-      const date2 = new Date(this.pickerEnd);
+      const date1 = new Date(this.habitsData.pickerStart);
+      const date2 = new Date(this.habitsData.pickerEnd);
       const diffTime = Math.abs(date2 - date1);
       this.habitsData.diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return this.habitsData.diffDays;

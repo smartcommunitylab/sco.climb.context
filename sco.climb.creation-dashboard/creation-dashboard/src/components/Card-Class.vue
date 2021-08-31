@@ -1,5 +1,5 @@
 <template>
-  <div class="c-card-layout pa-4">
+  <div class="c-card-layout px-7">
     <v-row>
       <v-col cols="10"></v-col>
       <v-col cols="1" class="pull-right">
@@ -7,12 +7,12 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               icon
-              color="red"
+              color="black"
               v-bind="attrs"
               v-on="on"
               @click="onDeleteBtnClick(schoolClass)"
             >
-              <v-icon>mdi-delete</v-icon>
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </template>
           <span>Permette di eliminare la scheda corrente</span>
@@ -70,10 +70,9 @@
                 color="primary"
                 rounded
                 small
-                text
                 @click="deleteStudent()"
               >
-                <v-icon color="black"> mdi-minus </v-icon>
+                <v-icon color="white"> mdi-delete </v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -83,7 +82,7 @@
 
     <v-row>
       <v-col cols="10"></v-col>
-      <v-col cols="2 pa-1">
+      <v-col cols="2" class="pl-0"> 
         <v-btn class="mx-2" color="indigo" rounded small @click="addStudent()">
           <v-icon color="white"> mdi-plus </v-icon>
         </v-btn>

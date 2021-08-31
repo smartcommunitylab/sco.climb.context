@@ -39,7 +39,7 @@
 
           <div class="row pa-4">
             <div
-              class="col-6 pa-5"
+              class="col-5 pa-5"
               v-for="(schoolClass, idx) in schoolClasses"
               v-bind:key="schoolClass"
             >
@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       snackbar: false,
-      snackBarText: "Kill Me!",
+      snackBarText: "",
       show: false,
       isHidden: true,
       nomepagina: "Class Definition",
@@ -104,7 +104,7 @@ export default {
         return;
       }
       if (this.schoolClasses?.length === 1) {
-        this.snackBarText = "At least one class should be defined!";
+        this.snackBarText = "Almeno una classe deve essere definita";
         this.snackbar = true;
         return;
       }
@@ -140,7 +140,7 @@ export default {
     goNext() {
       const areFormsValid = this.checkFormValidations();
       if (!areFormsValid) {
-        this.snackBarText = "Please check your inserted information!";
+        this.snackBarText = "Per favore controllare le informazioni immesse";
         this.snackbar = true;
         return;
       }
