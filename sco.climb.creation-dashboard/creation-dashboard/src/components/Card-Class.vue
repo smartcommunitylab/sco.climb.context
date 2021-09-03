@@ -23,29 +23,52 @@
     <v-row>
       <v-col cols="12">
         <v-form ref="form" lazy-validation>
-          <v-text-field
+          <v-row>
+            <v-col><v-text-field
             v-model="schoolClass.className"
             :label="$t('class')"
             :rules="classNameRules"
             required
             outlined
             dense
-          ></v-text-field>
-          Nicknames
+          ></v-text-field></v-col>
+          </v-row>
+          
+          <v-row>
+            <v-col cols="10">
+              Nicknames
+              <v-tooltip v-model="show" right @click="show = !show"
+                ><template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">
+                      mdi-help-circle-outline
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span
+                  >Ogni numero è associato al nickname di uno studente e non è
+                  modificabile</span
+                >
+              </v-tooltip>
+            </v-col>
 
-          <v-tooltip v-model="show" right @click="show = !show"
-            ><template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon color="grey lighten-1">
-                  mdi-help-circle-outline
-                </v-icon>
+            <v-col cols="2">
+              <v-btn
+                class="mx-2"
+                v-if="
+                  schoolClass == null ||
+                  schoolClass.students == null ||
+                  schoolClass.students.length == 0
+                "
+                color="indigo"
+                rounded
+                small
+                @click="addStudent()"
+              >
+                <v-icon color="white"> mdi-plus </v-icon>
               </v-btn>
-            </template>
-            <span
-              >Ogni numero è associato al nickname di uno studente e non è
-              modificabile</span
-            >
-          </v-tooltip>
+            </v-col>
+          </v-row>
           <v-row
             class="ma-0"
             v-for="(student, index) in schoolClass.students"
@@ -82,8 +105,19 @@
 
     <v-row>
       <v-col cols="10"></v-col>
-      <v-col cols="2" class="pl-0"> 
-        <v-btn class="mx-2" color="indigo" rounded small @click="addStudent()">
+      <v-col cols="2" class="pl-0">
+        <v-btn
+          class="mx-2"
+          v-if="
+            schoolClass &&
+            schoolClass.students &&
+            schoolClass.students.length > 0
+          "
+          color="indigo"
+          rounded
+          small
+          @click="addStudent()"
+        >
           <v-icon color="white"> mdi-plus </v-icon>
         </v-btn>
       </v-col>

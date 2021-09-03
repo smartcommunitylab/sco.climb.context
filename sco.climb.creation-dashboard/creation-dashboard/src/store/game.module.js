@@ -9,6 +9,23 @@ const state = {
 
 const actions = {
 
+    getAllActivities({ dispatch, commit }) {
+        commit('getAllActivitiesRequest');
+        gameService.getAllMyGames()
+            .then(
+                games => {
+                    //todo reset old values
+                    commit('getAllActivitiesRequest', games);
+                    dispatch('alert/success', "Recuperati i tuoi activities.", { root: true });
+
+                },
+                error => {
+                    commit('getAllActivitiesRequest', error);
+                    dispatch('alert/error', "Errore nel recupero delle informazioni.", { root: true });
+                }
+            );
+    },
+
     getAllMyGames({ dispatch, commit }) {
         commit('getAllMyGamesRequest');
         gameService.getAllMyGames()
@@ -52,6 +69,12 @@ const actions = {
     createHabits({ commit }, habitsDefinition) {
         commit('setHabitsDefinition', habitsDefinition);
     },
+
+    createActivities({ commit }, habitsDefinition) {
+        commit('setActivities', habitsDefinition);
+    },
+
+
 
 
 };

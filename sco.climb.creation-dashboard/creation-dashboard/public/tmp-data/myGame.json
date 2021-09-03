@@ -23,6 +23,7 @@
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
+                "city": "Trento",
                 "lastDaySeen": null,
                 "lateSchedule": false,
                 "usingPedibusData": false,
@@ -37,7 +38,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": "https://i.picsum.photos/id/1040/4496/3000.jpg?hmac=kvZONlBpTcZ16PuE_g2RWxlicQ5JKVq2lqqZndfafBY",
+                "imageLink": "https://www.architetturaecosostenibile.it/images/stories/2016/promuoviamo-paesaggio-italiano.jpg",
                 "geographicArea": null,
                 "disciplines": [],
                 "ageRange": []
@@ -72,6 +73,7 @@
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
+                "city": "Ferrara",
                 "lastDaySeen": null,
                 "lateSchedule": false,
                 "usingPedibusData": false,
@@ -86,7 +88,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": "https://i.picsum.photos/id/1043/5184/3456.jpg?hmac=wsz2e0aFKEI0ij7mauIr2nFz2pzC8xNlgDHWHYi9qbc",
+                "imageLink": "https://formiche.net/wp-content/blogs.dir/10051/files/2021/06/Mediterraneo-1-720x390.png",
                 "geographicArea": null,
                 "disciplines": [],
                 "ageRange": []

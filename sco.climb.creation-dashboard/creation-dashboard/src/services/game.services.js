@@ -1,6 +1,7 @@
 import axios from "axios";
 export const gameService = {
     getAllMyGames,
+    getAllActivities,
     getCatalogGames,
     getMinScore,
     getMaxScore,
@@ -8,6 +9,26 @@ export const gameService = {
     updateGame,
     deleteGame,
 };
+
+
+function getAllActivities() {
+    return axios.get('tmp-data/activities.json', {
+        params: {
+            size: 1200
+        }
+    }).then(
+        res => {
+            if (res) {
+                console.log(res.data)
+                return Promise.resolve(res.data);
+            }
+            else return Promise.reject(null);
+        }, err => {
+            return Promise.reject(err);
+        }
+
+    )
+}
 
 function getAllMyGames() {
     return axios.get('tmp-data/myGame.json', {

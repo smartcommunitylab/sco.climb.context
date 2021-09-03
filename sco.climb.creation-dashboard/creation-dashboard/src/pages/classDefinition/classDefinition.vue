@@ -4,22 +4,17 @@
       <v-col>
         <v-card class="pa-2" outlined tile>
           <div class="pa-7">
-            <h2>Classi</h2>
-            <h4>
-              Inserendo il numero totale degli alunni verrà generata una lista
-              di campi dove potranno essere inseriti i nicknames scelti dagli
-              alunni e che servirà per la compilazione quotidiana del diario di
-              mobilità. Questa modifica non è obbligatoria e può essere fatta a
-              percorso già iniziato.
-              <v-tooltip v-model="show" right @click="show = !show"
-                ><template v-slot:activator="{ on, attrs }">
-                  <v-btn icon v-bind="attrs" v-on="on">
-                    <v-icon color="grey lighten-1"> mdi-open-in-new </v-icon>
-                  </v-btn>
-                </template>
-                <span>Vedi altro</span>
-              </v-tooltip>
-            </h4>
+            <v-row> <h2 class="font-weight-regular">Classi</h2></v-row>
+            <v-row> <v-col cols="12"></v-col></v-row>
+            <v-row>
+              <h4 class="font-weight-regular">
+                Inserendo il numero totale degli alunni verrà generata una lista
+                di campi dove potranno essere inseriti i nicknames scelti dagli
+                alunni e che servirà per la compilazione quotidiana del diario
+                di mobilità. Questa modifica non è obbligatoria e può essere
+                fatta a percorso già iniziato.
+              </h4>
+            </v-row>
           </div>
 
           <div class="row ma-2">
@@ -32,7 +27,7 @@
                 color="primary"
                 @click="addNewClass()"
               >
-                Add another class
+                Aggiungi classe
               </v-btn>
             </div>
           </div>

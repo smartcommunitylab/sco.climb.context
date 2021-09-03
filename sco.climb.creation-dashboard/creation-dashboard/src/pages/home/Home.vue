@@ -11,31 +11,42 @@
             </v-avatar>
             <v-list-item class="pa-0" color="rgba(0, 0, 0, .4)">
               <v-list-item-content>
-                <v-list-item-title class="text-h6">
-                  {{ username }}
+                <v-list-item-title
+                  ><p class="font-weight-regular">
+                    {{ username }}
+                  </p>
                 </v-list-item-title>
-                <v-list-item-subtitle class="text-h8">{{
-                  role
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  <p class="font-weight-regular">
+                    {{ role }}
+                  </p></v-list-item-subtitle
+                >
               </v-list-item-content>
             </v-list-item>
           </v-col>
           <v-col cols="12" sm="8" class="text-left">
             <v-list-item-content>
-              <v-list-item-title class="text-h5 pa-3">
-                Riepilogo informazioni {{ role }}
+              <v-list-item-title class="text-h6 pa-3">
+                <p class="font-weight-regular">
+                  Riepilogo informazioni insegnante
+                </p>
               </v-list-item-title>
               <v-list-item-subtitle class="text pa-2"
-                ><v-icon>{{ territorioIcon }}</v-icon> Territorio:
-                {{ territorioName }}
+                ><p class="font-weight-regular">
+                  <v-icon>{{ territorioIcon }}</v-icon> Territorio:
+                  {{ territorioName }}
+                </p>
               </v-list-item-subtitle>
               <v-list-item-subtitle class="text pa-2"
-                ><v-icon>{{ istitutoIcon }}</v-icon> Istituto:
-                {{ istitutoName }}
+                ><p class="font-weight-regular">
+                  <v-icon>{{ istitutoIcon }}</v-icon> Istituto:
+                  {{ istitutoName }}
+                </p>
               </v-list-item-subtitle>
               <v-list-item-subtitle class="text pa-2">
-                <v-icon>{{ scuolaIcon }}</v-icon> Scuola:
-                {{ scuolaName }}
+                <p class="font-weight-regular">
+                  <v-icon>{{ scuolaIcon }}</v-icon> Scuola: {{ scuolaName }}
+                </p>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-col>
@@ -44,11 +55,11 @@
         <v-row align="center">
           <v-col cols="12" sm="1"></v-col>
           <v-col cols="12" sm="10">
-            <p class="text-h5 text-left">Crea percorsi</p>
+            <p class="text-h6 pa-1 text-left font-weight-regular">Crea percorsi</p>
           </v-col>
           <v-col cols="12" sm="1"></v-col>
 
-          <v-row  align="center" v-if="myGames.items">
+          <v-row align="center" v-if="myGames.items">
             <v-col cols="12" sm="1"></v-col>
             <div
               class="col-sm-10 col-md-3"
@@ -79,7 +90,6 @@ import {
   mdiBookEducationOutline,
 } from "@mdi/js";
 import { mapState, mapActions } from "vuex";
-import institutes from "../../../public/tmp-data/institutes.json";
 import CardPercorso from "@/components/Card-Percorso.vue";
 export default {
   name: "Home",
@@ -88,7 +98,6 @@ export default {
   },
   data() {
     return {
-      institutesJson: institutes,
       nomepagina: "Home",
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
@@ -98,8 +107,6 @@ export default {
       scuolaName: "S. Pertini",
       role: "Insegnante",
       username: "Francesca Russo",
-      departure: "Trento",
-      kilometers: "12424",
     };
   },
   computed: {

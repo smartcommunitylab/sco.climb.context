@@ -1,26 +1,38 @@
 <template>
-  <div style="height: 240px" class="my-3">
-    <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
+  <div style="height: 360px" class="my-3">
+    <v-card
+      class="percorso-card font-weight-regular"
+      v-bind:class="{ 'add-card': !percorso }"
+    >
       <div v-if="percorso">
-        {{ percorso.pedibusGame.gameName }}
+        <v-col cols="1"></v-col>
+        <v-row
+          ><v-col cols="11"
+            ><div class="content-card">
+              {{ percorso.pedibusGame.gameName }}
+            </div></v-col
+          >
+          <v-col cols="5"> </v-col>
+        </v-row>
+        <div class="content-image">
+          <v-img
+            v-bind:src="percorso.pedibusGame.imageLink"
+            max-width="200"
+            min-height="150"
+          />
+        </div>
 
-        <v-img
-          v-bind:src="percorso.pedibusGame.imageLink"
-          max-width="200"
-          min-height="150"
-        />
+        <div class="content-start">
+          Dal: {{ getTimestamp(percorso.pedibusGame.from) }}
+        </div>
 
-        {{ percorso.length }}
-        <!--length e start non ci sono -->
-        {{ percorso.start }}
-        Da: {{ getTimestamp(percorso.pedibusGame.from) }}
-
+        <div class="content-start">Da: {{ percorso.pedibusGame.city }}</div>
         <div align="right">
           <v-btn @click.native="goToRoutePersonalization()">Esplora</v-btn>
         </div>
       </div>
 
-      <div v-else>+</div>
+      
       <slot />
     </v-card>
   </div>

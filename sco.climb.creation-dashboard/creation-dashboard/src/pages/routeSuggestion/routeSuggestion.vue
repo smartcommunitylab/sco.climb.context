@@ -4,8 +4,10 @@
       <v-col cols="12" sm="12">
         <v-card class="pa-2" outlined tile>
           <div class="pa-7">
-            <h2>Percorsi consigliati</h2>
-            <h4>
+            <v-row>
+            <h2 class="font-weight-regular">Percorsi consigliati</h2></v-row>
+            <v-row>
+            <h4 class="font-weight-regular">
               Il catalogo di Kids Go Green offre questi percorsi per i gruppi
               simili al suo
               <v-tooltip v-model="show" right @click="show = !show"
@@ -22,7 +24,7 @@
                 >
               </v-tooltip>
             </h4>
-
+</v-row>
             <v-row class="pa-7">
               <div class="col-sm-2"></div>
               <v-btn @click="expand = !expand" class="ma-2" color="primary"

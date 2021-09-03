@@ -24,6 +24,7 @@
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
+                "city": "Trento",
                 "lastDaySeen": null,
                 "lateSchedule": false,
                 "usingPedibusData": false,
@@ -38,7 +39,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": null,
+                "imageLink": "https://upload.wikimedia.org/wikipedia/commons/7/71/Black.png",
                 "geographicArea": ["mondo"],
                 "disciplines": ["storia", "geografia"],
                 "ageRange": []
@@ -73,6 +74,7 @@
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
+                "city": "Trento",
                 "lastDaySeen": null,
                 "lateSchedule": false,
                 "usingPedibusData": false,
@@ -87,7 +89,7 @@
                 "roundTrip": false,
                 "useCalendar": true,
                 "catalog": true,
-                "imageLink": null,
+                "imageLink": "https://upload.wikimedia.org/wikipedia/commons/7/71/Black.png",
                 "geographicArea": ["italia"],
                 "disciplines": ["italiano"],
                 "ageRange": []

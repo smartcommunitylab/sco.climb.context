@@ -1,61 +1,68 @@
 <template>
-  <div style="height: 240px" class="my-3">
-    <v-card class="percorso-card" v-bind:class="{ 'add-card': !percorso }">
+  <div style="height: 300px" class="my-3">
+    <v-card
+      class="percorso-card font-weight-regular"
+      v-bind:class="{ 'add-card': !percorso }"
+    >
       <div v-if="percorso">
-        {{ percorso.pedibusGame.gameName }}
-
-        <div>
-          <v-chip
-            class="ma-1"
-            color="green"
-            label
-            text-color="white"
-            v-if="percorso.pedibusGame.deployed"
+        <v-col cols="1"></v-col>
+        <v-row
+          ><v-col cols="6"
+            ><div class="content-card">
+              {{ percorso.pedibusGame.gameName }}
+            </div></v-col
           >
-            <v-icon left> mdi-label </v-icon>
-            deployed
-          </v-chip>
+          <v-col cols="5">
+            <div>
+              <v-chip
+                class="ma-2"
+                small
+                color="green"
+                label
+                text-color="white"
+                v-if="percorso.pedibusGame.deployed"
+              >
+                deployed
+              </v-chip>
 
-          <v-chip class="ma-1" color="red" label text-color="white" v-else>
-            <v-icon left> mdi-label </v-icon>
-            not deployed
-          </v-chip>
+              <v-chip
+                class="ma-1"
+                small
+                color="red"
+                label
+                text-color="white"
+                v-else
+              >
+                not deployed
+              </v-chip>
+            </div>
+          </v-col>
+        </v-row>
+        <div class="content-image">
+          <v-img
+            v-bind:src="percorso.pedibusGame.imageLink"
+            max-width="200"
+            min-height="150"
+          />
         </div>
 
-        <v-img
-          v-bind:src="percorso.pedibusGame.imageLink"
-          max-width="200"
-          min-height="150"
-        />
+        <div class="content-start">
+          Dal: {{ getTimestamp(percorso.pedibusGame.from) }}
+        </div>
 
-        {{ percorso.length }}
-        {{ percorso.start }}
-
-        Da: {{ getTimestamp(percorso.pedibusGame.from) }}
+        <div class="content-start">Da: {{ percorso.pedibusGame.city }}</div>
       </div>
 
       <div v-else>+</div>
       <slot />
     </v-card>
   </div>
-  <!--length e start non ci sono -->
-  <!-- this.$luxon(percorso.pedibusGame.from)  1475272800000
-         let timestamp = 1615065599.426264
-          undefined
-          > new Date(timestamp).toJSON()
-          '1970-01-19T16:37:45.599Z'
-          > new Date(timestamp * 1000).toJSON()
-        
-        getTimestamp()
-         -->
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      date: new Date().getFullYear(),
-    };
+    return {};
   },
   namespaced: true,
   props: {
@@ -100,4 +107,23 @@ export default {
   font-size: 42px !important;
   color: #cbcbcb !important;
 }
+.content-card {
+  padding-left: 15px;
+}
+.content-image {
+  padding: 15px;
+  padding-right: 0px;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+.content-start {
+  padding: 15px;
+  padding-right: 0px;
+  padding-top: 0px;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
 </style>
+
