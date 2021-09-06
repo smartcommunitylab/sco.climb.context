@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 300px" class="my-3">
+  <div style="height: 360px" class="my-3">
     <v-card
       class="percorso-card font-weight-regular"
       v-bind:class="{ 'add-card': !percorso }"
@@ -7,36 +7,12 @@
       <div v-if="percorso">
         <v-col cols="1"></v-col>
         <v-row
-          ><v-col cols="6"
+          ><v-col cols="11"
             ><div class="content-card">
               {{ percorso.pedibusGame.gameName }}
             </div></v-col
           >
-          <v-col cols="5">
-            <div>
-              <v-chip
-                class="ma-2"
-                small
-                color="green"
-                label
-                text-color="white"
-                v-if="percorso.pedibusGame.deployed"
-              >
-                deployed
-              </v-chip>
-
-              <v-chip
-                class="ma-1"
-                small
-                color="red"
-                label
-                text-color="white"
-                v-else
-              >
-                not deployed
-              </v-chip>
-            </div>
-          </v-col>
+          <v-col cols="5"> </v-col>
         </v-row>
         <div class="content-image">
           <v-img
@@ -51,9 +27,12 @@
         </div>
 
         <div class="content-start">Da: {{ percorso.pedibusGame.city }}</div>
+        <div align="right">
+          <v-btn @click.native="goToRoutePersonalization()">Esplora</v-btn>
+        </div>
       </div>
 
-      <div v-else>+</div>
+      
       <slot />
     </v-card>
   </div>
@@ -62,7 +41,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      date: new Date().getFullYear(),
+    };
   },
   namespaced: true,
   props: {
@@ -74,6 +55,10 @@ export default {
     },
     openTab(url) {
       window.open(url, "_blank");
+    },
+    goToRoutePersonalization() {
+      this.$router.push("routePersonalization");
+      this.nextStep();
     },
   },
 };
@@ -107,23 +92,4 @@ export default {
   font-size: 42px !important;
   color: #cbcbcb !important;
 }
-.content-card {
-  padding-left: 15px;
-}
-.content-image {
-  padding: 15px;
-  padding-right: 0px;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-}
-.content-start {
-  padding: 15px;
-  padding-right: 0px;
-  padding-top: 0px;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-}
 </style>
-

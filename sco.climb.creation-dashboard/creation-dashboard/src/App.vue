@@ -115,6 +115,7 @@ export default {
 .alert-danger {
   background-color: #dc3545;
 }
+
 </style>
 
 
