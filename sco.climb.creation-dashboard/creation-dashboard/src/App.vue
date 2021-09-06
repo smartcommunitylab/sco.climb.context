@@ -6,8 +6,8 @@
 
     <v-main >
       <v-container fluid>
-      <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
-      <a v-else href @click.prevent="authenticateOidc">Sign in</a>
+      <!-- <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
+      <a v-else href @click.prevent="authenticateOidc">Sign in</a> -->
         <status-bar v-if="status.loggedIn"></status-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
@@ -23,7 +23,7 @@
 
 <script>
 import AppNavigation from "@/components/AppNavigation";
-import { mapActions, mapState,mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
 // import Footer from "@/components/Footer";
 import StatusBar from './components/StatusBar.vue';
@@ -49,12 +49,6 @@ export default {
     ...mapState("account", ["status"]),
     ...mapState("alert", ["message"]),
     ...mapState("oidcStore", ["access_token"]),
-    ...mapGetters('oidcStore', [
-      'oidcIsAuthenticated'
-    ]),
-    hasAccess: function () {
-      return this.oidcIsAuthenticated || this.$route.meta.isPublic
-    }
   },
   methods: {
     ...mapActions("alert", { clearAlert: "clear" }),
@@ -66,7 +60,8 @@ export default {
       console.log('I am listening to the user loaded event in vuex-oidc', e.detail)
     },
     oidcError: function (e) {
-      console.log('I am listening to the oidc oidcError event in vuex-oidc', e.detail)
+      console.log('I am listening to the oidc oidcError event in vuex-oidc', e.detail);
+
     },
     automaticSilentRenewError: function (e) {
       console.log('I am listening to the automaticSilentRenewError event in vuex-oidc', e.detail)
@@ -97,6 +92,7 @@ export default {
     window.removeEventListener('vuexoidc:userLoaded', this.userLoaded)
     window.removeEventListener('vuexoidc:oidcError', this.oidcError)
     window.removeEventListener('vuexoidc:automaticSilentRenewError', this.automaticSilentRenewError)
+
   }
 };
 </script>

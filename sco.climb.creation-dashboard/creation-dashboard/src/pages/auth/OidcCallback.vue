@@ -4,14 +4,20 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 
 export default {
   name: 'OidcCallback',
   methods: {
-      ...mapActions('oidcStore', [
+      ...mapActions('account', [
+      'login'
+    ]),
+          ...mapActions('oidcStore', [
       'oidcSignInCallback'
     ])
+  },
+  computed:{
+    ...mapState("oidcStore", ["access_token"]),
   },
   mounted () {
     // workaround: problem with non-standard id_token response
@@ -22,7 +28,11 @@ export default {
         // eslint-disable-next-line no-unused-vars
       .then((redirectPath) => {
         // this.$router.push(redirectPath)
-        this.$router.push({ name: 'home' });
+        // store.dispatch('account/login', {access_token:user.access_token}, {root:true})
+        // this.$router.push({ name: 'home' });
+        // alert(this.access_token)
+        this.login({access_token:this.access_token})
+
       })
       .catch((err) => {
         console.error(err)

@@ -8,27 +8,35 @@ const state = user
 
 const actions = {
 
-    login({ dispatch, commit }) {
-        commit('loginRequest');
-
-        userService.login()
-            .then(
-                token => {
-                    //todo reset old values
-                    commit('loginSuccess', token);
-                    userService.getAccount().then(user => {
-                        commit('userLogged', user);
-                        dispatch('alert/error', "Utente entrato con successo", { root: true });
-                        dispatch('navigation/changePage','/home', { root: true });
-                        router.push('/home');
-                    })
-                },
-                error => {
-                    commit('loginFailure', error);
-                    dispatch('alert/error', "Errore nell'accesso alla console.", { root: true });
-                }
-            );
+    login({commit,dispatch},access_token) {
+        commit('loginSuccess', access_token);
+        userService.getAccount().then(user => {
+                                commit('userLogged', user);
+                                dispatch('alert/error', "Utente entrato con successo", { root: true });
+                                dispatch('navigation/changePage','/home', { root: true });
+                                router.push('/home');
+                            })
     },
+    // login({ dispatch, commit }) {
+    //     commit('loginRequest');
+    //     userService.login()
+    //         .then(
+    //             token => {
+    //                 //todo reset old values
+    //                 commit('loginSuccess', token);
+    //                 userService.getAccount().then(user => {
+    //                     commit('userLogged', user);
+    //                     dispatch('alert/error', "Utente entrato con successo", { root: true });
+    //                     dispatch('navigation/changePage','/home', { root: true });
+    //                     router.push('/home');
+    //                 })
+    //             },
+    //             error => {
+    //                 commit('loginFailure', error);
+    //                 dispatch('alert/error', "Errore nell'accesso alla console.", { root: true });
+    //             }
+    //         );
+    // },
     logout({ commit, dispatch }) {
         userService.logout();
         commit('logout');

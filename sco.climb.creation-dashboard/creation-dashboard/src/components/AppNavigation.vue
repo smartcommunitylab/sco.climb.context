@@ -10,8 +10,8 @@
       <v-spacer class="hidden-sm-and-down"></v-spacer>
       <!-- <v-btn text class="hidden-sm-and-down" @click="login" v-if="!status.loggedIn">Accedi</v-btn>
       <v-btn text class="hidden-sm-and-down" @click="logout" v-else>Logout</v-btn> -->
-      <v-btn text class="hidden-sm-and-down"  v-if="oidcIsAuthenticated" href @click.prevent="signOut">Sign out</v-btn>
-      <v-btn text class="hidden-sm-and-down"  v-else href @click.prevent="authenticateOidcPopup">Sign in</v-btn>
+      <v-btn text class="hidden-sm-and-down"  v-if="status.loggedIn" href @click.prevent="logout">Sign out</v-btn>
+      <v-btn text class="hidden-sm-and-down"  v-else href @click.prevent="login">Sign in</v-btn>
     </v-app-bar>
     <v-navigation-drawer
       class="hidden-md-and-up"
@@ -45,6 +45,8 @@ export default {
   name: "AppNavigation",
 computed: {
     ...mapState("account", ["status"]),
+        ...mapState("oidcStore", ["access_token"]),
+
   },
   created() {},
   data: () => ({
@@ -58,16 +60,21 @@ computed: {
     ],
   }),
   methods: {
-      ...mapActions("account", {loginAction:"login", logoutAction:"logout"}),
+    ...mapActions("account", {logoutAction:"logout"}),
+    ...mapActions('oidcStore', [
+      'authenticateOidc',
+      'removeOidcUser'
+    ]),
       navigate(method) {
           this[method]();
       },
     login() {
-        this.loginAction();
+        this.authenticateOidc();
     //   this.$router.push("/home");
     },
     logout() {
         this.logoutAction();
+        this.removeOidcUser();
     //   this.$router.push("/home");
     },
   },
