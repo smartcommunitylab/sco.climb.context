@@ -62,6 +62,11 @@ const routes = [
     component: () => import('./pages/OidcCallback.vue')
   },
   {
+    path: '/createDeparture',
+    name: 'createDeparture',
+    component: () => import('./pages/createDeparture/createDeparture.vue')
+  },
+  {
     path: '/404',
     component: NotFound
 

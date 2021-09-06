@@ -1,11 +1,16 @@
 {
-"login": {
-  "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
+  "login": {
+    "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
   },
-    "numStud": "numero degli studenti",
-    "students": "studenti,",
-  "class": "Classe",
-  "createPath":"+",
+  "classDefinition": {
+    "description": "<h4>Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
+  },
+  "numStud": "numero degli studenti",
   "numKms": "chilometri",
-  "nickname":"Nickname"
+  "dateStart": "Data di inizio",
+  "dateEnd": "Data di fine",
+  "students": "studenti,",
+  "class": "Classe",
+  "createPath": "+",
+  "nickname": "Nickname"
 }
