@@ -102,7 +102,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-		.allowedMethods("PUT", "DELETE", "GET", "POST", "PATCH")
+		.allowedMethods("*")
 		.allowedOrigins("*");
 	}
 	
