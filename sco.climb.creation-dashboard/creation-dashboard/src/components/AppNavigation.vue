@@ -43,9 +43,9 @@
 import { mapState, mapActions } from "vuex";
 export default {
   name: "AppNavigation",
-computed: {
+  computed: {
     ...mapState("account", ["status"]),
-        ...mapState("oidcStore", ["access_token"]),
+    ...mapState("oidcStore", ["access_token"]),
 
   },
   created() {},

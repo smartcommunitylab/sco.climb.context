@@ -1,34 +1,63 @@
-// import axios from "axios";
+import axios from "axios";
 
 export const userService = {
     login,
     logout,
-    getAccount
+    getProfile
 
 };
 
 function login() {
     // console.log(process.env.VUE_APP_BASE_URL);
-    return Promise.resolve({token:'xxxx'});
+    //return Promise.resolve({token:'xxxx'});
 }
 
-function getAccount() {
-    return Promise.resolve({user: {
-        username:'Matteo'
-    }})
+function getProfile() {
+    return axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GET_PROFILE_API
+        // {
+        //     headers: {
+        //       'Authorization': `Bearer ${access_token.access_token}`
+        //     }
+        //   }
+    //     ,{
+    //     headers: { Authorization: `Bearer ${access_token}` }
+    // }
+    ).then(
+        user => {
+            if (user && user.data) {
+                localStorage.setItem('user', JSON.stringify(user.data));
+                return Promise.resolve(user.data);
+            }
+            return Promise.reject();
+        }, err => {
+            return Promise.reject(err);
+        }
 
-    // return axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GET_ACCOUNT_API).then(
-    //     user => {
-    //         if (user && user.data) {
-    //             localStorage.setItem('user', JSON.stringify(user.data));
-    //             return Promise.resolve(user.data);
-    //         }
-    //         return Promise.reject();
-    //     }, () => {
-    //         return Promise.reject();
-    //     }
+    )
 
-    // )
+    // dataService.getProfile = function () {
+    //     var deferred = $q.defer()
+    //     if (myProfile) deferred.resolve(myProfile);
+    //     else {
+    //       $http({
+    //         method: 'GET',
+    //         url: configService.getURL() + '/api/profile', 
+    //         headers: {
+    //           'Accept': 'application/json',
+    //           'Authorization': 'Bearer ' + loginService.getUserToken()
+    //         },
+    //         timeout: configService.httpTimout(),
+    //       }).then(function (response) {
+    //         myProfile = response.data;
+    //         deferred.resolve(response.data)
+    //       }, function (reason) {
+    //         console.log(reason)
+    //         deferred.reject(reason)
+    //       })
+    //     }      
+    //     return deferred.promise
+    //   }
+
 }
 function logout() {
     // remove user from local storage to log user out

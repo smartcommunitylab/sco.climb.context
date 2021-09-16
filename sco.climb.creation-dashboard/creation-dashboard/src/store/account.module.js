@@ -9,12 +9,13 @@ const state = user
 const actions = {
 
     login({commit,dispatch},access_token) {
-        commit('loginSuccess', access_token);
-        userService.getAccount().then(user => {
+        commit('loginRequest');
+        userService.getProfile(access_token).then(user => {
+                                router.push('/home');
+                                commit('loginSuccess', access_token);
                                 commit('userLogged', user);
                                 dispatch('alert/error', "Utente entrato con successo", { root: true });
                                 dispatch('navigation/changePage','/home', { root: true });
-                                router.push('/home');
                             })
     },
     // login({ dispatch, commit }) {
@@ -42,6 +43,7 @@ const actions = {
         commit('logout');
         dispatch('navigation/logout',null,{ root: true });
         dispatch('alert/success', "Utente uscito con successo", { root: true });
+        // "https://climbdev.smartcommunitylab.it/v3/logout?target=https://climbdev.smartcommunitylab.it/v3/backend/user/index.html#"
         router.push('/login');
     },
 
@@ -51,7 +53,7 @@ const actions = {
 const mutations = {
 
     loginRequest(state) {
-        state.status = { loggingIn: true };
+        state.status = {};
     },
     loginSuccess(state, token) {
         console.log('logged and token')

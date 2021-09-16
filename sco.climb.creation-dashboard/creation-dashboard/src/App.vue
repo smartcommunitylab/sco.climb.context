@@ -27,6 +27,7 @@ import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
 // import Footer from "@/components/Footer";
 import StatusBar from './components/StatusBar.vue';
+
 export default {
   name: "App",
 
