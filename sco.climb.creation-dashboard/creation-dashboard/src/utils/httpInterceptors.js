@@ -20,8 +20,6 @@ export function setupInterceptors({ dispatch }) {
     config => {
       let token =store.getters['oidcStore/oidcAccessToken'];
 
-      // let token = sessionStorage.getItem('oidcStore');
-
       if (token) {
         config.headers['Authorization'] = 'Bearer ' + token;
       }
