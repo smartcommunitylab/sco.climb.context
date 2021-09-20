@@ -7,12 +7,12 @@
  
   <div class= "column1">
     <div flex="33" class="col-not-sf">
-       <md-card class="notifiche">
+       <md-card class="notifiche" ng-click= "go('home.notifications')">
         <span class="material-icons">notifications</span>
         <md-card-title>
           <md-card-title-text>
             <span class="md-headline">Notifiche</span>
-           <div ng-if="notifications != []">
+           <div ng-if="notificationsPresent">
             <div ng-if="!endReached">
             <span class="md-subhead">Bravi, siete arrivati a {{notifications}}!</span>
             </div> 
@@ -20,7 +20,7 @@
             <span class="md-subhead">Congratulazioni, siete arrivati a {{notifications}} e avete quindi completato il percorso!</span>
             </div> 
             </div>
-            <div ng-if="notifications == []"> 
+            <div ng-if="!notificationsPresent"> 
             <span class="md-subhead">{{'notif_empty' | translate}}</span>
             </div>
           </md-card-title-text>
@@ -108,7 +108,7 @@
        </md-card>
       
        
-        <md-card ng-click= "showGite($event)">
+        <md-card ng-click= "go('home.excursions',{'type':'gita'})">
         <md-card-title>
           <md-card-title-text>
             <span class="md-headline">Gite</span>
@@ -124,7 +124,7 @@
        </md-card>
        
        
-       <md-card ng-click= "go('home.excursions')">
+       <md-card ng-click= "go('home.excursions',{'type':'buonazione'})">
         <md-card-title>
           <md-card-title-text>
             <span class="md-headline">Buone Azioni</span>

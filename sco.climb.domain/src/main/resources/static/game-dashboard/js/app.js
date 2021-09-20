@@ -217,12 +217,11 @@ angular.module('climbGame', [
 			})
 
 			.state('home.excursions', {
-				url: 'excursions/:owner/:institute/:school/:game/:itinerary/:class',
+				url: 'excursions/:owner/:institute/:school/:game/:itinerary/:class/:type',
 				views: {
 					'content@home': {
 						templateUrl: 'templates/excursions.html',
-						controller: 'excursionsCtrl'
-					}
+						controller: 'excursionsCtrl'					}
 				}
 			})
 			.state('home.notifications', {

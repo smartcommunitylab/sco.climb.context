@@ -1,12 +1,12 @@
 /* global angular */
 angular.module('climbGame.controllers.excursions', [])
   .controller('excursionsCtrl',
-    function ($scope, $window, $mdDialog, $mdToast, dataService) {
+    function ($scope, $window, $mdDialog, $mdToast, dataService,$stateParams) {
       $scope.showHints = false
       $scope.datepickerisOpen = false
       $scope.excursions = null
       $scope.sendingData = false
-
+      
       /* excursion example
       {
         children: 12,
@@ -73,7 +73,7 @@ angular.module('climbGame.controllers.excursions', [])
         children: null,
         distance: null,
         meteo: 'sunny',
-        goodAction: false
+        goodAction: $stateParams.type==='buonazione'?true:false
       }
 
       $scope.newExcursion = angular.copy(emptyExcursion)
