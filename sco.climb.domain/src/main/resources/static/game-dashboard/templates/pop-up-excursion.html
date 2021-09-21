@@ -1,0 +1,44 @@
+<md-dialog class="pop-up-ex" aria-label="Gita">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Gita</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+    <form class="form-control">
+    <div class = row>
+    <span class="md-headline">Nome della gita</span>
+    <input type="text" class= "input-popup"></input>
+    </div>
+    
+    <div class = row>
+    <span class="md-headline">Inserisci la data</span>
+     <span class="material-icons">insert_invitation</span>
+    </div>
+    <div class = row>
+    <span class="md-headline">Numero di bambini</span>
+     <input type="text"></input>
+    </div>
+    <div class = row>
+    <span class="md-headline">Km a piedi</span>
+     <input type="text"></input>
+    </div>
+    </form>
+    </md-dialog-content>
+
+    <md-dialog-actions >
+           
+      <button ng-click="answer('save')">
+       Save
+      </button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+
+ 
