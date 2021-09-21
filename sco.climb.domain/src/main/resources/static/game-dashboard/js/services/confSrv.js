@@ -5,7 +5,8 @@ angular.module('climbGame.services.conf', [])
     configService.DEVELOPMENT = true
     configService.ENABLE_PAST_DAYS_EDIT = true
     configService.IMAGES_PREFIX_URL = './'; //changed in game-public to load right images
-    var URL = 'https://' + (configService.DEVELOPMENT ? 'climbdev' : 'climb.platform') + '.smartcommunitylab.it/v3'
+    //var URL = 'https://' + (configService.DEVELOPMENT ? 'climbdev' : 'climb.platform') + '.smartcommunitylab.it/v3'
+    var URL = 'http://localhost:6020/domain'
   
     configService.FOOT_CONSTANT = 'foot'
     configService.PLANE_CONSTANT = 'plane'

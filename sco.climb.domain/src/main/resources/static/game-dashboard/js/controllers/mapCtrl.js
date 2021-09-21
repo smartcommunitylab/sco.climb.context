@@ -528,6 +528,7 @@ angular.module("climbGame.controllers.map", [])
     }
 
     function getMarkerIcon(leg) {
+    
       //check leg and give me icon based on my status and type of mean
       if (leg.position == 0) {
         return configService.IMAGES_PREFIX_URL+'img/POI_start.png'
@@ -535,6 +536,7 @@ angular.module("climbGame.controllers.map", [])
       if (leg.position == $scope.legs.length - 1) {
         return configService.IMAGES_PREFIX_URL+'img/POI_destination.png'
       }
+      console.log($scope.currentLeg.position)
       return configService.getIconImg(leg.icon, leg.position < $scope.currentLeg.position); 
     }
 
