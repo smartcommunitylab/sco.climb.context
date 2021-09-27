@@ -486,7 +486,7 @@ angular.module("climbGame.controllers.map", [])
             if ((polylines[i].position == myLeg.position + 1) || $scope.endReached) {
               // Actual leg. I have to split them in 2 part considering the percentage
               var actual_completing = doneRange / totalRange; //0,8
-              var lengthInMeters = $scope.sumAllDistances(pointArr) * 1000;
+              var lengthInMeters = mapService.sumAllDistances(pointArr) * 1000;
               if (actual_completing > 0) {
                 if ((actual_completing < 1)) { // case completing between 1% and 99%
                   var proportionalLength = lengthInMeters * actual_completing;
@@ -585,7 +585,7 @@ angular.module("climbGame.controllers.map", [])
       var count = 1;
       do {
         var partialPoly = pointArr.slice(0, count);
-        var lengthInMeters = $scope.sumAllDistances(partialPoly) * 1000;
+        var lengthInMeters = mapService.sumAllDistances(partialPoly) * 1000;
         if (lengthInMeters > proportionalLength) {
           findSplitPoint = true;
         } else {
@@ -614,36 +614,7 @@ angular.module("climbGame.controllers.map", [])
       return splittedPolys;
     };
 
-    // Method used to calculate a polyline length (in meters) with the sum of the distances between each point
-    $scope.sumAllDistances = function (arrOfPoints) {
-      var partialDist = 0;
-      for (var i = 1; i < arrOfPoints.length; i++) {
-        var lat1 = arrOfPoints[i - 1][0];
-        var lon1 = arrOfPoints[i - 1][1];
-        var lat2 = arrOfPoints[i][0];
-        var lon2 = arrOfPoints[i][1];
-        partialDist += $scope.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
-      }
-      return partialDist;
-    };
-
-    // Method used to calculate the distance between two points
-    $scope.getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
-      var R = 6371; // Radius of the earth in km
-      var dLat = deg2rad(lat2 - lat1); // deg2rad below
-      var dLon = deg2rad(lon2 - lon1);
-      var a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      var d = R * c; // Distance in km
-      return d;
-    };
-
-    var deg2rad = function (deg) {
-      return deg * (Math.PI / 180)
-    };
+    
 
     $scope.scrollLeft = function () {
       document.getElementById('gallery').scrollLeft -= 50;

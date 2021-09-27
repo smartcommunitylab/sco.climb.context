@@ -109,5 +109,35 @@ angular.module('climbGame.services.map', [])
         map.invalidateSize();
       })
     }
+    // Method used to calculate a polyline length (in meters) with the sum of the distances between each point
+    mapService.sumAllDistances = function (arrOfPoints) {
+      var partialDist = 0;
+      for (var i = 1; i < arrOfPoints.length; i++) {
+        var lat1 = arrOfPoints[i - 1][0];
+        var lon1 = arrOfPoints[i - 1][1];
+        var lat2 = arrOfPoints[i][0];
+        var lon2 = arrOfPoints[i][1];
+        partialDist += mapService.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
+      }
+      return partialDist;
+    };
+
+    // Method used to calculate the distance between two points
+    mapService.getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = mapService.deg2rad(lat2 - lat1); // deg2rad below
+      var dLon = mapService.deg2rad(lon2 - lon1);
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(mapService.deg2rad(lat1)) * Math.cos(mapService.deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c; // Distance in km
+      return d;
+    };
+
+    mapService.deg2rad = function (deg) {
+      return deg * (Math.PI / 180)
+    };
     return mapService
   });
