@@ -1,148 +1,165 @@
 <div class="homepage">
-<div ng-if="isLoading" layout="row" layout-sm="column" layout-align="space-around">
-      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-</div>
+  <div ng-if="isLoading" layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
 
-<div ng-if="!isLoading" class= "row">
- 
-  <div class= "column1">
-    <div flex="33" class="col-not-sf">
-       <md-card class="notifiche" ng-click= "go('home.notifications')">
-        <span class="material-icons">notifications</span>
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Notifiche</span>
-           <div ng-if="notificationsPresent">
-            <div ng-if="!endReached">
-            <span class="md-subhead">Bravi, siete arrivati a {{notifications}}!</span>
-            </div> 
-             <div ng-if="endReached">
-            <span class="md-subhead">Congratulazioni, siete arrivati a {{notifications}} e avete quindi completato il percorso!</span>
-            </div> 
-            </div>
-            <div ng-if="!notificationsPresent"> 
-            <span class="md-subhead">{{'notif_empty' | translate}}</span>
-            </div>
-          </md-card-title-text>
+  <div ng-if="!isLoading" class="row">
+
+    <div class="column1">
+      <div flex="33" class="col-not-sf">
+        <md-card class="notifiche" ng-click="go('home.notifications')">
+          <span class="material-icons">notifications</span>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Notifiche</span>
+              <div ng-if="notificationsPresent">
+                <div>
+                  <span class="md-subhead">{{notificationText}}</span>
+                </div>
+                <!-- <div ng-if="!endReached">
+                  <span class="md-subhead">Bravi, siete arrivati a {{notificationText}}!</span>
+                </div>
+                <div ng-if="endReached">
+                  <span class="md-subhead">Congratulazioni, siete arrivati a {{notificationText}} e avete quindi completato
+                    il percorso!</span>
+                </div> -->
+              </div>
+              <div ng-if="!notificationsPresent">
+                <span class="md-subhead">{{'notif_empty' | translate}}</span>
+              </div>
+            </md-card-title-text>
           </md-card-title>
           <md-card-title-media>
             <div class="md-media-lg card-media"></div>
           </md-card-title-media>
-        
-       </md-card>
-       
-       
-        <md-card class="sfide" ng-show="checkChallenge" >
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Sfide</span> 
-             <div ng-if="challenges.length != 0">
-              <span class="md-subhead"> <p>{{challenges.playerId}}</p></span> 
-             </div> 
-            <div ng-if="challenges.length == 0"> 
-              <span class="md-subhead" style="color: #7D7979;"><p>Al momento non ci sono sfide disponibili</p></span>
-            </div>
-          </md-card-title-text>
-         </md-card-title> 
-          <md-card-title-media>
-            <div class="md-media-lg card-media"></div>
-          </md-card-title-media>
-        
-       </md-card>
-    </div>
-    </div>
-    
-   <div class= "column2"> 
-    <div flex="33" class="col-map-km">
-        <md-card class= "map-col" ng-click= "go('home.map')">
-           <leaflet width="100%" height="480px"  layers="layers" center="center" paths="pathLine" markers="markers" id="map" defaults="defaults"></leaflet>
-       </md-card>
-       
 
-       <md-card class= "km-col">  
-         <md-card-title>
-          <md-card-title-text>
-            <div ng-if="!endReached">
-             <span class="md-headline">Mancano {{scoreToNext}} km alla prossima tappa!</span>
-            </div> 
+        </md-card>
+
+
+        <md-card class="sfide">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Sfide</span>
+              <div ng-if="challenges.length != 0">
+                <span class="md-subhead">
+                  <p>Giocatore {{challenges.playerId}}</p>
+                </span>
+              </div>
+              <div ng-if="!checkChallenge || challenges.length == 0">
+                <span class="md-subhead" style="color: #7D7979;">
+                  <p>Al momento non ci sono sfide disponibili</p>
+                </span>
+              </div>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-title-media>
+            <div class="md-media-lg card-media"></div>
+          </md-card-title-media>
+
+        </md-card>
+      </div>
+    </div>
+
+    <div class="column2">
+      <div flex="33" class="col-map-km">
+        <p class="map-title">{{gameName}}</p>
+        <md-card class="map-col" ng-click="go('home.map')">
+          <leaflet width="100%" height="400px" layers="layers" paths="pathLine" markers="markers" id="maphome"
+            defaults="defaults"></leaflet>
+        </md-card>
+
+
+        <md-card class="km-col" ng-click="go('home.stats')">
+          <md-card-title>
+            <md-card-title-text>
+              <div ng-if="!endReached">
+                <!-- <span class="md-headline">Mancano {{scoreToNext}} km alla prossima tappa!</span> -->
+                <span class="md-headline">Tappe sbloccate: {{previousStep}} su {{totalStep}}. Mancano {{scoreToNext}} km alla tappa {{nextStep+1}}!</span>
+              </div>
               <div ng-if="endReached">
-            <span class="md-headline">Complimenti! Avete raggiunto la fine del percorso!</span>
-            </div> 
-            
-          </md-card-title-text>
-        </md-card-title>
-        <md-card-content>
-         <div class="ng-scope">
-        <div layout="row" layout-align="start" layout-margin="" class="layout-margin layout-align-start-stretch layout-row">
-          <span class="md-headline">{{actualScore}}km</span>
-          <md-progress-linear md-mode="determinate" ng-value="actualScore"  role="progressbar" class="" aria-checked="true">
-          <div class="md-container md-mode-determinate"><div class="md-dashed"></div><div class="md-bar md-bar1"></div><div class="md-bar md-bar2" style="transform: translateX(-40.625%) scale(0.1875, 1);">
-         </div></div></md-progress-linear> 
-         <span class="material-icons">emoji_events</span>
-           <span class="md-headline">{{nextGoal}}km</span>
-        </div>
-        </div>     
-         </md-card-content> 
+                <span class="md-headline">Complimenti! Avete raggiunto la fine del percorso!</span>
+              </div>
+
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <div class="ng-scope">
+              <div layout="row" layout-align="start" layout-margin=""
+                class="layout-margin layout-align-start-stretch layout-row">
+                <span class="md-headline">{{actualScore}}km</span>
+                <md-progress-linear md-mode="determinate" ng-value="actualScore" role="progressbar" class=""
+                  aria-checked="true">
+                  <div class="md-container md-mode-determinate">
+                    <div class="md-dashed"></div>
+                    <div class="md-bar md-bar1"></div>
+                    <div class="md-bar md-bar2" style="transform: translateX(-40.625%) scale(0.1875, 1);">
+                    </div>
+                  </div>
+                </md-progress-linear>
+                <span class="material-icons">emoji_events</span>
+                <span class="md-headline">{{nextGoal}}km</span>
+              </div>
+            </div>
+          </md-card-content>
           <md-card-title-media>
             <div class="md-media-lg card-media"></div>
           </md-card-title-media>
-       </md-card>
-     </div>
+        </md-card>
+      </div>
     </div>
-    
-    <div class= "column3"> 
+
+    <div class="column3">
       <div class="col-inserimento">
-     
-       <md-card ng-click= "go('home.class')" class="card border-warning text-warning">
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Calendario</span>
-          </md-card-title-text>
-        </md-card-title>
-          <md-card-content> 
-           <span class="material-icons">insert_invitation</span>
-           </md-card-content>     
+
+        <md-card ng-click="go('home.class')" class="card border-warning text-warning">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Calendario</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <span class="material-icons">insert_invitation</span>
+          </md-card-content>
           <md-card-title-media>
             <div class="md-media-lg card-media"></div>
           </md-card-title-media>
-       </md-card>
-      
-       
-        <md-card ng-click= "go('home.excursions',{'type':'gita'})">
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Gite</span>
-           
-          </md-card-title-text>
-         </md-card-title>
-         <md-card-content> 
+        </md-card>
+
+
+        <md-card ng-click="go('home.excursions',{'type':'gita'})">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Gite</span>
+
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
             <span class="material-icons">nature_people</span>
-           </md-card-content> 
+          </md-card-content>
           <md-card-title-media>
             <div class="md-media-lg card-media"></div>
           </md-card-title-media>
-       </md-card>
-       
-       
-       <md-card ng-click= "go('home.excursions',{'type':'buonazione'})">
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Buone Azioni</span>
-          </md-card-title-text>
-        </md-card-title>
-          <md-card-content> 
-                <span class="material-icons">volunteer_activism</span>
-           </md-card-content> 
+        </md-card>
+
+
+        <md-card ng-click="go('home.excursions',{'type':'buonazione'})">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Buone Azioni</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <span class="material-icons">volunteer_activism</span>
+          </md-card-content>
           <md-card-title-media>
             <div class="md-media-lg card-media"></div>
-          </md-card-title-media>       
-       </md-card>
-       
-       </div>
+          </md-card-title-media>
+        </md-card>
+
+      </div>
     </div>
- </div> 
-  <div id="map-container">
-    <leaflet style="width: 10%; height: 10px;" ></leaflet>
   </div>
+  <!-- <div id="map-container">
+    <leaflet style="width: 10%; height: 10px;" id="maphome" ></leaflet>
+  </div> -->
 </div>
-   
