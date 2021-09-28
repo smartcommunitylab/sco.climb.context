@@ -490,7 +490,7 @@ angular.module("climbGame.controllers.map", [])
               if (actual_completing > 0) {
                 if ((actual_completing < 1)) { // case completing between 1% and 99%
                   var proportionalLength = lengthInMeters * actual_completing;
-                  var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
+                  var splittedSubPolys = mapService.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
                   for (var y = 0; y < splittedSubPolys.length; y++) {
                     if (y == 0) { // I initialize the actual position for the specific marker with the last coord of the firt splitted polyline
                       actualMarkerPosition = splittedSubPolys[y][splittedSubPolys[y].length - 1];
@@ -578,41 +578,7 @@ angular.module("climbGame.controllers.map", [])
       return returnMarker;
     }
 
-    // Method used to split a polyline in two polylines considering a percentage value.
-    // Now the percentage is related with the array elements number but we can consider the real distance in meters
-    $scope.retrievePercentagePoly = function (pointArr, percentage, proportionalLength) {
-      var findSplitPoint = false;
-      var count = 1;
-      do {
-        var partialPoly = pointArr.slice(0, count);
-        var lengthInMeters = mapService.sumAllDistances(partialPoly) * 1000;
-        if (lengthInMeters > proportionalLength) {
-          findSplitPoint = true;
-        } else {
-          count++;
-        }
-      } while (!findSplitPoint);
-      if (count == pointArr.length) {
-        count--;
-      }
-      var previousPoint = pointArr[count - 1];
-      var nextPoint = pointArr[count];
-      var deltaY = nextPoint[0] - previousPoint[0];
-      var deltaX = nextPoint[1] - previousPoint[1];
-      var newX = previousPoint[1] + (deltaX * percentage);
-      var newY = previousPoint[0] + (deltaY * percentage);
-      var newPoint = [newY, newX];
 
-      var partialPoly1 = pointArr.slice(0, count);
-      partialPoly1.push(newPoint);
-      var partialPoly2 = pointArr.slice(count, pointArr.length);
-      partialPoly2.unshift(newPoint);
-
-      var splittedPolys = [];
-      splittedPolys.push(partialPoly1);
-      splittedPolys.push(partialPoly2);
-      return splittedPolys;
-    };
 
     
 

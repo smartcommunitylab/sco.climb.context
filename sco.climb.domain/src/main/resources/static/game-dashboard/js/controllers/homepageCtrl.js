@@ -86,10 +86,10 @@ angular.module('climbGame.controllers.homepage', [])
                       // zoom: 10
                     }
                     //% 100 completed and 0 just started
-                    $scope.actualScore = (data.teams[i].score / (data.teams[i].score + data.teams[i].scoreToEnd)) * 100;
+                    $scope.actualScore = Math.round(data.teams[i].score / (data.teams[i].score + data.teams[i].scoreToEnd)) * 100;
                     $scope.scoreToEnd = Math.round(data.teams[i].scoreToEnd / 1000);
                     $scope.scoreToNext = Math.round(data.teams[i].scoreToNext / 1000);
-                    $scope.nextGoal = $scope.actualScore + $scope.scoreToEnd;
+                    $scope.nextGoal = Math.round($scope.actualScore + $scope.scoreToEnd);
                     if ($scope.nextGoal <= $scope.actualScore) {
                       $scope.endReached = true;
                     }
@@ -200,7 +200,7 @@ angular.module('climbGame.controllers.homepage', [])
                 if (actual_completing > 0) {
                   if ((actual_completing < 1)) { // case completing between 1% and 99%
                     var proportionalLength = lengthInMeters * actual_completing;
-                    var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
+                    var splittedSubPolys = mapService.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
                     for (var y = 0; y < splittedSubPolys.length; y++) {
                       if (y == 0) { // I initialize the actual position for the specific marker with the last coord of the firt splitted polyline
                         $scope.actualMarkerPosition = splittedSubPolys[y][splittedSubPolys[y].length - 1];
