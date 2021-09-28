@@ -333,7 +333,7 @@ angular.module('climbGame.controllers.homepage', [])
               } else {
                 $scope.notificationsPresent = true;
                 if (data[0].badge != null) {
-                  $scope.notificationText = $translate.instant('notif_badge', { badge: $scope.escape(data[0].badge) })
+                  $scope.notificationText = $translate.instant('notif_badge', { badge: data[0].badge })
                 } else {
                   if (data[0].key)
                     $scope.notificationText = $translate.instant('notif_' + data[0].key, data[0].data)
