@@ -50,8 +50,126 @@ angular.module('climbGame.controllers.homepage', [])
         pathLine: {},
         markers: []
       })
-      $scope.init = function () {
+      $scope.getNotifications = function () {
+        dataService.getNotifications(CacheSrv.getLastCheck('calendar')).then(
+          function (data) {
+            if (data && data.length) {
+              console.log('[Calendar] New notifications: ' + data.length)
+              angular.forEach(data, function (notification) {
+                notification.data = $scope.convertFields(notification.data)
+                if (!CacheSrv.isGameFinishedNotified(loginService.getOwnerId(),
+                  loginService.getGameId(), loginService.getClassRoom())) {
+                  if ((notification.key == 'GameFinished') &&
+                    (!$scope.isGameFinishedNotificationDisplaied)) {
+                    $scope.gameFinishedNotification = notification;
+                    $scope.isGameFinishedNotificationDisplaied = true;
+                    $mdDialog.show({
+                      // targetEvent: $event,
+                      scope: $scope, // use parent scope in template
+                      preserveScope: true, // do not forget this if use parent scope
+                      template: '<md-dialog-game-finisched>' +
+                        '<div class="cal-dialog-game-finisched">' +
+                        '  <div class="cal-dialog-title">COMPLIMENTI!</div>' +
+                        '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog1" | translate}}</div>' +
+                        '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog2" | translate:gameFinishedNotification.data}}</div>' +
+                        '  <img class="cal-dialog-img" ng-src="{{lastLeg.imageUrl}}">' +
+                        '  <div class="cal-dialog-leg">{{"notif_gameFinishedDialogLeg" | translate:gameFinishedNotification.data}}</div>' +
+                        '  <div layout="row" layout-align="end">' +
+                        '    <div layout="column" layout-align="end">' +
+                        '      <md-button ng-click="closeDialog()" class="send-dialog-dismiss">' +
+                        '        Chiudi' +
+                        '      </md-button>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div></md-dialog-game-finisched>',
+                      controller: function DialogController($scope, $mdDialog) {
+                        $scope.closeDialog = function () {
+                          CacheSrv.setGameFinishedNotified(loginService.getOwnerId(),
+                            loginService.getGameId(), loginService.getClassRoom(), true);
+                          $scope.isGameFinishedNotificationDisplaied = false;
+                          $mdDialog.hide();
+                        }
+                      }
+                    })
+                  }
+                }
+              })
+              if (data.length == 0) {
+                $scope.notifications = data;
+              } else {
+                $scope.notificationsPresent = true;
+                if (data[0].badge != null) {
+                  $scope.notificationText = $translate.instant('notif_badge', { badge: escape(data[0].badge) })
+                } else {
+                  if (data[0].key)
+                    $scope.notificationText = $translate.instant('notif_' + data[0].key, data[0].data)
+                }
+              }
+              CacheSrv.updateLastCheck('calendar');
+            }
+            $scope.isLoading = false;
 
+          },
+          function (reason) {
+            console.log('[Calendar]' + reason);
+            $mdToast.show($mdToast.simple().content('Errore nel caricamento delle notifiche'))
+            $scope.isLoading = false;
+          }
+        )
+      }
+      $scope.getChallenges = function () {
+        var cleanStatesChallenges = function (arrayOfChallenges) {
+          $scope.openChallenge = false;
+          var challengesNotCompleted = [];
+          var d = new Date();
+          var now = d.getTime();
+          //first get all the not completed
+          for (var i = 0; i < arrayOfChallenges.length; i++) {
+            if (!arrayOfChallenges[i].completed && !arrayOfChallenges[i].fields.prizeWon) {
+              if (arrayOfChallenges[i].start > now) {
+                continue;
+              }
+              if (arrayOfChallenges[i].hasOwnProperty('end')) {
+                if (arrayOfChallenges[i].end > now) {
+                  challengesNotCompleted.push(arrayOfChallenges[i]);
+                }
+              } else {
+                challengesNotCompleted.push(arrayOfChallenges[i]);
+              }
+            }
+          }
+          if (challengesNotCompleted[0]) {
+            $scope.lastChallenge.state = [challengesNotCompleted[0]];
+            $scope.openChallenge = true;
+          }
+          for (var j = 1; j < challengesNotCompleted.length; j++) {
+            if (challengesNotCompleted[j] && challengesNotCompleted[j].start > $scope.lastChallenge.state[0].start) {
+              $scope.lastChallenge.state = [challengesNotCompleted[j]]
+            }
+          }
+        }
+        dataService.getChallenges().then(
+          function (data) {
+            $scope.lastChallenge = { state: [] }
+            if (data && data.length) {
+              console.log('[Calendar] Challenges: ' + data.length)
+              for (var i = 0; i < data.length; i++) {
+                if (data[i].state) {
+                  angular.forEach(data[i].state, function (state) {
+                    state.fields = $scope.convertFields(state.fields)
+                    $scope.lastChallenge.state.push(state)
+                  })
+                }
+              }
+              cleanStatesChallenges($scope.lastChallenge.state)
+            }
+          },
+          function (reason) {
+            console.log('[Calendar]' + reason)
+          }
+        )
+      }
+      $scope.init = function () {
         profileService.getProfile().then(function (profile) {
           loginService.setUserToken(profile.token)
           loginService.setAllOwners(profile.ownerIds)
@@ -140,29 +258,16 @@ angular.module('climbGame.controllers.homepage', [])
           $scope.getNotifications();
           $scope.getChallenges();
 
-
-          // dataService.getChallenges().then(
-          //   function (data) {
-
-          //     if (data != []) {
-          //       if (data[data.length - 1].playerId != 'Scuola') {
-          //         if (data.state == null) {
-          //           $scope.checkChallenge = false;
-          //         }
-          //         $scope.challenges = data[data.length - 1];
-
-          //       } else {
-          //         $scope.challenges = data[data.length - 2];
-
-          //       }
-          //     }
-          //     else {
-          //       $scope.challenges = data;
-          //     }
-          //   })
         }
-
         )
+        //call the auto refresh for challenge and calendar
+        refresh();
+      }
+
+      function refresh() {
+        $scope.getChallenges();
+        $scope.getNotifications();
+        setTimeout(refresh, 60000);
       }
       function addPlayerPosition() {
         //var poly = {};
@@ -274,155 +379,8 @@ angular.module('climbGame.controllers.homepage', [])
         }
         );
       };
-
       $scope.init();
 
-      // poll every 10 seconds
-      // $scope.poller = $interval(function () {
-      //   getNotifications()
-      //   getChallenges()
-      // }, (1000 * 10))
-      $scope.getNotifications = function () {
-        dataService.getNotifications(CacheSrv.getLastCheck('calendar')).then(
-          function (data) {
-            if (data && data.length) {
-              console.log('[Calendar] New notifications: ' + data.length)
-              angular.forEach(data, function (notification) {
-                notification.data = $scope.convertFields(notification.data)
-                if (!CacheSrv.isGameFinishedNotified(loginService.getOwnerId(),
-                  loginService.getGameId(), loginService.getClassRoom())) {
-                  if ((notification.key == 'GameFinished') &&
-                    (!$scope.isGameFinishedNotificationDisplaied)) {
-                    $scope.gameFinishedNotification = notification;
-                    $scope.isGameFinishedNotificationDisplaied = true;
-                    $mdDialog.show({
-                      // targetEvent: $event,
-                      scope: $scope, // use parent scope in template
-                      preserveScope: true, // do not forget this if use parent scope
-                      template: '<md-dialog-game-finisched>' +
-                        '<div class="cal-dialog-game-finisched">' +
-                        '  <div class="cal-dialog-title">COMPLIMENTI!</div>' +
-                        '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog1" | translate}}</div>' +
-                        '  <div class="cal-dialog-text">{{"notif_gameFinishedDialog2" | translate:gameFinishedNotification.data}}</div>' +
-                        '  <img class="cal-dialog-img" ng-src="{{lastLeg.imageUrl}}">' +
-                        '  <div class="cal-dialog-leg">{{"notif_gameFinishedDialogLeg" | translate:gameFinishedNotification.data}}</div>' +
-                        '  <div layout="row" layout-align="end">' +
-                        '    <div layout="column" layout-align="end">' +
-                        '      <md-button ng-click="closeDialog()" class="send-dialog-dismiss">' +
-                        '        Chiudi' +
-                        '      </md-button>' +
-                        '    </div>' +
-                        '  </div>' +
-                        '</div></md-dialog-game-finisched>',
-                      controller: function DialogController($scope, $mdDialog) {
-                        $scope.closeDialog = function () {
-                          CacheSrv.setGameFinishedNotified(loginService.getOwnerId(),
-                            loginService.getGameId(), loginService.getClassRoom(), true);
-                          $scope.isGameFinishedNotificationDisplaied = false;
-                          $mdDialog.hide();
-                        }
-                      }
-                    })
-                  }
-                }
-              })
-              if (data.length == 0) {
-                $scope.notifications = data;
-              } else {
-                $scope.notificationsPresent = true;
-                if (data[0].badge != null) {
-                  $scope.notificationText = $translate.instant('notif_badge', { badge: escape(data[0].badge) })
-                } else {
-                  if (data[0].key)
-                    $scope.notificationText = $translate.instant('notif_' + data[0].key, data[0].data)
-                }
-              }
-              CacheSrv.updateLastCheck('calendar');
-            }
-            $scope.isLoading = false;
-
-          },
-          function (reason) {
-            console.log('[Calendar]' + reason);
-            $mdToast.show($mdToast.simple().content('Errore nel caricamento delle notifiche'))
-            $scope.isLoading = false;
-          }
-        )
-        // dataService.getNotifications(CacheSrv.getLastCheck('calendar')).then(
-        //   function (data) {
-        //     console.log(data)
-        //     if (data.length == 0) {
-        //       $scope.notifications = data;
-        //     } else {
-        //       $scope.notificationsPresent = true;
-        //       if (data[0].badge != null) {
-        //         $scope.notificationText=$translate.instant('notif_badge',{ badge: escape(data[0].badge) })
-        //         // $scope.notificationText = data[0].badge;
-        //       } else { 
-        //         if (data[0].key)
-        //         $scope.notificationText= $translate.instant('notif_' +data[0].key,data[0].data)
-        //         // $scope.notificationText = data[1].badge; 
-        //       }
-
-        //     }
-        //     $scope.isLoading = false;
-        //   }, function (error) {
-        //     $mdToast.show($mdToast.simple().content('Errore nel caricamento delle notifiche'))
-        //     $scope.isLoading = false;
-        //   })
-      }
-      $scope.getChallenges = function () {
-        var cleanStatesChallenges = function (arrayOfChallenges) {
-          $scope.openChallenge = false;
-          var challengesNotCompleted = [];
-          var d = new Date();
-          var now = d.getTime();
-          //first get all the not completed
-          for (var i = 0; i < arrayOfChallenges.length; i++) {
-            if (!arrayOfChallenges[i].completed && !arrayOfChallenges[i].fields.prizeWon) {
-              if (arrayOfChallenges[i].start > now) {
-                continue;
-              }
-              if (arrayOfChallenges[i].hasOwnProperty('end')) {
-                if (arrayOfChallenges[i].end > now) {
-                  challengesNotCompleted.push(arrayOfChallenges[i]);
-                }
-              } else {
-                challengesNotCompleted.push(arrayOfChallenges[i]);
-              }
-            }
-          }
-          if (challengesNotCompleted[0]) {
-            $scope.lastChallenge.state = [challengesNotCompleted[0]];
-            $scope.openChallenge = true;
-          }
-          for (var j = 1; j < challengesNotCompleted.length; j++) {
-            if (challengesNotCompleted[j] && challengesNotCompleted[j].start > $scope.lastChallenge.state[0].start) {
-              $scope.lastChallenge.state = [challengesNotCompleted[j]]
-            }
-          }
-        }
-        dataService.getChallenges().then(
-          function (data) {
-            $scope.lastChallenge = { state: [] }
-            if (data && data.length) {
-              console.log('[Calendar] Challenges: ' + data.length)
-              for (var i = 0; i < data.length; i++) {
-                if (data[i].state) {
-                  angular.forEach(data[i].state, function (state) {
-                    state.fields = $scope.convertFields(state.fields)
-                    $scope.lastChallenge.state.push(state)
-                  })
-                }
-              }
-              cleanStatesChallenges($scope.lastChallenge.state)
-            }
-          },
-          function (reason) {
-            console.log('[Calendar]' + reason)
-          }
-        )
-      }
     }
 
   ])
