@@ -6,7 +6,7 @@
       <v-container fluid style="margin: 0; width: 100%">
       <!-- <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
       <a v-else href @click.prevent="authenticateOidc">Sign in</a> -->
-        <top-bar v-if="status.loggedIn"></top-bar>
+        <top-bar></top-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
             {{ alert.message }}

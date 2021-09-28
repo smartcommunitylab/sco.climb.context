@@ -38,8 +38,8 @@ function getAllMyGames() {
     }).then(
         res => {
             if (res) {
-                console.log(res.data)
-                return Promise.resolve(res.data);
+                // console.log(res.data)
+                return Promise.resolve(res);
             }
             else return Promise.reject(null);
         }, err => {
