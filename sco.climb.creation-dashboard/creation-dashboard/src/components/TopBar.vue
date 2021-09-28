@@ -42,7 +42,7 @@ export default {
   name: "TopBar",
 computed: {
     ...mapState("account", ["status"]),
-        ...mapState("oidcStore", ["access_token"]),
+    ...mapState("oidcStore", ["access_token"]),
 
   },
   created() {},

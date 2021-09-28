@@ -1,43 +1,45 @@
-import httpClient from "./httpClient";
+import axios from 'axios';
+import {store} from '../store/index'
 const actionScope = `loader`;
+
 export function setupInterceptors({ dispatch }) {
   let requestsPending = 0;
-const req = {
+  const req = {
     pending: () => {
       requestsPending++;
       dispatch(`${actionScope}/show`);
     },
     done: () => {
       requestsPending--;
-if (requestsPending <= 0) {
+      if (requestsPending <= 0) {
         dispatch(`${actionScope}/hide`);
       }
     }
   };
-httpClient.interceptors.request.use(
+  axios.interceptors.request.use(
     config => {
-      let token = localStorage.getItem('token');
+      let token =store.getters['oidcStore/oidcAccessToken'];
 
       if (token) {
-        config.headers['Authorization'] = 'Bearer '+ token;
+        config.headers['Authorization'] = 'Bearer ' + token;
       }
       req.pending();
-return config;
+      return config;
     },
     error => {
       requestsPending--;
-req.done();
-return Promise.reject(error);
+      req.done();
+      return Promise.reject(error);
     }
   );
-httpClient.interceptors.response.use(
+  axios.interceptors.response.use(
     ({ data }) => {
       req.done();
-return Promise.resolve(data);
+      return Promise.resolve(data);
     },
     error => {
       req.done();
-return Promise.reject(error);
+      return Promise.reject(error);
     }
   );
 }

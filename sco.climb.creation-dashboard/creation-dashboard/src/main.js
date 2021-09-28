@@ -8,6 +8,8 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import i18n from './i18n'
 import VueLuxon from "vue-luxon";
 import './assets/styles/common.css';
+import { setupInterceptors } from './utils/httpInterceptors';
+Vue.config.productionTip = false
 
 Vue.use(Loading);
 Vue.use(VueLuxon,{
@@ -23,6 +25,9 @@ new Vue({
   vuetify,
   i18n,
   render: h => h(App),
+  created() {
+    setupInterceptors(store);
+  },
   router,
   store:store
 }).$mount('#app')

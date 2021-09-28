@@ -32,7 +32,6 @@ export default {
         // this.$router.push({ name: 'home' });
         // alert(this.access_token)
         this.login({access_token:this.access_token})
-
       })
       .catch((err) => {
         console.error(err)

@@ -51,10 +51,10 @@
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
-              <v-btn class="float-left" @click="navigateHome()">Indietro</v-btn>
+              <v-btn class="float-left" @click="navigateHome()" color="primary">Indietro</v-btn>
             </div>
             <div class="col-sm-5">
-              <v-btn class="float-right" @click="goNext()">Avanti</v-btn>
+              <v-btn class="float-right" @click="goNext()" color="primary">Avanti</v-btn>
             </div>
             <div class="col-sm-1"></div>
           </div>
