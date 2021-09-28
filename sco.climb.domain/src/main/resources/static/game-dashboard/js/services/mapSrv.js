@@ -139,5 +139,41 @@ angular.module('climbGame.services.map', [])
     mapService.deg2rad = function (deg) {
       return deg * (Math.PI / 180)
     };
+
+    // Method used to split a polyline in two polylines considering a percentage value.
+    // Now the percentage is related with the array elements number but we can consider the real distance in meters
+    mapService.retrievePercentagePoly = function (pointArr, percentage, proportionalLength) {
+      var findSplitPoint = false;
+      var count = 1;
+      do {
+        var partialPoly = pointArr.slice(0, count);
+        var lengthInMeters = mapService.sumAllDistances(partialPoly) * 1000;
+        if (lengthInMeters > proportionalLength) {
+          findSplitPoint = true;
+        } else {
+          count++;
+        }
+      } while (!findSplitPoint);
+      if (count == pointArr.length) {
+        count--;
+      }
+      var previousPoint = pointArr[count - 1];
+      var nextPoint = pointArr[count];
+      var deltaY = nextPoint[0] - previousPoint[0];
+      var deltaX = nextPoint[1] - previousPoint[1];
+      var newX = previousPoint[1] + (deltaX * percentage);
+      var newY = previousPoint[0] + (deltaY * percentage);
+      var newPoint = [newY, newX];
+
+      var partialPoly1 = pointArr.slice(0, count);
+      partialPoly1.push(newPoint);
+      var partialPoly2 = pointArr.slice(count, pointArr.length);
+      partialPoly2.unshift(newPoint);
+
+      var splittedPolys = [];
+      splittedPolys.push(partialPoly1);
+      splittedPolys.push(partialPoly2);
+      return splittedPolys;
+    };
     return mapService
   });
