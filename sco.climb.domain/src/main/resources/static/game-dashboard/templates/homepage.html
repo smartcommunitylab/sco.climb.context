@@ -74,7 +74,7 @@
             <md-card-title-text>
               <div ng-if="!endReached">
                 <!-- <span class="md-headline">Mancano {{scoreToNext}} km alla prossima tappa!</span> -->
-                <span class="md-headline">Tappe sbloccate: {{previousStep}} su {{totalStep}}. Mancano {{scoreToNext}} km alla tappa {{nextStep+1}}!</span>
+                <span class="md-headline">Tappe sbloccate: {{previousStep}} su {{totalStep}}. Mancano {{scoreToNext}} km alla tappa {{previousStep+1}}!</span>
               </div>
               <div ng-if="endReached">
                 <span class="md-headline">Complimenti! Avete raggiunto la fine del percorso!</span>
@@ -87,7 +87,7 @@
               <div layout="row" layout-align="start" layout-margin=""
                 class="layout-margin layout-align-start-stretch layout-row">
                 <span class="md-headline">{{actualScore}}km</span>
-                <md-progress-linear md-mode="determinate" ng-value="actualScore" role="progressbar" class=""
+                <md-progress-linear md-mode="determinate" ng-value="pecentualScore" role="progressbar" class=""
                   aria-checked="true">
                   <div class="md-container md-mode-determinate">
                     <div class="md-dashed"></div>
