@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!--<div>
     <v-row class="text-center">
       <v-col col="12">
         <v-breadcrumbs :items="items" divider="">
@@ -14,12 +14,57 @@
       </v-col>
     </v-row>
   </div>
+  <div v-show="!['home'].includes($route.name)" class="divStepper">-->
+    <div>
+    <v-stepper alt-labels class="stepper elevation-0">
+      <v-stepper-header>
+        <v-stepper-step step="1">
+          <p v-html="$t('stepper.step1')" class="step"></p>
+        </v-stepper-step>
+        <v-divider></v-divider>
+
+        <v-stepper-step step="2">
+          <p v-html="$t('stepper.step2')" class="step"></p>
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="3">
+          <p v-html="$t('stepper.step3')" class="step"></p>
+        </v-stepper-step>
+        
+        <v-divider></v-divider>
+
+        <v-stepper-step step="4">
+          <p v-html="$t('stepper.step4')" class="step"></p>
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="5">
+          <p v-html="$t('stepper.step5')" class="step"></p>
+        </v-stepper-step>
+        
+        <v-divider></v-divider>
+
+        <v-stepper-step step="6" class="step">
+          <p v-html="$t('stepper.step6')"></p>
+        </v-stepper-step>
+      </v-stepper-header>
+    </v-stepper>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "StatusBar",
+  name: "Stepper",
+  data() {
+    return {
+      snackbar: false,
+      snackBarText: "",
+    }
+  },
   computed: {
     ...mapState("navigation", ["page","items"]),
     ...mapState("game", ["currentGame"]),
@@ -32,11 +77,11 @@ export default {
     isActualPath(path){
       return this.currentRouteName===path.href
     },
-  },
+  }
 };
 </script>
 <style>
-.breadcrumb {
+/*.breadcrumb {
   color: white;
   position: relative;
   margin: 25px;
@@ -55,6 +100,17 @@ export default {
   left: -40px;
   top: 0%;
   height: 100%;
+}*/
+.divStepper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.stepper {
+  width: 90%;
+}
+.step {
+  text-align: center;
 }
 .home {
   background-color: lightcoral;

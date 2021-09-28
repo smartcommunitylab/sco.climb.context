@@ -1,12 +1,9 @@
 <template>
   <div>
     <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon
-        class="hidden-md-and-up"
-        @click="drawer = !drawer"
-      ></v-app-bar-nav-icon>
-      <v-spacer class="hidden-md-and-up"></v-spacer>
-      <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
+      <v-toolbar-title class="pt-4">
+        <p v-html="$t('topbar.title')"></p>
+      </v-toolbar-title>
       <v-spacer class="hidden-sm-and-down"></v-spacer>
       <!-- <v-btn text class="hidden-sm-and-down" @click="login" v-if="!status.loggedIn">Accedi</v-btn>
       <v-btn text class="hidden-sm-and-down" @click="logout" v-else>Logout</v-btn> -->
@@ -42,7 +39,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  name: "AppNavigation",
+  name: "TopBar",
 computed: {
     ...mapState("account", ["status"]),
         ...mapState("oidcStore", ["access_token"]),

@@ -2,6 +2,24 @@
   "login": {
     "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
   },
+
+  "topbar": {
+    "title": "<p>Area insegnante<p>"
+  },
+
+  "stepper": {
+    "step1": "<p>Classi partecipanti</p>",
+    "step2" : "<p>Abitudini di mobilità</p>",
+    "step3" : "<p>Calibrazione percorso</p>",
+    "step4" : "<p>Scelta percorso</p>",
+    "step5" : "<p>Personalizzazione percorso</p>",
+    "step6" : "<p>Riepilogo</p>"
+  },
+
+  "home": {
+    "name": "<p>Francesca Russo</p>",
+    "territorio": "Territorio:"
+  },
   "classDefinition": {
     "description": "<h4>Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
   },

@@ -7,5 +7,3 @@ export const ROLE_APP_USER=`ROLE_APP_USER`
 export const BASE_URL_API =`http://localhost:6020`
 
 
-
-

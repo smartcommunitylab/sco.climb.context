@@ -1,0 +1,13 @@
+:root{
+    --primary:#034432;
+}
+.titleFont {
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    color: var(--primary);
+  }
+
+.cardFont {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}

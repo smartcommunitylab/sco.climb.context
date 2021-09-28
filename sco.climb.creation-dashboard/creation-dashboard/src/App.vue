@@ -2,13 +2,11 @@
   <v-app>
     <Loader v-if="loading" />
 
-    <app-navigation ></app-navigation>
-
     <v-main >
-      <v-container fluid>
+      <v-container fluid style="margin: 0; width: 100%">
       <!-- <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
       <a v-else href @click.prevent="authenticateOidc">Sign in</a> -->
-        <status-bar v-if="status.loggedIn"></status-bar>
+        <top-bar v-if="status.loggedIn"></top-bar>
         <transition name="fade">
           <div v-if="alert.message" :class="`alert ${alert.type}`">
             {{ alert.message }}
@@ -22,19 +20,17 @@
 </template>
 
 <script>
-import AppNavigation from "@/components/AppNavigation";
 import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
 // import Footer from "@/components/Footer";
-import StatusBar from './components/StatusBar.vue';
+import TopBar from './components/TopBar.vue';
 export default {
   name: "App",
 
   components: {
-    AppNavigation,
     Loader,
     // "app-footer": Footer,
-    StatusBar
+    TopBar,
   },
 
   data: () => ({

@@ -1,40 +1,27 @@
 <template>
-  <v-container class="grey lighten-5">
-    <v-card class="pa-1" outlined tile>
-      <div class="align-center text-center mt-4">
-        <v-row align="center">
+  <v-container style="width: 70%; background-color:pink" class="pa-0">
+      <div class="align-center text-center mt-0">
+        <v-row align="center" class="pt-0 mt-0">
           <v-col cols="12" sm="4">
             <v-avatar rounded="100" class="profile" color="grey" size="148">
               <v-img
                 src="https://picsum.photos/id/1005/5760/3840.jpg?hmac=2acSJCOwz9q_dKtDZdSB-OIK1HUcwBeXco_RMMTUgfY"
               ></v-img>
             </v-avatar>
-            <v-list-item class="pa-0" color="rgba(0, 0, 0, .4)">
-              <v-list-item-content>
-                <v-list-item-title
-                  ><p class="font-weight-regular">
-                    {{ username }}
-                  </p>
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  <p class="font-weight-regular">
-                    {{ role }}
-                  </p></v-list-item-subtitle
-                >
-              </v-list-item-content>
-            </v-list-item>
+            
           </v-col>
           <v-col cols="12" sm="8" class="text-left">
             <v-list-item-content>
               <v-list-item-title class="text-h6 pa-3">
-                <p class="font-weight-regular">
-                  Riepilogo informazioni insegnante
-                </p>
+                <p class="titleFont"
+                  v-html="$t('home.name')"></p>
               </v-list-item-title>
               <v-list-item-subtitle class="text pa-2"
                 ><p class="font-weight-regular">
-                  <v-icon>{{ territorioIcon }}</v-icon> Territorio:
-                  {{ territorioName }}
+                  <v-icon>{{ territorioIcon }}</v-icon>
+                  <span color="primary"
+                  v-html="$t('home.territorio')">
+                  {{ territorioName }}</span>
                 </p>
               </v-list-item-subtitle>
               <v-list-item-subtitle class="text pa-2"
@@ -59,27 +46,24 @@
           </v-col>
           <v-col cols="12" sm="1"></v-col>
 
-          <v-row align="center" v-if="myGames.items">
-            <v-col cols="12" sm="1"></v-col>
+          <div class="d-flex pa-3 ma-3">
             <div
-              class="col-sm-10 col-md-3"
               v-for="game in myGames.items"
               :key="game.id"
             >
               <Card-Percorso :percorso="game" :catalog="false"> </Card-Percorso>
             </div>
 
-            <div
+           <!-- <div
               class="col-sm-4 col-md-3 col-12"
               @click="goToClassDefinition()"
             >
               <Card-Percorso> </Card-Percorso>
-            </div>
-            <v-col cols="12" sm="1"></v-col>
-          </v-row>
+            </div> -->
+          </div>
         </v-row>
       </div>
-    </v-card>
+    
   </v-container>
 </template>
 
@@ -142,3 +126,6 @@ export default {
   height: 100%;
 }
 </style>
+
+
+

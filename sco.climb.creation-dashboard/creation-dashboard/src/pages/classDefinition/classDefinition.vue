@@ -1,4 +1,7 @@
 <template>
+  <div>
+  <stepper > </stepper>
+
   <v-container class="grey lighten-5">
     <v-row no-gutters>
       <v-col>
@@ -70,20 +73,23 @@
       </v-snackbar>
     </div>
   </v-container>
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import CardClass from "@/components/Card-Class.vue";
+import Stepper from "@/components/Stepper.vue";
 export default {
   name: "classDefinition",
   components: {
     "Card-Class": CardClass,
+    Stepper,
   },
   data() {
     return {
-      snackbar: false,
-      snackBarText: "",
+      //snackbar: false,
+      //snackBarText: "",
       show: false,
       isHidden: true,
       nomepagina: "Class Definition",

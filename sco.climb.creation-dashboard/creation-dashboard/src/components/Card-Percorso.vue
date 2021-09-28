@@ -1,9 +1,10 @@
 <template>
-  <div style="height: 300px" class="my-3">
+  <!--<div style="height: 385px; background-color: red" class="my-3">
     <v-card
       class="percorso-card font-weight-regular"
       v-bind:class="{ 'add-card': !percorso }"
     >
+      NOME PERCORSO
       <div v-if="percorso">
         <v-col cols="1"></v-col>
         <v-row
@@ -12,7 +13,9 @@
               {{ percorso.pedibusGame.gameName }}
             </div></v-col
           >
-          <v-col cols="5">
+
+          CHIP
+          <v-col cols="5" style="background-color: yellow">
             <div>
               <v-chip
                 class="ma-2"
@@ -38,6 +41,8 @@
             </div>
           </v-col>
         </v-row>
+
+        IMMAGINE
         <div class="content-image">
           <v-img
             v-bind:src="percorso.pedibusGame.imageLink"
@@ -55,6 +60,18 @@
 
       <div v-else>+</div>
       <slot />
+    </v-card>
+  </div>-->
+  <div style="background-color: blue; height: 100%" class="pa-4" v-if="percorso">
+    <v-card class="percorso-card font-weight-regular rounded-lg" style="height: 385px; width: 280px">
+     <v-img
+      class="black--text align-end"
+      height="133px"
+      :src="percorso.pedibusGame.imageLink"
+    >
+      <v-card-title>Top 10 Australian beaches</v-card-title>
+    </v-img>
+        
     </v-card>
   </div>
 </template>
@@ -81,11 +98,7 @@ export default {
 
 <style>
 .percorso-card {
-  min-width: 180px;
-  max-width: 248px !important;
   height: 100%;
-  border-radius: 8px;
-  border: 1px solid #ccc;
   padding: 0;
   display: flex !important;
   align-content: center;
@@ -93,7 +106,6 @@ export default {
   align-items: center;
   text-align: left;
   margin: auto;
-  cursor: pointer;
   transition: 0.5s all;
 }
 .percorso-card:hover {

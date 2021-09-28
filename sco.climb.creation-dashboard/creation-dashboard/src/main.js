@@ -7,6 +7,7 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import i18n from './i18n'
 import VueLuxon from "vue-luxon";
+import './assets/styles/common.css';
 
 Vue.use(Loading);
 Vue.use(VueLuxon,{
