@@ -63,15 +63,56 @@
     </v-card>
   </div>-->
   <div style="background-color: blue; height: 100%" class="pa-4" v-if="percorso">
-    <v-card class="percorso-card font-weight-regular rounded-lg" style="height: 385px; width: 280px">
+    <v-card class=" d-flex flex-column font-weight-regular rounded-lg" height="360px" width="260px">
      <v-img
-      class="black--text align-end"
-      height="133px"
+      height="10"
       :src="percorso.pedibusGame.imageLink"
     >
-      <v-card-title>Top 10 Australian beaches</v-card-title>
     </v-img>
-        
+       <div class="d-flex flex-row">
+              <v-chip
+                class="ma-2 rounded-xl"
+                small
+                color="green"
+                label
+                text-color="white"
+                v-if="percorso.pedibusGame.deployed"
+              >
+                deployed
+              </v-chip>
+
+              <v-chip
+                class="ma-2 rounded-xl"
+                small
+                color="red"
+                label
+                text-color="white"
+                v-else
+              >
+                not deployed
+              </v-chip>
+            </div>
+    <v-card-title
+    class="pa-2 pt-0 ml-2">Titolo percorso</v-card-title>
+    <v-card-text>
+      <div
+      align="left"
+      class="ml-2 "
+      > Tot km in tot tappe <br />
+            Scuola <br />
+            Classe <br />
+            Anno scolastico</div>
+    </v-card-text>
+
+    <v-card-actions class="align-self-end">
+      <v-btn
+        color="var(--primary)"
+        text
+        @click="claDef()"
+      >
+        Visualizza
+      </v-btn>
+    </v-card-actions>    
     </v-card>
   </div>
 </template>
@@ -84,6 +125,7 @@ export default {
   namespaced: true,
   props: {
     percorso: Object,
+
   },
   methods: {
     getTimestamp(timestamp) {
@@ -92,12 +134,15 @@ export default {
     openTab(url) {
       window.open(url, "_blank");
     },
+    claDef() {
+      this.$router.push("classdefinition");
+    },
   },
 };
 </script>
 
 <style>
-.percorso-card {
+.percorso-cardTTT {
   height: 100%;
   padding: 0;
   display: flex !important;
