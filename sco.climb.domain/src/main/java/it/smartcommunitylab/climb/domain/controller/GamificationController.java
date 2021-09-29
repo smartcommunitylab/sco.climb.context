@@ -395,7 +395,7 @@ public class GamificationController extends AuthController {
 	public @ResponseBody PedibusGame updatePedibusGameMobility(
 			@PathVariable String ownerId, 
 			@PathVariable String pedibusGameId,
-			@RequestBody PedibusGame game, 
+			@RequestBody Map<String, Map<String, Integer>> mobilityParams, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		PedibusGame pedibusGameDb = storage.getPedibusGame(ownerId, pedibusGameId);
@@ -406,7 +406,8 @@ public class GamificationController extends AuthController {
 				null, null, Const.AUTH_RES_PedibusGame_Mobility, Const.AUTH_ACTION_UPDATE, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		pedibusGameDb.getParams().putAll(game.getParams());
+		pedibusGameDb.setMobilityParams(mobilityParams);
+		ricalcolaNumeroStudentiMobility(pedibusGameDb);
 		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGameMobility[%s]: %s", ownerId, pedibusGameId));
@@ -414,6 +415,34 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
+	private void ricalcolaNumeroStudentiMobility(PedibusGame pedibusGameDb) {
+		Map<String, Integer> mobilityParams = new HashMap<>();
+		mobilityParams.put("walk_studenti", 0);
+		mobilityParams.put("bike_studenti", 0);
+		mobilityParams.put("bus_studenti", 0);
+		mobilityParams.put("car_studenti", 0);
+		mobilityParams.put("pedibus_studenti", 0);
+		mobilityParams.put("pandr_studenti", 0);
+		String[] paramsName = new String[] {"walk_studenti", "bike_studenti", "bus_studenti",
+				"car_studenti", "pedibus_studenti", "pandr_studenti"};
+		for(String param : paramsName) {
+			mobilityParams.put(param, 0);
+		}
+		for(Map<String, Integer> map : pedibusGameDb.getMobilityParams().values()) {
+			Integer num = map.get("walk_studenti");
+			if(num != null) {
+				for(String param : paramsName) {
+					mobilityParams.put(param, mobilityParams.get(param) + num);
+				}
+			}
+		}
+		Map<String, String> mobilityParamsString = new HashMap<>();
+		for(String param : paramsName) {
+			mobilityParamsString.put(param, String.valueOf(mobilityParams.get(param)));
+		}
+		pedibusGameDb.getParams().putAll(mobilityParamsString);
+	}
+
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/tuning", method = RequestMethod.PUT)
 	public @ResponseBody PedibusGame updatePedibusGameTuning(
 			@PathVariable String ownerId, 
