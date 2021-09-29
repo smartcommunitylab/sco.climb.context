@@ -9,7 +9,7 @@
       <div flex="33" class="col-not-sf">
         <md-card class="notifiche" ng-click="go('home.notifications')">
           <span class="material-icons">notifications</span>
-         
+
           <md-card-content>
             <span class="md-headline">Notifiche</span>
             <div ng-if="notificationsPresent">
@@ -19,7 +19,11 @@
               </div>
             </div>
             <div ng-if="!notificationsPresent">
-              <span class="md-subhead" style="color: #7D7979;">{{'notif_empty' | translate}}</span>
+              <span class="md-subhead" style="color: #7D7979;">
+                <p>
+                  {{'notif_empty' | translate}}
+                </p>
+              </span>
             </div>
           </md-card-content>
 
@@ -31,21 +35,23 @@
             emoji_events
           </span>
           <md-card-title>
-           
-          <md-card-content>
-            <span class="md-headline">Sfide</span>
-            <div ng-if="challenges.length != 0">
-              <span class="md-subhead">
-                <p>Giocatore {{challenges.playerId}}</p>
-              </span>
-            </div>
-            <div ng-if="!checkChallenge || challenges.length == 0">
-              <span class="md-subhead" style="color: #7D7979;">
-                <p>Al momento non ci sono sfide disponibili</p>
-              </span>
-            </div>
-          </md-card-content>
-          
+
+            <md-card-content>
+              <span class="md-headline">Sfide</span>
+              <div ng-if="challenges.length != 0">
+                <span class="md-subhead">
+                  <p>Giocatore {{challenges.playerId}}</p>
+                </span>
+              </div>
+              <div ng-if="!checkChallenge || challenges.length == 0">
+                <span class="md-subhead" style="color: #7D7979;">
+                  <p>
+                    {{'chall_empty' | translate}}
+                  </p>
+                </span>
+              </div>
+            </md-card-content>
+
 
         </md-card>
       </div>

@@ -1,12 +1,15 @@
 <div class="excursions" layout="row" layout-padding>
   <div layout="column" flex="25" class="form-column">
     <h1 class="md-title">
-	  	<md-input-container class="md-block">
+	  	<!-- <md-input-container class="md-block">
 	  		<md-select ng-model="newExcursion.goodAction" ng-change="changeExcursion()">
 	  			<md-option ng-value="false">Gita scolastica</md-option>
 	  			<md-option ng-value="true">Buona azione</md-option>
 	  		</md-select>
-	  	</md-input-container>
+	  	</md-input-container> -->
+      <div layout-align="end center" ng-if="!isExcursion(newExcursion)">Buona azione</div>
+      <div layout-align="end center" ng-if="isExcursion(newExcursion)">Gita scolastica</div>
+
     </h1>
     <form novalidate name="excursionForm">
       <!-- Name -->
@@ -108,7 +111,8 @@
     </md-button>
   </div>
   <div layout="column" flex>
-    <h1 class="md-title">{{'excursions_history' | translate}}</h1>
+    <h1 class="md-title" ng-if="isExcursion(newExcursion)">{{'excursions_history' | translate}}</h1>
+    <h1 class="md-title" ng-if="!isExcursion(newExcursion)">{{'good_actions_history' | translate}}</h1>
     <md-content id="excursions-list" drag-scroll="enabled" axis="y">
       <div layout="row" layout-wrap>
         <div flex="50" ng-repeat="ex in excursions">

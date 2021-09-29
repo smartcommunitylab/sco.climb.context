@@ -5,9 +5,9 @@ angular.module('climbGame.controllers.home', [])
        $state.go('home.homepage')
        //$state.go('home.stats')
 
-      $scope.go = function (path) {
+       $scope.go = function (path, params) {
         $scope.closeSideNavPanel()
-        $state.go(path)
+        $state.go(path, params)
       }
 
       $scope.isCurrentState = function (state) {
@@ -65,7 +65,12 @@ angular.module('climbGame.controllers.home', [])
       $scope.openSideNavPanel = function () {
         $mdSidenav('leftMenu').open()
       }
-
+      $scope.backHome = function () {
+        $state.go('home.homepage');
+      }
+      $scope.isHome = function() {
+       return ($state.current.name === 'home.homepage')
+      }
       $scope.closeSideNavPanel = function () {
         $mdSidenav('leftMenu').close()
       }

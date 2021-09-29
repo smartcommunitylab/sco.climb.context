@@ -25,9 +25,13 @@
         <md-icon class="material-icons menu-colors icon-path"></md-icon>
         <p>{{'menu_map' | translate}}</p>
       </md-list-item>
-      <md-list-item ng-click="go('home.excursions')" ng-class="{'menu-selected' : isCurrentState('home.excursions')}">
+      <md-list-item ng-click="go('home.excursions',{'type':'gita'})" ng-class="{'menu-selected' : isCurrentState('home.excursions')}">
         <md-icon class="material-icons menu-colors icon-trip"></md-icon>
         <p>{{'menu_excursions' | translate}}</p>
+      </md-list-item>
+      <md-list-item ng-click="go('home.excursions',{'type':'buonazione'})" ng-class="{'menu-selected' : isCurrentState('home.excursions')}">
+        <md-icon class="material-icons menu-colors">&#xea70;</md-icon>
+        <p>{{'menu_good_actions' | translate}}</p>
       </md-list-item>
       <md-list-item ng-click="go('home.notifications')" ng-class="{'menu-selected' : isCurrentState('home.notifications')}">
         <md-icon class="material-icons menu-colors icon-notifications"></md-icon>
@@ -67,9 +71,13 @@
 </md-sidenav>
 <md-toolbar class="desktop bar-colors">
   <div class="md-toolbar-tools bar-colors">
-    <md-button class="md-icon-button bar-colors" aria-label="Side Panel" ng-click="openSideNavPanel()">
+    <md-button class="md-icon-button bar-colors" aria-label="Side Panel" ng-if="isHome()" ng-click="openSideNavPanel()">
       <md-tooltip>Menu</md-tooltip>
       <md-icon class="material-icons bar-colors">&#xE5D2;</md-icon>
+    </md-button>
+    <md-button class="md-icon-button bar-colors" aria-label="Side Panel" ng-if="!isHome()"  ng-click="backHome()">
+      <md-tooltip>back</md-tooltip>
+      <md-icon class="material-icons bar-colors">&#xe5c4;</md-icon>
     </md-button>
     <h2> <span>{{title}}</span>
     </h2>
