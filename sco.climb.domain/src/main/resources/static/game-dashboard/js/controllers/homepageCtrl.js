@@ -5,6 +5,7 @@ angular.module('climbGame.controllers.homepage', [])
       $scope.notificationsPresent = false;
       $scope.notifications = [];
       $scope.notificationText = '';
+      $scope.notifcationTime = 0;
       $scope.challenges = [];
       $scope.globalTeam = '';
       $scope.legs = [];
@@ -338,6 +339,7 @@ angular.module('climbGame.controllers.homepage', [])
                   if (data[0].key)
                     $scope.notificationText = $translate.instant('notif_' + data[0].key, data[0].data)
                 }
+                $scope.notifcationTime=data[0].timestamp;
               }
               CacheSrv.updateLastCheck('calendar');
             }

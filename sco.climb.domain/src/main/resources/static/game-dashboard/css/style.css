@@ -189,6 +189,7 @@ md-sidenav {
 
 .angular-leaflet-map {
   z-index: 0;
+  border-radius: 15px;
 }
 
 .map-resources {
@@ -1411,17 +1412,18 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .homepage md-card.map-col{
    height: 390px; 
    cursor:pointer;
-
+  margin-top:8px;
 }
-
 .homepage md-card.km-col{
    height: 169px;
    cursor: pointer;
+   margin-top: 25px;
 }
 .homepage .map-title{
   text-align: center;
   color: #4153a0; 
    font-size: 30px;
+   margin:20px;
 }
 md-card-content span.material-icons {
    color: #eed700; 
@@ -1433,7 +1435,9 @@ md-card-content span.material-icons {
 .col-not-sf span.material-icons {
    color: #400080; 
    font-size: 30px;
-   text-align: left; 
+   text-align: left;
+   margin:4px;
+
 }
 md-card-content md-progress-linear .md-container,
 .stats md-progress-linear .md-container .md-bar {
