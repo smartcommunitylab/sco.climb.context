@@ -5,6 +5,7 @@ angular.module('climbGame.controllers.homepage', [])
       $scope.notificationsPresent = false;
       $scope.notifications = [];
       $scope.notificationText = '';
+      $scope.notifcationTime = 0;
       $scope.challenges = [];
       $scope.globalTeam = '';
       $scope.legs = [];
@@ -88,7 +89,7 @@ angular.module('climbGame.controllers.homepage', [])
                     //% 100 completed and 0 just started
                     $scope.actualScore = Math.round(data.teams[i].score / 1000);
                     $scope.scoreToEnd = Math.round(data.teams[i].scoreToEnd / 1000);
-                    $scope.pecentualScore = Math.round(($scope.actualScore/$scope.scoreToEnd)*100)
+                    $scope.pecentualScore = Math.round(($scope.actualScore/($scope.actualScore+$scope.scoreToEnd))*100)
 
                     $scope.scoreToNext = Math.round(data.teams[i].scoreToNext / 1000);
                     $scope.nextGoal = $scope.actualScore + $scope.scoreToEnd;
@@ -338,6 +339,7 @@ angular.module('climbGame.controllers.homepage', [])
                   if (data[0].key)
                     $scope.notificationText = $translate.instant('notif_' + data[0].key, data[0].data)
                 }
+                $scope.notifcationTime=data[0].timestamp;
               }
               CacheSrv.updateLastCheck('calendar');
             }

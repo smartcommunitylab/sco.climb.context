@@ -9,36 +9,34 @@
       <div flex="33" class="col-not-sf">
         <md-card class="notifiche" ng-click="go('home.notifications')">
           <span class="material-icons">notifications</span>
-          <md-card-title>
-            <md-card-title-text>
-              <span class="md-headline">Notifiche</span>
-              <div ng-if="notificationsPresent">
-                <div>
-                  <span class="md-subhead">{{notificationText}}</span>
-                </div>
-                <!-- <div ng-if="!endReached">
-                  <span class="md-subhead">Bravi, siete arrivati a {{notificationText}}!</span>
-                </div>
-                <div ng-if="endReached">
-                  <span class="md-subhead">Congratulazioni, siete arrivati a {{notificationText}} e avete quindi completato
-                    il percorso!</span>
-                </div> -->
+
+          <md-card-content>
+            <span class="md-headline">Notifiche</span>
+            <div ng-if="notificationsPresent">
+              <div>
+                <span class="md-header">{{notifcationTime | date:'dd MMMM yyyy, HH:mm'}}</span>
+                <span class="md-subhead">{{notificationText}}</span>
               </div>
-              <div ng-if="!notificationsPresent">
-                <span class="md-subhead">{{'notif_empty' | translate}}</span>
-              </div>
-            </md-card-title-text>
-          </md-card-title>
-          <md-card-title-media>
-            <div class="md-media-lg card-media"></div>
-          </md-card-title-media>
+            </div>
+            <div ng-if="!notificationsPresent">
+              <span class="md-subhead" style="color: #7D7979;">
+                <p>
+                  {{'notif_empty' | translate}}
+                </p>
+              </span>
+            </div>
+          </md-card-content>
 
         </md-card>
 
 
         <md-card class="sfide">
+          <span class="material-icons">
+            emoji_events
+          </span>
           <md-card-title>
-            <md-card-title-text>
+
+            <md-card-content>
               <span class="md-headline">Sfide</span>
               <div ng-if="challenges.length != 0">
                 <span class="md-subhead">
@@ -47,14 +45,13 @@
               </div>
               <div ng-if="!checkChallenge || challenges.length == 0">
                 <span class="md-subhead" style="color: #7D7979;">
-                  <p>Al momento non ci sono sfide disponibili</p>
+                  <p>
+                    {{'chall_empty' | translate}}
+                  </p>
                 </span>
               </div>
-            </md-card-title-text>
-          </md-card-title>
-          <md-card-title-media>
-            <div class="md-media-lg card-media"></div>
-          </md-card-title-media>
+            </md-card-content>
+
 
         </md-card>
       </div>
@@ -74,7 +71,8 @@
             <md-card-title-text>
               <div ng-if="!endReached">
                 <!-- <span class="md-headline">Mancano {{scoreToNext}} km alla prossima tappa!</span> -->
-                <span class="md-headline">Tappe sbloccate: {{previousStep}} su {{totalStep}}. Mancano {{scoreToNext}} km alla tappa {{previousStep+1}}!</span>
+                <span class="md-headline">Tappe sbloccate: {{previousStep}} su {{totalStep}}. Mancano {{scoreToNext}} km
+                  alla tappa {{previousStep+1}}!</span>
               </div>
               <div ng-if="endReached">
                 <span class="md-headline">Complimenti! Avete raggiunto la fine del percorso!</span>

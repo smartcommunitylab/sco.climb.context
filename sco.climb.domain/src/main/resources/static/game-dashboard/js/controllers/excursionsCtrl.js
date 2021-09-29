@@ -36,7 +36,21 @@ angular.module('climbGame.controllers.excursions', [])
               $scope.game = game;
               dataService.getExcursions(game.from, game.to).then(
                 function (excursions) {
-                  $scope.excursions = excursions
+                  //$scope.excursions = excursions
+                   //filter by selection
+                  if ($stateParams.type =='buonazione'){
+                      //  filter buone azioni
+                    excursions.forEach(function(element){
+                      if (!$scope.isExcursion(element))
+                        $scope.excursions.push(element)
+                    })
+                  } else {
+                    // filter excursions
+                    excursions.forEach(function(element){
+                    if ($scope.isExcursion(element))
+                    $scope.excursions.push(element)
+                    })
+                  }
                 },
                 function (reason) {
                   console.log("[refreshExcursions]" + JSON.stringify(reason));
