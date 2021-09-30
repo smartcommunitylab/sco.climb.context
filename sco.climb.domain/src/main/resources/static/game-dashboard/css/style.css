@@ -1402,8 +1402,12 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 }
 .homepage div.col-not-sf md-card.sfide {
   cursor: default;
-  border: none;
+  /* border: none; */
 
+}
+.homepage .notifiche .md-header {
+  color: gray;
+  font-size: smaller;
 }
 .homepage .col-inserimento span.material-icons{
   
@@ -1424,15 +1428,12 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
    height: 390px; 
    cursor:pointer;
   margin-top:8px;
-  color: #f39512;
-  border: 3px solid #f39512;
   border-radius: 15px;
 }
 .homepage md-card.km-col{
    height: 169px;
    cursor: pointer;
    margin-top: 25px;
-   border: 3px solid #f39512;
    border-radius: 15px;
 }
 .homepage .map-title{
