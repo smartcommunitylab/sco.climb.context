@@ -459,6 +459,7 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		pedibusGameDb.getParams().putAll(game.getParams());
+		ricalcolaNumeroStudentiMobility(pedibusGameDb);
 		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGameTuning[%s]: %s", ownerId, pedibusGameId));
