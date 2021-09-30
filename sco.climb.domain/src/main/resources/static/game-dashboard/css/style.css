@@ -178,13 +178,16 @@ md-sidenav {
 }
 
 .bar-logo img {
-  position: absolute;
+  /* position: absolute; */
   right: 6px;
   top: 6px;
   height: 50px;
 }
 
-
+.back-button.ng-hide {
+  display: block!important;
+  visibility: hidden;
+}
 /*map*/
 
 .angular-leaflet-map {
@@ -1383,6 +1386,9 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
    height: 285px; 
    margin-bottom: 60px;
    cursor: pointer;
+   color: #f39512;
+   border: 3px solid #f39512;
+   border-radius: 15px;
 }
 
 .homepage div.col-inserimento md-card{
@@ -1396,6 +1402,8 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 }
 .homepage div.col-not-sf md-card.sfide {
   cursor: default;
+  border: none;
+
 }
 .homepage .col-inserimento span.material-icons{
   
@@ -1408,16 +1416,24 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
    text-align: center; 
 }
 
-
+.homepage md-card .card-body{
+  color:black;
+  margin-top:4px;
+}
 .homepage md-card.map-col{
    height: 390px; 
    cursor:pointer;
   margin-top:8px;
+  color: #f39512;
+  border: 3px solid #f39512;
+  border-radius: 15px;
 }
 .homepage md-card.km-col{
    height: 169px;
    cursor: pointer;
    margin-top: 25px;
+   border: 3px solid #f39512;
+   border-radius: 15px;
 }
 .homepage .map-title{
   text-align: center;
@@ -1426,14 +1442,14 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
    margin:20px;
 }
 md-card-content span.material-icons {
-   color: #eed700; 
+   color: #4153a0; 
    font-size: 30px;
    text-align: left; 
 }
 
 
 .col-not-sf span.material-icons {
-   color: #400080; 
+   color: #f39512; 
    font-size: 30px;
    text-align: left;
    margin:4px;

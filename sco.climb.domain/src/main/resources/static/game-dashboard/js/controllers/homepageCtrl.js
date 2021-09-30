@@ -2,10 +2,10 @@
 angular.module('climbGame.controllers.homepage', [])
   .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData','profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog','$filter',
     function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,$filter) {
-      $scope.notificationsPresent = false;
+      $scope.notificationsPresent = true;
       $scope.notifications = [];
-      $scope.notificationText = '';
-      $scope.notifcationTime = 0;
+      $scope.notificationText = 'olaaaciao';
+      $scope.notifcationTime = 145678;
       $scope.challenges = [];
       $scope.globalTeam = '';
       $scope.legs = [];
@@ -352,28 +352,7 @@ angular.module('climbGame.controllers.homepage', [])
             $scope.isLoading = false;
           }
         )
-        // dataService.getNotifications(CacheSrv.getLastCheck('calendar')).then(
-        //   function (data) {
-        //     console.log(data)
-        //     if (data.length == 0) {
-        //       $scope.notifications = data;
-        //     } else {
-        //       $scope.notificationsPresent = true;
-        //       if (data[0].badge != null) {
-        //         $scope.notificationText=$translate.instant('notif_badge',{ badge: escape(data[0].badge) })
-        //         // $scope.notificationText = data[0].badge;
-        //       } else { 
-        //         if (data[0].key)
-        //         $scope.notificationText= $translate.instant('notif_' +data[0].key,data[0].data)
-        //         // $scope.notificationText = data[1].badge; 
-        //       }
-
-        //     }
-        //     $scope.isLoading = false;
-        //   }, function (error) {
-        //     $mdToast.show($mdToast.simple().content('Errore nel caricamento delle notifiche'))
-        //     $scope.isLoading = false;
-        //   })
+        
       }
       $scope.escape = function(str) {
         return str.replace(/"/g,'\\"');
