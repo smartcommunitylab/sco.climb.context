@@ -981,6 +981,7 @@ public class RepositoryManager {
 				update.set("lateSchedule", game.isLateSchedule());
 				update.set("usingPedibusData", game.isUsingPedibusData());
 				update.set("params", game.getParams());
+				update.set("mobilityParams", game.getMobilityParams());
 	      update.set("daysOfWeek", game.getDaysOfWeek());
 	      update.set("modalities", game.getModalities());
 	      update.set("roundTrip", game.isRoundTrip());
