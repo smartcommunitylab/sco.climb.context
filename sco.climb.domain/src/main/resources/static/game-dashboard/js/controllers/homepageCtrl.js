@@ -2,10 +2,10 @@
 angular.module('climbGame.controllers.homepage', [])
   .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData','profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog','$filter',
     function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,$filter) {
-      $scope.notificationsPresent = true;
+      $scope.notificationsPresent = false;
       $scope.notifications = [];
-      $scope.notificationText = 'olaaaciao';
-      $scope.notifcationTime = 145678;
+      $scope.notificationText = '';
+      $scope.notifcationTime = 0;
       $scope.challenges = [];
       $scope.globalTeam = '';
       $scope.legs = [];
