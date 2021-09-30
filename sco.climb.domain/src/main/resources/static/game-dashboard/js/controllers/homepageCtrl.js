@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.homepage', [])
-  .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData', 'profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog',
-    function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,) {
+  .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData','profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog','$filter',
+    function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,$filter) {
       $scope.notificationsPresent = false;
       $scope.notifications = [];
       $scope.notificationText = '';
@@ -56,10 +56,10 @@ angular.module('climbGame.controllers.homepage', [])
         profileService.getProfile().then(function (profile) {
           loginService.setUserToken(profile.token)
           loginService.setAllOwners(profile.ownerIds)
-
           dataService.getStatus().then(
             function (data) {
               $scope.status = data;
+              loginService.setTitle(data.game.globalTeam + " - " + $filter('translate')('title_class') + " " + loginService.getClassRoom());
               console.log(data)
               if (data) {
                 $scope.globalTeam = data.game.globalTeam;
