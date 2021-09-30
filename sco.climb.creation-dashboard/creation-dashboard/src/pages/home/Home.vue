@@ -1,5 +1,5 @@
 <template>
-  <v-container style="width: 70%; background-color:pink" class="pa-0">
+  <v-container style="width: 70%" class="pa-0">
       <div class="align-center text-center mt-0">
         <v-row align="center" class="pt-0 mt-0">
           <v-col cols="12" sm="4">

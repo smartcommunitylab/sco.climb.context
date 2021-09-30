@@ -19,7 +19,12 @@
                 "gameDescription": "Test game desc 1",
                 "from": 1475272800000,
                 "to": 1504216800000,
+                
+                "kminstops": "12424km in 18 tappe",
+                "class": "1, 2",
+                "year": "a.s. 2020/2021",
                 "globalTeam": "Scuola Test",
+
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
@@ -69,7 +74,12 @@
                 "gameDescription": "Giro del mediterraneo",
                 "from": 1475272800000,
                 "to": 1504216800000,
+                
+                "kminstops": "7516km in 5 tappe",
+                "class": "2, 3",
+                "year": "a.s. 2020/2021",
                 "globalTeam": "Scuola Test",
+
                 "fromHour": "7:30",
                 "toHour": "18:30",
                 "interval": 0,
@@ -78,6 +88,64 @@
                 "lateSchedule": false,
                 "usingPedibusData": false,
                 "deployed": false,
+                "confTemplateId": null,
+                "params": {},
+                "shortName": null,
+                "pollingFlagMap": {},
+                "daysOfWeek": [],
+                "modalities": [],
+                "sponsorTemplate": null,
+                "roundTrip": false,
+                "useCalendar": true,
+                "catalog": true,
+                "imageLink": "https://formiche.net/wp-content/blogs.dir/10051/files/2021/06/Mediterraneo-1-720x390.png",
+                "geographicArea": null,
+                "disciplines": [],
+                "ageRange": []
+            },
+            "finalScore": 12476,
+            "legs": 2,
+            "firstLeg": "inizio",
+            "finalLeg": "fine",
+            "itineraryId": "b549da4c-19ab-4b24-a11e-5281dabe224b"
+        },
+        {
+            "pedibusGame": {
+                "ownerId": "ALTRO",
+                "objectId": "cd758aca-568e-4df5-8905-bd1e3ed80cbc",
+                "creationDate": 1628060157011,
+                "lastUpdate": 1628060157011,
+                "instituteId": "bb63c7a1-25b6-4b5a-ab87-e366d52c3e42",
+                "schoolId": "7e2f2c8d-c13f-4414-8c55-f83535af2bd7",
+                "classRooms": [
+                    "1^",
+                    "2^",
+                    "3^",
+                    "4^",
+                    "5^"
+                ],
+                "gameId": null,
+                "gameName": "Giro del mediterraneo",
+                "gameDescription": "Giro del mediterraneo",
+                "from": 1475272800000,
+                "to": 1504216800000,
+                
+                "kminstops": "7516km in 5 tappe",
+                "class": "2, 3",
+                "year": "a.s. 2020/2021",
+                "globalTeam": "Scuola Test",
+
+                "fromHour": "7:30",
+                "toHour": "18:30",
+                "interval": 0,
+                "city": "Ferrara",
+                "lastDaySeen": null,
+                "lateSchedule": false,
+                "usingPedibusData": false,
+
+                "deployed": false,
+
+
                 "confTemplateId": null,
                 "params": {},
                 "shortName": null,

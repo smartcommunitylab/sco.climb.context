@@ -62,8 +62,8 @@
       <slot />
     </v-card>
   </div>-->
-  <div style="background-color: blue; height: 100%" class="pa-4" v-if="percorso">
-    <v-card class=" d-flex flex-column font-weight-regular rounded-lg" height="360px" width="260px">
+  <div style="height: 100%" class="pa-4" v-if="percorso">
+    <v-card class=" d-flex flex-column font-weight-regular rounded-lg" elevation="3" height="360px" width="260px">
      <v-img
       height="10"
       :src="percorso.pedibusGame.imageLink"
@@ -71,41 +71,40 @@
     </v-img>
        <div class="d-flex flex-row">
               <v-chip
-                class="ma-2 rounded-xl"
+                class="ma-2 rounded-xl greenchip"
                 small
-                color="green"
                 label
                 text-color="white"
                 v-if="percorso.pedibusGame.deployed"
               >
-                deployed
+                APPROVATO
               </v-chip>
 
               <v-chip
-                class="ma-2 rounded-xl"
+                class="ma-2 rounded-xl yellowchip"
                 small
-                color="red"
                 label
                 text-color="white"
                 v-else
               >
-                not deployed
+                NON APPROVATO
               </v-chip>
             </div>
     <v-card-title
-    class="pa-2 pt-0 ml-2">Titolo percorso</v-card-title>
+    class="pa-1 pt-0 ml-2">{{ percorso.pedibusGame.gameName }}</v-card-title>
     <v-card-text>
       <div
       align="left"
-      class="ml-2 "
-      > Tot km in tot tappe <br />
-            Scuola <br />
-            Classe <br />
-            Anno scolastico</div>
+      class="ml-1"
+      >{{ percorso.pedibusGame.kminstops }}<br />
+            {{ percorso.pedibusGame.globalTeam }} <br />
+            {{ percorso.pedibusGame.class }} <br />
+            {{ percorso.pedibusGame.year }}</div>
     </v-card-text>
 
     <v-card-actions class="align-self-end">
       <v-btn
+        class="rounded-xl"
         color="var(--primary)"
         text
         @click="claDef()"
