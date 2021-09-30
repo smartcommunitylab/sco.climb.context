@@ -9,13 +9,13 @@
       <div flex="33" class="col-not-sf">
         <md-card class="notifiche" ng-click="go('home.notifications')">
           <span class="material-icons">notifications</span>
-
+          
           <md-card-content>
             <span class="md-headline">Notifiche</span>
             <div ng-if="notificationsPresent">
-              <div>
-                <span class="md-header">{{notifcationTime | date:'dd MMMM yyyy, HH:mm'}}</span>
-                <span class="md-subhead">{{notificationText}}</span>
+              <div class="card-body">
+                <p class="md-header">{{notifcationTime | date:'dd MMMM yyyy'}}</p>
+                <p class="md-subhead">{{notificationText}}</p>
               </div>
             </div>
             <div ng-if="!notificationsPresent">
@@ -39,7 +39,7 @@
             <md-card-content>
               <span class="md-headline">Sfide</span>
               <div ng-if="challenges.length != 0">
-                <span class="md-subhead">
+                <span class="md-subhead card-body">
                   <p>Giocatore {{challenges.playerId}}</p>
                 </span>
               </div>
@@ -94,7 +94,7 @@
                     </div>
                   </div>
                 </md-progress-linear>
-                <span class="material-icons">emoji_events</span>
+                <span class="material-icons">flag</span>
                 <span class="md-headline">{{nextGoal}}km</span>
               </div>
             </div>

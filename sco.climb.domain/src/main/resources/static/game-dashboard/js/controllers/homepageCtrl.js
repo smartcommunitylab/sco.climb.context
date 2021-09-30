@@ -1,11 +1,11 @@
 /* global angular */
 angular.module('climbGame.controllers.homepage', [])
-  .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData', 'profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog',
-    function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,) {
-      $scope.notificationsPresent = false;
+  .controller('homepageCtrl', ['$scope', '$mdToast', '$state', '$translate', 'leafletData','profileService', 'dataService', 'CacheSrv', 'loginService', 'configService', 'mapService', '$mdDialog','$filter',
+    function ($scope, $mdToast, $state, $translate, leafletData, profileService, dataService, CacheSrv, loginService, configService, mapService, $mdDialog,$filter) {
+      $scope.notificationsPresent = true;
       $scope.notifications = [];
-      $scope.notificationText = '';
-      $scope.notifcationTime = 0;
+      $scope.notificationText = 'olaaaciao';
+      $scope.notifcationTime = 145678;
       $scope.challenges = [];
       $scope.globalTeam = '';
       $scope.legs = [];
@@ -56,10 +56,10 @@ angular.module('climbGame.controllers.homepage', [])
         profileService.getProfile().then(function (profile) {
           loginService.setUserToken(profile.token)
           loginService.setAllOwners(profile.ownerIds)
-
           dataService.getStatus().then(
             function (data) {
               $scope.status = data;
+              loginService.setTitle(data.game.globalTeam + " - " + $filter('translate')('title_class') + " " + loginService.getClassRoom());
               console.log(data)
               if (data) {
                 $scope.globalTeam = data.game.globalTeam;
@@ -352,28 +352,7 @@ angular.module('climbGame.controllers.homepage', [])
             $scope.isLoading = false;
           }
         )
-        // dataService.getNotifications(CacheSrv.getLastCheck('calendar')).then(
-        //   function (data) {
-        //     console.log(data)
-        //     if (data.length == 0) {
-        //       $scope.notifications = data;
-        //     } else {
-        //       $scope.notificationsPresent = true;
-        //       if (data[0].badge != null) {
-        //         $scope.notificationText=$translate.instant('notif_badge',{ badge: escape(data[0].badge) })
-        //         // $scope.notificationText = data[0].badge;
-        //       } else { 
-        //         if (data[0].key)
-        //         $scope.notificationText= $translate.instant('notif_' +data[0].key,data[0].data)
-        //         // $scope.notificationText = data[1].badge; 
-        //       }
-
-        //     }
-        //     $scope.isLoading = false;
-        //   }, function (error) {
-        //     $mdToast.show($mdToast.simple().content('Errore nel caricamento delle notifiche'))
-        //     $scope.isLoading = false;
-        //   })
+        
       }
       $scope.escape = function(str) {
         return str.replace(/"/g,'\\"');
