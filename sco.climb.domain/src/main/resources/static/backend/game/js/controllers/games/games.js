@@ -486,6 +486,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.initParamController = function () {
             if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
                 //for every class
+                $scope.currentGame.mobilityParams = {};
                 $scope.currentGame.classRooms.forEach(classRoom => {
                     $scope.currentGame.mobilityParams[classRoom] = {
                         walk_studenti: 0,
