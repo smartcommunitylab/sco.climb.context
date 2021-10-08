@@ -224,7 +224,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         } else { //new game
             $scope.initController();
         }
-
+        // get map for class
+        //Map<String, Map<String, Integer>> 
+        $scope.getParamsGame = function(game){
+            return game.mobilityParams;
+        }
         // Save the changes made to the path
         $scope.save = function () {
 
@@ -256,7 +260,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 });
 
                 if ($scope.selectedTab == 'params') {
-                    DataService.updateParams($scope.currentGame).then(
+                    DataService.updateParams($scope.currentGame.ownerId ,$scope.currentGame.objectId, $scope.getParamsGame($scope.currentGame)).then(
                         function (response) {
                             $scope.manageResponse(response);
                         })
@@ -474,43 +478,34 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
     })
 
-
+//params tab ha all the parameters: number of students using different means
     .controller('GameParamsCtrl', function ($scope, DataService, createDialog) {
         $scope.$parent.selectedTab = 'params';
         $scope.nrOfStudenti = 0;
 
         $scope.initParamController = function () {
-            if ((!$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
-                $scope.currentGame.params = {
-                    walk_studenti: 0,
-                    const_walk_distance: 0,
-                    bike_studenti: 0,
-                    const_bike_distance: 0,
-                    bus_studenti: 0,
-                    const_bus_distance: 0,
-                    pedibus_studenti: 0,
-                    const_pedibus_distance: 0,
-                    pandr_studenti: 0,
-                    const_pandr_distance: 0,
-                    carpooling_studenti: 0,
-                    const_carpooling_distance: 0,
-                    car_studenti: 0,
-                    const_car_distance: 0,
-                    const_daily_nominal_distance: 0,
-                    const_zeroimpact_distance: 0,
-                    giorni_chiusi: 0,
-                    const_cloudy_bonus: 0,
-                    const_rain_bonus: 0,
-                    const_snow_bonus: 0,
-                    const_ZeroImpactDayClass_bonus: 0,
-                    const_NoCarDayClass_bonus: 0,
-                    km_bonus: 0
-                }
+            if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
+                //for every class
+                $scope.currentGame.classRooms.forEach(classRoom => {
+                    $scope.currentGame.mobilityParams[classRoom] = {
+                        walk_studenti: 0,
+                        bike_studenti: 0,
+                        bus_studenti: 0,
+                        pedibus_studenti: 0,
+                        pandr_studenti: 0,
+                        carpooling_studenti: 0,
+                        car_studenti: 0
+                    }
+                })
+                
             } else {
                 // typecast params.
-                for (var p in $scope.currentGame.params) {
-                    $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
-                }
+                $scope.currentGame.classRooms.forEach(classRoom => {
+                    for (var p in $scope.currentGame.mobilityParams[classRoom]) {
+                        $scope.currentGame.mobilityParams[classRoom][p] = parseFloat($scope.currentGame.mobilityParams[classRoom][p]);
+                    }
+                })
+
             }
         }
         $scope.calculateStudenti = function (classes) {
@@ -539,38 +534,29 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             $scope.initParamController();
         });
 
-        //        $scope.calculateBonusAutonomia = function() {
-        //        	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
-        //        	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
-        //        	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-        //        	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-        //        	return $scope.currentGame.params.const_zi_solo_bonus;
-        //        }
+        $scope.calculateBonusAutonomia = function() {
+               	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
+               	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
+               	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+               	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+               	return $scope.currentGame.params.const_zi_solo_bonus;
+               }
 
-        $scope.calculateCDND = function () {
-            if ($scope.currentGame && $scope.currentGame.params) {
-                $scope.currentGame.params.const_daily_nominal_distance = (
-                    ($scope.currentGame.params.walk_studenti * $scope.currentGame.params.const_walk_distance) +
-                    ($scope.currentGame.params.bike_studenti * $scope.currentGame.params.const_bike_distance) +
-                    ($scope.currentGame.params.bus_studenti * $scope.currentGame.params.const_bus_distance) +
-                    ($scope.currentGame.params.pedibus_studenti * $scope.currentGame.params.const_pedibus_distance) +
-                    ($scope.currentGame.params.pandr_studenti * $scope.currentGame.params.const_pandr_distance) +
-                    ($scope.currentGame.params.carpooling_studenti * $scope.currentGame.params.const_carpooling_distance) +
-                    ($scope.currentGame.params.car_studenti * $scope.currentGame.params.const_car_distance)
-                );
-                return $scope.currentGame.params.const_daily_nominal_distance;
-            }
-        };
+        
 
         $scope.calculateSS = function () {
-            if ($scope.currentGame && $scope.currentGame.params) {
-                return ($scope.currentGame.params.walk_studenti +
-                    $scope.currentGame.params.bike_studenti +
-                    $scope.currentGame.params.bus_studenti +
-                    $scope.currentGame.params.pedibus_studenti +
-                    $scope.currentGame.params.pandr_studenti +
-                    $scope.currentGame.params.carpooling_studenti +
-                    $scope.currentGame.params.car_studenti);
+            if ($scope.currentGame && $scope.currentGame.mobilityParams && $scope.currentGame.classRooms) {
+                var ss=0
+            $scope.currentGame.classRooms.forEach(classRoom => {
+                    ss+=($scope.currentGame.mobilityParams[classRoom].walk_studenti?$scope.currentGame.mobilityParams[classRoom].walk_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti?$scope.currentGame.mobilityParams[classRoom].bike_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti?$scope.currentGame.mobilityParams[classRoom].bus_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?$scope.currentGame.mobilityParams[classRoom].pedibus_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?$scope.currentGame.mobilityParams[classRoom].pandr_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?$scope.currentGame.mobilityParams[classRoom].carpooling_studenti:0) +
+                    ($scope.currentGame.mobilityParams[classRoom].car_studenti?$scope.currentGame.mobilityParams[classRoom].car_studenti:0)
+                })
+                return ss;
             }
         }
 
@@ -729,25 +715,21 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         	return -1;
         }
     })
+
+    //calibration has all params for calibrate: distance, bonus and so on
     .controller('GameCalibrationCtrl', function ($scope) {
         $scope.$parent.selectedTab = 'calibration';
 
         $scope.initParamController = function () {
             if ((!$scope.currentGame && !$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
                 $scope.currentGame.params = {
-                    walk_studenti: 0,
                     const_walk_distance: 0,
-                    bike_studenti: 0,
                     const_bike_distance: 0,
-                    bus_studenti: 0,
                     const_bus_distance: 0,
-                    pedibus_studenti: 0,
                     const_pedibus_distance: 0,
-                    pandr_studenti: 0,
                     const_pandr_distance: 0,
-                    carpooling_studenti: 0,
                     const_carpooling_distance: 0,
-                    car_studenti: 0,
+                    // car_studenti: 0,
                     const_car_distance: 0,
                     const_daily_nominal_distance: 0,
                     const_zeroimpact_distance: 0,
@@ -778,14 +760,39 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             }
 
         }
-
+        $scope.calculateCDND = function () {
+            if ($scope.currentGame && $scope.currentGame.params) {
+                $scope.currentGame.params.const_daily_nominal_distance = 0;
+                $scope.currentGame.classRooms.forEach(classRoom => {
+                    $scope.currentGame.params.const_daily_nominal_distance+=(
+                    (($scope.currentGame.mobilityParams[classRoom].walk_studenti?$scope.currentGame.mobilityParams[classRoom].walk_studenti:0) * $scope.currentGame.params.const_walk_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].bike_studenti?$scope.currentGame.mobilityParams[classRoom].bike_studenti:0) * $scope.currentGame.params.const_bike_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?$scope.currentGame.mobilityParams[classRoom].pedibus_studenti:0) * $scope.currentGame.params.const_bus_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].bus_studenti?$scope.currentGame.mobilityParams[classRoom].bus_studenti:0) * $scope.currentGame.params.const_pedibus_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].pandr_studenti?$scope.currentGame.mobilityParams[classRoom].pandr_studenti:0) * $scope.currentGame.params.const_pandr_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?$scope.currentGame.mobilityParams[classRoom].carpooling_studenti:0) * $scope.currentGame.params.const_carpooling_distance) +
+                    (($scope.currentGame.mobilityParams[classRoom].car_studenti?$scope.currentGame.mobilityParams[classRoom].car_studenti:0) * $scope.currentGame.params.const_car_distance)
+                );
+            })
+                return $scope.currentGame.params.const_daily_nominal_distance;
+            }
+        };
+        
         $scope.calculateKMTarget = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
-                var km = $scope.kmStimati + Number($scope.currentGame.params.km_bonus);
-                return km;
+                var km = $scope.kmStimati;
+                if ($scope.currentGame.params.km_bonus) 
+                km+=Number($scope.currentGame.params.km_bonus);
+                
             }
+            return km;
         }
 
+        $scope.isModalityPresent = function (mode) {
+            if ($scope.currentGame && $scope.currentGame.modalities)
+                return $scope.currentGame.modalities.includes(mode);
+            return false
+        }
         $scope.getNumWorkDays = function (startTS, endTS) {
             var numWorkDays = 0;
             var currentDate = new Date(startTS);
@@ -799,6 +806,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             }
             return numWorkDays;
         }
+        
         $scope.$on('gameLoaded', function (e) {
             // Variabili per date-picker(fix for refresh issue on parametri page)
             // $scope.$parent.dateFormat = 'dd/MM/yyyy';
