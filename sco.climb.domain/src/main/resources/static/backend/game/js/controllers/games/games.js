@@ -487,7 +487,10 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
                 //for every class
                 $scope.currentGame.mobilityParams = {};
-                $scope.currentGame.classRooms.forEach(classRoom => {
+                if ($scope.currentGame.classRooms.length>0)
+                    {
+                    $scope.classesArePresent=true;
+                    $scope.currentGame.classRooms.forEach(classRoom => {
                     $scope.currentGame.mobilityParams[classRoom] = {
                         walk_studenti: 0,
                         bike_studenti: 0,
@@ -497,15 +500,24 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                         carpooling_studenti: 0,
                         car_studenti: 0
                     }
-                })
+                })}
+                else {
+                    $scope.classesArePresent=false;
+                }
                 
             } else {
                 // typecast params.
-                $scope.currentGame.classRooms.forEach(classRoom => {
+                if ($scope.currentGame.classRooms.length>0)
+
+                {$scope.classesArePresent=true;
+                    $scope.currentGame.classRooms.forEach(classRoom => {
                     for (var p in $scope.currentGame.mobilityParams[classRoom]) {
                         $scope.currentGame.mobilityParams[classRoom][p] = parseFloat($scope.currentGame.mobilityParams[classRoom][p]);
                     }
-                })
+                })}
+                else {
+                    $scope.classesArePresent=false;
+                }
 
             }
         }

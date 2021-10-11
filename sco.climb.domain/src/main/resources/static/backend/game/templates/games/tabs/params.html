@@ -7,6 +7,7 @@
         </h3>
         <hr style="border-color: black;">
     </div>
+    <div ng-if="classesArePresent">
     <div class="row">
         <div class="col-lg-4 col-xs-4 col-4"><label style="font-style: italic; font-weight: normal">Numero studenti<i
                     class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
@@ -108,6 +109,10 @@
                 <p><b>Velocità stimata(KM/gg): {{calculateCDND()/1000}}</b>
                 </p>
             </div> -->
+    </div>
+    </div>
+    <div ng-if="!classesArePresent">
+        <p><h3 class="text-center">Non sono presenti classi</h3></p>
     </div>
     <br />
 </fieldset>
