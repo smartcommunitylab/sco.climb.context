@@ -765,6 +765,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ($scope.currentGame && $scope.currentGame.params) {
                 $scope.currentGame.params.const_daily_nominal_distance = 0;
                 $scope.currentGame.classRooms.forEach(classRoom => {
+                    if ($scope.currentGame.mobilityParams && $scope.currentGame.mobilityParams[classRoom])
                     $scope.currentGame.params.const_daily_nominal_distance+=(
                     (($scope.currentGame.mobilityParams[classRoom].walk_studenti?$scope.currentGame.mobilityParams[classRoom].walk_studenti:0) * $scope.currentGame.params.const_walk_distance) +
                     (($scope.currentGame.mobilityParams[classRoom].bike_studenti?$scope.currentGame.mobilityParams[classRoom].bike_studenti:0) * $scope.currentGame.params.const_bike_distance) +
@@ -777,6 +778,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             })
                 return $scope.currentGame.params.const_daily_nominal_distance;
             }
+            return 0;
         };
         
         $scope.calculateKMTarget = function () {
