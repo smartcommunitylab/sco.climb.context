@@ -1,5 +1,5 @@
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledParamInfo() || currentGame.deployed">
-
+<fieldset ng-disabled="!PermissionsService.permissionEnabledParamInfo() || currentGame.deployed">
+    
     <div class="col-lg-12">
         <h3>Abitudini di mobilità e distanze<i class="glyphicon glyphicon-info-sign information-circle"
                 tooltip-placement="auto top" tooltip-append-to-body="true"
@@ -7,94 +7,94 @@
         </h3>
         <hr style="border-color: black;">
     </div>
-    <div ng-if="classesArePresent">
+    <div  class="container-fluid container-scroll single-row"  ng-if="classesArePresent">
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4"><label style="font-style: italic; font-weight: normal">Numero studenti<i
+        <div class="col-lg-4 col-xs-4 col-4 single-col"><label style="font-style: italic; font-weight: normal">Numero studenti<i
                     class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
                     tooltip-append-to-body="true"
                     uib-tooltip="Ricordati di inserire tutti i giocatori prima di passare a questa sezione."></i></label>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <label style="font-style: italic; font-weight: normal">{{class}}
             </label>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>A Piedi</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-change="changed()"
                 ng-model="currentGame.mobilityParams[class].walk_studenti" ng-disabled="!isModalityPresent('walk')" />
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>In bici</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].bike_studenti"
                 ng-disabled="!isModalityPresent('bike')" />
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>Scuolabus o trasporto pubblico</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].bus_studenti"
                 ng-disabled="!isModalityPresent('bus')" />
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>Pedibus</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;"ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;"ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].pedibus_studenti"
                 ng-disabled="!isModalityPresent('pedibus')" />
         </div>
 
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>In auto fino alla piazzola di sosta</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].pandr_studenti"
                 ng-disabled="!isModalityPresent('pandr')" />
         </div>
 
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>Car pooling</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].carpooling_studenti"
                 ng-disabled="!isModalityPresent('carpooling')" />
         </div>
 
     </div>
     <div class="row">
-        <div class="col-lg-4 col-xs-4 col-4">
+        <div class="col-lg-4 col-xs-4 col-4 single-col">
             <p>&emsp;
                 <b>In auto fino a scuola</b>
             </p>
         </div>
-        <div class="col-lg-2 col-xs-2 col-2" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
+        <div class="col-lg-2 col-xs-2 col-2 single-col" style="margin-bottom: 20px;" ng-repeat="class in currentGame.classRooms">
             <input class="form-control" type="number" min="0" ng-model="currentGame.mobilityParams[class].car_studenti"
                 ng-disabled="!isModalityPresent('car')" />
         </div>
