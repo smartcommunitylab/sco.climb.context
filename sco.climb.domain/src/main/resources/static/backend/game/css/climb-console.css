@@ -1322,6 +1322,13 @@ rotate
   .single-col {
 	display: inline-block;
 	float: none;
+	position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .table-margin {
+	   margin-top: 24px;
   }
  .container-scroll::-webkit-scrollbar {
 	 width: 12px;
@@ -1336,3 +1343,4 @@ rotate
 	 border-radius: 10px;
 	 -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
  }
+ 
