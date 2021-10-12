@@ -19,7 +19,14 @@
     <div>
     <v-stepper alt-labels class="stepper elevation-0">
       <v-stepper-header>
-        <v-stepper-step step="1">
+        <template v-for="(item,index) in items"  >
+          <v-stepper-step :key="index" :step="item.step" @click="openStep(item.href)" :complete="item.step <= currentStep" :editable="isEditable(item)">
+          <p class="step">{{item.text}}</p>
+           
+        </v-stepper-step>
+        <v-divider  :key="index" v-if="index < items.length - 1"></v-divider>
+        </template>
+        <!-- <v-stepper-step step="1">
           <p v-html="$t('stepper.step1')" class="step"></p>
         </v-stepper-step>
         <v-divider></v-divider>
@@ -50,7 +57,7 @@
 
         <v-stepper-step step="6" class="step">
           <p v-html="$t('stepper.step6')"></p>
-        </v-stepper-step>
+        </v-stepper-step> -->
       </v-stepper-header>
     </v-stepper>
   </div>
@@ -62,12 +69,12 @@ export default {
   name: "Stepper",
   data() {
     return {
-      snackbar: false,
-      snackBarText: "",
+      // snackbar: false,
+      // snackBarText: "",
     }
   },
   computed: {
-    ...mapState("navigation", ["page","items"]),
+    ...mapState("navigation", ["page","items","currentStep"]),
     ...mapState("game", ["currentGame"]),
     currentRouteName() {
         return this.$route.name;
@@ -75,6 +82,12 @@ export default {
   },
   created() {},
   methods: {
+    isEditable(item){
+      return item.step == this.currentStep
+    },
+    openStep(stepHref){
+      this.$router.push(stepHref);
+    },
     isActualPath(path){
       return this.currentRouteName===path.href
     },

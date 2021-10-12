@@ -1,6 +1,6 @@
 <template>
   <v-container 
-  fluid="true"
+  :fluid="true"
   class="pa-0">
   
 
@@ -40,7 +40,7 @@
             <div
               class="col-5 pa-5"
               v-for="(schoolClass, idx) in schoolClasses"
-              v-bind:key="schoolClass"
+              v-bind:key="schoolClass.id"
             >
               <Card-Class
                 @removeClassCard="onCardRemoveBtnClick"
@@ -86,8 +86,8 @@ export default {
   },
   data() {
     return {
-      //snackbar: false,
-      //snackBarText: "",
+      snackbar: false,
+      snackBarText: "",
       show: false,
       isHidden: true,
       nomepagina: "Class Definition",
@@ -111,6 +111,7 @@ export default {
     },
     createCardClassObj() {
       return {
+        id:this.schoolClasses?this.schoolClasses.length:0,
         className: "",
         students: [],
       };

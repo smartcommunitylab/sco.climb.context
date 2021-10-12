@@ -1,7 +1,5 @@
 <template>
 <div>
-  <stepper > </stepper>
-
   <v-form ref="form" v-model="valid">
     <v-container style="height: 1000px" class="grey lighten-5">
       <v-row no-gutters>
@@ -486,12 +484,10 @@
 </template>
 
 <script>
-import Stepper from "@/components/Stepper.vue";
 import { mapState, mapActions } from "vuex";
 export default {
   name: "habitsDefinition",
   components: {
-    Stepper,
   },
   data() {
     return {

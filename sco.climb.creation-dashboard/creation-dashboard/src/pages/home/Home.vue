@@ -1,6 +1,6 @@
 <template>
   <v-container 
-  fluid="true"
+  :fluid="true"
   class="pa-0">
   <!-- <test>
     <div @click="claDef">
@@ -55,7 +55,7 @@
       <v-col offset="2" cols="8">
         <v-row>
           <v-col cols="12" align-self="center" >
-            <v-row>
+            <v-row v-if="myGames">
               <v-col cols="4" align-self="center"
                 v-for="game in myGames.items"
                 :key="game.id">
@@ -76,7 +76,7 @@
       rounded
       bottom
       right
-      absolute="true"
+      :absolute="true"
       text
       class="imFab"
       @click="claDef()"
@@ -195,7 +195,8 @@ export default {
   },
   methods: {
         claDef() {
-      this.$router.push("classdefinition");
+           this.$router.push("classdefinition");
+           this.nextStep();
     },
 
     // goToClassDefinition() {
