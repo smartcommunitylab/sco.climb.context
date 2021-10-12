@@ -354,7 +354,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameInfoCtrl', function ($scope,createDialog, MainDataService,DataService) {
         $scope.$parent.selectedTab = 'info';
-        // $scope.nrOfStudenti = 0;
         $scope.new = {
             classe: ""
         }
@@ -481,7 +480,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 //params tab ha all the parameters: number of students using different means
     .controller('GameParamsCtrl', function ($scope, DataService, createDialog) {
         $scope.$parent.selectedTab = 'params';
-        $scope.nrOfStudenti = 0;
+        $scope.nrOfStudenti = {};
 
         $scope.initParamController = function () {
             if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
@@ -533,8 +532,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             Promise.all(promises).then((values) => {
                 console.log(values);
               });
-            // $scope.nrOfStudenti = $scope.$parent.players.length;
-            // $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
 
         }
         $scope.$on('gameLoaded', function (e) {
@@ -578,9 +575,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 // })
                 return ss;
             }
-        }
-        $scope.nrOfStudenti =function(classRoom) {
-
         }
 
 
