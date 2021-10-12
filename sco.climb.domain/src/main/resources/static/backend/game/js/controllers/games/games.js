@@ -768,7 +768,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 // calcuate actual days.
-                actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to);
+                actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to, $scope.currentGame.daysOfWeek);
                 actualDays = actualDays - $scope.currentGame.params.giorni_chiusi;
                 $scope.kmStimati = ($scope.currentGame.params.const_daily_nominal_distance / 1000) * actualDays;
 
@@ -811,16 +811,35 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 return $scope.currentGame.modalities.includes(mode);
             return false
         }
-        $scope.getNumWorkDays = function (startTS, endTS) {
+        
+        $scope.getNumWorkDays = function (startTS, endTS, daysOfWeek) {
             var numWorkDays = 0;
             var currentDate = new Date(startTS);
             var endDate = new Date(endTS)
             while (currentDate <= endDate) {
-                // Skips Sunday and Saturday
-                if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-                    numWorkDays++;
-                }
-                currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
+              // check week days
+            	if(currentDate.getDay() == 1 && daysOfWeek[0]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 2 && daysOfWeek[1]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 3 && daysOfWeek[2]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 4 && daysOfWeek[3]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 5 && daysOfWeek[4]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 6 && daysOfWeek[5]) {
+            		numWorkDays++;
+            	}
+            	if(currentDate.getDay() == 0 && daysOfWeek[6]) {
+            		numWorkDays++;
+            	}
+            	currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
             }
             return numWorkDays;
         }
