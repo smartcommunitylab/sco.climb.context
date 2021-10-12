@@ -1,8 +1,9 @@
 <template>
-  <div>
-  <stepper > </stepper>
+  <v-container 
+  fluid="true"
+  class="pa-0">
+  
 
-  <v-container class="grey lighten-5">
     <v-row no-gutters>
       <v-col>
         <v-card class="pa-2" outlined tile>
@@ -73,18 +74,15 @@
       </v-snackbar>
     </div>
   </v-container>
-  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import CardClass from "@/components/Card-Class.vue";
-import Stepper from "@/components/Stepper.vue";
 export default {
   name: "classDefinition",
   components: {
     "Card-Class": CardClass,
-    Stepper,
   },
   data() {
     return {

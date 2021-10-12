@@ -15,6 +15,7 @@
     </v-row>
   </div>
   <div v-show="!['home'].includes($route.name)" class="divStepper">-->
+    
     <div>
     <v-stepper alt-labels class="stepper elevation-0">
       <v-stepper-header>

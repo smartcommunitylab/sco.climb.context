@@ -18,7 +18,8 @@
 
   "home": {
     "name": "<p>Francesca Russo</p>",
-    "territorio": "Territorio:"
+    "territorio": "Territorio:",
+    "subTitle": "I miei percorsi"
   },
   "classDefinition": {
     "description": "<h4>Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
@@ -29,6 +30,5 @@
   "dateEnd": "Data di fine",
   "students": "studenti,",
   "class": "Classe",
-  "createPath": "+",
   "nickname": "Nickname"
 }

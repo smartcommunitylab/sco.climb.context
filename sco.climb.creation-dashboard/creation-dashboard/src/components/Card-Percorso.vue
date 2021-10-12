@@ -64,23 +64,28 @@
   </div>-->
   <div style="height: 100%" class="pa-4" v-if="percorso">
     <v-card class=" d-flex flex-column font-weight-regular rounded-lg" elevation="3" height="360px" width="260px">
-     <v-img
-      height="10"
-      :src="percorso.pedibusGame.imageLink"
-    >
-    </v-img>
+      <v-img
+      :src="percorso.pedibusGame.imageLink">
+      </v-img>
+       
        <div class="d-flex flex-row">
               <v-chip
-                class="ma-2 rounded-xl greenchip"
+                class="ma-2 rounded-xl"
+                :class="{'yellow': !isDeployed(), 'green': isDeployed()}"
                 small
                 label
                 text-color="white"
-                v-if="percorso.pedibusGame.deployed"
               >
-                APPROVATO
+              
+              <span v-if="isDeployed()"
+              >
+              APPROVATO</span>
+              <span v-else
+              >
+              NON APPROVATO</span>
               </v-chip>
 
-              <v-chip
+              <!-- <v-chip
                 class="ma-2 rounded-xl yellowchip"
                 small
                 label
@@ -88,7 +93,7 @@
                 v-else
               >
                 NON APPROVATO
-              </v-chip>
+              </v-chip> -->
             </div>
     <v-card-title
     class="pa-1 pt-0 ml-2">{{ percorso.pedibusGame.gameName }}</v-card-title>
@@ -96,10 +101,8 @@
       <div
       align="left"
       class="ml-1"
-      >{{ percorso.pedibusGame.kminstops }}<br />
-            {{ percorso.pedibusGame.globalTeam }} <br />
-            {{ percorso.pedibusGame.class }} <br />
-            {{ percorso.pedibusGame.year }}</div>
+      >
+            {{ getTimestamp(percorso.pedibusGame.from) }}</div>
     </v-card-text>
 
     <v-card-actions class="align-self-end">
@@ -107,34 +110,38 @@
         class="rounded-xl"
         color="var(--primary)"
         text
-        @click="claDef()"
-      >
+        @click="showAlert = true"
+        >
         Visualizza
       </v-btn>
-    </v-card-actions>    
+    </v-card-actions>
+    
     </v-card>
+
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {};
-  },
+  data: function() {
+    return {
+      showAlert: false,
+    };
+},
   namespaced: true,
   props: {
     percorso: Object,
 
   },
   methods: {
+    isDeployed() {
+      return this.percorso.pedibusGame.deployed
+    },
     getTimestamp(timestamp) {
       return this.$luxon(new Date(timestamp).toJSON());
     },
     openTab(url) {
       window.open(url, "_blank");
-    },
-    claDef() {
-      this.$router.push("classdefinition");
     },
   },
 };
@@ -163,10 +170,11 @@ export default {
   font-size: 42px !important;
   color: #cbcbcb !important;
 }
+
 .content-card {
   padding-left: 15px;
 }
-.content-image {
+.content-imageT {
   padding: 15px;
   padding-right: 0px;
   align-content: center;

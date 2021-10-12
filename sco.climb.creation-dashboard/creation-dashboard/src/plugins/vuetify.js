@@ -9,8 +9,8 @@ export default new Vuetify({
           light: {
             primary: '#034432',
             secondary: '#b0bec5',
-            yellowchip: '#FFB60A',
-            greenchip: '00C86E',
+            yellow: '#FFB60A',
+            green: '#00C86E',
             accent: '#8c9eff',
             alert: '#b71c1c',
           },

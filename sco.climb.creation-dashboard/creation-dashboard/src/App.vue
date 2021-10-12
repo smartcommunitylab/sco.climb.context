@@ -1,17 +1,33 @@
 <template>
   <v-app>
     <Loader v-if="loading" />
-
+    
     <v-main >
       <v-container fluid style="margin: 0; width: 100%">
       <!-- <a v-if="access_token" href @click.prevent="signOut">Sign out</a>
       <a v-else href @click.prevent="authenticateOidc">Sign in</a> -->
         <top-bar></top-bar>
-        <transition name="fade">
-          <div v-if="alert.message" :class="`alert ${alert.type}`">
+        <!-- <transition name="fade">
+          <v-alert v-if="alert.message" :class="`alert ${alert.type}`">
             {{ alert.message }}
-          </div>
-        </transition>
+          </v-alert>
+        </transition> -->
+       <div v-if="stepper">
+ <Stepper />
+       </div>
+      
+        <v-alert
+          v-if="alert.message"
+          :type="alert.type"
+          transition="scale-transition"
+          origin="center center"
+        >{{ alert.message }}</v-alert>
+        
+        <!-- <v-alert
+          prominent
+          type="info"
+        ></v-alert> -->
+        
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -23,11 +39,13 @@
 import { mapActions, mapState } from "vuex";
 import Loader from "./components/Loader";
 // import Footer from "@/components/Footer";
+import Stepper from "@/components/Stepper";
 import TopBar from './components/TopBar.vue';
 export default {
   name: "App",
 
   components: {
+    Stepper,
     Loader,
     // "app-footer": Footer,
     TopBar,
@@ -36,6 +54,7 @@ export default {
   data: () => ({
     appTitle: "Dashboard",
     drawer: false,
+    stepper:false
   }),
   computed: {
     ...mapState({
@@ -76,6 +95,10 @@ export default {
     // eslint-disable-next-line no-unused-vars
     $route(to, from) {
       // clear alert on location change
+      if (to.name!='home')
+          this.stepper=true;
+      else 
+          this.stepper=false;
       setTimeout(() => this.clearAlert(), 2500);
     },
   },
@@ -93,11 +116,11 @@ export default {
 };
 </script>
 <style scoped>
-.alert {
+/* .alert {
   padding: 20px;
   color: white;
   position: fixed;
-  position: fixed; /* or absolute */
+  position: fixed; /* or absolute
   top: 50%;
   margin: 10px;
   left: 50%;
@@ -110,6 +133,15 @@ export default {
 }
 .alert-danger {
   background-color: #dc3545;
+} */
+
+.v-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 200;
 }
 
 </style>
