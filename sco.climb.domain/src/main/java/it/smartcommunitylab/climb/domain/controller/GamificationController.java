@@ -423,8 +423,9 @@ public class GamificationController extends AuthController {
 		mobilityParams.put("car_studenti", 0);
 		mobilityParams.put("pedibus_studenti", 0);
 		mobilityParams.put("pandr_studenti", 0);
+		mobilityParams.put("carpooling_studenti", 0);
 		String[] paramsName = new String[] {"walk_studenti", "bike_studenti", "bus_studenti",
-				"car_studenti", "pedibus_studenti", "pandr_studenti"};
+				"car_studenti", "pedibus_studenti", "pandr_studenti", "carpooling_studenti"};
 		for(String param : paramsName) {
 			mobilityParams.put(param, 0);
 		}
