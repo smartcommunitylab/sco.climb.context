@@ -762,6 +762,13 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 for (var p in $scope.currentGame.params) {
                     $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
                 }
+                if ($scope.isModalityPresent('car'))
+                {
+                    $scope.currentGame.params['const_car_distance']=0;
+                } 
+                else {
+                    $scope.currentGame.params['const_car_distance']=undefined;
+                }
             }
 
         }
@@ -845,22 +852,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         
         $scope.$on('gameLoaded', function (e) {
-            // Variabili per date-picker(fix for refresh issue on parametri page)
-            // $scope.$parent.dateFormat = 'dd/MM/yyyy';
-            // $scope.$parent.startDate = new Date();
-            // $scope.$parent.endDate = new Date();
-            // $scope.$parent.isCalendarOpen = [false, false];
-            // $scope.$parent.minDate = new Date(1970, 1, 1);
-            // if ($scope.currentGame.from) {
-            //     $scope.$parent.startDate.setTime($scope.currentGame.from);
-            // }
-            // if ($scope.currentGame.to) {
-            //     $scope.$parent.endDate.setTime($scope.currentGame.to);
-            // }
-            // $scope.calculateStudenti($scope.$parent.classes);
             $scope.initParamController();
         });
-
+        if ($scope.currentGame) {
+            $scope.initParamController();
+        }
     })
     .controller('GamePedibusCtrl', function ($scope) {
         $scope.$parent.selectedTab = 'pedibus';
