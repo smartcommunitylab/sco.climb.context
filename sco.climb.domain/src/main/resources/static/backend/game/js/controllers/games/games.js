@@ -765,7 +765,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 // calcuate actual days.
-                actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to, $scope.currentGame.);
+                actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to, $scope.currentGame.daysOfWeek);
                 actualDays = actualDays - $scope.currentGame.params.giorni_chiusi;
                 $scope.kmStimati = ($scope.currentGame.params.const_daily_nominal_distance / 1000) * actualDays;
 
@@ -808,6 +808,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 return $scope.currentGame.modalities.includes(mode);
             return false
         }
+        
         $scope.getNumWorkDays = function (startTS, endTS, daysOfWeek) {
             var numWorkDays = 0;
             var currentDate = new Date(startTS);
