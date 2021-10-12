@@ -523,9 +523,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         $scope.calculateStudenti = function (classes) {
             //call api and calculate nr.of studenti.
-            DataService.getStudentsByClasses($scope.currentGame.ownerId, $scope.currentGame.objectId, classes).then(function (data) {
-                $scope.nrOfStudenti = data.data;
-            });
+            var promises=[]
+            classes.forEach(function(classRoom){
+                promises.push(DataService.getStudentsByClasses($scope.currentGame.ownerId, $scope.currentGame.objectId, [classRoom]).then(function (data) {
+                    $scope.nrOfStudenti[classRoom] = data.data;
+                }))
+            })
+            
+            Promise.all(promises).then((values) => {
+                console.log(values);
+              });
             // $scope.nrOfStudenti = $scope.$parent.players.length;
             // $scope.$parent.nrOfStudenti = $scope.nrOfStudenti;
 
@@ -557,10 +564,10 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
         
 
-        $scope.calculateSS = function () {
+        $scope.calculateSS = function (classRoom) {
             if ($scope.currentGame && $scope.currentGame.mobilityParams && $scope.currentGame.classRooms) {
                 var ss=0
-            $scope.currentGame.classRooms.forEach(classRoom => {
+            // $scope.currentGame.classRooms.forEach(classRoom => {
                     ss+=($scope.currentGame.mobilityParams[classRoom].walk_studenti?$scope.currentGame.mobilityParams[classRoom].walk_studenti:0) +
                     ($scope.currentGame.mobilityParams[classRoom].bike_studenti?$scope.currentGame.mobilityParams[classRoom].bike_studenti:0) +
                     ($scope.currentGame.mobilityParams[classRoom].bus_studenti?$scope.currentGame.mobilityParams[classRoom].bus_studenti:0) +
@@ -568,11 +575,13 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?$scope.currentGame.mobilityParams[classRoom].pandr_studenti:0) +
                     ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?$scope.currentGame.mobilityParams[classRoom].carpooling_studenti:0) +
                     ($scope.currentGame.mobilityParams[classRoom].car_studenti?$scope.currentGame.mobilityParams[classRoom].car_studenti:0)
-                })
+                // })
                 return ss;
             }
         }
+        $scope.nrOfStudenti =function(classRoom) {
 
+        }
 
 
         $scope.isModalityPresent = function (mode) {

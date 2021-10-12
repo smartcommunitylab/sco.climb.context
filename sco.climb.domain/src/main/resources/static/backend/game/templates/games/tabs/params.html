@@ -67,6 +67,11 @@
                         </p>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="single-col table-margin">
+                        <p>&emsp;<b>Abitudini rilevate degli studenti</b> </p>
+                    </div>
+                </div>
 
             </div>
             <div class="col" style="width: 56%;">
@@ -145,13 +150,19 @@
                                 ng-disabled="!isModalityPresent('car')" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="currentGame && currentGame.classRooms">
+                        <div class="col-lg-2 col-xs-2 col-2 single-col" 
+                            ng-repeat="class in currentGame.classRooms">
+                            <p>{{calculateSS(class)}}/{{nrOfStudenti[class]}}</p>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
                         <div class="col-lg-4 col-xs-4 col-4">
                         </div>
                         <div class="col-lg-4 col-xs-4 col-4">
                             <p><b>Abitudini rilevate degli studenti:</b> {{calculateSS()}}/{{nrOfStudenti}}</p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
