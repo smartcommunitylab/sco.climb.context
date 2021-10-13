@@ -519,6 +519,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 }
 
             }
+            
         }
         $scope.calculateStudenti = function (classes) {
             //call api and calculate nr.of studenti.
@@ -770,17 +771,20 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     $scope.currentGame.params['const_car_distance']=undefined;
                 }
             }
+            $scope.calculateCDND();
 
         }
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 // calcuate actual days.
                 actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to, $scope.currentGame.daysOfWeek);
-                actualDays = actualDays - $scope.currentGame.params.giorni_chiusi;
+                actualDays = actualDays - ($scope.currentGame.params.giorni_chiusi?$scope.currentGame.params.giorni_chiusi:0);
                 $scope.kmStimati = ($scope.currentGame.params.const_daily_nominal_distance / 1000) * actualDays;
-
-                return $scope.kmStimati;
+                $scope.calculateKMTarget();
+                return;
             }
+            $scope.$scope.kmStimati=0;
+            return;
 
         }
         $scope.calculateCDND = function () {
@@ -789,18 +793,25 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.currentGame.classRooms.forEach(classRoom => {
                     if ($scope.currentGame.mobilityParams && $scope.currentGame.mobilityParams[classRoom])
                     $scope.currentGame.params.const_daily_nominal_distance+=(
-                    ($scope.currentGame.mobilityParams[classRoom].walk_studenti?($scope.currentGame.mobilityParams[classRoom].walk_studenti * $scope.currentGame.params.const_walk_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti?($scope.currentGame.mobilityParams[classRoom].bike_studenti * $scope.currentGame.params.const_bike_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?($scope.currentGame.mobilityParams[classRoom].pedibus_studenti * $scope.currentGame.params.const_bus_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti?($scope.currentGame.mobilityParams[classRoom].bus_studenti * $scope.currentGame.params.const_pedibus_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?($scope.currentGame.mobilityParams[classRoom].pandr_studenti * $scope.currentGame.params.const_pandr_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?($scope.currentGame.mobilityParams[classRoom].carpooling_studenti * $scope.currentGame.params.const_carpooling_distance):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].car_studenti?($scope.currentGame.mobilityParams[classRoom].car_studenti * $scope.currentGame.params.const_car_distance):0))
+                    (($scope.currentGame.mobilityParams[classRoom].walk_studenti&&$scope.currentGame.params.const_walk_distance)?($scope.currentGame.mobilityParams[classRoom].walk_studenti * $scope.currentGame.params.const_walk_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].bike_studenti&&$scope.currentGame.params.const_bike_distance)?($scope.currentGame.mobilityParams[classRoom].bike_studenti * $scope.currentGame.params.const_bike_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].pedibus_studenti&&$scope.currentGame.params.const_pedibus_distance)?($scope.currentGame.mobilityParams[classRoom].pedibus_studenti * $scope.currentGame.params.const_pedibus_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].bus_studenti&&$scope.currentGame.params.const_bus_distance)?($scope.currentGame.mobilityParams[classRoom].bus_studenti * $scope.currentGame.params.const_bus_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].pandr_studenti&&$scope.currentGame.params.const_pandr_distance)?($scope.currentGame.mobilityParams[classRoom].pandr_studenti * $scope.currentGame.params.const_pandr_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].carpooling_studenti&&$scope.currentGame.params.const_carpooling_distance)?($scope.currentGame.mobilityParams[classRoom].carpooling_studenti * $scope.currentGame.params.const_carpooling_distance):0) +
+                    (($scope.currentGame.mobilityParams[classRoom].car_studenti&&$scope.currentGame.params.const_car_distance)?($scope.currentGame.mobilityParams[classRoom].car_studenti * $scope.currentGame.params.const_car_distance):0))
                 
             })
-                return $scope.currentGame.params.const_daily_nominal_distance;
+                $scope.cdnd=$scope.currentGame.params.const_daily_nominal_distance;
+                $scope.calculateKMStimati();
+                $scope.calculateKMTarget();
+
+                return;
             }
-            return 0;
+            $scope.cdnd=0;
+            $scope.calculateKMStimati();
+            $scope.calculateKMTarget();
+            return;
         };
         
         $scope.calculateKMTarget = function () {
@@ -808,9 +819,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 var km = $scope.kmStimati;
                 if ($scope.currentGame.params.km_bonus) 
                 km+=Number($scope.currentGame.params.km_bonus);
-                
+                $scope.kmTarget=km;
+                return;  
             }
-            return km;
+            $scope.kmTarget=0;
+             return;
         }
 
         $scope.isModalityPresent = function (mode) {
