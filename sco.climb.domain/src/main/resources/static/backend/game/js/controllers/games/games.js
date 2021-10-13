@@ -738,7 +738,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.$parent.selectedTab = 'calibration';
 
         $scope.initParamController = function () {
-            if ((!$scope.currentGame && !$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
+            if (($scope.currentGame && !$scope.currentGame.params) || (Object.keys($scope.currentGame.params).length === 0)) {
                 $scope.currentGame.params = {
                     const_walk_distance: 0,
                     const_bike_distance: 0,
