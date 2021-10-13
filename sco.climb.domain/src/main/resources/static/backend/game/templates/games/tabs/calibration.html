@@ -77,7 +77,8 @@
         </div>
         <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
             <input class="form-control" type="number" min="0" ng-change="calculateCDND()"
-                ng-model="currentGame.params.const_carpooling_distance" ng-disabled="!isModalityPresent('carpooling')" />
+                ng-model="currentGame.params.const_carpooling_distance"
+                ng-disabled="!isModalityPresent('carpooling')" />
         </div>
     </div>
     <div class="row">
@@ -87,8 +88,8 @@
             </p>
         </div>
         <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-            <input class="form-control" type="number" min="0" 
-                ng-model="currentGame.params.const_car_distance"  disabled />
+            <input class="form-control" type="number" min="0" ng-model="currentGame.params.const_car_distance"
+                disabled />
         </div>
     </div>
     <div class="row">
@@ -112,40 +113,29 @@
     <hr style="border-color: black;">
     </div>
     <!-- Start and end date -->
-    <div class="row" style="margin-bottom: 20px;">
-        <p style="display: inline-block" class="col-sm-3">
-            <b>Data di inizio:&emsp;</b>
-        </p>
-        <p class="input-group" class="col-sm-4" style="display: inline-block">
-            <b>{{$parent.startDate | date:"dd/MM/yyyy"}}</b>
-            <!-- <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[0]"
-                    ng-model="$parent.startDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
-                /> -->
-            <!-- <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="isCalendarOpen[0] = true">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </button>
-                </span> -->
-        </p>
-    </div>
-    <div class="row" style="margin-bottom: 20px;">
-        <p style="display: inline-block" class="col-sm-3">
-            <b>Data di fine:&emsp;</b>
-        </p>
-        <p class="input-group" class="col-sm-4" style="display: inline-block">
-            <b>{{$parent.endDate | date:"dd/MM/yyyy"}}</b>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">
+            <p><b>Data di inizio:</b>
 
-            <!-- <input style="width: 200px" class="form-control" type="text" uib-datepicker-popup="{{dateFormat}}" is-open="isCalendarOpen[1]"
-                    ng-model="$parent.endDate" min-date="minDate" ng-required="true" current-text="Oggi" clear-text="Azzera" close-text="Fatto"
-                />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="isCalendarOpen[1] = true">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </button>
-                </span> -->
-        </p>
+            </p>
+        </div>
+        <div class="col-sm-6 col-xs-6">
+            <b>{{$parent.startDate | date:"dd/MM/yyyy"}}</b>
+        </div>
     </div>
-    <div class="row">
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">
+            <p><b>Data di fine:</b>
+
+            </p>
+        </div>
+        <div class="col-sm-6 col-xs-6">
+            <b>{{$parent.endDate | date:"dd/MM/yyyy"}}</b>
+        </div>
+    </div>
+
+
+    <div class="row min-height-50">
         <div class="col-sm-6 col-xs-6">
             <p><b>Giorni di chiusura:</b>
                 <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
@@ -153,85 +143,89 @@
                     uib-tooltip="specificare il numero di giorni in cui la scuola rimane chiusa durante il periodo del gioco, ad esclusione di sabati e domeniche."></i>
             </p>
         </div>
-        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+        <div class="col-sm-6 col-xs-6">
             <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
                 ng-change="calculateKMStimati()" ng-model="currentGame.params.giorni_chiusi" />
         </div>
     </div>
-
-    
-        <div class="row">
-            <div class="col-sm-6 col-xs-6">
-                <p><b>Km stimati:
-                        <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
-                            tooltip-append-to-body="true"
-                            uib-tooltip="Sono i Km che riesce a percorrere virtualmente il gruppo nell'arco della durata del gioco. Viene calcolato moltiplicando la velocità giornaliera del gruppo per i giorni di gioco effettivi."></i>
-            </div>
-            <div class="col-sm-6 col-xs-6"> <span ng-if="kmStimati!=undefined">{{kmStimati}}</span></div></b></p>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">
+            <p><b>Km stimati:
+                    <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
+                        tooltip-append-to-body="true"
+                        uib-tooltip="Sono i Km che riesce a percorrere virtualmente il gruppo nell'arco della durata del gioco. Viene calcolato moltiplicando la velocità giornaliera del gruppo per i giorni di gioco effettivi."></i>
+        </div>
+        <div class="col-sm-6 col-xs-6"> <span ng-if="kmStimati!=undefined">{{kmStimati}}</span></div></b></p>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">
+            <p><b>Km sfide:</b></p>
         </div>
         <div class="col-sm-6 col-xs-6">
-            <b>km sfide:</b>
-        </div>
-        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
             <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
                 ng-change="calculateKMTarget()" ng-model="currentGame.params.km_bonus" />
         </div>
-        <div class="row">
-            <div class="col-sm-6 col-xs-6">
-                <p><b>Km target:
-                        <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
-                            tooltip-append-to-body="true"
-                            uib-tooltip="Sono i Km totali percorsi, ed indicano la possibile distanza finale del gioco."></i>
-            </div>
-            <div class="col-sm-6 col-xs-6"> <span ng-if="kmTarget!= undefined">{{kmTarget}}</span></div></b></p>
-
-
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">
+            <p><b>Km target:
+                    <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
+                        tooltip-append-to-body="true"
+                        uib-tooltip="Sono i Km totali percorsi, ed indicano la possibile distanza finale del gioco."></i>
         </div>
+        <div class="col-sm-6 col-xs-6"> <span ng-if="kmTarget!= undefined">{{kmTarget}}</span></div></b></p>
+
+
+    </div>
+    <div class="row min-height-50">
         <div class="col-sm-12 col-12 ">
             <h3>Bonus gioco</h3>
             <hr style="border-color: black;">
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <p><b>Bonus meteo (metri):</b></p>
-            </div>
-            <div class="col-sm-6 col-xs-6">nuovoloso</div>
-            <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                    ng-change="changed()" ng-model="currentGame.params.const_cloudy_bonus" />
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-xs-6">pioggia</div>
-                <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                    <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                        ng-change="changed()" ng-model="currentGame.params.const_rain_bonus" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-xs-6">neve</div>
-                <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                    <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                        ng-change="changed()" ng-model="currentGame.params.const_snow_bonus" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <p><b>Bonus performance (metri):</b></p>
-                </div>
-                <div class="col-sm-6 col-xs-6">giorno impatto zero</div>
-                <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                    <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
-                        ng-change="changed()" ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 col-xs-6">giorno senz'auto</div>
-                    <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
-                        <input class="form-control" string-to-number type="number" min="0"
-                            oninput="validity.valid||(value='');" ng-change="changed()"
-                            ng-model="currentGame.params.const_NoCarDayClass_bonus" />
-                    </div>
-                </div>
-            </div>
     </div>
+    <div class="row min-height-50">
+        <div class="col-sm-12">
+            <p><b>Bonus meteo (metri):</b></p>
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">Nuovoloso</div>
+        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+            <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                ng-change="changed()" ng-model="currentGame.params.const_cloudy_bonus" />
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">Pioggia</div>
+        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+            <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                ng-change="changed()" ng-model="currentGame.params.const_rain_bonus" />
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">Neve</div>
+        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+            <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                ng-change="changed()" ng-model="currentGame.params.const_snow_bonus" />
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-12">
+            <p><b>Bonus performance (metri):</b></p>
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">Giorno impatto zero</div>
+        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+            <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                ng-change="changed()" ng-model="currentGame.params.const_ZeroImpactDayClass_bonus" />
+        </div>
+    </div>
+    <div class="row min-height-50">
+        <div class="col-sm-6 col-xs-6">Giorno senz'auto</div>
+        <div class="col-sm-6 col-xs-6" style="margin-bottom: 20px;">
+            <input class="form-control" string-to-number type="number" min="0" oninput="validity.valid||(value='');"
+                ng-change="changed()" ng-model="currentGame.params.const_NoCarDayClass_bonus" />
+        </div>
     </div>
 </fieldset>
