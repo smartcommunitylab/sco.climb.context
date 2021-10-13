@@ -7,8 +7,8 @@
         </h3>
         <hr style="border-color: black;">
     </div>
-    <div class="container">
-        <div class="row" style="display: flex;">
+    <div class="container" >
+        <div class="row" style="display: flex;" ng-if="classesArePresent">
             <div class="col">
                 <div class="row table-margin">
                     <div class="col corner-table">
@@ -80,10 +80,10 @@
 
             </div>
             <div class="col" style="width: 56%;">
-                <div class="container-fluid container-scroll single-row" ng-if="classesArePresent">
+                <div class="container-fluid container-scroll single-row" >
                     <div class="row">
 
-                        <div class="col-lg-2 col-xs-2 col-2 single-col" 
+                        <div class="col-lg-2 col-xs-2 col-2 single-col center" 
                             ng-repeat="class in currentGame.classRooms">
                             <label style="font-style: italic; font-weight: normal">{{class}}
                             </label>
