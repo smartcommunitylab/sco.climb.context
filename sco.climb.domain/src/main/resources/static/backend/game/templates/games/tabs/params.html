@@ -1,7 +1,7 @@
 <fieldset ng-disabled="!PermissionsService.permissionEnabledParamInfo() || currentGame.deployed">
 
     <div>
-        <h3>Abitudini di mobilità e distanze<i class="glyphicon glyphicon-info-sign information-circle"
+        <h3>Abitudini di mobilità<i class="glyphicon glyphicon-info-sign information-circle"
                 tooltip-placement="auto top" tooltip-append-to-body="true"
                 uib-tooltip="Inserisci il numero di studenti che attualmente vanno a scuola a piedi, in bici, con il pedibus ecc. "></i>
         </h3>
@@ -11,11 +11,13 @@
         <div class="row" style="display: flex;">
             <div class="col">
                 <div class="row table-margin">
-                    <div class="col"><label
+                    <div class="col corner-table">
+                        
+                        <!-- <label
                             style="font-style: italic; font-weight: normal;" >Numero studenti<i
                                 class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
                                 tooltip-append-to-body="true"
-                                uib-tooltip="Ricordati di inserire tutti i giocatori prima di passare a questa sezione."></i></label>
+                                uib-tooltip="Ricordati di inserire tutti i giocatori prima di passare a questa sezione."></i></label> -->
                     </div>
                 </div>
                 <div class="row">
@@ -69,7 +71,10 @@
                 </div>
                 <div class="row">
                     <div class="single-col table-margin">
-                        <p>&emsp;<b>Abitudini rilevate degli studenti</b> </p>
+                        <p>&emsp;<b>Abitudini rilevate degli studenti</b> <i
+                            class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
+                            tooltip-append-to-body="true"
+                            uib-tooltip="Ricordati di inserire tutti i giocatori prima di passare a questa sezione."></i></p>
                     </div>
                 </div>
 
