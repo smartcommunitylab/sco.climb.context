@@ -50,6 +50,7 @@ consoleApp.directive('stringToNumber', function() {
     }
   };
 });
+
 consoleApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/institutes-list');
     $stateProvider
