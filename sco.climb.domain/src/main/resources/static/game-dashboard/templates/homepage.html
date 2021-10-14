@@ -3,10 +3,10 @@
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 
-  <div ng-if="!isLoading" class="row">
+  <div ng-if="!isLoading"  class="home-row">
 
     <div class="column1">
-      <div flex="33" class="col-not-sf">
+      <div class="col-not-sf">
         <md-card class="notifiche" ng-click="go('home.notifications')">
           <span class="material-icons">notifications</span>
           
@@ -15,7 +15,7 @@
             <div ng-if="notificationsPresent">
               <div class="card-body">
                 <p class="md-header">{{notifcationTime | date:'dd MMMM yyyy'}}</p>
-                <p class="md-subhead">{{notificationText}}</p>
+                <p class="md-subhead notification-text">{{notificationText}}</p>
               </div>
             </div>
             <div ng-if="!notificationsPresent">
@@ -58,7 +58,7 @@
     </div>
 
     <div class="column2">
-      <div flex="33" class="col-map-km">
+      <div class="col-map-km">
         <p class="map-title">{{gameName}}</p>
         <md-card class="map-col" ng-click="go('home.map')">
           <leaflet width="100%" height="400px" layers="layers" paths="pathLine" markers="markers" id="maphome"
@@ -107,7 +107,7 @@
     </div>
 
     <div class="column3">
-      <div class="col-inserimento">
+      <div  class="col-inserimento">
 
         <md-card ng-click="go('home.class')" class="card border-warning text-warning">
           <md-card-title>
