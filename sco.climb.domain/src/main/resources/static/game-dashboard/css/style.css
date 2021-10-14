@@ -1356,19 +1356,19 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 /**** homepage ****/
 
 .column1{
- width: 17%;
- float: left;
- padding: 7px;
+ width: 20%;
+ display: table-cell;
+  padding: 7px;
 }
 .column2{
- width: 56%;
- float: left;
+ width: 60%;
+ display: table-cell;
   padding: 7px;
 }
 .column3{
- width: 17%;
- float: left;
-  padding: 7px;
+ width: 20%;
+ display: table-cell;
+   padding: 7px;
 }
 
 .homepage md-card {
@@ -1392,7 +1392,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 }
 
 .homepage div.col-inserimento md-card{
-   min-width: 179px;
+   min-width: 100px;
    height: 170px; 
    margin-bottom: 60px;
    color: #f39512; 
@@ -1408,6 +1408,9 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .homepage .notifiche .md-header {
   color: gray;
   font-size: smaller;
+}
+.notification-text{
+  text-overflow:ellipsis;
 }
 .homepage .col-inserimento span.material-icons{
   
@@ -1441,6 +1444,10 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   color: #4153a0; 
    font-size: 30px;
    margin:20px;
+}
+.home-row{
+  display: table;
+  width: 100%;
 }
 md-card-content span.material-icons {
    color: #4153a0; 
