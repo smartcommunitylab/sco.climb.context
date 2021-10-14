@@ -49,14 +49,14 @@ angular.module("climbGame.controllers.map", [])
                 attribution: 'Copyright ESRI. Sources: Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, GeoEye, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community'
               }
             },            
-            fisica: {
-            	name: 'Fisica',
-            	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
-            	type: 'xyz',
-              layerOptions: {
-                attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data © OpenStreetMap contributors.'
-              }							
-            }            
+            // fisica: {
+            // 	name: 'Fisica',
+            // 	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
+            // 	type: 'xyz',
+            //   layerOptions: {
+            //     attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data © OpenStreetMap contributors.'
+            //   }							
+            // }            
           }
         },
         events: {
