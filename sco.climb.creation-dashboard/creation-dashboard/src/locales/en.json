@@ -1,16 +1,41 @@
 {
     "login": {
-        "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
+      "welcome": "<h1>Da casa a scuola, scoprendo il mondo!</h1>Un gioco educativo che coinvolge la scuola, i bambini e le famiglie in un’avventura alla scoperta del mondo e all’insegna di una mobilità più sostenibile."
     },
-    "classDefinition": {
-        "description": "<h4>By entering the total number of students, a list of fields will be generated where the nicknames chosen by the students can be inserted and which will be used for the daily compilation of the mobility diary. This modification is not compulsory and can be made when the course has already started."
+    "topbar": {
+      "title": "Area insegnante"
+    },
+    "stepper": {
+      "step1": "<p>Classi partecipanti</p>",
+      "step2" : "<p>Abitudini di mobilità</p>",
+      "step3" : "<p>Calibrazione percorso</p>",
+      "step4" : "<p>Scelta percorso</p>",
+      "step5" : "<p>Personalizzazione percorso</p>",
+      "step6" : "<p>Riepilogo</p>"
+    },
+    "home": {
+      "name": "<p>Francesca Russo</p>",
+      "territorio": "Territorio:",
+      "subTitle": "I miei percorsi"
       },
-    "numStud": "numbers of students",
-    "dateStart": "Start date",
-    "dateEnd": "End date",
-    "numKms": "kilometers",
-    "students": "students,",
-    "class": "Class",
-    "createPath": "+",
-    "nickname": "Nickname"
-}
+    "classDefinition": {
+      "title": "Classi partecipanti",
+      "description": "<h4>Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
+    },
+    "cardClass": {
+      "promptClass": "Classe",
+      "inputClass": "es. 1A, 2B, 3C...",
+      "promptNum": "Totale alunni",
+      "inputNum": "numero totale alunni partecipanti",
+      "inputNickname":"Nickname"
+    },
+    "global": {
+      "numStud": "Totale alunni",
+      "numKms": "chilometri",
+      "dateStart": "Data di inizio",
+      "dateEnd": "Data di fine",
+      "students": "studenti,",
+      "class": "Classe",
+      "nickname": "Nickname"  
+    }
+  }

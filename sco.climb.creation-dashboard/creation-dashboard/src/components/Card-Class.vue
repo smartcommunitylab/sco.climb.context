@@ -147,9 +147,9 @@
       </v-col>
     </v-row>
 <!-- FORM CARD -->
-    <v-row class="pt-2 px-4">
-      <v-col cols="12">
-        <v-form ref="form" lazy-validation>
+    <!-- <v-row class="pt-2 px-4">
+      <v-col cols="12"> -->
+        <v-form ref="form" lazy-validation class="pt-2 px-4">
           <v-row>
 <!-- FIELD CLASSE -->
             <v-col cols="1" class="pl-0 text">
@@ -178,16 +178,15 @@
                 v-model="schoolClass.classNum"
                 :placeholder="$t('cardClass.inputNum')"
                 :rules="classNumRules"
-                type="number"
                 required
                 dense
               ></v-text-field>    
             </v-col>
           </v-row>
 <!-- BOTTONE CARD PER ESPLODERE NICKNAME  -->
-          <v-row class="mt-0">
-            <v-col class="py-0 pr-0">
-              <v-card-actions class="py-0 pr-0">
+          <!-- <v-row class="mt-0">
+            <v-col class="py-0 pr-0"> -->
+              <v-card-actions >
                 <v-spacer></v-spacer>
 
                 <v-btn
@@ -201,11 +200,11 @@
                   <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                 </v-btn>
               </v-card-actions>
-            </v-col>  
-          </v-row>    
+            <!-- </v-col>  
+          </v-row>     -->
         </v-form>
-          </v-col>
-    </v-row>
+          <!-- </v-col>
+    </v-row> -->
 
 
     
@@ -213,7 +212,10 @@
       <div v-show="show">
 
         <v-card-text>
-          I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+          <template v-if="schoolClass.classNum>0">
+           <v-text-field  :placeholder="$t('cardClass.inputNickname')" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">alunno</v-text-field>
+          </template>
+           
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -235,6 +237,7 @@ export default {
       ],
       classNumRules: [
         (v) => !!v || "Il numero totale degli alunni è richiesto!",
+        (v) => (v && !isNaN(v))|| "Il valore deve essere un numero!",
         (v) =>
           (v && v.length <= 3) ||
           "Il numero totale degli alunni non può essere più lungo di 3 cifre",

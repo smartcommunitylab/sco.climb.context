@@ -26,7 +26,8 @@
     "promptClass": "Classe",
     "inputClass": "es. 1A, 2B, 3C...",
     "promptNum": "Totale alunni",
-    "inputNum": "numero totale alunni partecipanti"
+    "inputNum": "numero totale alunni partecipanti",
+    "inputNickname":"Nickname"
   },
   "global": {
     "numStud": "Totale alunni",
