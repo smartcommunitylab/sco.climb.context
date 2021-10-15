@@ -90,6 +90,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             axis: 'y',
             stop: function (e, ui) {
                 for (i = 0; i < $scope.legs.length; i++) {
+                    
                     $scope.legs[i].position = i;
                 }
             }
@@ -386,7 +387,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
                 // save the new ordered list only when all promise get resolved.
                 $scope.currentPath.legs = $scope.legs;
-                DataService.editData('legs', $scope.currentPath).then(
+                $scope.saveData('legs', $scope.currentPath).then(
                 // DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
                         console.log('Salvataggio dati a buon fine.');
