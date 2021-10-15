@@ -1,8 +1,8 @@
 <template>
-  <div class="c-card-layout px-7">
-    <v-row>
+  <div>
+    <!-- <v-row>
       <v-col cols="10"></v-col>
-      <v-col cols="1" class="pull-right">
+      <v-col cols="1">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -121,7 +121,103 @@
           <v-icon color="white"> mdi-plus </v-icon>
         </v-btn>
       </v-col>
+    </v-row> -->
+
+    <v-card class="rounded-lg px-3 pt-2 ma-0"  width="100%" elevation="3"
+    >
+      <v-row class="px-0">
+      <v-col cols="11" class="px-0"></v-col>
+      <v-col cols="1" class="px-0">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              absolute
+              right
+              color="alert"
+              v-bind="attrs"
+              v-on="on"
+              @click="onDeleteBtnClick(schoolClass)"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+          <span>Permette di eliminare la scheda corrente</span>
+        </v-tooltip>
+      </v-col>
     </v-row>
+<!-- FORM CARD -->
+    <v-row class="pt-2 px-4">
+      <v-col cols="12">
+        <v-form ref="form" lazy-validation>
+          <v-row>
+<!-- FIELD CLASSE -->
+            <v-col cols="1" class="pl-0 text">
+              <span class="tinyTitle"
+              v-html="$t('cardClass.promptClass')">
+              </span>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                class="mr-5"
+                v-model="schoolClass.className"
+                :placeholder="$t('cardClass.inputClass')"
+                :rules="classNameRules"
+                required
+                dense
+              ></v-text-field>
+            </v-col>
+<!-- FIELD TOTALE ALUNNI -->
+            <v-col cols="2" class="text">
+              <span class="tinyTitle"
+              v-html="$t('cardClass.promptNum')">
+              </span>
+            </v-col>
+            <v-col cols="4" class="mb-2">
+              <v-text-field
+                v-model="schoolClass.classNum"
+                :placeholder="$t('cardClass.inputNum')"
+                :rules="classNumRules"
+                type="number"
+                required
+                dense
+              ></v-text-field>    
+            </v-col>
+          </v-row>
+<!-- BOTTONE CARD PER ESPLODERE NICKNAME  -->
+          <v-row class="mt-0">
+            <v-col class="py-0 pr-0">
+              <v-card-actions class="py-0 pr-0">
+                <v-spacer></v-spacer>
+
+                <v-btn
+                  top
+                  text
+                  rounded
+                  color="primary"
+                  @click="show = !show"
+                >
+                Aggiungi nickname
+                  <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-col>  
+          </v-row>    
+        </v-form>
+          </v-col>
+    </v-row>
+
+
+    
+    <v-expand-transition>
+      <div v-show="show">
+
+        <v-card-text>
+          I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+        </v-card-text>
+      </div>
+    </v-expand-transition>
+    </v-card>
   </div>
 </template>
 
@@ -136,6 +232,12 @@ export default {
         (v) =>
           (v && v.length >= 2) ||
           "Il nome della classe deve essere lungo più di 1 carattere",
+      ],
+      classNumRules: [
+        (v) => !!v || "Il numero totale degli alunni è richiesto!",
+        (v) =>
+          (v && v.length <= 3) ||
+          "Il numero totale degli alunni non può essere più lungo di 3 cifre",
       ],
       nicknameRules: [
         (v) =>
@@ -180,8 +282,12 @@ export default {
 </script>
 
 <style>
-.c-card-layout {
+/* .c-card-layout {
   background: #f8f8f8;
   border-radius: 8px;
+} */
+
+.text {
+  padding-top: 2.6%;
 }
 </style>

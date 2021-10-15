@@ -63,7 +63,7 @@
     </v-card>
   </div>-->
   <div style="height: 100%" class="pa-4" v-if="percorso">
-    <v-card class=" d-flex flex-column font-weight-regular rounded-lg" elevation="3" height="360px" width="260px">
+    <v-card class=" d-flex flex-column font-weight-regular rounded-lg" elevation="3">
       <v-img
       :src="percorso.pedibusGame.imageLink">
       </v-img>

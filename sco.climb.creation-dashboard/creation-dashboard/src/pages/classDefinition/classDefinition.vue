@@ -2,9 +2,8 @@
   <v-container 
   :fluid="true"
   class="pa-0">
-  
 
-    <v-row no-gutters>
+    <!-- <v-row no-gutters>
       <v-col>
         <v-card class="pa-2" outlined tile>
           <div class="pa-7">
@@ -61,6 +60,45 @@
           </div>
         </v-card>
       </v-col>
+    </v-row> -->
+
+    <v-row class="mt-4">
+      <v-col offset="2" cols="8">
+        <v-row>
+          <v-col cols="12" align-self="center" class="pa-0 ml-0">
+            <div class="d-inline-block">
+              <p class="titleFont"
+                v-html="$t('classDefinition.title')">
+              </p>
+              <p
+                v-html="$t('classDefinition.description')">
+              </p>
+            </div>
+          </v-col>
+        </v-row>  
+      </v-col>        
+    </v-row>
+
+    <v-row>
+      <v-col offset="2" cols="8" class="px-0">
+        <v-row>
+          <v-col cols="12" align-self="center" class="px-0 pb-0 mb-0">
+          <div class="row pa-4">
+            <div
+              class="col-12 pa-0"
+              v-for="(schoolClass, idx) in schoolClasses"
+              v-bind:key="schoolClass.id"
+            >
+              <Card-Class
+                @removeClassCard="onCardRemoveBtnClick"
+                :schoolClass="schoolClass"
+                :cardIdx="idx"
+              ></Card-Class>
+            </div>
+          </div>
+          </v-col>
+        </v-row>  
+      </v-col>        
     </v-row>
 
     <div class="text-center ma-2">
@@ -73,6 +111,34 @@
         </template>
       </v-snackbar>
     </div>
+
+      <v-btn
+        color="primary"
+        outlined
+        rounded
+        bottom
+        left
+        :absolute="true"
+        text
+        class="homeStep"
+        @click="claDef()">
+        <v-icon small>home</v-icon>
+        <span>Torna alla home</span>
+      </v-btn>
+    
+      <v-btn
+        color="secondary"
+        rounded
+        bottom
+        right
+        :absolute="true"
+        text
+        class="imFab"
+        @click="claDef()">
+        <span>Salva e prosegui</span>
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+
   </v-container>
 </template>
 
@@ -176,6 +242,11 @@ export default {
 .c-card-layout {
   background: #f4f2f2;
   border-radius: 8px;
+}
+.homeStep {
+  bottom: 0;
+  position: fixed;
+  margin: 0 0 16px 16px;
 }
 </style>
 

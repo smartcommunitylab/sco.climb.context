@@ -37,11 +37,11 @@
               </div>  
             </div>
 
-
           </v-col>
         </v-row>  
       </v-col>        
     </v-row>
+    
     <v-row>
       <v-col offset="2" cols="8">
         <v-row>
@@ -227,17 +227,6 @@ export default {
 
 .justify-content-center { justify-content: center; }
 .align-items-center { align-items: center; }
-
-.imFab {
-    bottom: 0;
-    position: fixed;
-    margin: 0 0 16px 16px;
-    background-color: var(--primary);
-  }
-
-.fabIcon, .imFab span {
-  color: #fff;
-}
 </style>
 
 
