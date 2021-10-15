@@ -873,7 +873,7 @@ public class GamificationController extends AuthController {
 //					sumValue += leg.getScore();
 //					leg.setScore(sumValue);
 //				}
-				storage.savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
+				storage.savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
