@@ -802,10 +802,12 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     (($scope.currentGame.mobilityParams[classRoom].car_studenti&&$scope.currentGame.params.const_car_distance)?($scope.currentGame.mobilityParams[classRoom].car_studenti * $scope.currentGame.params.const_car_distance):0))
                 
             })
-                $scope.cdnd=$scope.currentGame.params.const_daily_nominal_distance;
-                $scope.calculateKMStimati();
-                $scope.calculateKMTarget();
-
+            if($scope.currentGame.roundTrip) {
+                $scope.currentGame.params.const_daily_nominal_distance = $scope.currentGame.params.const_daily_nominal_distance * 2;
+            }
+        $scope.cdnd=$scope.currentGame.params.const_daily_nominal_distance;
+            $scope.calculateKMStimati();
+            $scope.calculateKMTarget();
                 return;
             }
             $scope.cdnd=0;
