@@ -320,7 +320,6 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         };
 
         $scope.saveLegs = function () {
-
             // logic to modify legs in order.
             $scope.legs[0].polyline = '';
 
@@ -387,10 +386,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
                 // save the new ordered list only when all promise get resolved.
                 $scope.currentPath.legs = $scope.legs;
-
-                DataService.updateStopsPosition($scope.currentPath).then(
+                DataService.editData('legs', $scope.currentPath).then(
+                // DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
                         console.log('Salvataggio dati a buon fine.');
+                        //$scope.save();
                     }, function () {
                         alert('Errore nel salvataggio delle tappe.');
                     }
