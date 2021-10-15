@@ -860,7 +860,7 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Collections.sort(legs);
-		int sumValue = 0;
+//		int sumValue = 0;
 		try {
 			storage.removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, itineraryId);
 //			storage.removeMultimediaContentByItineraryId(ownerId, game.getInstituteId(), 
@@ -869,11 +869,11 @@ public class GamificationController extends AuthController {
 				leg.setPedibusGameId(pedibusGameId);
 				leg.setItineraryId(itineraryId);
 				leg.setOwnerId(ownerId);
-				if (sum != null && sum) {
-					sumValue += leg.getScore();
-					leg.setScore(sumValue);
-				}
-				storage.savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
+//				if (sum != null && sum) {
+//					sumValue += leg.getScore();
+//					leg.setScore(sumValue);
+//				}
+				storage.savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
 			}
 			if (logger.isInfoEnabled()) {
 				logger.info(String.format("updatePedibusItineraryLegs[%s]: %s", ownerId, itineraryId));
