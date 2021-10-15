@@ -860,19 +860,22 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Collections.sort(legs);
-//		int sumValue = 0;
+		int sumValue = 0;
 		try {
-			storage.removePedibusItineraryLegByItineraryId(ownerId, pedibusGameId, itineraryId);
-//			storage.removeMultimediaContentByItineraryId(ownerId, game.getInstituteId(), 
-//					game.getSchoolId(), itineraryId);
+			List<PedibusItineraryLeg> actualLegs = storage.getPedibusItineraryLegsByItineraryId(itineraryId);
+			for(PedibusItineraryLeg leg : actualLegs) {
+				if(!containsLeg(leg, legs)) {
+					storage.removePedibusItineraryLeg(ownerId, leg.getObjectId());
+				}
+			}
 			for (PedibusItineraryLeg leg: legs) {
 				leg.setPedibusGameId(pedibusGameId);
 				leg.setItineraryId(itineraryId);
 				leg.setOwnerId(ownerId);
-//				if (sum != null && sum) {
-//					sumValue += leg.getScore();
-//					leg.setScore(sumValue);
-//				}
+				if (sum != null && sum) {
+					sumValue += leg.getScore();
+					leg.setScore(sumValue);
+				}
 				storage.savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
 			}
 			if (logger.isInfoEnabled()) {
@@ -882,6 +885,15 @@ public class GamificationController extends AuthController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 		return legs;
+	}
+	
+	private boolean containsLeg(PedibusItineraryLeg leg, List<PedibusItineraryLeg> legs) {
+		for(PedibusItineraryLeg l: legs) {
+			if(leg.getObjectId().equals(l.getObjectId())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/legs/positions", method = RequestMethod.PUT)
