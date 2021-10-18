@@ -172,7 +172,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.$parent.selectedTab = 'info';
     })
 
-    .controller('LegsListCtrl', function ($scope, $state, $stateParams, $rootScope, $q, createDialog, DataService, drawMapLine) {
+    .controller('LegsListCtrl', function ($scope, $state, $stateParams, $timeout, $q, createDialog, DataService, drawMapLine) {
         $scope.$parent.selectedTab = 'legs';
         $scope.directionsService = new google.maps.DirectionsService();
 
@@ -323,7 +323,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.saveLegs = function () {
             // logic to modify legs in order.
             $scope.legs[0].polyline = '';
-
+            const delay = t => new Promise(resolve => setTimeout(resolve, t));
             var promises = [];
             for (var i = 1; i < $scope.legs.length; i++) {
 
@@ -339,9 +339,10 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     points[1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
 
                     // encode polyline
-                    var promise = drawMapLine.createEncodings(points);
-                    promises.push(promise);
-
+                    // var promise = drawMapLine.createEncodings(points);
+                    //delay(i*1000).then(() => promises.push(drawMapLine.createEncodings(points)));
+                    // promises.push(promise);
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000)).then(() => drawMapLine.createEncodings(points)))
                 } else { // drive, walk modes
                     var start = new google.maps.LatLng(newPrevious.geocoding[1], newPrevious.geocoding[0]);
                     var end = new google.maps.LatLng(reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]);
@@ -351,8 +352,11 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                         travelMode: drawMapLine.selectMode(reOrderLeg.transport)
                     };
                     // calculate new route between 'new preious' -> 'next leg and update polyline.'
-                    var promise = drawMapLine.route(request);
-                    promises.push(promise);
+                    // var promise = setTimeout(drawMapLine.route(request),i*1000);
+                    //delay(i*1000).then(() => promises.push(drawMapLine.route(request)));
+                    // promises.push(promise);
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000)).then(() => drawMapLine.route(request)))
+
                 }
             }
 
