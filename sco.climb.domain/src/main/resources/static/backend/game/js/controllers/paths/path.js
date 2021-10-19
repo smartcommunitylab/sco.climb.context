@@ -172,7 +172,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.$parent.selectedTab = 'info';
     })
 
-    .controller('LegsListCtrl', function ($scope, $state, $stateParams, $timeout, $q, createDialog, DataService, drawMapLine) {
+    .controller('LegsListCtrl', function ($scope, $state, $stateParams,usSpinnerService, $timeout, $q, createDialog, DataService, drawMapLine) {
         $scope.$parent.selectedTab = 'legs';
         $scope.directionsService = new google.maps.DirectionsService();
 
@@ -322,6 +322,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
         $scope.saveLegs = function () {
             // logic to modify legs in order.
+            usSpinnerService.spin('spinner-1');
+            $scope.spinner=true;
             $scope.legs[0].polyline = '';
             const delay = t => new Promise(resolve => setTimeout(resolve, t));
             var promises = [];
@@ -395,11 +397,20 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 // DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
                         console.log('Salvataggio dati a buon fine.');
+                        usSpinnerService.stop('spinner-1');
+                        $scope.spinner=false;
+
                         //$scope.save();
                     }, function () {
                         alert('Errore nel salvataggio delle tappe.');
+                        usSpinnerService.stop('spinner-1');
+                        $scope.spinner=false;
+
                     }
                 );
+            },function(err){
+                usSpinnerService.stop('spinner-1');
+                $scope.spinner=false;
             });
         }
         $scope.saveOrder = function () {
