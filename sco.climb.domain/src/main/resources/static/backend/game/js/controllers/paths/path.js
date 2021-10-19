@@ -345,20 +345,33 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 if (reOrderLeg.transport.toLowerCase() == 'plane' || reOrderLeg.transport.toLowerCase() == 'boat') {
                     // define polyline
                     var points = new Array();
-                    points[0] = [newPrevious.geocoding[1], newPrevious.geocoding[0]];
-                    points[1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
-                    matrixArray.push({point0:points[0],point1:points[1]})
+                    points.push([newPrevious.geocoding[1], newPrevious.geocoding[0]]);
+                    for (var k=0;k<reOrderLeg.additionalPoints.length;k++)
+                    {
+                        points.push([reOrderLeg.additionalPoints[k].latitude, reOrderLeg.additionalPoints[k].longitude])
+                    }
+                    points.push([reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]]);
+                    matrixArray.push(points)
                     request.push({});
                     // encode polyline
                     promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
-                         drawMapLine.createEncodings([matrixArray[i-1].point0,matrixArray[i-1].point1])
+                         drawMapLine.createEncodings(matrixArray[i-1])
                     ))
                 } else { // drive, walk modes
                     var start = new google.maps.LatLng(newPrevious.geocoding[1], newPrevious.geocoding[0]);
                     var end = new google.maps.LatLng(reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]);
+                    const waypts = [];
+                    for (var k=0;k<reOrderLeg.additionalPoints.length;k++)
+                        {
+                            waypts.push({
+                                location: new google.maps.LatLng(reOrderLeg.additionalPoints[k].latitude, reOrderLeg.additionalPoints[k].longitude),
+                                stopover: true,
+                              }); 
+                        }
                     request.push({
                         origin: start,
                         destination: end,
+                        waypoints: waypts,
                         travelMode: JSON.parse(JSON.stringify(drawMapLine.selectMode(reOrderLeg.transport)))
                     });
                     matrixArray.push({});
