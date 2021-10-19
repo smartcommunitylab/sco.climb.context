@@ -1353,4 +1353,14 @@ rotate
 	min-height:50px;
 	line-height:50px;
 }
+.spinner-container {
+	width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background: black;
+    left: 0;
+    opacity: 0.5;
+}
  
