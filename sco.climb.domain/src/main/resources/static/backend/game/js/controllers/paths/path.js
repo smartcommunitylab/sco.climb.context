@@ -325,6 +325,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             $scope.legs[0].polyline = '';
             const delay = t => new Promise(resolve => setTimeout(resolve, t));
             var promises = [];
+            var request =[];
+            var matrixArray =[];
             for (var i = 1; i < $scope.legs.length; i++) {
 
                 // for each leg modify the polyline.
@@ -334,29 +336,33 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 if (reOrderLeg.transport.toLowerCase() == 'plane' || reOrderLeg.transport.toLowerCase() == 'boat') {
                     // define polyline
                     var points = new Array();
-
                     points[0] = [newPrevious.geocoding[1], newPrevious.geocoding[0]];
-                    points[1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
-
+                    if (newPrevious.additionalPoints)
+                    {
+                        for (k=0;k<newPrevious.additionalPoints.length;k++){
+                            points.push[newPreviousadditionalPoints[k].latitude, newPrevious.additionalPoints[k].longitude]
+                        }
+                    }
+                    points[points.length-1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
+                    matrixArray.push(points)
+                    request.push({});
                     // encode polyline
-                    // var promise = drawMapLine.createEncodings(points);
-                    //delay(i*1000).then(() => promises.push(drawMapLine.createEncodings(points)));
-                    // promises.push(promise);
-                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000)).then(() => drawMapLine.createEncodings(points)))
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
+                         drawMapLine.createEncodings(points)
+                    ))
                 } else { // drive, walk modes
                     var start = new google.maps.LatLng(newPrevious.geocoding[1], newPrevious.geocoding[0]);
                     var end = new google.maps.LatLng(reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]);
-                    var request = {
+                    request.push({
                         origin: start,
                         destination: end,
-                        travelMode: drawMapLine.selectMode(reOrderLeg.transport)
-                    };
+                        travelMode: JSON.parse(JSON.stringify(drawMapLine.selectMode(reOrderLeg.transport)))
+                    });
+                    matrixArray.push({});
                     // calculate new route between 'new preious' -> 'next leg and update polyline.'
-                    // var promise = setTimeout(drawMapLine.route(request),i*1000);
-                    //delay(i*1000).then(() => promises.push(drawMapLine.route(request)));
-                    // promises.push(promise);
-                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000)).then(() => drawMapLine.route(request)))
-
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
+                        drawMapLine.route(request[i-1]))
+                        )
                 }
             }
 
