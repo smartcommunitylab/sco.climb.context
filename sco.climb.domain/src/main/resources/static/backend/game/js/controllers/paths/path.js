@@ -337,18 +337,12 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     // define polyline
                     var points = new Array();
                     points[0] = [newPrevious.geocoding[1], newPrevious.geocoding[0]];
-                    if (newPrevious.additionalPoints)
-                    {
-                        for (k=0;k<newPrevious.additionalPoints.length;k++){
-                            points.push[newPreviousadditionalPoints[k].latitude, newPrevious.additionalPoints[k].longitude]
-                        }
-                    }
-                    points[points.length-1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
-                    matrixArray.push(points)
+                    points[1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
+                    matrixArray.push({point0:points[0],point1:points[1]})
                     request.push({});
                     // encode polyline
                     promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
-                         drawMapLine.createEncodings(points)
+                         drawMapLine.createEncodings([matrixArray[i-1].point0,matrixArray[i-1].point1])
                     ))
                 } else { // drive, walk modes
                     var start = new google.maps.LatLng(newPrevious.geocoding[1], newPrevious.geocoding[0]);
