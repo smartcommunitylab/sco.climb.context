@@ -223,6 +223,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     DataService.deleteStopFromItinerary($scope.currentPath, leg).then(
                                         /*DataService.editData('legs', $scope.currentPath).then(*/
                                         function () {
+                                            $scope.saveLegs().then(function(){
                                             console.log('Salvataggio dati a buon fine.');
                                             createDialog('templates/modals/leg-order-saved.html', {
                                                 id: 'leg-order-saved',
@@ -232,7 +233,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                                 }
                                             }
                                             )
-                                            $scope.saveLegs();
+                                        })
+                                            // $scope.saveLegs();
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
                                         }
@@ -263,6 +265,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 /*                                    DataService.editData('legs', $scope.currentPath).then(
 */                                        function () {
+    $scope.saveLegs().then(function(){
                                             createDialog('templates/modals/leg-order-saved.html', {
                                                 id: 'leg-order-saved',
                                                 title: 'Modifica percorsi sulla mappa',
@@ -271,7 +274,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                                 }
                                             }
                                             )
-                                            $scope.saveLegs();
+                                        })
+                                            // $scope.saveLegs();
                                             console.log('Salvataggio dati a buon fine.');
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
@@ -297,6 +301,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 /*                            DataService.editData('legs', $scope.currentPath).then(
 */                                function () {
+    $scope.saveLegs().then(function(){
                                     createDialog('templates/modals/leg-order-saved.html', {
                                         id: 'leg-order-saved',
                                         title: 'Modifica percorsi sulla mappa',
@@ -305,8 +310,9 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                         }
                                     }
                                     )
+                                })
                                     //After deleting recalculate values
-                                    $scope.saveLegs();
+                                    // $scope.saveLegs();
                                     console.log('Salvataggio dati a buon fine.');
                                 }, function () {
                                     alert('Errore nel salvataggio delle tappe.');
@@ -322,6 +328,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
         $scope.saveLegs = function () {
             // logic to modify legs in order.
+            var deferred = $q.defer();
             usSpinnerService.spin('spinner-1');
             $scope.spinner=true;
             $scope.legs[0].polyline = '';
@@ -399,37 +406,43 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                         console.log('Salvataggio dati a buon fine.');
                         usSpinnerService.stop('spinner-1');
                         $scope.spinner=false;
-
+                        deferred.resolve();
                         //$scope.save();
                     }, function () {
                         alert('Errore nel salvataggio delle tappe.');
                         usSpinnerService.stop('spinner-1');
                         $scope.spinner=false;
+                        deferred.reject();
 
                     }
                 );
             },function(err){
                 usSpinnerService.stop('spinner-1');
                 $scope.spinner=false;
+                deferred.reject();
             });
+            return deferred.promise;
         }
         $scope.saveOrder = function () {
             if ($scope.enableOrder) {
                 $scope.currentPath.legs = $scope.legs;
                 DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
-                        console.log('Salvataggio ordine tappe a buon fine.');
-                        $scope.enableOrder = false;
-                        createDialog('templates/modals/leg-order-saved.html', {
-                            id: 'leg-order-saved',
-                            title: 'Tappe riordinate. Controlla i dati delle tappe coinvolte!',
-                            noCancelBtn: true,
-                            success: {
-                                label: 'Conferma', fn: function () {
-                                    $scope.saveLegs();
+                        $scope.saveLegs().then(function(){
+                            console.log('Salvataggio ordine tappe a buon fine.');
+                            $scope.enableOrder = false;
+                            createDialog('templates/modals/leg-order-saved.html', {
+                                id: 'leg-order-saved',
+                                title: 'Tappe riordinate. Controlla i dati delle tappe coinvolte!',
+                                noCancelBtn: true,
+                                success: {
+                                    label: 'Conferma', fn: function () {
+                                        
+                                    }
                                 }
-                            }
+                            });
                         });
+
                     }, function () {
                         alert('Errore nel salvataggio dell\'ordine tappe.');
                     }
