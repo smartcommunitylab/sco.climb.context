@@ -288,7 +288,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
                     },
                     score: '',
                     polyline: '',         // NEW: stringa contenente il percorso compreso tra la tappa e la sua precedente (nel 1° LEG sarà vuota, ovviamente)
-                    transport: 'foot',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
+                    transport: ($scope.legs.length>0)?'foot':'plane',     // NEW: mezzo con cui si arriva alla tappa (foot [default], plane, boat)
                     position: $scope.legs.length
                 };
                 $scope.saveData = DataService.saveData;

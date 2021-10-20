@@ -330,6 +330,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             // logic to modify legs in order.
             var deferred = $q.defer();
             usSpinnerService.spin('spinner-1');
+            if ($scope.legs[0]){
             $scope.spinner=true;
             $scope.legs[0].polyline = '';
             const delay = t => new Promise(resolve => setTimeout(resolve, t));
@@ -377,8 +378,17 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     matrixArray.push({});
                     // calculate new route between 'new preious' -> 'next leg and update polyline.'
                     promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
-                        drawMapLine.route(request[i-1]))
-                        )
+                        drawMapLine.route(request[i-1]).then(function(ret){
+                            return ret;
+                        },function(err){
+                        if (err=='ZERO_RESULTS')
+                            return drawMapLine.createEncodings([[request[i-1].origin.lat(), request[i-1].origin.lng()],[request[i-1].destination.lat(), request[i-1].destination.lng()]]).then(function(ret){
+                                return {value:ret,type:'plane'};
+                            })
+                         else 
+                            return err;
+                        })))
+                        
                 }
             }
 
@@ -389,7 +399,12 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     if (response[i].routes) { //(walk, drive)
                         $scope.legs[i + 1].polyline = response[i].routes[0].overview_polyline;
                     } else {   // response can be flat line (boat,plane).
-                        $scope.legs[i + 1].polyline = response[i];
+                        if (response[i].type)
+                        {
+                            $scope.legs[i + 1].polyline = response[i].value;
+                            $scope.legs[i + 1].transport=response[i].type;
+                        }
+                        else $scope.legs[i + 1].polyline = response[i];
                     }
                     var decodedPath = google.maps.geometry.encoding.decodePath($scope.legs[i + 1].polyline);
                     var polyPath = new google.maps.Polyline({
@@ -434,6 +449,9 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 $scope.spinner=false;
                 deferred.reject();
             });
+        } else {
+            deferred.resolve();
+        }
             return deferred.promise;
         }
         $scope.saveOrder = function () {
