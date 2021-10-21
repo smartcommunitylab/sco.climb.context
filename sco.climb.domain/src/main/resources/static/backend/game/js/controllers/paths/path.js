@@ -381,7 +381,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                         drawMapLine.route(request[i-1]).then(function(ret){
                             return ret;
                         },function(err){
-                        if (err=='ZERO_RESULTS')
+                        if ((err=='ZERO_RESULTS')||(err=='MAX_ROUTE_LENGTH_EXCEEDED'))
                             return drawMapLine.createEncodings([[request[i-1].origin.lat(), request[i-1].origin.lng()],[request[i-1].destination.lat(), request[i-1].destination.lng()]]).then(function(ret){
                                 return {value:ret,type:'plane'};
                             })
