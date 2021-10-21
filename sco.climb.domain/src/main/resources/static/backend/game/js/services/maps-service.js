@@ -342,7 +342,7 @@ angular.module('MapsService', [])
             else
                 return google.maps.geometry.encoding.encodePath(polyPath.getPath());
         };
-        this.getCustomWayPoint = function () {
+        this.getCustomWayPoint = function (polyline) {
             var customWayPoints = [];
             var directions = directionsDisplay.getDirections();
             if (directions) {
@@ -353,6 +353,20 @@ angular.module('MapsService', [])
                         longitude: tmp[i].location.lng()
                     };
                     customWayPoints[i] = obj;
+                }
+            } else {
+                //if not directions and is boat or plane get customWayPoints from decode
+                if  ((travelType === 'plane') || (travelType === 'boat')){
+                    var decoded = google.maps.geometry.encoding.decodePath(polyline);
+                    if (decoded.length>2){
+                        for (var k = 1; k< decoded.length-1; k++) {
+                            var obj = {
+                                latitude: decoded[k].lat(),
+                                longitude: decoded[k].lng()
+                            };
+                            customWayPoints.push(obj);
+                        }
+                    }
                 }
             }
             return customWayPoints;

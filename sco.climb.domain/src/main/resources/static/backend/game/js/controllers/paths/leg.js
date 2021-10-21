@@ -412,7 +412,7 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             }
             if (savedLed.position > 0) {
                 savedLed.polyline = drawMapLeg.getPathPolyline();     // ottiene la polyline dal servizio
-                savedLed.additionalPoints = drawMapLeg.getCustomWayPoint();
+                savedLed.additionalPoints = drawMapLeg.getCustomWayPoint(savedLed.polyline);
             }
             //change score from km to meters (better to use a local variable)
             //add all the previous
