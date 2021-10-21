@@ -569,8 +569,8 @@ angular.module('MapsService', [])
                 plat = lat;
                 plng = lng;
             }
-            // close polyline
-            encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
+            // close polyline...why?
+            //encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
             deferred.resolve(encoded_points);
 
             return deferred.promise;
