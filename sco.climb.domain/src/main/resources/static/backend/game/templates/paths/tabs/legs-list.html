@@ -20,7 +20,7 @@
 		ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
 		<a class="btn btn-info btn-margin button-blue"
 			ui-sref="root.path.leg({idLeg: ''})"
-			ng-disabled="currentGame.deployed">Crea nuova <i
+			ng-disabled="currentGame.deployed || enableOrder">Crea nuova <i
 			class="fa fa-plus-circle"></i></a> <a class="btn button-blue"
 			ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}"
 			ng-click="saveOrder()" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || currentGame.deployed">{{enableOrder
