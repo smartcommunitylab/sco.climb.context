@@ -464,7 +464,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                             $scope.enableOrder = false;
                             createDialog('templates/modals/leg-order-saved.html', {
                                 id: 'leg-order-saved',
-                                title: 'Tappe riordinate. Controlla i dati delle tappe coinvolte!',
+                                title: 'Tappe riordinate!',
                                 noCancelBtn: true,
                                 success: {
                                     label: 'Conferma', fn: function () {
