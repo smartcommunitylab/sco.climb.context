@@ -43,7 +43,7 @@
 							href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}/{{path.objectId}}/info"
 							ng-click="$parent.$parent.$parent.pathsModified = true"
 							class="interact-blue">
-							<h5> <span ng-hide="enableOrder">{{$index + 1}}.</span> {{leg.name}}</h5>
+							<h5> <span>{{$index + 1}}.</span> {{leg.name}}</h5>
 						</a> <img class="path-img" ng-src="{{leg.imageUrl}}"
 							alt="{{leg.name}}" ng-if="leg.imageUrl">
 						<div class="load-img" ng-if="!leg.imageUrl" ui-sref="root.path.leg({idLeg: leg.objectId})"

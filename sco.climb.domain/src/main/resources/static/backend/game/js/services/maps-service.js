@@ -345,7 +345,7 @@ angular.module('MapsService', [])
         this.getCustomWayPoint = function (polyline) {
             var customWayPoints = [];
             var directions = directionsDisplay.getDirections();
-            if (directions) {
+            if (directions && (travelType != 'plane') && (travelType != 'boat')) {
                 var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
                 for (var i = 0; i < tmp.length; i++) {
                     var obj = {
