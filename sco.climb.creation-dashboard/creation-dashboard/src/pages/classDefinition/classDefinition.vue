@@ -179,8 +179,8 @@ export default {
   methods: {
     ...mapActions("navigation",["changePageByName","nextStep"]),
     goHome() {
-      this.$router.push("home");
-
+      // this.$router.push("home");
+      this.changePageByName("home");
     },
     goOnHab() {
       // this.changePageByName("habitsDefinition");
@@ -236,7 +236,11 @@ export default {
         return;
       }
       let tempArr = this.schoolClasses.map((x) => {
-        return { className: x.className, students: Array.from(Array(Number(x.classNum)).keys())};
+        let studentsArray=[];
+        for (let k=0;k<Number(x.classNum);k++){
+          this.schoolClasses.students[k]?students.push(this.schoolClasses.students[k]):students.push(k)
+        }
+        return { className: x.className, students: studentsArray,classNum:x.classNum};
       });
       this.createClass(tempArr);
       this.nextStep();

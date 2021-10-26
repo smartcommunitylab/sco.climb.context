@@ -48,6 +48,16 @@ const actions = {
       dispatch('alert/error', "Passo non ancora accessibile", { root: true });
     }
   },
+  prevStep({ commit,state,dispatch }) {
+    var pageFound = state.items.find(page => page.step === (state.currentStep-1))
+    if (pageFound) {
+      router.push(pageFound.href);
+      commit('changePage', pageFound);
+      } else {
+        dispatch('alert/error', "Pagina non trovata", { root: true });
+
+      }
+  },
   nextStep({ commit,state,dispatch }) {
     var pageFound = state.items.find(page => page.step === (state.currentStep+1))
     if (pageFound) {
@@ -58,15 +68,20 @@ const actions = {
 
       }
   },
-  changePageByName({ commit,state,dispatch }, pageName) {
+  changePageByName({ commit,state }, pageName) {
     var pageFound = state.items.find(page => page.href === pageName)
-    if (pageFound) {
-      router.push(pageFound.href);
-    commit('changePage', pageFound);
-    } else {
-      dispatch('alert/error', "Pagina non trovata", { root: true });
-
+    if (!pageFound)
+       {
+        pageFound ={
+        step: 0,
+        text: "Home",
+        class: "home",
+        href: "home"
+      }
+      //commit('initNavigation');
     }
+      router.push(pageFound.href);
+      commit('changePage', pageFound);
   }, 
   logout({ commit }) {
     commit('logout');
@@ -80,8 +95,15 @@ const mutations = {
       if (state.currentStep > state.lastStep)
           state.lastStep = state.currentStep
   },
+  initNavigation(state) {
+    state.currentStep = 0;
+    state.lastStep=0;
+    state.page = null;
+     state.items = JSON.parse(JSON.stringify(items));
+  },
   logout(state) {
     state.currentStep = 0;
+    state.lastStep=0;
     state.page = null;
     state.items = JSON.parse(JSON.stringify(items));
   }

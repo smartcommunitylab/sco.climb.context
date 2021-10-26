@@ -11,12 +11,12 @@
                   Abitudini di mobilità degli alunni
 
                 </h2>
-                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                <!-- <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
                   {{gameclass.className}}
                   <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
                     {{student}}
                   </span>
-                </div>
+                </div> -->
                 </v-row
               >
               <v-row> <v-col cols="12"></v-col></v-row>
@@ -532,6 +532,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("navigation",["prevStep","nextStep"]),
     initHabitsArray: function () {
       if (this.currentGame.habitsDefinition == null) {
         this.habitsData.habits.push({
@@ -646,7 +647,7 @@ export default {
       ) {
         this.$refs.form.validate();
         this.createHabits(this.habitsData);
-        this.$router.push("routeSuggestion");
+        //this.$router.push("routeSuggestion");
         this.nextStep();
       } else if (this.isInputsDataValid != true) {
         this.snackBarText =
@@ -663,7 +664,8 @@ export default {
       }
     },
     goToClassDefinition() {
-      this.$router.push("classDefinition");
+      this.prevStep();
+      //this.$router.push("classDefinition");
     },
   },
   mounted() {

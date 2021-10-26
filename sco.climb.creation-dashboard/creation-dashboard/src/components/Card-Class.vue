@@ -209,13 +209,12 @@
 
     
     <v-expand-transition>
-      <div v-show="show">
-
+      <div v-if="show">
         <v-card-text>
           <template v-if="schoolClass.classNum>0">
             <v-row>
               <v-col cols="3" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">
-                <v-text-field :prefix="(index+1)" :placeholder="$t('cardClass.inputNickname')">alunno</v-text-field>
+                <v-text-field :prefix="String(index+1)" :placeholder="$t('cardClass.inputNickname')">alunno</v-text-field>
               </v-col>
             </v-row>
           </template>
@@ -265,6 +264,7 @@ export default {
   computed: {
     ...mapState("game", ["currentGame"]),
   },
+
   methods: {
     onDeleteBtnClick() {
       this.$emit("removeClassCard", this.cardIdx);
