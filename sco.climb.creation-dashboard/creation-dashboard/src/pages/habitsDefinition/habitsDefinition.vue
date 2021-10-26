@@ -9,7 +9,15 @@
               <v-row
                 ><h2 class="font-weight-regular">
                   Abitudini di mobilità degli alunni
-                </h2></v-row
+
+                </h2>
+                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                  {{gameclass.className}}
+                  <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
+                    {{student}}
+                  </span>
+                </div>
+                </v-row
               >
               <v-row> <v-col cols="12"></v-col></v-row>
               <v-row

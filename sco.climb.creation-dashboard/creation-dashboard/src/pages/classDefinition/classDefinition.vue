@@ -147,7 +147,7 @@
         :absolute="true"
         text
         class="imFab"
-        @click="goOnHab()">
+        @click="goNext()">
         <span>Salva e prosegui</span>
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -236,11 +236,12 @@ export default {
         return;
       }
       let tempArr = this.schoolClasses.map((x) => {
-        return { className: x.className, students: x.students };
+        return { className: x.className, students: Array.from(Array(Number(x.classNum)).keys())};
       });
       this.createClass(tempArr);
-      this.$router.push("habitsDefinition");
-           this.changePageByName("habitsDefinition");
+      this.nextStep();
+      // this.$router.push("habitsDefinition");
+      //      this.changePageByName("habitsDefinition");
     },
   },
   mounted() {

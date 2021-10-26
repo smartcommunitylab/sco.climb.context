@@ -198,7 +198,6 @@ export default {
   methods: {
     ...mapActions("navigation",["changePageByName","nextStep"]),
         claDef() {
-
           //  this.changePageByName("classDefinition");
           this.nextStep();
     },
