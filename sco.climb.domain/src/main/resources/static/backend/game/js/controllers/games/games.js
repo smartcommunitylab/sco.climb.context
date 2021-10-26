@@ -821,6 +821,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
         
         $scope.calculateKMTarget = function () {
+            $scope.changed();
             if ($scope.currentGame && $scope.currentGame.params) {
                 var km = $scope.kmStimati;
                 if ($scope.currentGame.params.km_bonus) 
