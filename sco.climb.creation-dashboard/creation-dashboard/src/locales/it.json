@@ -20,7 +20,7 @@
     },
   "classDefinition": {
     "title": "Classi partecipanti",
-    "description": "<h4>Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
+    "description": "Inserendo il numero totale degli alunni verrà generata una lista di campi dove potranno essere inseriti i nicknames scelti dagli alunni e che servirà per la compilazione quotidiana del diario di mobilità. Questa modifica non è obbligatoria e può essere fatta a percorso già iniziato."
   },
   "cardClass": {
     "promptClass": "Classe",
@@ -28,6 +28,10 @@
     "promptNum": "Totale alunni",
     "inputNum": "numero totale alunni partecipanti",
     "inputNickname":"Nickname"
+  },
+  "habitsDefinition": {
+    "title": "Abitudini di mobilità",
+    "description": "Come si recano a scuola attualmente gli alunni che intendono partecipare al percorso Kids Go Green?"
   },
   "global": {
     "numStud": "Totale alunni",

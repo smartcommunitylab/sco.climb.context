@@ -51,7 +51,7 @@
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
-              <v-btn class="float-left" @click="navigateHome()" color="primary">Indietro</v-btn>
+              <v-btn class="float-left" @click="goHome()" color="primary">Indietro</v-btn>
             </div>
             <div class="col-sm-5">
               <v-btn class="float-right" @click="goNext()" color="primary">Avanti</v-btn>
@@ -115,7 +115,8 @@
     <div class="text-center ma-2">
       <v-snackbar
       v-model="snackbar"
-      :timeout="2000">
+      :timeout="2000"
+      transition="scroll-y-reverse-transition">
         {{ snackBarText }}
         <template v-slot:action="{ attrs }">
           <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
@@ -133,7 +134,7 @@
         left
         :absolute="true"
         text
-        class="homeStep"
+        class="goBack"
         @click="goHome()">
         <v-icon small>home</v-icon>
         <span>Torna alla home</span>
@@ -178,10 +179,6 @@ export default {
   },
   methods: {
     ...mapActions("navigation",["changePageByName","nextStep"]),
-    goHome() {
-      this.$router.push("home");
-
-    },
     goOnHab() {
       // this.changePageByName("habitsDefinition");
        this.nextStep();
@@ -192,7 +189,7 @@ export default {
         return;
       }
       if (this.schoolClasses?.length === 1) {
-        this.snackBarText = "Almeno una classe deve essere definita";
+        this.snackBarText = "Almeno una classe deve essere definita!!!";
         this.snackbar = true;
         return;
       }
@@ -216,7 +213,7 @@ export default {
     addNewClass() {
       this.schoolClasses.push(this.createCardClassObj());
     },
-    navigateHome() {
+    goHome() {
       this.$router.push("home");
     },
     checkFormValidations() {
@@ -236,6 +233,7 @@ export default {
         return;
       }
       let tempArr = this.schoolClasses.map((x) => {
+        
         return { className: x.className, students: Array.from(Array(Number(x.classNum)).keys())};
       });
       this.createClass(tempArr);
@@ -265,15 +263,12 @@ export default {
   padding: 0 !important;
   margin: 0 !important;
 }
+
 .c-card-layout {
   background: #f4f2f2;
   border-radius: 8px;
 }
-.homeStep {
-  bottom: 0;
-  position: fixed;
-  margin: 0 0 16px 16px;
-}
+
 .plusFab {
   text-align: center;
 }

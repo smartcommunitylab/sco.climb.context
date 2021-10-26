@@ -213,11 +213,17 @@
 
         <v-card-text>
           <template v-if="schoolClass.classNum>0">
+            <v-form ref="form" lazy-validation>
             <v-row>
               <v-col cols="3" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">
-                <v-text-field :prefix="(index+1)" :placeholder="$t('cardClass.inputNickname')">alunno</v-text-field>
+                <v-text-field
+                v-model="schoolClass.students[index]"
+                :prefix="(index+1)"
+                :placeholder="$t('cardClass.inputNickname')"
+                :rules="nicknameRules">alunno</v-text-field>
               </v-col>
             </v-row>
+            </v-form>
           </template>
           <template v-else>
             <div>

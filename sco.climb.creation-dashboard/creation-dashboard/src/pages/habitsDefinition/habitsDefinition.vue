@@ -1,5 +1,5 @@
 <template>
-<div>
+<!-- <div>
   <v-form ref="form" v-model="valid">
     <v-container style="height: 1000px" class="grey lighten-5">
       <v-row no-gutters>
@@ -11,12 +11,6 @@
                   Abitudini di mobilità degli alunni
 
                 </h2>
-                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
-                  {{gameclass.className}}
-                  <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
-                    {{student}}
-                  </span>
-                </div>
                 </v-row
               >
               <v-row> <v-col cols="12"></v-col></v-row>
@@ -488,7 +482,153 @@
       </div>
     </v-container>
   </v-form>
- </div> 
+ </div>  -->
+
+  <v-container 
+  :fluid="true"
+  class="pa-0">
+
+    <v-row class="mt-2">
+      <v-col offset="2" cols="8">
+        <v-row>
+          <v-col cols="12" align-self="center" class="pa-0 ml-0">
+            <div class="d-inline-block">
+              <p class="titleFont"
+                v-html="$t('habitsDefinition.title')">
+              </p>
+              <p
+                v-html="$t('habitsDefinition.description')">
+              </p>
+            </div>
+                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                  {{className}}
+                  <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
+                    {{student}}
+                  </span>
+                </div>
+
+          </v-col>
+        </v-row>  
+      </v-col>        
+    </v-row>
+
+    <v-row>
+      <v-col offset="2" cols="8" class="px-0">
+        <v-row>
+          <v-col cols="12" align-self="center" class="px-0 pb-0 mb-0">
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    
+                  </th>
+                  <th class="text-center">
+                    In bici
+                  </th>
+                  <th class="text-center">
+                    A piedi
+                  </th>
+                  <th class="text-center">
+                    Trasporto pubblico
+                  </th>
+                  <th class="text-center">
+                    Pedibus
+                  </th>
+                  <th class="text-center">
+                    In auto fino alla piazzola
+                  </th>
+                  <th class="text-center">
+                    Car pooling
+                  </th>
+                  <th class="text-center">
+                    In auto fino a scuola
+                  </th>
+                  <th class="text-center">
+                    TOTALE ALUNNI
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                  <td>{{ gameclass.className }}</td>
+                  <td auto-grow>
+                    <v-text-field placeholder="0" class="inputField" auto-grow suffix="/0"></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0" class="inputField" auto-grow></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0" auto-grow></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0"></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0"></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0"></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field placeholder="0"></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field ></v-text-field>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          </v-col>
+        </v-row>
+      </v-col>        
+    </v-row>
+
+    <div class="text-center ma-2">
+      <v-snackbar
+      v-model="snackbar"
+      :timeout="2000"
+      transition="scroll-y-reverse-transition">
+        {{ snackBarText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+            Chiudi
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
+
+      <v-btn
+        color="primary"
+        outlined
+        rounded
+        bottom
+        left
+        :absolute="true"
+        text
+        class="goBack"
+        @click="goBackClass()">
+        <v-icon small>mdi-chevron-left</v-icon>
+        <span>Indietro</span>
+      </v-btn>
+    
+      <v-btn
+        color="secondary"
+        rounded
+        bottom
+        right
+        :absolute="true"
+        text
+        class="imFab"
+        @click="goOnHab()">
+        <span>Salva e prosegui</span>
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+
+  </v-container>
+
 </template>
 
 <script>
@@ -510,6 +650,48 @@ export default {
         pickerEnd: 0,
         diffDays: 0,
       },
+        desserts: [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+          },
+        ],
       row: null,
       modalStart: false,
       isAtLeastOneCheckboxChecked: false,
@@ -662,7 +844,7 @@ export default {
         this.snackbar = true;
       }
     },
-    goToClassDefinition() {
+    goBackClass() {
       this.$router.push("classDefinition");
     },
   },
@@ -691,6 +873,10 @@ export default {
 }
 .col-sm-2 {
   padding: 8px !important;
+}
+.inputField {
+  text-align: center;
+  min-width: 60%;
 }
 </style>
 

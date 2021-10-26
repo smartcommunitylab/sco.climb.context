@@ -45,11 +45,10 @@
   background-color: var(--primary);
 }
 
-.imFabOut {
+.goBack {
   bottom: 0;
   position: fixed;
-  margin: 0 0 16px 16px;
-  border: var(--primary);
+  margin: 16px 0 16px 0;
 }
 
 .fabIcon, .imFab span {
