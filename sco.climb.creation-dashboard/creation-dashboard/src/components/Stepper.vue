@@ -1,70 +1,21 @@
 <template>
-  <!--<div>
-    <v-row class="text-center">
-      <v-col col="12">
-        <v-breadcrumbs :items="items" divider="">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :href="item.href" :disabled="item.disabled" active-class="link-disabled" :class="{'actual':isActualPath(item)}">
-              <div class="col breadcrumb" :class="item.class">
-                <span>{{ item.text.toUpperCase() }}</span>
-              </div>
-            </v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-      </v-col>
-    </v-row>
-  </div>
-  <div v-show="!['home'].includes($route.name)" class="divStepper">-->
-    
     <div>
     <v-stepper alt-labels class="stepper elevation-0">
       <v-stepper-header>
         <template v-for="(item,index) in items"  >
-          <v-stepper-step :key="index" :step="item.step" @click="openStep(item.href)" :complete="item.step <= currentStep" :editable="isEditable(item)">
+          <v-stepper-step :key="index.step" :step="item.step" @click="openStep(item)" :complete="item.step <= lastStep" :editable="isEditable(item)">
           <p class="step">{{item.text}}</p>
            
         </v-stepper-step>
         <v-divider  :key="index" v-if="index < items.length - 1"></v-divider>
         </template>
-        <!-- <v-stepper-step step="1">
-          <p v-html="$t('stepper.step1')" class="step"></p>
-        </v-stepper-step>
-        <v-divider></v-divider>
-
-        <v-stepper-step step="2">
-          <p v-html="$t('stepper.step2')" class="step"></p>
-        </v-stepper-step>
-
-        <v-divider></v-divider>
-
-        <v-stepper-step step="3">
-          <p v-html="$t('stepper.step3')" class="step"></p>
-        </v-stepper-step>
-        
-        <v-divider></v-divider>
-
-        <v-stepper-step step="4">
-          <p v-html="$t('stepper.step4')" class="step"></p>
-        </v-stepper-step>
-
-        <v-divider></v-divider>
-
-        <v-stepper-step step="5">
-          <p v-html="$t('stepper.step5')" class="step"></p>
-        </v-stepper-step>
-        
-        <v-divider></v-divider>
-
-        <v-stepper-step step="6" class="step">
-          <p v-html="$t('stepper.step6')"></p>
-        </v-stepper-step> -->
       </v-stepper-header>
     </v-stepper>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Stepper",
   data() {
@@ -74,7 +25,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("navigation", ["page","items","currentStep"]),
+    ...mapState("navigation", ["page","items","currentStep","lastStep"]),
     ...mapState("game", ["currentGame"]),
     currentRouteName() {
         return this.$route.name;
@@ -82,15 +33,19 @@ export default {
   },
   created() {},
   methods: {
+    ...mapActions("navigation",["changePageByStepper"]),
+    //is the current step
     isEditable(item){
-      return item.step == this.currentStep
+      return item.step == this.lastStep
     },
-    openStep(stepHref){
-      this.$router.push(stepHref);
+    openStep(step){
+      this.changePageByStepper(step);
+      
+
     },
-    isActualPath(path){
-      return this.currentRouteName===path.href
-    },
+    // isActualPath(path){
+    //   return this.currentRouteName===path.href
+    // },
   }
 };
 </script>

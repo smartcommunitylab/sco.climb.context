@@ -192,22 +192,22 @@ export default {
   
   computed: {
     ...mapState("game", ["myGames"]),
+    ...mapState("navigation", ["items"]),
+
   },
   methods: {
+    ...mapActions("navigation",["changePageByName","nextStep"]),
         claDef() {
-           this.$router.push("classdefinition");
-           this.nextStep();
+
+          //  this.changePageByName("classDefinition");
+          this.nextStep();
     },
 
-    // goToClassDefinition() {
-    //   this.$router.push("classDefinition");
-    //   this.nextStep();
-    // },
     ...mapActions("game", {
       getAllMyGames: "getAllMyGames",
     }),
     ...mapActions("navigation", {
-      nextStep: "nextStep",
+      changePage: "changePage",
     }),
   },
   mounted() {

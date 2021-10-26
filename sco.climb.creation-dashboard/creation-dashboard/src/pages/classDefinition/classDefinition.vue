@@ -177,11 +177,15 @@ export default {
     ...mapState("game", ["currentGame"]),
   },
   methods: {
+    ...mapActions("navigation",["changePageByName","nextStep"]),
     goHome() {
       this.$router.push("home");
+
     },
     goOnHab() {
-      this.$router.push("habitsDefinition");
+      // this.changePageByName("habitsDefinition");
+       this.nextStep();
+
     },
     onCardRemoveBtnClick: function (index) {
       if (this.schoolClasses?.length <= index) {
@@ -236,7 +240,7 @@ export default {
       });
       this.createClass(tempArr);
       this.$router.push("habitsDefinition");
-      this.nextStep();
+           this.changePageByName("habitsDefinition");
     },
   },
   mounted() {

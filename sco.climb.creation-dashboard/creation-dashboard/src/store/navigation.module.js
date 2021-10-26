@@ -1,83 +1,95 @@
+import {router} from '../routes'
 
-    const items = [
+const items = [
 
-      {
-        step:1,
-        text: "Gruppo partecipanti",
-        class: "classDefinition",
-        href: "classDefinition",
-        disabled:true
-      },
-      {
-        step:2,
-        text: "Abitudine mobilitá",
-        class: "habitsDefinition",
-        href: "habitsDefinition",
-        disabled:true
-      },
-      {
-        step:3,
-        text: "Percorsi consigliati",
-        class: "routeSuggestion",
-        href: "routeSuggestion",
-        disabled:true
-      },
-      {
-        step:4,
-        text: "Creazione percorso",
-        class: "personalize",
-        href: "routeCreation",
-        disabled:true
-      },
-      {
-        step:5,
-        text: "Riepilogo",
-        class: "summary",
-        href: "summary",
-        disabled:true
-      },
-    ]
-    const state = { 
-     page: null,
-     currentStep:0,
-     items: JSON.parse(JSON.stringify(items))}
-     const actions = {
-    changePage({ commit }, page ) {
-        commit('changePage', page );
-    },
-    nextStep({commit}) {
-        commit('nextStep');
-    },
-    logout({commit}){
-        commit('logout');
+  {
+    step: 1,
+    text: "Gruppo partecipanti",
+    class: "classDefinition",
+    href: "classDefinition"
+  },
+  {
+    step: 2,
+    text: "Abitudine mobilitá",
+    class: "habitsDefinition",
+    href: "habitsDefinition"
+  },
+  {
+    step: 3,
+    text: "Percorsi consigliati",
+    class: "routeSuggestion",
+    href: "routeSuggestion"
+  },
+  {
+    step: 4,
+    text: "Creazione percorso",
+    class: "personalize",
+    href: "routeCreation"
+  },
+  {
+    step: 5,
+    text: "Riepilogo",
+    class: "summary",
+    href: "summary"
+  },
+]
+const state = {
+  page: null,
+  currentStep: 0,
+  lastStep: 0,
+  items: JSON.parse(JSON.stringify(items))
+}
+const actions = {
+  changePageByStepper({ commit,state,dispatch }, page) {
+    if (page.step <= state.lastStep) {
+      router.push(page.href);
+    commit('changePage', page);
+    } else {
+      dispatch('alert/error', "Passo non ancora accessibile", { root: true });
     }
+  },
+  nextStep({ commit,state,dispatch }) {
+    var pageFound = state.items.find(page => page.step === (state.currentStep+1))
+    if (pageFound) {
+      router.push(pageFound.href);
+      commit('changePage', pageFound);
+      } else {
+        dispatch('alert/error', "Pagina non trovata", { root: true });
+
+      }
+  },
+  changePageByName({ commit,state,dispatch }, pageName) {
+    var pageFound = state.items.find(page => page.href === pageName)
+    if (pageFound) {
+      router.push(pageFound.href);
+    commit('changePage', pageFound);
+    } else {
+      dispatch('alert/error', "Pagina non trovata", { root: true });
+
+    }
+  }, 
+  logout({ commit }) {
+    commit('logout');
+  }
 };
 
 const mutations = {
-    changePage(state, page) {
-        state.page = page;
-    },
-    nextStep(state) {
-        //check step and definition and increase in case is not defined
-        state.currentStep++;
-        // state.items.map(item => {
-        //     if (item.step===state.currentStep)
-        //         {
-        //             item.disabled=false;
-        //             state.page=item.href
-        //         }
-        // })
-    },
-    logout(state){
-        state.currentStep=0;
-        state.page=null;
-        state.items=JSON.parse(JSON.stringify(items));
-    }
+  changePage(state, page) {
+      state.page = page;
+      state.currentStep = page.step;
+      if (state.currentStep > state.lastStep)
+          state.lastStep = state.currentStep
+  },
+  logout(state) {
+    state.currentStep = 0;
+    state.page = null;
+    state.items = JSON.parse(JSON.stringify(items));
+  }
 };
 
 export const navigation = {
-    namespaced: true,
-    state,
-    actions,
-    mutations
+  namespaced: true,
+  state,
+  actions,
+  mutations
 };
