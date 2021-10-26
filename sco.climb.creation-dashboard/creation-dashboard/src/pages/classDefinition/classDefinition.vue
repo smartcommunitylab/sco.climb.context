@@ -62,7 +62,7 @@
       </v-col>
     </v-row> -->
 
-    <v-row class="mt-4">
+    <v-row class="mt-2">
       <v-col offset="2" cols="8">
         <v-row>
           <v-col cols="12" align-self="center" class="pa-0 ml-0">
@@ -85,7 +85,7 @@
           <v-col cols="12" align-self="center" class="px-0 pb-0 mb-0">
           <div class="row pa-4">
             <div
-              class="col-12 pa-0"
+              class="col-12 pb-2"
               v-for="(schoolClass, idx) in schoolClasses"
               v-bind:key="schoolClass.id"
             >
@@ -97,12 +97,25 @@
             </div>
           </div>
           </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="plusFab">
+            <v-btn
+              color="primary"
+              class="ma-auto"
+              @click="addNewClass()">
+              <v-icon>mdi-plus</v-icon>
+              <!-- <span>aggiungi classe</span> -->
+            </v-btn>
+          </v-col>
         </v-row>  
       </v-col>        
     </v-row>
 
     <div class="text-center ma-2">
-      <v-snackbar v-model="snackbar">
+      <v-snackbar
+      v-model="snackbar"
+      :timeout="2000">
         {{ snackBarText }}
         <template v-slot:action="{ attrs }">
           <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
@@ -121,7 +134,7 @@
         :absolute="true"
         text
         class="homeStep"
-        @click="claDef()">
+        @click="goHome()">
         <v-icon small>home</v-icon>
         <span>Torna alla home</span>
       </v-btn>
@@ -134,7 +147,7 @@
         :absolute="true"
         text
         class="imFab"
-        @click="claDef()">
+        @click="goOnHab()">
         <span>Salva e prosegui</span>
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -164,6 +177,12 @@ export default {
     ...mapState("game", ["currentGame"]),
   },
   methods: {
+    goHome() {
+      this.$router.push("home");
+    },
+    goOnHab() {
+      this.$router.push("habitsDefinition");
+    },
     onCardRemoveBtnClick: function (index) {
       if (this.schoolClasses?.length <= index) {
         return;
@@ -173,6 +192,8 @@ export default {
         this.snackbar = true;
         return;
       }
+      this.snackBarText = "Classe rimossa con successo!";
+      this.snackbar = true;
       this.schoolClasses.splice(index, 1);
     },
     createCardClassObj() {
@@ -247,6 +268,9 @@ export default {
   bottom: 0;
   position: fixed;
   margin: 0 0 16px 16px;
+}
+.plusFab {
+  text-align: center;
 }
 </style>
 

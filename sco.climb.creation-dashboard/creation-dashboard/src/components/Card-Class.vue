@@ -213,9 +213,17 @@
 
         <v-card-text>
           <template v-if="schoolClass.classNum>0">
-           <v-text-field  :placeholder="$t('cardClass.inputNickname')" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">alunno</v-text-field>
+            <v-row>
+              <v-col cols="3" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">
+                <v-text-field :prefix="(index+1)" :placeholder="$t('cardClass.inputNickname')">alunno</v-text-field>
+              </v-col>
+            </v-row>
           </template>
-           
+          <template v-else>
+            <div>
+              Inserisci sopra il numero di alunni per cominciare a definire i nickname.
+            </div>
+          </template>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -261,20 +269,20 @@ export default {
     onDeleteBtnClick() {
       this.$emit("removeClassCard", this.cardIdx);
     },
-    deleteStudent(index) {
-      this.schoolClass.students.splice(index, 1);
-    },
-    addStudent() {
-      this.schoolClass.students.push({
-        inputVal: "",
-        id: this.schoolClass.students.length,
-      });
-    },
-    updateStudentsFields(num) {
-      for (let i = 0; i < num; i++) {
-        this.schoolClass.students.push({ inputVal: "", id: i });
-      }
-    },
+    // deleteStudent(index) {
+    //   this.schoolClass.students.splice(index, 1);
+    // },
+    // addStudent() {
+    //   this.schoolClass.students.push({
+    //     inputVal: "",
+    //     id: this.schoolClass.students.length,
+    //   });
+    // },
+    // updateStudentsFields(num) {
+    //   for (let i = 0; i < num; i++) {
+    //     this.schoolClass.students.push({ inputVal: "", id: i });
+    //   }
+    // },
   },
   mounted() {
     if (this.schoolClass) {
