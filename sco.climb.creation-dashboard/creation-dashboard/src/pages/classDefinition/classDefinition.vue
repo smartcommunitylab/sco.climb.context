@@ -51,7 +51,7 @@
           <div class="row py-6">
             <div class="col-sm-1"></div>
             <div class="col-sm-5">
-              <v-btn class="float-left" @click="navigateHome()" color="primary">Indietro</v-btn>
+              <v-btn class="float-left" @click="goHome()" color="primary">Indietro</v-btn>
             </div>
             <div class="col-sm-5">
               <v-btn class="float-right" @click="goNext()" color="primary">Avanti</v-btn>
@@ -115,7 +115,8 @@
     <div class="text-center ma-2">
       <v-snackbar
       v-model="snackbar"
-      :timeout="2000">
+      :timeout="2000"
+      transition="scroll-y-reverse-transition">
         {{ snackBarText }}
         <template v-slot:action="{ attrs }">
           <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
@@ -133,7 +134,7 @@
         left
         :absolute="true"
         text
-        class="homeStep"
+        class="goBack"
         @click="goHome()">
         <v-icon small>home</v-icon>
         <span>Torna alla home</span>
@@ -192,7 +193,7 @@ export default {
         return;
       }
       if (this.schoolClasses?.length === 1) {
-        this.snackBarText = "Almeno una classe deve essere definita";
+        this.snackBarText = "Almeno una classe deve essere definita!!!";
         this.snackbar = true;
         return;
       }
@@ -216,9 +217,9 @@ export default {
     addNewClass() {
       this.schoolClasses.push(this.createCardClassObj());
     },
-    navigateHome() {
-      this.$router.push("home");
-    },
+    // goHome() {
+    //   this.$router.push("home");
+    // },
     checkFormValidations() {
       let areAllFormValid = true;
       this.schoolClasses.forEach((ele) => {
@@ -235,12 +236,12 @@ export default {
         this.snackbar = true;
         return;
       }
-      let tempArr = this.schoolClasses.map((x) => {
+      let tempArr = this.schoolClasses.map((classe) => {
         let studentsArray=[];
-        for (let k=0;k<Number(x.classNum);k++){
-          this.schoolClasses.students[k]?students.push(this.schoolClasses.students[k]):students.push(k)
+        for (let k=0;k<Number(classe.classNum);k++){
+          classe.students[k]?studentsArray.push(classe.students[k]):studentsArray.push(k)
         }
-        return { className: x.className, students: studentsArray,classNum:x.classNum};
+        return { className: classe.className, students: studentsArray,classNum:classe.classNum};
       });
       this.createClass(tempArr);
       this.nextStep();
@@ -269,15 +270,12 @@ export default {
   padding: 0 !important;
   margin: 0 !important;
 }
+
 .c-card-layout {
   background: #f4f2f2;
   border-radius: 8px;
 }
-.homeStep {
-  bottom: 0;
-  position: fixed;
-  margin: 0 0 16px 16px;
-}
+
 .plusFab {
   text-align: center;
 }
