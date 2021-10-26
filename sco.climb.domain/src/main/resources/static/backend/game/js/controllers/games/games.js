@@ -787,6 +787,10 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             return;
 
         }
+        $scope.changedAndcalculateCDND =function () {
+            $scope.changed();
+            $scope.calculateCDND();
+        }
         $scope.calculateCDND = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
                 $scope.currentGame.params.const_daily_nominal_distance = 0;
