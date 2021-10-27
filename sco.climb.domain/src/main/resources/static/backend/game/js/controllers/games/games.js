@@ -774,15 +774,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             $scope.modalities.forEach(mode => {
                 if (mode.value!='absent')
                 {if (!$scope.isModalityPresent(mode.value))
-                      $scope.currentGame.params['const_'+mode.value+'_distance']=undefined;}
+                      $scope.currentGame.params['const_'+mode.value+'_distance']=0;}
             })
-            if ($scope.isModalityPresent('car'))
-            {
-                $scope.currentGame.params['const_car_distance']=0;
-            } 
-            else {
-                $scope.currentGame.params['const_car_distance']=undefined;
-            }
+            // if ($scope.isModalityPresent('car'))
+            // {
+            //     $scope.currentGame.params['const_car_distance']=0;
+            // } 
+            // else {
+            //     $scope.currentGame.params['const_car_distance']=undefined;
+            // }
         }
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
