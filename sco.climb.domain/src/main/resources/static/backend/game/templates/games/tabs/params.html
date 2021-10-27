@@ -93,36 +93,36 @@
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0" ng-change="changed()"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].walk_studenti"
-                                ng-disabled="!isModalityPresent('walk')" />
+                                ng-disabled="!isModalityPresent('walk')" oninput="validity.valid||(value='');" />
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].bike_studenti"
-                                ng-disabled="!isModalityPresent('bike')" />
+                                ng-disabled="!isModalityPresent('bike')" oninput="validity.valid||(value='');"/>
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].bus_studenti"
-                                ng-disabled="!isModalityPresent('bus')" />
+                                ng-disabled="!isModalityPresent('bus')" oninput="validity.valid||(value='');"/>
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].pedibus_studenti"
-                                ng-disabled="!isModalityPresent('pedibus')" />
+                                ng-disabled="!isModalityPresent('pedibus')" oninput="validity.valid||(value='');"/>
                         </div>
 
                     </div>
@@ -130,9 +130,9 @@
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].pandr_studenti"
-                                ng-disabled="!isModalityPresent('pandr')" />
+                                ng-disabled="!isModalityPresent('pandr')" oninput="validity.valid||(value='');"/>
                         </div>
 
                     </div>
@@ -140,9 +140,9 @@
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].carpooling_studenti"
-                                ng-disabled="!isModalityPresent('carpooling')" />
+                                ng-disabled="!isModalityPresent('carpooling')" oninput="validity.valid||(value='');"/>
                         </div>
 
                     </div>
@@ -150,9 +150,9 @@
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"
+                            <input class="form-control" type="number" min="0"  ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].car_studenti"
-                                ng-disabled="!isModalityPresent('car')" />
+                                ng-disabled="!isModalityPresent('car')" oninput="validity.valid||(value='');"/>
                         </div>
                     </div>
                     <div class="row" ng-if="currentGame && currentGame.classRooms">
