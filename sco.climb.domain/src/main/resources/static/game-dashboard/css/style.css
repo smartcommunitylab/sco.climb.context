@@ -1356,21 +1356,27 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 /**** homepage ****/
 
 .column1{
+  vertical-align:top;
  width: 20%;
  display: table-cell;
   padding: 7px;
 }
 .column2{
+  vertical-align:top;
  width: 60%;
  display: table-cell;
   padding: 7px;
 }
 .column3{
+  vertical-align:top;
+
  width: 20%;
  display: table-cell;
    padding: 7px;
 }
-
+.homepage {
+  display:table;
+}
 .homepage md-card {
    border-radius: 15px;
    margin-top: 30px;
@@ -1446,7 +1452,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
    margin:20px;
 }
 .home-row{
-  display: table;
+  display: table-row;
   width: 100%;
 }
 md-card-content span.material-icons {

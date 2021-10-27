@@ -326,7 +326,7 @@ angular.module('climbGame.controllers.calendar', [])
                     } else {
                       $scope.isDevEditMode = undefined;
                       // sent data
-                      $mdToast.show($mdToast.simple().content('Dati inviati').position('top left'))
+                      $mdToast.show($mdToast.simple().content('Dati inviati').position('top right'))
                         // reload and show
                       calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                         function (calendar) {
