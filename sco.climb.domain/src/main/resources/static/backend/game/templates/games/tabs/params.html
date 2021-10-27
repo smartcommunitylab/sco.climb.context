@@ -150,7 +150,7 @@
 
                         <div class="col-lg-2 col-xs-2 col-2 single-col" 
                             ng-repeat="class in currentGame.classRooms">
-                            <input class="form-control" type="number" min="0"  ng-change="changed()"
+                            <input class="form-control" type="number" min="0" string-to-number ng-change="changed()"
                                 ng-model="currentGame.mobilityParams[class].car_studenti"
                                 ng-disabled="!isModalityPresent('car')" oninput="validity.valid||(value='');"/>
                         </div>
