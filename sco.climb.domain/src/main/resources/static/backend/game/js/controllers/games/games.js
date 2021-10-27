@@ -285,7 +285,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     );
             }
             else {
-                $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e che le date siano valide.";
+                $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi.";
                 $timeout(function () {
                     $rootScope.modelErrors = '';
                 }, 5000);
@@ -763,16 +763,26 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 for (var p in $scope.currentGame.params) {
                     $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
                 }
-                if ($scope.isModalityPresent('car'))
-                {
-                    $scope.currentGame.params['const_car_distance']=0;
-                } 
-                else {
-                    $scope.currentGame.params['const_car_distance']=undefined;
-                }
+                $scope.checkModalities();
+               
+                
             }
             $scope.calculateCDND();
 
+        }
+        $scope.checkModalities = function () {
+            $scope.modalities.forEach(mode => {
+                if (mode.value!='absent')
+                {if (!$scope.isModalityPresent(mode.value))
+                      $scope.currentGame.params['const_'+mode.value+'_distance']=undefined;}
+            })
+            if ($scope.isModalityPresent('car'))
+            {
+                $scope.currentGame.params['const_car_distance']=0;
+            } 
+            else {
+                $scope.currentGame.params['const_car_distance']=undefined;
+            }
         }
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
@@ -819,9 +829,17 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             $scope.calculateKMTarget();
             return;
         };
-        
-        $scope.calculateKMTarget = function () {
+        $scope.changedClosedDays = function() {
+            $scope.calculateKMStimati();
             $scope.changed();
+        }
+        $scope.changedChallenges = function() {
+            $scope.calculateKMTarget();
+            $scope.changed();
+        }
+        $scope.calculateKMTarget = function () {
+                       // $scope.changed();
+
             if ($scope.currentGame && $scope.currentGame.params) {
                 var km = $scope.kmStimati;
                 if ($scope.currentGame.params.km_bonus) 
