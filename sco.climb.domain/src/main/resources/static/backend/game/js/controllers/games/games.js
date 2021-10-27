@@ -285,7 +285,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     );
             }
             else {
-                $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi indicati con l'asterisco e che le date siano valide.";
+                $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi.";
                 $timeout(function () {
                     $rootScope.modelErrors = '';
                 }, 5000);
@@ -566,13 +566,13 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ($scope.currentGame && $scope.currentGame.mobilityParams && $scope.currentGame.classRooms) {
                 var ss=0
             // $scope.currentGame.classRooms.forEach(classRoom => {
-                    ss+=($scope.currentGame.mobilityParams[classRoom].walk_studenti?$scope.currentGame.mobilityParams[classRoom].walk_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti?$scope.currentGame.mobilityParams[classRoom].bike_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti?$scope.currentGame.mobilityParams[classRoom].bus_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?$scope.currentGame.mobilityParams[classRoom].pedibus_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?$scope.currentGame.mobilityParams[classRoom].pandr_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?$scope.currentGame.mobilityParams[classRoom].carpooling_studenti:0) +
-                    ($scope.currentGame.mobilityParams[classRoom].car_studenti?$scope.currentGame.mobilityParams[classRoom].car_studenti:0)
+                    ss+=($scope.currentGame.mobilityParams[classRoom].walk_studenti?Number($scope.currentGame.mobilityParams[classRoom].walk_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti?Number($scope.currentGame.mobilityParams[classRoom].bike_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti?Number($scope.currentGame.mobilityParams[classRoom].bus_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?Number($scope.currentGame.mobilityParams[classRoom].pedibus_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?Number($scope.currentGame.mobilityParams[classRoom].pandr_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?Number($scope.currentGame.mobilityParams[classRoom].carpooling_studenti):0) +
+                    ($scope.currentGame.mobilityParams[classRoom].car_studenti?Number($scope.currentGame.mobilityParams[classRoom].car_studenti):0)
                 // })
                 return ss;
             }
@@ -763,16 +763,26 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 for (var p in $scope.currentGame.params) {
                     $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
                 }
-                if ($scope.isModalityPresent('car'))
-                {
-                    $scope.currentGame.params['const_car_distance']=0;
-                } 
-                else {
-                    $scope.currentGame.params['const_car_distance']=undefined;
-                }
+                $scope.checkModalities();
+               
+                
             }
             $scope.calculateCDND();
 
+        }
+        $scope.checkModalities = function () {
+            $scope.modalities.forEach(mode => {
+                if (mode.value!='absent')
+                {if (!$scope.isModalityPresent(mode.value))
+                      $scope.currentGame.params['const_'+mode.value+'_distance']=undefined;}
+            })
+            if ($scope.isModalityPresent('car'))
+            {
+                $scope.currentGame.params['const_car_distance']=0;
+            } 
+            else {
+                $scope.currentGame.params['const_car_distance']=undefined;
+            }
         }
         $scope.calculateKMStimati = function () {
             if ($scope.currentGame && $scope.currentGame.params) {
@@ -819,9 +829,17 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             $scope.calculateKMTarget();
             return;
         };
-        
-        $scope.calculateKMTarget = function () {
+        $scope.changedClosedDays = function() {
+            $scope.calculateKMStimati();
             $scope.changed();
+        }
+        $scope.changedChallenges = function() {
+            $scope.calculateKMTarget();
+            $scope.changed();
+        }
+        $scope.calculateKMTarget = function () {
+                       // $scope.changed();
+
             if ($scope.currentGame && $scope.currentGame.params) {
                 var km = $scope.kmStimati;
                 if ($scope.currentGame.params.km_bonus) 
