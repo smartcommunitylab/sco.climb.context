@@ -90,6 +90,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
             axis: 'y',
             stop: function (e, ui) {
                 for (i = 0; i < $scope.legs.length; i++) {
+                    
                     $scope.legs[i].position = i;
                 }
             }
@@ -171,7 +172,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         $scope.$parent.selectedTab = 'info';
     })
 
-    .controller('LegsListCtrl', function ($scope, $state, $stateParams, $rootScope, $q, createDialog, DataService, drawMapLine) {
+    .controller('LegsListCtrl', function ($scope, $state, $stateParams,usSpinnerService, $timeout, $q, createDialog, DataService, drawMapLine) {
         $scope.$parent.selectedTab = 'legs';
         $scope.directionsService = new google.maps.DirectionsService();
 
@@ -222,6 +223,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                     DataService.deleteStopFromItinerary($scope.currentPath, leg).then(
                                         /*DataService.editData('legs', $scope.currentPath).then(*/
                                         function () {
+                                            $scope.saveLegs().then(function(){
                                             console.log('Salvataggio dati a buon fine.');
                                             createDialog('templates/modals/leg-order-saved.html', {
                                                 id: 'leg-order-saved',
@@ -231,7 +233,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                                 }
                                             }
                                             )
-                                            $scope.saveLegs();
+                                        })
+                                            // $scope.saveLegs();
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
                                         }
@@ -262,6 +265,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 /*                                    DataService.editData('legs', $scope.currentPath).then(
 */                                        function () {
+    $scope.saveLegs().then(function(){
                                             createDialog('templates/modals/leg-order-saved.html', {
                                                 id: 'leg-order-saved',
                                                 title: 'Modifica percorsi sulla mappa',
@@ -270,7 +274,8 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                                 }
                                             }
                                             )
-                                            $scope.saveLegs();
+                                        })
+                                            // $scope.saveLegs();
                                             console.log('Salvataggio dati a buon fine.');
                                         }, function () {
                                             alert('Errore nel salvataggio delle tappe.');
@@ -296,6 +301,7 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
 /*                            DataService.editData('legs', $scope.currentPath).then(
 */                                function () {
+    $scope.saveLegs().then(function(){
                                     createDialog('templates/modals/leg-order-saved.html', {
                                         id: 'leg-order-saved',
                                         title: 'Modifica percorsi sulla mappa',
@@ -304,8 +310,9 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                                         }
                                     }
                                     )
+                                })
                                     //After deleting recalculate values
-                                    $scope.saveLegs();
+                                    // $scope.saveLegs();
                                     console.log('Salvataggio dati a buon fine.');
                                 }, function () {
                                     alert('Errore nel salvataggio delle tappe.');
@@ -320,11 +327,16 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
         };
 
         $scope.saveLegs = function () {
-
             // logic to modify legs in order.
+            var deferred = $q.defer();
+            usSpinnerService.spin('spinner-1');
+            if ($scope.legs[0]){
+            $scope.spinner=true;
             $scope.legs[0].polyline = '';
-
+            const delay = t => new Promise(resolve => setTimeout(resolve, t));
             var promises = [];
+            var request =[];
+            var matrixArray =[];
             for (var i = 1; i < $scope.legs.length; i++) {
 
                 // for each leg modify the polyline.
@@ -334,25 +346,49 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                 if (reOrderLeg.transport.toLowerCase() == 'plane' || reOrderLeg.transport.toLowerCase() == 'boat') {
                     // define polyline
                     var points = new Array();
-
-                    points[0] = [newPrevious.geocoding[1], newPrevious.geocoding[0]];
-                    points[1] = [reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]];
-
+                    points.push([newPrevious.geocoding[1], newPrevious.geocoding[0]]);
+                    for (var k=0;k<reOrderLeg.additionalPoints.length;k++)
+                    {
+                        points.push([reOrderLeg.additionalPoints[k].latitude, reOrderLeg.additionalPoints[k].longitude])
+                    }
+                    points.push([reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]]);
+                    matrixArray.push(points)
+                    request.push({});
                     // encode polyline
-                    var promise = drawMapLine.createEncodings(points);
-                    promises.push(promise);
-
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
+                         drawMapLine.createEncodings(matrixArray[i-1])
+                    ))
                 } else { // drive, walk modes
                     var start = new google.maps.LatLng(newPrevious.geocoding[1], newPrevious.geocoding[0]);
                     var end = new google.maps.LatLng(reOrderLeg.geocoding[1], reOrderLeg.geocoding[0]);
-                    var request = {
+                    const waypts = [];
+                    for (var k=0;k<reOrderLeg.additionalPoints.length;k++)
+                        {
+                            waypts.push({
+                                location: new google.maps.LatLng(reOrderLeg.additionalPoints[k].latitude, reOrderLeg.additionalPoints[k].longitude),
+                                stopover: true,
+                              }); 
+                        }
+                    request.push({
                         origin: start,
                         destination: end,
-                        travelMode: drawMapLine.selectMode(reOrderLeg.transport)
-                    };
+                        waypoints: waypts,
+                        travelMode: JSON.parse(JSON.stringify(drawMapLine.selectMode(reOrderLeg.transport)))
+                    });
+                    matrixArray.push({});
                     // calculate new route between 'new preious' -> 'next leg and update polyline.'
-                    var promise = drawMapLine.route(request);
-                    promises.push(promise);
+                    promises.push(new Promise(resolve => setTimeout(resolve, i*1000,i)).then(i => 
+                        drawMapLine.route(request[i-1]).then(function(ret){
+                            return ret;
+                        },function(err){
+                        if ((err=='ZERO_RESULTS')||(err=='MAX_ROUTE_LENGTH_EXCEEDED'))
+                            return drawMapLine.createEncodings([[request[i-1].origin.lat(), request[i-1].origin.lng()],[request[i-1].destination.lat(), request[i-1].destination.lng()]]).then(function(ret){
+                                return {value:ret,type:'plane'};
+                            })
+                         else 
+                            return err;
+                        })))
+                        
                 }
             }
 
@@ -363,7 +399,12 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
                     if (response[i].routes) { //(walk, drive)
                         $scope.legs[i + 1].polyline = response[i].routes[0].overview_polyline;
                     } else {   // response can be flat line (boat,plane).
-                        $scope.legs[i + 1].polyline = response[i];
+                        if (response[i].type)
+                        {
+                            $scope.legs[i + 1].polyline = response[i].value;
+                            $scope.legs[i + 1].transport=response[i].type;
+                        }
+                        else $scope.legs[i + 1].polyline = response[i];
                     }
                     var decodedPath = google.maps.geometry.encoding.decodePath($scope.legs[i + 1].polyline);
                     var polyPath = new google.maps.Polyline({
@@ -387,33 +428,52 @@ angular.module('consoleControllers.paths', ['ngSanitize'])
 
                 // save the new ordered list only when all promise get resolved.
                 $scope.currentPath.legs = $scope.legs;
-
-                DataService.updateStopsPosition($scope.currentPath).then(
+                $scope.saveData('legs', $scope.currentPath).then(
+                // DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
                         console.log('Salvataggio dati a buon fine.');
+                        usSpinnerService.stop('spinner-1');
+                        $scope.spinner=false;
+                        deferred.resolve();
+                        //$scope.save();
                     }, function () {
                         alert('Errore nel salvataggio delle tappe.');
+                        usSpinnerService.stop('spinner-1');
+                        $scope.spinner=false;
+                        deferred.reject();
+
                     }
                 );
+            },function(err){
+                usSpinnerService.stop('spinner-1');
+                $scope.spinner=false;
+                deferred.reject();
             });
+        } else {
+            deferred.resolve();
+        }
+            return deferred.promise;
         }
         $scope.saveOrder = function () {
             if ($scope.enableOrder) {
                 $scope.currentPath.legs = $scope.legs;
                 DataService.updateStopsPosition($scope.currentPath).then(
                     function () {
-                        console.log('Salvataggio ordine tappe a buon fine.');
-                        $scope.enableOrder = false;
-                        createDialog('templates/modals/leg-order-saved.html', {
-                            id: 'leg-order-saved',
-                            title: 'Tappe riordinate. Controlla i dati delle tappe coinvolte!',
-                            noCancelBtn: true,
-                            success: {
-                                label: 'Conferma', fn: function () {
-                                    $scope.saveLegs();
+                        $scope.saveLegs().then(function(){
+                            console.log('Salvataggio ordine tappe a buon fine.');
+                            $scope.enableOrder = false;
+                            createDialog('templates/modals/leg-order-saved.html', {
+                                id: 'leg-order-saved',
+                                title: 'Tappe riordinate!',
+                                noCancelBtn: true,
+                                success: {
+                                    label: 'Conferma', fn: function () {
+                                        
+                                    }
                                 }
-                            }
+                            });
                         });
+
                     }, function () {
                         alert('Errore nel salvataggio dell\'ordine tappe.');
                     }

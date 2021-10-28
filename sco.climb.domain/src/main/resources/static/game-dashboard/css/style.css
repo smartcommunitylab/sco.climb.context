@@ -178,17 +178,21 @@ md-sidenav {
 }
 
 .bar-logo img {
-  position: absolute;
+  /* position: absolute; */
   right: 6px;
   top: 6px;
   height: 50px;
 }
 
-
+.back-button.ng-hide {
+  display: block!important;
+  visibility: hidden;
+}
 /*map*/
 
 .angular-leaflet-map {
   z-index: 0;
+  border-radius: 15px;
 }
 
 .map-resources {
@@ -1349,6 +1353,202 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   color: transparent
 }
 
+/**** homepage ****/
+
+.column1{
+  vertical-align:top;
+ width: 20%;
+ display: table-cell;
+  padding: 7px;
+}
+.column2{
+  vertical-align:top;
+ width: 60%;
+ display: table-cell;
+  padding: 7px;
+}
+.column3{
+  vertical-align:top;
+
+ width: 20%;
+ display: table-cell;
+   padding: 7px;
+}
+.homepage {
+  display:table;
+}
+.homepage md-card {
+   border-radius: 15px;
+   margin-top: 30px;
+   text-align: center; 
+}
+.homepage leaflet {
+   border-radius: 15px;
+   text-align: center; 
+}
+
+.homepage div.col-not-sf md-card{
+   min-width: 100px; 
+   height: 285px; 
+   margin-bottom: 60px;
+   cursor: pointer;
+   color: #f39512;
+   border: 3px solid #f39512;
+   border-radius: 15px;
+}
+
+.homepage div.col-inserimento md-card{
+   min-width: 100px;
+   height: 170px; 
+   margin-bottom: 60px;
+   color: #f39512; 
+   border: 3px solid #f39512;
+   cursor: pointer;
+
+}
+.homepage div.col-not-sf md-card.sfide {
+  cursor: default;
+  /* border: none; */
+
+}
+.homepage .notifiche .md-header {
+  color: gray;
+  font-size: smaller;
+}
+.notification-text{
+  text-overflow:ellipsis;
+}
+.homepage .col-inserimento span.material-icons{
+  
+   color: #f39512; 
+   font-size: 90px;
+}
+
+.homepage span.md-headline{
+   font-size: 20px;
+   text-align: center; 
+}
+
+.homepage md-card .card-body{
+  color:black;
+  margin-top:4px;
+}
+.homepage md-card.map-col{
+   height: 390px; 
+   cursor:pointer;
+  margin-top:8px;
+  border-radius: 15px;
+}
+.homepage md-card.km-col{
+   height: 169px;
+   cursor: pointer;
+   margin-top: 25px;
+   border-radius: 15px;
+}
+.homepage .map-title{
+  text-align: center;
+  color: #4153a0; 
+   font-size: 30px;
+   margin:20px;
+}
+.home-row{
+  display: table-row;
+  width: 100%;
+}
+md-card-content span.material-icons {
+   color: #4153a0; 
+   font-size: 30px;
+   text-align: left; 
+}
+
+
+.col-not-sf span.material-icons {
+   color: #f39512; 
+   font-size: 30px;
+   text-align: left;
+   margin:4px;
+
+}
+md-card-content md-progress-linear .md-container,
+.stats md-progress-linear .md-container .md-bar {
+  height: 38px;
+  border-radius: 15px;
+}
+
+md-card-content md-progress-linear .md-container {
+  background-color: #bdbdbd;
+}
+
+md-card-content md-progress-linear .md-container .md-bar {
+  height: 38px;
+  background-color: #4153a0;
+}
+
+
+/*****Pop-up-excursion******/
+.pop-up-ex {
+	min-height: 500px;
+	width: 350px;
+	border-radius: 15px;
+}
+
+.pop-up-ex .row{
+ width: 70%;
+ float: left;
+ padding: 7px;
+}
+
+.pop-up-ex md-dialog-actions {
+ width: 100%;
+ float: left;
+ padding: 7px;
+	
+}
+
+.pop-up-ex span.md-headline{
+   font-size: 20px;   
+   margin-top: 40px;
+}
+
+
+.pop-up-ex md-toolbar{
+	height: 38px;
+    background-color: #f39c12;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    
+ 
+}
+.input-popup{
+     padding: 10px;
+     border-radius: 15px;
+     border: 3px solid #f39512;
+     box-sizing: border-box;
+     margin-bottom: 40px;
+     margin-bottom: 20px;
+}
+
+.pop-up-ex span.material-icons{
+  
+   color: #f39512; 
+   font-size: 30px;
+}
+
+
+.pop-up-ex button {
+	height: 38px;
+	width: 30%;
+    border: 3px solid #f39512;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    font-size: 20px; 
+    text-align: center; 
+}
+
+
 /***************/
 div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up>md-fab-actions{
   max-height: 1px !important;
@@ -1356,3 +1556,5 @@ div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animation
 div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up.md-is-open>md-fab-actions{
   height: auto;
 }
+
+

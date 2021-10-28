@@ -1,11 +1,27 @@
 /* global angular */
 angular.module('climbGame.controllers.excursions', [])
   .controller('excursionsCtrl',
-    function ($scope, $window, $mdDialog, $mdToast, dataService) {
+    function ($scope, $window, $mdDialog, $mdToast, dataService,$stateParams) {
       $scope.showHints = false
       $scope.datepickerisOpen = false
       $scope.excursions = null
       $scope.sendingData = false
+      
+      /* excursion example
+      {
+        children: 12,
+        classRoom: '1^',
+        creationDate: 1486042491236,
+        day: 1485385200000,
+        distance: 750,
+        gameId: '588889c0e4b0464e16ac40a0',
+        lastUpdate: 1486042491236,
+        meteo: 'cloudy',
+        name: 'test1',
+        objectId: 'c219c822-35af-4e34-ad81-b39591dd36a2',
+        ownerId: 'VELA'
+      }
+      */
       
       $scope.isExcursion = function (ex) {
       	if(ex && ex.hasOwnProperty('goodAction') && ex.goodAction) {
@@ -20,7 +36,21 @@ angular.module('climbGame.controllers.excursions', [])
               $scope.game = game;
               dataService.getExcursions(game.from, game.to).then(
                 function (excursions) {
-                  $scope.excursions = excursions
+                  $scope.excursions = [];
+                   //filter by selection
+                  if ($stateParams.type =='buonazione'){
+                      //  filter buone azioni
+                    excursions.forEach(function(element){
+                      if (!$scope.isExcursion(element))
+                        $scope.excursions.push(element)
+                    })
+                  } else {
+                    // filter excursions
+                    excursions.forEach(function(element){
+                    if ($scope.isExcursion(element))
+                    $scope.excursions.push(element)
+                    })
+                  }
                 },
                 function (reason) {
                   console.log("[refreshExcursions]" + JSON.stringify(reason));
@@ -55,7 +85,7 @@ angular.module('climbGame.controllers.excursions', [])
         children: null,
         distance: null,
         meteo: 'sunny',
-        goodAction: true
+        goodAction: $stateParams.type==='buonazione'?true:false
       }
 
       $scope.newExcursion = angular.copy(emptyExcursion)

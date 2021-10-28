@@ -49,14 +49,14 @@ angular.module("climbGame.controllers.map", [])
                 attribution: 'Copyright ESRI. Sources: Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, GeoEye, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community'
               }
             },            
-            fisica: {
-            	name: 'Fisica',
-            	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
-            	type: 'xyz',
-              layerOptions: {
-                attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data © OpenStreetMap contributors.'
-              }							
-            }            
+            // fisica: {
+            // 	name: 'Fisica',
+            // 	url: 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png',
+            // 	type: 'xyz',
+            //   layerOptions: {
+            //     attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data © OpenStreetMap contributors.'
+            //   }							
+            // }            
           }
         },
         events: {
@@ -486,11 +486,11 @@ angular.module("climbGame.controllers.map", [])
             if ((polylines[i].position == myLeg.position + 1) || $scope.endReached) {
               // Actual leg. I have to split them in 2 part considering the percentage
               var actual_completing = doneRange / totalRange; //0,8
-              var lengthInMeters = $scope.sumAllDistances(pointArr) * 1000;
+              var lengthInMeters = mapService.sumAllDistances(pointArr) * 1000;
               if (actual_completing > 0) {
                 if ((actual_completing < 1)) { // case completing between 1% and 99%
                   var proportionalLength = lengthInMeters * actual_completing;
-                  var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
+                  var splittedSubPolys = mapService.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
                   for (var y = 0; y < splittedSubPolys.length; y++) {
                     if (y == 0) { // I initialize the actual position for the specific marker with the last coord of the firt splitted polyline
                       actualMarkerPosition = splittedSubPolys[y][splittedSubPolys[y].length - 1];
@@ -528,6 +528,7 @@ angular.module("climbGame.controllers.map", [])
     }
 
     function getMarkerIcon(leg) {
+    
       //check leg and give me icon based on my status and type of mean
       if (leg.position == 0) {
         return configService.IMAGES_PREFIX_URL+'img/POI_start.png'
@@ -535,6 +536,7 @@ angular.module("climbGame.controllers.map", [])
       if (leg.position == $scope.legs.length - 1) {
         return configService.IMAGES_PREFIX_URL+'img/POI_destination.png'
       }
+      console.log($scope.currentLeg.position)
       return configService.getIconImg(leg.icon, leg.position < $scope.currentLeg.position); 
     }
 
@@ -576,72 +578,9 @@ angular.module("climbGame.controllers.map", [])
       return returnMarker;
     }
 
-    // Method used to split a polyline in two polylines considering a percentage value.
-    // Now the percentage is related with the array elements number but we can consider the real distance in meters
-    $scope.retrievePercentagePoly = function (pointArr, percentage, proportionalLength) {
-      var findSplitPoint = false;
-      var count = 1;
-      do {
-        var partialPoly = pointArr.slice(0, count);
-        var lengthInMeters = $scope.sumAllDistances(partialPoly) * 1000;
-        if (lengthInMeters > proportionalLength) {
-          findSplitPoint = true;
-        } else {
-          count++;
-        }
-      } while (!findSplitPoint);
-      if (count == pointArr.length) {
-        count--;
-      }
-      var previousPoint = pointArr[count - 1];
-      var nextPoint = pointArr[count];
-      var deltaY = nextPoint[0] - previousPoint[0];
-      var deltaX = nextPoint[1] - previousPoint[1];
-      var newX = previousPoint[1] + (deltaX * percentage);
-      var newY = previousPoint[0] + (deltaY * percentage);
-      var newPoint = [newY, newX];
 
-      var partialPoly1 = pointArr.slice(0, count);
-      partialPoly1.push(newPoint);
-      var partialPoly2 = pointArr.slice(count, pointArr.length);
-      partialPoly2.unshift(newPoint);
 
-      var splittedPolys = [];
-      splittedPolys.push(partialPoly1);
-      splittedPolys.push(partialPoly2);
-      return splittedPolys;
-    };
-
-    // Method used to calculate a polyline length (in meters) with the sum of the distances between each point
-    $scope.sumAllDistances = function (arrOfPoints) {
-      var partialDist = 0;
-      for (var i = 1; i < arrOfPoints.length; i++) {
-        var lat1 = arrOfPoints[i - 1][0];
-        var lon1 = arrOfPoints[i - 1][1];
-        var lat2 = arrOfPoints[i][0];
-        var lon2 = arrOfPoints[i][1];
-        partialDist += $scope.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
-      }
-      return partialDist;
-    };
-
-    // Method used to calculate the distance between two points
-    $scope.getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
-      var R = 6371; // Radius of the earth in km
-      var dLat = deg2rad(lat2 - lat1); // deg2rad below
-      var dLon = deg2rad(lon2 - lon1);
-      var a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      var d = R * c; // Distance in km
-      return d;
-    };
-
-    var deg2rad = function (deg) {
-      return deg * (Math.PI / 180)
-    };
+    
 
     $scope.scrollLeft = function () {
       document.getElementById('gallery').scrollLeft -= 50;

@@ -342,10 +342,10 @@ angular.module('MapsService', [])
             else
                 return google.maps.geometry.encoding.encodePath(polyPath.getPath());
         };
-        this.getCustomWayPoint = function () {
+        this.getCustomWayPoint = function (polyline) {
             var customWayPoints = [];
             var directions = directionsDisplay.getDirections();
-            if (directions) {
+            if (directions && (travelType != 'plane') && (travelType != 'boat')) {
                 var tmp = directionsDisplay.getDirections().routes[0].legs[0].via_waypoint;
                 for (var i = 0; i < tmp.length; i++) {
                     var obj = {
@@ -353,6 +353,20 @@ angular.module('MapsService', [])
                         longitude: tmp[i].location.lng()
                     };
                     customWayPoints[i] = obj;
+                }
+            } else {
+                //if not directions and is boat or plane get customWayPoints from decode
+                if  ((travelType === 'plane') || (travelType === 'boat')){
+                    var decoded = google.maps.geometry.encoding.decodePath(polyline);
+                    if (decoded.length>2){
+                        for (var k = 1; k< decoded.length-1; k++) {
+                            var obj = {
+                                latitude: decoded[k].lat(),
+                                longitude: decoded[k].lng()
+                            };
+                            customWayPoints.push(obj);
+                        }
+                    }
                 }
             }
             return customWayPoints;
@@ -569,8 +583,8 @@ angular.module('MapsService', [])
                 plat = lat;
                 plng = lng;
             }
-            // close polyline
-            encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
+            // close polyline...why?
+            //encoded_points += this.encodePoint(plat, plng, coords[0][0], coords[0][1]);
             deferred.resolve(encoded_points);
 
             return deferred.promise;

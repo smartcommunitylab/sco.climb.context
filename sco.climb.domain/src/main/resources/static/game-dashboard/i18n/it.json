@@ -1,7 +1,8 @@
 {
   "menu_class": "Calendario",
   "menu_map": "Percorso",
-  "menu_excursions": "Gite / Buone azioni",
+  "menu_excursions": "Gite",
+  "menu_good_actions": "Buone azioni",
   "menu_stats": "Statistiche",
   "menu_notifications": "Notifiche",
   "menu_change_class": "Cambia sezione",
@@ -24,7 +25,8 @@
   "stats_bonus": "Bonus",
   "stats_next_leg": "Prossima tappa tra ",
   "excursions_new": "Nuova gita scolastica",
-  "excursions_history": "Storico gite scolastiche / buone azioni",
+  "excursions_history": "Storico gite scolastiche",
+  "good_actions_history": "Storico buone azioni",
   "excursion_distance": "km a piedi da ciascun partecipante",
   "excursion_distance_ga": "km bonus",
   "excursion_children": "Hanno partecipato {{children}} bambini per un totale di {{total}} Km",
@@ -91,6 +93,7 @@
   "notif_GameFinished": "BRAVISSIMI: Siete arrivati a {{_finalDestination_}}! Avete percorso {{_totalKm_}} Km sostenibili.",
   "notif_badge": "BRAVI! Avete raggiunto la tappa {{badge}}!",
   "notif_empty": "Non sono ancora presenti notifiche. ",
+  "chall_empty": "Al momento non ci sono sfide disponibili",
   "notif_gameFinishedDialog1": "Avete raggiunto l'ultima tappa completando",
   "notif_gameFinishedDialog2": "il viaggio di {{_totalKm_}} Km!",
   "notif_gameFinishedDialogLeg": "{{_finalDestination_}}",
@@ -101,5 +104,7 @@
   "cal_challenge_empty": "Non ci sono sfide in corso",
   "cal_header_andataritorno":"Andata/Ritorno",
   "cal_header_andata":"Andata",
-  "cal_header_ritorno":"Ritorno"
+  "cal_header_ritorno":"Ritorno",
+  "err":"Errore nell'inserimento dei dati",
+  "menu_homepage" : "Homepage"
 }

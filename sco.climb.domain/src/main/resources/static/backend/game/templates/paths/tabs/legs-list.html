@@ -1,10 +1,26 @@
+ <div class="spinner-container" ng-hide="!spinner">
+<span us-spinner="{lines: 13, 
+  length: 38,
+  width: 17, 
+  radius: 45, 
+  scale: 1, 
+  corners: 1, 
+  speed: 1, 
+  rotate: 0, 
+  animation: 'spinner-line-fade-more', 
+  direction: 1, 
+  color: '#ffffff',
+  fadeColor: 'black', 
+  shadow: '0 0 1px transparent',
+  zIndex: 2000000000}" spinner-key="spinner-1"></span>
+</div>
 <fieldset class="row" style="min-height: 300px"
 	ng-disabled="!PermissionsService.permissionEnabledShowLegs()">
 	<fieldset class="col-lg-12 center field"
 		ng-disabled="!PermissionsService.permissionEnabledEditLegs()">
 		<a class="btn btn-info btn-margin button-blue"
 			ui-sref="root.path.leg({idLeg: ''})"
-			ng-disabled="currentGame.deployed">Crea nuova <i
+			ng-disabled="currentGame.deployed || enableOrder">Crea nuova <i
 			class="fa fa-plus-circle"></i></a> <a class="btn button-blue"
 			ng-class="{'btn-success': enableOrder, 'btn-info': !enableOrder}"
 			ng-click="saveOrder()" ng-disabled="(!PermissionsService.permissionEnabledEditLegs()) || currentGame.deployed">{{enableOrder
@@ -27,7 +43,7 @@
 							href="#/path/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{selectedGame.objectId}}/{{path.objectId}}/info"
 							ng-click="$parent.$parent.$parent.pathsModified = true"
 							class="interact-blue">
-							<h5> <span ng-hide="enableOrder">{{$index + 1}}.</span> {{leg.name}}</h5>
+							<h5> <span>{{$index + 1}}.</span> {{leg.name}}</h5>
 						</a> <img class="path-img" ng-src="{{leg.imageUrl}}"
 							alt="{{leg.name}}" ng-if="leg.imageUrl">
 						<div class="load-img" ng-if="!leg.imageUrl" ui-sref="root.path.leg({idLeg: leg.objectId})"

@@ -1307,3 +1307,60 @@ rotate
 .margin-left-md { margin-left: 1em; }
 .margin-left-lg { margin-left: 1.5em; }
 .margin-left-xl { margin-left: 3em; }
+
+.container-scroll > .row {
+	margin-top: 24px;
+  }
+  .container-scroll > .row > .col-md-2 {
+	font-weight: bold;
+	text-align: center;
+  }
+  .single-row {
+	overflow-x: scroll;
+	white-space: nowrap;
+  }
+  .single-col {
+	display: inline-block;
+	float: none;
+	position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .table-margin {
+	   line-height: 48px;
+  }
+  .corner-table {
+	  min-height:60px;
+  }
+ .container-scroll::-webkit-scrollbar {
+	 width: 12px;
+ }
+ 
+ .container-scroll::-webkit-scrollbar-track {
+	 -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+	 border-radius: 10px;
+ }
+ 
+ .container-scroll::-webkit-scrollbar-thumb {
+	 border-radius: 10px;
+	 -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+ }
+ .min-height-30{
+	 min-height:30px;
+ }
+ .min-height-50{
+	min-height:50px;
+	line-height:50px;
+}
+.spinner-container {
+	width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background: black;
+    left: 0;
+    opacity: 0.5;
+}
+ 

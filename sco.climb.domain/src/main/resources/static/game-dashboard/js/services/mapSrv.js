@@ -109,5 +109,71 @@ angular.module('climbGame.services.map', [])
         map.invalidateSize();
       })
     }
+    // Method used to calculate a polyline length (in meters) with the sum of the distances between each point
+    mapService.sumAllDistances = function (arrOfPoints) {
+      var partialDist = 0;
+      for (var i = 1; i < arrOfPoints.length; i++) {
+        var lat1 = arrOfPoints[i - 1][0];
+        var lon1 = arrOfPoints[i - 1][1];
+        var lat2 = arrOfPoints[i][0];
+        var lon2 = arrOfPoints[i][1];
+        partialDist += mapService.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
+      }
+      return partialDist;
+    };
+
+    // Method used to calculate the distance between two points
+    mapService.getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = mapService.deg2rad(lat2 - lat1); // deg2rad below
+      var dLon = mapService.deg2rad(lon2 - lon1);
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(mapService.deg2rad(lat1)) * Math.cos(mapService.deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c; // Distance in km
+      return d;
+    };
+
+    mapService.deg2rad = function (deg) {
+      return deg * (Math.PI / 180)
+    };
+
+    // Method used to split a polyline in two polylines considering a percentage value.
+    // Now the percentage is related with the array elements number but we can consider the real distance in meters
+    mapService.retrievePercentagePoly = function (pointArr, percentage, proportionalLength) {
+      var findSplitPoint = false;
+      var count = 1;
+      do {
+        var partialPoly = pointArr.slice(0, count);
+        var lengthInMeters = mapService.sumAllDistances(partialPoly) * 1000;
+        if (lengthInMeters > proportionalLength) {
+          findSplitPoint = true;
+        } else {
+          count++;
+        }
+      } while (!findSplitPoint);
+      if (count == pointArr.length) {
+        count--;
+      }
+      var previousPoint = pointArr[count - 1];
+      var nextPoint = pointArr[count];
+      var deltaY = nextPoint[0] - previousPoint[0];
+      var deltaX = nextPoint[1] - previousPoint[1];
+      var newX = previousPoint[1] + (deltaX * percentage);
+      var newY = previousPoint[0] + (deltaY * percentage);
+      var newPoint = [newY, newX];
+
+      var partialPoly1 = pointArr.slice(0, count);
+      partialPoly1.push(newPoint);
+      var partialPoly2 = pointArr.slice(count, pointArr.length);
+      partialPoly2.unshift(newPoint);
+
+      var splittedPolys = [];
+      splittedPolys.push(partialPoly1);
+      splittedPolys.push(partialPoly2);
+      return splittedPolys;
+    };
     return mapService
   });

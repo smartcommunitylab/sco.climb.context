@@ -28,6 +28,7 @@ public class PedibusGame extends BaseObject {
 	private boolean deployed;
 	private String confTemplateId;
 	private Map<String, String> params = new HashMap<>();
+	private Map<String, Map<String, Integer>> mobilityParams = new HashMap<>();
 	private String shortName;
 	private Map<String, Boolean> pollingFlagMap = new HashMap<>();
 	/**
@@ -237,6 +238,14 @@ public class PedibusGame extends BaseObject {
 
 	public void setUseCalendar(boolean useCalendar) {
 		this.useCalendar = useCalendar;
+	}
+
+	public Map<String, Map<String, Integer>> getMobilityParams() {
+		return mobilityParams;
+	}
+
+	public void setMobilityParams(Map<String, Map<String, Integer>> mobilityParams) {
+		this.mobilityParams = mobilityParams;
 	}
 
 }

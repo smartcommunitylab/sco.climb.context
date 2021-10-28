@@ -28,4 +28,4 @@ RUN apk add --no-cache tzdata
 COPY --from=mvn --chown=climb:climb ${FOLDER}/domain.jar /home/${USER}/app/climb.jar
 
 USER climb
-CMD ["java", "-XX:MaxRAMFraction=2", "-jar", "climb.jar"]
+CMD ["java", "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-XX:MaxRAMFraction=2", "-jar", "climb.jar"]

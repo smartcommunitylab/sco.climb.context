@@ -362,9 +362,9 @@ function ($q, $http, $rootScope, $timeout) {
         },
         // PUT /api/game/{ownerId}/{pedibusGameId}/mobility
         // modifica i dati di abitudini di mobilità
-        updateParams: function(element){
-            var url= baseUrl + "/api/game/"+ element.ownerId + "/" + element.objectId + "/mobility";
-            return $http.put(url, element, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+        updateParams: function(ownerId,objectId, params){
+            var url= baseUrl + "/api/game/"+ ownerId + "/" + objectId + "/mobility";
+            return $http.put(url, params, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         }, 
         // PUT /api/game/{ownerId}/{pedibusGameId}/tuning
         // modifica i dati di calibrazione
