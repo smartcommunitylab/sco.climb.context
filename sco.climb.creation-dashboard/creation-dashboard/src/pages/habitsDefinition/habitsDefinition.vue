@@ -506,12 +506,12 @@
                 v-html="$t('habitsDefinition.description')">
               </p>
             </div>
-                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                <!-- <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
                   {{className}}
                   <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
                     {{student}}
                   </span>
-                </div>
+                </div> -->
 
           </v-col>
         </v-row>  

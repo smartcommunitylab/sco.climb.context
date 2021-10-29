@@ -254,7 +254,7 @@ export default {
         (v) => !!v || "Il numero totale degli alunni è richiesto!",
         (v) => (v && !isNaN(v))|| "Il valore deve essere un numero!",
         (v) =>
-          (v && v.length <= 3) ||
+          (v && String(v).length <= 3) ||
           "Il numero totale degli alunni non può essere più lungo di 3 cifre",
       ],
       nicknameRules: [

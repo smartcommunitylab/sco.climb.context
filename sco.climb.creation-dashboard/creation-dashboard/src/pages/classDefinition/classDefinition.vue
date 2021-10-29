@@ -184,11 +184,11 @@ export default {
        this.$router.push("home");
       //this.changePageByName("home");
     },
-    goOnHab() {
-      // this.changePageByName("habitsDefinition");
-       this.nextStep();
+    // goOnHab() {
+    //    this.changePageByName("habitsDefinition");
+    //    //this.nextStep();
 
-    },
+    // },
     onCardRemoveBtnClick: function (index) {
       if (this.schoolClasses?.length <= index) {
         return;
@@ -241,9 +241,9 @@ export default {
       });
        this.createClass(tempArr);
         //this.createClass({classes:[{className: "ciao", students: ['1','2'],classNum:2},{className: "ciao", students: ['1','2'],classNum:2}]});
-      this.nextStep();
+      //this.nextStep();
       // this.$router.push("habitsDefinition");
-      //      this.changePageByName("habitsDefinition");
+      this.changePageByName("habitsDefinition");
     },
   },
   mounted() {
