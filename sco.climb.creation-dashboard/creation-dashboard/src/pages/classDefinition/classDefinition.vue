@@ -171,7 +171,7 @@ export default {
       show: false,
       isHidden: true,
       nomepagina: "Class Definition",
-      schoolClasses: [this.createCardClassObj()],
+      schoolClasses: [],
     };
   },
   computed: {
@@ -179,9 +179,10 @@ export default {
   },
   methods: {
     ...mapActions("navigation",["changePageByName","nextStep"]),
+    ...mapActions("game", {createClass: "createClass"}),
     goHome() {
-      // this.$router.push("home");
-      this.changePageByName("home");
+       this.$router.push("home");
+      //this.changePageByName("home");
     },
     goOnHab() {
       // this.changePageByName("habitsDefinition");
@@ -208,12 +209,7 @@ export default {
         students: [],
       };
     },
-    ...mapActions("game", {
-      createClass: "createClass",
-    }),
-    ...mapActions("navigation", {
-      nextStep: "nextStep",
-    }),
+
     addNewClass() {
       this.schoolClasses.push(this.createCardClassObj());
     },
@@ -241,9 +237,10 @@ export default {
         for (let k=0;k<Number(classe.classNum);k++){
           classe.students[k]?studentsArray.push(classe.students[k]):studentsArray.push(k)
         }
-        return { className: classe.className, students: studentsArray,classNum:classe.classNum};
+        return { className: classe.className, students: studentsArray,classNum:Number(classe.classNum)};
       });
-      this.createClass(tempArr);
+       this.createClass(tempArr);
+        //this.createClass({classes:[{className: "ciao", students: ['1','2'],classNum:2},{className: "ciao", students: ['1','2'],classNum:2}]});
       this.nextStep();
       // this.$router.push("habitsDefinition");
       //      this.changePageByName("habitsDefinition");
@@ -251,8 +248,9 @@ export default {
   },
   mounted() {
     if (this.currentGame && this.currentGame.classDefinition != null) {
-      this.schoolClasses = this.currentGame.classDefinition;
+      this.schoolClasses = JSON.parse(JSON.stringify(this.currentGame.classDefinition));
     }
+    else this.schoolClasses = [this.createCardClassObj()];
     let loader = this.$loading.show({
       canCancel: false,
       backgroundColor: "#000",

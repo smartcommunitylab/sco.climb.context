@@ -125,6 +125,8 @@
 
     <v-card class="rounded-lg px-3 pt-2 ma-0"  width="100%" elevation="3"
     >
+            <v-form ref="form" lazy-validation class="pt-2 px-4">
+
       <v-row class="px-0">
       <v-col cols="11" class="px-0"></v-col>
       <v-col cols="1" class="px-0">
@@ -149,7 +151,6 @@
 <!-- FORM CARD -->
     <!-- <v-row class="pt-2 px-4">
       <v-col cols="12"> -->
-        <v-form ref="form" lazy-validation class="pt-2 px-4">
           <v-row>
 <!-- FIELD CLASSE -->
             <v-col cols="1" class="pl-0 text">
@@ -202,7 +203,6 @@
               </v-card-actions>
             <!-- </v-col>  
           </v-row>     -->
-        </v-form>
           <!-- </v-col>
     </v-row> -->
 
@@ -212,17 +212,17 @@
       <div v-if="show">
         <v-card-text>
           <template v-if="schoolClass.classNum>0">
-            <v-form ref="form" lazy-validation>
+            <!-- <v-form ref="formLong" lazy-validation> -->
             <v-row>
               <v-col cols="3" v-for="(alumn,index) in Number(schoolClass.classNum)" :key="index">
                 <v-text-field
                 v-model="schoolClass.students[index]"
-                :prefix="(index+1)"
+                :prefix="String(index+1)"
                 :placeholder="$t('cardClass.inputNickname')"
                 :rules="nicknameRules">alunno</v-text-field>
               </v-col>
             </v-row>
-            </v-form>
+            <!-- </v-form> -->
           </template>
           <template v-else>
             <div>
@@ -232,6 +232,8 @@
         </v-card-text>
       </div>
     </v-expand-transition>
+            </v-form>
+
     </v-card>
   </div>
 </template>

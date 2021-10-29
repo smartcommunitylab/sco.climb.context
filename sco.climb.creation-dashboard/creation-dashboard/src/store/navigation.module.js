@@ -37,7 +37,7 @@ const state = {
   page: null,
   currentStep: 0,
   lastStep: 0,
-  items: JSON.parse(JSON.stringify(items))
+  items: items
 }
 const actions = {
   changePageByStepper({ commit,state,dispatch }, page) {
@@ -83,6 +83,10 @@ const actions = {
       router.push(pageFound.href);
       commit('changePage', pageFound);
   }, 
+  beginSteps({dispatch}){
+    dispatch('changePageByName',items[0].href);
+    dispatch('game/initGame', null, { root: true });
+  },
   logout({ commit }) {
     commit('logout');
   }
@@ -93,7 +97,11 @@ const mutations = {
       state.page = page;
       state.currentStep = page.step;
       if (state.currentStep > state.lastStep)
-          state.lastStep = state.currentStep
+          {state.lastStep = state.currentStep;
+          return;}
+      if (state.currentStep==0){
+        state.lastStep = 0;
+      }
   },
   initNavigation(state) {
     state.currentStep = 0;

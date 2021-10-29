@@ -8,7 +8,9 @@ const state = {
 }
 
 const actions = {
-
+    initGame({commit}) {
+        commit('initGame')
+    },
     getAllActivities({ dispatch, commit }) {
         commit('getAllActivitiesRequest');
         gameService.getAllMyGames()
@@ -80,7 +82,12 @@ const actions = {
 };
 
 const mutations = {
-
+    initGame(state) {
+        state.currentGame= null;
+        state.currentFilters=null;
+        state.catalogGames=null;
+        
+    },
     getAllMyGamesRequest(state) {
         state.myGames = { loading: true };
     },

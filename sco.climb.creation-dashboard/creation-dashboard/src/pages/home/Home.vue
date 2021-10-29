@@ -196,10 +196,11 @@ export default {
 
   },
   methods: {
-    ...mapActions("navigation",["changePageByName","nextStep"]),
+    ...mapActions("navigation",["beginSteps"]),
         claDef() {
-          //  this.changePageByName("classDefinition");
-          this.nextStep();
+          // this.changePageByName("classDefinition");
+          // this.nextStep();
+          this.beginSteps();
     },
 
     ...mapActions("game", {
