@@ -259,9 +259,8 @@ export default {
           "Il numero totale degli alunni non può essere più lungo di 3 cifre",
       ],
       nicknameRules: [
-        (v) =>
-          (v && v.length >= 3) ||
-          "Il nickname deve essere più lungo di 3 caratteri",
+        (v) => (!!v && /\S/.test(v))|| "Il nickname é richiesto!",
+
       ],
     };
   },
@@ -296,6 +295,7 @@ export default {
   mounted() {
     if (this.schoolClass) {
       this.schoolClass.form = this.$refs.form;
+      window.scrollTo(0,document.body.scrollHeight);
     }
   },
 };

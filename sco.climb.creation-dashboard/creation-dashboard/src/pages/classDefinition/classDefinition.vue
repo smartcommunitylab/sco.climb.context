@@ -89,6 +89,7 @@
               v-for="(schoolClass, idx) in schoolClasses"
               v-bind:key="schoolClass.id"
             >
+             
               <Card-Class
                 @removeClassCard="onCardRemoveBtnClick"
                 :schoolClass="schoolClass"
@@ -214,6 +215,8 @@ export default {
       this.schoolClasses.push(this.createCardClassObj());
       // var scrollingElement = (document.scrollingElement || document.body);
       // scrollingElement.scrollTop = scrollingElement.scrollHeight;
+      // window.scrollTo(0,document.body.scrollHeight);
+
   },
     // goHome() {
     //   this.$router.push("home");
