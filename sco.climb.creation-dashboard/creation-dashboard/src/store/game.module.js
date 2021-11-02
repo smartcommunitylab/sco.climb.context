@@ -117,15 +117,22 @@ const mutations = {
     },
 
     setClassDefinition(state, classDefinition) {
-        state.currentGame = { classDefinition: classDefinition };
+        if (!state.currentGame)
+        state.currentGame={};
+        state.currentGame['classDefinition'] = classDefinition ;
     },
 
     setHabitsDefinition(state, habitsDefinition) {
-        state.currentGame = { habitsDefinition: habitsDefinition };
+        if (!state.currentGame)
+        state.currentGame={};
+        state.currentGame['habitsDefinition'] = habitsDefinition ;
     },
 
     setRouteCalibration(state, routeCalibration) {
-        state.currentGame = { routeCalibration: routeCalibration};
+        if (!state.currentGame)
+        state.currentGame={};
+        state.currentGame['routeCalibration'] = routeCalibration ;
+
     },
 
 
