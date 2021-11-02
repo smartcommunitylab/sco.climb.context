@@ -12,9 +12,11 @@
             {{ alert.message }}
           </v-alert>
         </transition> -->
-       <div v-if="stepper">
- <Stepper />
-       </div>
+        <v-row v-if="stepper">
+          <v-col cols="11" offset="1">
+            <Stepper />
+          </v-col>
+        </v-row>
       
         <v-alert
           v-if="alert.message"

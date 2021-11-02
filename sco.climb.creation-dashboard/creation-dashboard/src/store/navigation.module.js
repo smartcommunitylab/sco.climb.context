@@ -10,24 +10,30 @@ const items = [
   },
   {
     step: 2,
-    text: "Abitudine mobilitá",
+    text: "Abitudini di mobilitá",
     class: "habitsDefinition",
     href: "habitsDefinition"
   },
   {
     step: 3,
+    text: "Calibrazione percorso",
+    class: "routeCalibration",
+    href: "routeCalibration"
+  },
+  {
+    step: 4,
     text: "Percorsi consigliati",
     class: "routeSuggestion",
     href: "routeSuggestion"
   },
   {
-    step: 4,
+    step: 5,
     text: "Creazione percorso",
     class: "personalize",
     href: "routeCreation"
   },
   {
-    step: 5,
+    step: 6,
     text: "Riepilogo",
     class: "summary",
     href: "summary"

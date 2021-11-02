@@ -254,12 +254,13 @@ export default {
       classNumRules: [
         (v) => !!v || "Il numero totale degli alunni è richiesto!",
         // (v) => (v && !isNaN(v))|| "Il valore deve essere un numero!",
+        (v) => (v > 0)|| "Il totale deve essere un numero positivo maggiore di zero",
         (v) =>
           (v && String(v).length <= 3) ||
           "Il numero totale degli alunni non può essere più lungo di 3 cifre",
       ],
       nicknameRules: [
-        (v) => (!!v && /\S/.test(v))|| "Il nickname é richiesto!",
+        (v) => (!!v && /\S/.test(v))|| "Il nickname non può essere uno spazio vuoto!",
 
       ],
     };

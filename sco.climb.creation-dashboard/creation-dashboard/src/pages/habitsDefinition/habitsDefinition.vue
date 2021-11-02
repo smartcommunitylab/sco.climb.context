@@ -1,12 +1,12 @@
 <template>
-  <v-container :fluid="true" class="pa-0">
+  <v-container :fluid="true" class="pa-0 mb-14">
     <v-row class="mt-2">
       <v-col offset="2" cols="8">
         <v-row>
           <v-col cols="12" align-self="center" class="pa-0 ml-0">
             <div class="d-inline-block">
-              <p class="titleFont" v-html="$t('habitsDefinition.title')"></p>
-              <p v-html="$t('habitsDefinition.description')"></p>
+              <p class="titleFont" v-html="$t('habitsDefinition.title1')"></p>
+              <p v-html="$t('habitsDefinition.description1')"></p>
             </div>
             <!-- <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
                   {{className}}
@@ -28,16 +28,11 @@
                 <thead>
                   <tr>
                     <th class="text-left"></th>
-                    <th class="text-center">In bici</th>
-                    <th class="text-center">A piedi</th>
-                    <th class="text-center">Trasporto pubblico</th>
-                    <th class="text-center">Pedibus</th>
-                    <th class="text-center">In auto fino alla piazzola</th>
-                    <th class="text-center">Car pooling</th>
-                    <th class="text-center">In auto fino a scuola</th>
+                    <th class="text-center" v-for="(mean, index) in habitsData.diaryMeans" :key="index">{{mean.label}}</th>
                     <th class="text-center">TOTALE ALUNNI</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   <tr
                     v-for="(gameclass, indexClass) in currentGame.classDefinition"
@@ -125,7 +120,7 @@
       </v-col>
     </v-row>
 
-    <div class="text-center ma-2">
+    <!-- <div class="text-center ma-2">
       <v-snackbar
         v-model="snackbar"
         :timeout="2000"
@@ -138,37 +133,38 @@
           </v-btn>
         </template>
       </v-snackbar>
-    </div>
+    </div> -->
 
-    <v-btn
-      color="primary"
-      outlined
-      rounded
-      bottom
-      left
-      :absolute="true"
-      text
-      class="goBack"
-      @click="goToClassDefinition()"
-    >
-      <v-icon small>mdi-chevron-left</v-icon>
-      <span>Indietro</span>
-    </v-btn>
+    <v-row class="mt-10">
+      <v-col offset="2" cols="8">
+        <v-row>
+          <v-col cols="12" align-self="center" class="pa-0 ml-0">
+            <div class="d-inline-block">
+              <p class="titleFont" v-html="$t('habitsDefinition.title2')"></p>
+              <p v-html="$t('habitsDefinition.description2')"></p>
+            </div>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
 
-    <v-btn
-      color="secondary"
-      rounded
-      bottom
-      right
-      :absolute="true"
-      text
-      class="imFab"
-      @click="goOnHab()"
-    >
-      <span>Salva e prosegui</span>
-      <v-icon>mdi-chevron-right</v-icon>
-    </v-btn>
-    <div class="pa-7">
+    <v-row class="mt-10">
+      <v-col offset="2" cols="8">
+        <v-row>
+          <v-col cols="4" class="pa-0 ml-0" v-for="(mean, index) in habitsData.diaryMeans" :key="index">
+            <div class="pa-0">
+              <v-checkbox
+                @change="onActivityValueChange()"
+                v-model="mean.checked"
+                :label="mean.label"
+              ></v-checkbox>
+            </div>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+
+  <!-- <div class="pa-7">
       <h2 class="font-weight-regular">
         Mezzi di trasporto da visualizzare nel diario giornaliero
       </h2>
@@ -180,14 +176,9 @@
       </h4>
     </div>
 
-    <div
-      class="align-center text-center"
-      v-if="habitsData && habitsData && habitsData.diaryMeans"
-    >
+    <div v-if="habitsData && habitsData && habitsData.diaryMeans">
       <v-row>
-        <!-- <div class="col-sm-2"></div>
-        <div class="col-sm-2 pa-1" style="align-self: center"></div> -->
-        <div class="col-sm-6 m-auto " v-for="(mean, index) in habitsData.diaryMeans" :key="index">
+        <div class="col-sm-6 m-auto" v-for="(mean, index) in habitsData.diaryMeans" :key="index">
           <v-checkbox
             @change="onActivityValueChange()"
             v-model="mean.checked"
@@ -195,7 +186,7 @@
           ></v-checkbox>
         </div>
       </v-row>
-      <!-- <v-row>
+      <v-row>
         <div class="col-sm-2"></div>
         <div class="col-sm-2 pa-1" style="align-self: center">In bici</div>
         <div class="col-sm-1 pa-1">
@@ -269,7 +260,7 @@
             v-model="habitsData.habits[6].checked"
           ></v-checkbox>
         </div>
-      </v-row> -->
+      </v-row> 
     </div>
 
     <div class="pa-7">
@@ -365,7 +356,8 @@
           <v-radio name="roundtrip" label="No" value="no"></v-radio>
         </v-radio-group>
       </div>
-    </div>
+    </div> 
+  -->
 
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar">
@@ -377,6 +369,38 @@
         </template>
       </v-snackbar>
     </div>
+    
+    <v-btn
+      elevation="5"
+      color="primary"
+      outlined
+      rounded
+      bottom
+      left
+      :absolute="true"
+      text
+      class="imFabOut"
+      @click="goToClassDefinition()"
+    >
+      <v-icon small>mdi-chevron-left</v-icon>
+      <span>Indietro</span>
+    </v-btn>
+
+    <v-btn
+      elevation="5"
+      color="secondary"
+      rounded
+      bottom
+      right
+      :absolute="true"
+      text
+      class="imFab"
+      @click="goNext()"
+    >
+      <span>Salva e prosegui</span>
+      <v-icon>mdi-chevron-right</v-icon>
+    </v-btn>
+
   </v-container>
 </template>
 
@@ -454,7 +478,6 @@ export default {
             });
           }
         });
-        console.log(this.habitsData.habits);
         this.habitsData.pickerStart = new Date(
           Date.now() - new Date().getTimezoneOffset() * 60000
         )
@@ -472,14 +495,10 @@ export default {
         //TODO
         this.habitsData = this.currentGame.habitsDefinition;
       }
-      console.log(this.habitsData.habits);
     },
-    ...mapActions("game", {
-      createHabits: "createHabits",
-    }),
-    ...mapActions("navigation", {
-      nextStep: "nextStep",
-    }),
+
+    ...mapActions("game", { createHabits: "createHabits" }),
+    ...mapActions("navigation", { nextStep: "nextStep" }),
     onActivityValueChange(index) {
       if (this.habitsData == null || this.habitsData.habits[index] == null) return;
       this.isInputsDataValid[index] = false;
@@ -496,7 +515,6 @@ export default {
       this.formMetadata.totStudentsInserted[index] = totNumStud;
       // this.formMetadata.totalChilloMeters = totChillo;
       // const totalStudents = this.getTotalStudents();
-      console.log(this.currentGame);
       if (totNumStud == this.currentGame.classDefinition[index].students.length) {
         this.isInputsDataValid[index] = true;
       }
@@ -519,24 +537,17 @@ export default {
       this.habitsData.diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return this.habitsData.diffDays;
     },
-    goToRouteSuggestion() {
-      this.getDays();
+    goNext() {
       if (
         this.isInputsDataValid &&
-        this.getDays() > 1 &&
         this.isAtLeastOneCheckboxChecked
       ) {
         this.$refs.form.validate();
         this.createHabits(this.habitsData);
-        //this.$router.push("routeSuggestion");
         this.nextStep();
       } else if (this.isInputsDataValid != true) {
         this.snackBarText =
           "Per favore, controllare le informazioni immesse nella prima sezione di abitudini";
-        this.snackbar = true;
-      } else if (this.getDays() <= 1) {
-        this.snackBarText =
-          "Per favore, controllare che i giorni del percorso siano più di uno";
         this.snackbar = true;
       } else if (this.isAtLeastOneCheckboxChecked != true) {
         this.snackBarText =

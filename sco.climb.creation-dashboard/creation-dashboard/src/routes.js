@@ -43,6 +43,11 @@ const routes = [
     component: () => import('./pages/habitsDefinition/habitsDefinition.vue')
   },
   {
+    path: '/routeCalibration',
+    name: 'routeCalibration',
+    component: () => import('./pages/routeCalibration/routeCalibration.vue')
+  },
+  {
     path: '/routeSuggestion',
     name: 'routeSuggestion',
     component: () => import('./pages/routeSuggestion/routeSuggestion.vue')

@@ -72,6 +72,10 @@ const actions = {
         commit('setHabitsDefinition', habitsDefinition);
     },
 
+    createCalibration({commit}, routeCalibration) {
+        commit('setRouteCalibration', routeCalibration);
+    },
+
     createActivities({ commit }, habitsDefinition) {
         commit('setActivities', habitsDefinition);
     },
@@ -118,6 +122,10 @@ const mutations = {
 
     setHabitsDefinition(state, habitsDefinition) {
         state.currentGame = { habitsDefinition: habitsDefinition };
+    },
+
+    setRouteCalibration(state, routeCalibration) {
+        state.currentGame = { routeCalibration: routeCalibration};
     },
 
 

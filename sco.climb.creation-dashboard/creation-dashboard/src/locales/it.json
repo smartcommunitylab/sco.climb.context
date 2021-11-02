@@ -30,8 +30,17 @@
     "inputNickname":"Nickname"
   },
   "habitsDefinition": {
-    "title": "Abitudini di mobilità",
-    "description": "Come si recano a scuola attualmente gli alunni che intendono partecipare al percorso Kids Go Green?"
+    "title1": "Abitudini di mobilità",
+    "description1": "Come si recano a scuola attualmente gli alunni che intendono partecipare al percorso Kids Go Green?",
+    "title2": "Mezzi di trasporto da visualizzare nel diario giornaliero",
+    "description2": "Spuntare tutte le abitudini di mobilità che si vogliono avere disponibili per guadagnare i chilometri sostenibili che facciano avanzare nel percorso Kids Go Green."
+
+  },
+  "routeCalibration": {
+    "title1": "Calibrazione del percorso",
+    "description1": "In modo da poterti consigliare il percorso più adatto alle te classi, abbiamo bisogno di sapere quando lorem ipsum",
+    "title2": "Mezzi di trasporto da visualizzare nel diario giornaliero",
+    "description2": "Spuntare tutte le abitudini di mobilità che si vogliono avere disponibili per guadagnare i chilometri sostenibili che facciano avanzare nel percorso Kids Go Green."
   },
   "global": {
     "numStud": "Totale alunni",

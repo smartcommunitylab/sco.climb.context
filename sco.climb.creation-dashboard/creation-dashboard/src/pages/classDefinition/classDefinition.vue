@@ -1,7 +1,7 @@
 <template>
   <v-container
   :fluid="true"
-  class="pa-0">
+  class="pa-0 mb-14">
 
     <!-- <v-row no-gutters>
       <v-col>
@@ -131,6 +131,7 @@
 
       <v-btn
         outlined
+        elevation="5"
         rounded
         bottom
         left
@@ -143,6 +144,7 @@
       </v-btn>
     
       <v-btn
+        elevation="5"
         rounded
         bottom
         right
@@ -183,13 +185,7 @@ export default {
     ...mapActions("game", {createClass: "createClass"}),
     goHome() {
        this.$router.push("home");
-      //this.changePageByName("home");
     },
-    // goOnHab() {
-    //    this.changePageByName("habitsDefinition");
-    //    //this.nextStep();
-
-    // },
     onCardRemoveBtnClick: function (index) {
       if (this.schoolClasses?.length <= index) {
         return;
