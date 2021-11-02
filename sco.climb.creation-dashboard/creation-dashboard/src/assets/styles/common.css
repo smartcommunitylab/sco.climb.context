@@ -1,6 +1,7 @@
 :root{
     --primary:#034432;
 }
+
 .titleFont {
     font-family: 'Poppins', sans-serif;
     font-size: 32px;
@@ -43,16 +44,27 @@
   position: fixed;
   margin: 0 0 16px 16px;
   background-color: var(--primary);
+  border: 1px;
+  border-color: blueviolet;
 }
 
-.goBack {
+.imFabOut {
   bottom: 0;
   position: fixed;
   margin: 16px 0 16px 0;
+  background-color: #fff;
 }
 
-.fabIcon, .imFab span {
-color: #fff;
+.imFabOut.v-btn--outlined {
+  border: thin solid #fff !important;
+}
+
+.imFab span, .plusFab span {
+color: #fff !important;
+}
+
+.imFabOut span  {
+  color: var(--primary);
 }
 
 .test {

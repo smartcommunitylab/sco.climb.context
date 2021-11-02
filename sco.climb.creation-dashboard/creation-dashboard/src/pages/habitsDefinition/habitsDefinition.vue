@@ -1,245 +1,188 @@
 <template>
-<!-- <div>
-  <v-form ref="form" v-model="valid">
-    <v-container style="height: 1000px" class="grey lighten-5">
-      <v-row no-gutters>
-        <v-col cols="12" sm="12">
-          <v-card class="pa-2" outlined tile>
-            <div class="pa-7">
-              <v-row
-                ><h2 class="font-weight-regular">
-                  Abitudini di mobilità degli alunni
+  <v-container 
+  :fluid="true"
+  class="pa-0">
 
-                </h2>
-                <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
-                  {{gameclass.className}}
+    <v-row class="mt-2">
+      <v-col offset="2" cols="8">
+        <v-row>
+          <v-col cols="12" align-self="center" class="pa-0 ml-0">
+            <div class="d-inline-block">
+              <p class="titleFont"
+                v-html="$t('habitsDefinition.title')">
+              </p>
+              <p
+                v-html="$t('habitsDefinition.description')">
+              </p>
+            </div>
+                <!-- <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                  {{className}}
                   <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
                     {{student}}
                   </span>
-                </div> 
-                </v-row
-              >
-              <v-row> <v-col cols="12"></v-col></v-row>
-              <v-row
-                ><h4 class="font-weight-regular">
-                  Come si recano a scuola attualmente gli alunni che intendono
-                  partecipare al percorso Kids Go Green?
-                  <v-tooltip v-model="show2" bottom
-                    ><template v-slot:activator="{ on, attrs }">
-                      <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon color="grey lighten-1">
-                          mdi-information-outline
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span
-                      >Assicurarsi che il numero totale dei partecipanti
-                      corrisponda al numero delle abitudini rilevate
-                    </span>
-                  </v-tooltip>
-                  <div
-                    class="text-center d-flex align-center justify-space-around"
-                  ></div>
-                </h4>
-              </v-row>
-            </div>
+                </div> -->
 
-            <div
-              v-if="habitsData.habits && habitsData.habits.length > 0"
-              class="align-center text-center"
-            >
-              <div class="col-sm-12">
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">In bici</div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @change="onActivityValueChange()"
-                      v-model="habitsData.habits[0].numStud"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange()"
-                      v-model="habitsData.habits[0].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
+          </v-col>
+        </v-row>  
+      </v-col>        
+    </v-row>
 
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">A piedi</div>
-                  <div class="col-sm-2">
+    <v-row>
+      <v-col offset="2" cols="8" class="px-0">
+        <v-row>
+          <v-col cols="12" align-self="center" class="px-0 pb-0 mb-0">
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    
+                  </th>
+                  <th class="text-center">
+                    In bici
+                  </th>
+                  <th class="text-center">
+                    A piedi
+                  </th>
+                  <th class="text-center">
+                    Trasporto pubblico
+                  </th>
+                  <th class="text-center">
+                    Pedibus
+                  </th>
+                  <th class="text-center">
+                    In auto fino alla piazzola
+                  </th>
+                  <th class="text-center">
+                    Car pooling
+                  </th>
+                  <th class="text-center">
+                    In auto fino a scuola
+                  </th>
+                  <th class="text-center">
+                    TOTALE ALUNNI
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
+                  <td>{{ gameclass.className }}</td>
+                  <td>
                     <v-text-field
-                      @keydown="onActivityValueChange"
-                      @change="onActivityValueChange"
-                      v-model="habitsData.habits[1].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
+                    placeholder="0"
+                    class="inputField"
+                    @input="onActivityValueChange"
+                    v-model="habitsData.habits[indexClass][0].numStud"
+                    type="number"
                     ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
+                  </td>
+                  <td>
+                    <v-text-field 
+                    placeholder="0"
+                    class="inputField"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][1].numStud"
+                    type="number"
+                    ></v-text-field>
+                  </td>
+                  <td>
                     <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[1].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">Scuolabus o trasporto pubblico</div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[2].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[2].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">Pedibus</div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[3].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[3].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">
-                    In auto fino alla piazzola di sosta
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[4].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[4].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">Car pooling</div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[5].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[5].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">In auto fino a scuola</div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[6].numStud"
-                      type="number"
-                      :label="$t('numStud')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                  <div class="col-sm-2">
-                    <v-text-field
-                      @keydown="onActivityValueChange"
-                      v-model="habitsData.habits[6].chilometri"
-                      type="number"
-                      :label="$t('numKms')"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </div>
-                </v-row>
-
-                <v-row>
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-2">Abitudini rilevate dagli studenti</div>
-                  <div class="col-sm-2">
-                    <span
-                      v-bind:class="{ 'red--text': !this.isInputsDataValid }"
-                      >{{ this.formMetadata.totStudentsInserted }}</span
+                    placeholder="0"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][2].numStud"
+                    type="number"
                     >
-                  </div>
-                  <div class="col-sm-2">
-                    <span>{{ this.formMetadata.totalChilloMeters }}</span>
-                  </div>
-                </v-row>
-              </div>
-            </div>
+                    </v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                    placeholder="0"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][3].numStud"
+                    type="number"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                    placeholder="0"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][4].numStud"
+                    type="number"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                    placeholder="0"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][5].numStud"
+                    type="number"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                    placeholder="0"
+                    @input="onActivityValueChange(indexClass)"
+                    v-model="habitsData.habits[indexClass][6].numStud"
+                    type="number"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <span
+                    v-bind:class="{ 'red--text': ! isInputsDataValid && formMetadata.totStudentsInserted[indexClass] != 0 }"
+                    >
+                      {{ formMetadata.totStudentsInserted[indexClass] }}/{{gameclass.classNum}}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          </v-col>
+        </v-row>
+      </v-col>        
+    </v-row>
 
+    <div class="text-center ma-2">
+      <v-snackbar
+      v-model="snackbar"
+      :timeout="2000"
+      transition="scroll-y-reverse-transition">
+        {{ snackBarText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+            Chiudi
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
+
+      <v-btn
+        color="primary"
+        outlined
+        rounded
+        bottom
+        left
+        :absolute="true"
+        text
+        class="goBack"
+        @click="goToClassDefinition()">
+        <v-icon small>mdi-chevron-left</v-icon>
+        <span>Indietro</span>
+      </v-btn>
+    
+      <v-btn
+        color="secondary"
+        rounded
+        bottom
+        right
+        :absolute="true"
+        text
+        class="imFab"
+        @click="goOnHab()">
+        <span>Salva e prosegui</span>
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
             <div class="pa-7">
               <h2 class="font-weight-regular">
                 Mezzi di trasporto da visualizzare nel diario giornaliero
@@ -417,7 +360,7 @@
                   </v-dialog>
                 </v-col>
               </v-row>
-
+            </div>
               <div class="col-sm-12"></div>
               <h4 class="font-weight-regular">
                 Gli alunni vanno a scuola di sabato?
@@ -439,7 +382,7 @@
                   </v-radio-group>
                 </div>
               </div>
-
+            
               <h4 class="font-weight-regular">
                 I punti sono calcolati considerando sia l’andata che il ritorno
                 da scuola?
@@ -454,28 +397,6 @@
                 </div>
               </div>
 
-              <div class="row py-6">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-5">
-                  <v-btn class="float-left" @click="goToClassDefinition()"
-                    >Indietro</v-btn
-                  >
-                </div>
-
-                <div class="col-sm-5">
-                  <v-btn
-                    class="float-right"
-                    :disabled="!valid"
-                    @click="goToRouteSuggestion()"
-                    >Avanti</v-btn
-                  >
-                </div>
-                <div class="col-sm-1"></div>
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
       <div class="text-center ma-2">
         <v-snackbar v-model="snackbar">
           {{ snackBarText }}
@@ -486,155 +407,8 @@
           </template>
         </v-snackbar>
       </div>
-    </v-container>
-  </v-form>
- </div>  -->
-
-  <v-container 
-  :fluid="true"
-  class="pa-0">
-
-    <v-row class="mt-2">
-      <v-col offset="2" cols="8">
-        <v-row>
-          <v-col cols="12" align-self="center" class="pa-0 ml-0">
-            <div class="d-inline-block">
-              <p class="titleFont"
-                v-html="$t('habitsDefinition.title')">
-              </p>
-              <p
-                v-html="$t('habitsDefinition.description')">
-              </p>
-            </div>
-                <!-- <div v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
-                  {{className}}
-                  <span v-for="(student,studentIndex) in currentGame.classDefinition[indexClass]" :key="studentIndex">
-                    {{student}}
-                  </span>
-                </div> -->
-
-          </v-col>
-        </v-row>  
-      </v-col>        
-    </v-row>
-
-    <v-row>
-      <v-col offset="2" cols="8" class="px-0">
-        <v-row>
-          <v-col cols="12" align-self="center" class="px-0 pb-0 mb-0">
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">
-                    
-                  </th>
-                  <th class="text-center">
-                    In bici
-                  </th>
-                  <th class="text-center">
-                    A piedi
-                  </th>
-                  <th class="text-center">
-                    Trasporto pubblico
-                  </th>
-                  <th class="text-center">
-                    Pedibus
-                  </th>
-                  <th class="text-center">
-                    In auto fino alla piazzola
-                  </th>
-                  <th class="text-center">
-                    Car pooling
-                  </th>
-                  <th class="text-center">
-                    In auto fino a scuola
-                  </th>
-                  <th class="text-center">
-                    TOTALE ALUNNI
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(gameclass,indexClass) in currentGame.classDefinition" :key="indexClass" >
-                  <td>{{ gameclass.className }}</td>
-                  <td auto-grow>
-                    <v-text-field placeholder="0" class="inputField" auto-grow suffix="/0"></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0" class="inputField" auto-grow></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0" auto-grow></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0"></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0"></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0"></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field placeholder="0"></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field ></v-text-field>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-          </v-col>
-        </v-row>
-      </v-col>        
-    </v-row>
-
-    <div class="text-center ma-2">
-      <v-snackbar
-      v-model="snackbar"
-      :timeout="2000"
-      transition="scroll-y-reverse-transition">
-        {{ snackBarText }}
-        <template v-slot:action="{ attrs }">
-          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-            Chiudi
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </div>
-
-      <v-btn
-        color="primary"
-        outlined
-        rounded
-        bottom
-        left
-        :absolute="true"
-        text
-        class="goBack"
-        @click="goToClassDefinition()">
-        <v-icon small>mdi-chevron-left</v-icon>
-        <span>Indietro</span>
-      </v-btn>
     
-      <v-btn
-        color="secondary"
-        rounded
-        bottom
-        right
-        :absolute="true"
-        text
-        class="imFab"
-        @click="goOnHab()">
-        <span>Salva e prosegui</span>
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-
   </v-container>
-
 </template>
 
 <script>
@@ -656,54 +430,13 @@ export default {
         pickerEnd: 0,
         diffDays: 0,
       },
-        desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-          },
-        ],
       row: null,
       modalStart: false,
       isAtLeastOneCheckboxChecked: false,
       modalEnd: false,
       valid: true,
-      formMetadata: { totStudentsInserted: 0, totalChilloMeters: 0 },
+      formMetadata: { totStudentsInserted: [] },
+      // totalChilloMeters: 0
       nomepagina: "habitsDefinition",
       show2: false,
       show: true,
@@ -722,49 +455,51 @@ export default {
   methods: {
     ...mapActions("navigation",["prevStep","nextStep"]),
     initHabitsArray: function () {
+      for (var j = 0; j < this.currentGame.classDefinition.length; j++) {
+        this.formMetadata.totStudentsInserted[j] = 0;
+      }
       if (this.currentGame.habitsDefinition == null) {
-        this.habitsData.habits.push({
-          name: "inBici",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "aPiedi",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "scuolabus",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "pedibus",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "autososta",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "carpooling",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
-        this.habitsData.habits.push({
-          name: "autoscuola",
-          numStud: 0,
-          chilometri: 0,
-          checked: false,
-        });
+        for (var i = 0; i < this.currentGame.classDefinition.length; i++) {
+          var tmp = [];
+          tmp.push({
+            name: "inBici",
+            numStud: "",
+            checked: false,
+          });
+          tmp.push({
+            name: "aPiedi",
+            numStud: "",
+            checked: false,
+          });
+          tmp.push({
+            name: "scuolabus",
+            numStud: "",
+            checked: false,
+          });
+          tmp.push({
+            name: "pedibus",
+            numStud: "",
+            
+            checked: false,
+          });
+          tmp.push({
+            name: "autososta",
+            numStud: "",
+            checked: false,
+          });
+          tmp.push({
+            name: "carpooling",
+            numStud: "",
+            checked: false,
+          });
+          tmp.push({
+            name: "autoscuola",
+            numStud: "",
+            checked: false,
+          });
+          this.habitsData.habits.push(tmp);
+        }
+        console.log(this.habitsData.habits)
         this.habitsData.pickerStart = new Date(
           Date.now() - new Date().getTimezoneOffset() * 60000
         )
@@ -781,6 +516,7 @@ export default {
       } else {
         this.habitsData = this.currentGame.habitsDefinition;
       }
+      console.log(this.habitsData.habits)
     },
     ...mapActions("game", {
       createHabits: "createHabits",
@@ -788,23 +524,24 @@ export default {
     ...mapActions("navigation", {
       nextStep: "nextStep",
     }),
-    onActivityValueChange() {
-      if (this.habitsData == null || this.habitsData.habits == null) return;
+    onActivityValueChange(index) {
+      if (this.habitsData == null || this.habitsData.habits[index] == null) return;
       this.isInputsDataValid = false;
       let totNumStud = 0;
       this.isAtLeastOneCheckboxChecked = false;
-      let totChillo = 0;
-      this.habitsData.habits.forEach((habit) => {
+      // let totChillo = 0;
+      this.habitsData.habits[index].forEach((habit) => {
         totNumStud += +habit.numStud;
-        totChillo += +habit.chilometri;
+        // totChillo += +habit.chilometri;
         if (habit.checked) {
           this.isAtLeastOneCheckboxChecked = true;
         }
       });
-      this.formMetadata.totStudentsInserted = totNumStud;
-      this.formMetadata.totalChilloMeters = totChillo;
-      const totalStudents = this.getTotalStudents();
-      if (totNumStud == totalStudents) {
+      this.formMetadata.totStudentsInserted[index] = totNumStud;
+      // this.formMetadata.totalChilloMeters = totChillo;
+      // const totalStudents = this.getTotalStudents();
+      console.log(this.currentGame)
+      if (totNumStud == this.currentGame.classDefinition[index].students.length) {
         this.isInputsDataValid = true;
       }
     },

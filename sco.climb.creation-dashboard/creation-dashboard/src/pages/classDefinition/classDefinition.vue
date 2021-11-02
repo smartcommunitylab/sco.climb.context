@@ -1,5 +1,5 @@
 <template>
-  <v-container 
+  <v-container
   :fluid="true"
   class="pa-0">
 
@@ -101,11 +101,13 @@
         <v-row>
           <v-col class="plusFab">
             <v-btn
-              color="primary"
+              color="green"
               class="ma-auto"
+              width="100%"
+              
               @click="addNewClass()">
               <v-icon>mdi-plus</v-icon>
-              <!-- <span>aggiungi classe</span> -->
+              <span>aggiungi classe</span>
             </v-btn>
           </v-col>
         </v-row>  
@@ -116,7 +118,7 @@
       <v-snackbar
       v-model="snackbar"
       :timeout="2000"
-      transition="scroll-y-reverse-transition">
+      transition="scroll-y-transition">
         {{ snackBarText }}
         <template v-slot:action="{ attrs }">
           <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
@@ -127,21 +129,19 @@
     </div>
 
       <v-btn
-        color="primary"
         outlined
         rounded
         bottom
         left
         :absolute="true"
         text
-        class="goBack"
+        class="imFabOut"
         @click="goHome()">
         <v-icon small>home</v-icon>
         <span>Torna alla home</span>
       </v-btn>
     
       <v-btn
-        color="secondary"
         rounded
         bottom
         right
@@ -212,7 +212,9 @@ export default {
 
     addNewClass() {
       this.schoolClasses.push(this.createCardClassObj());
-    },
+      // var scrollingElement = (document.scrollingElement || document.body);
+      // scrollingElement.scrollTop = scrollingElement.scrollHeight;
+  },
     // goHome() {
     //   this.$router.push("home");
     // },
@@ -235,7 +237,7 @@ export default {
       let tempArr = this.schoolClasses.map((classe) => {
         let studentsArray=[];
         for (let k=0;k<Number(classe.classNum);k++){
-          classe.students[k]?studentsArray.push(classe.students[k]):studentsArray.push(k)
+          classe.students[k]?studentsArray.push(classe.students[k]):studentsArray.push(k+1)
         }
         return { className: classe.className, students: studentsArray,classNum:Number(classe.classNum)};
       });
