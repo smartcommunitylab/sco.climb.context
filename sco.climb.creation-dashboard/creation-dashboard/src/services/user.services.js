@@ -24,9 +24,9 @@ function getProfile() {
     // }
     ).then(
         user => {
-            if (user && user.data) {
-                localStorage.setItem('user', JSON.stringify(user.data));
-                return Promise.resolve(user.data);
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+                return Promise.resolve(user);
             }
             return Promise.reject();
         }, err => {

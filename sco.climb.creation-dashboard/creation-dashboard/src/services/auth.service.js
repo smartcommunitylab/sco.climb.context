@@ -7,7 +7,7 @@ export const oidcSettings = {
   //  automaticSilentSignin: false,
     // silentRedirectUri: "http://localhost:5002/silent-renew-oidc.html",
   responseType: 'token',
-  scope: 'profile.basicprofile.me',
+  scope: 'profile.basicprofile.me profile.accountprofile.me',
   loadUserInfo: false
 }
 
