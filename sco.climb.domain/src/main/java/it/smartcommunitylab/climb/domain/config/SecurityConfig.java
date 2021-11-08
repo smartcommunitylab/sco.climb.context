@@ -13,6 +13,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +24,9 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -118,7 +122,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       return service;
   }
 
-  
   @Bean
   @ConfigurationProperties("security.oauth2.client")
   public AuthorizationCodeResourceDetails aacGoogleOnly() {
@@ -174,6 +177,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidateHttpSession(true)
 				.logoutSuccessHandler(customLogoutSuccessHandler);
 		http
+			.cors().and()
 			.csrf()
 				.disable()
 			.requestMatcher(new OrRequestMatcher(
@@ -227,6 +231,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        return aacFilter;
 	      }
 
+	    private Filter authFilter() {
+	        OAuth2AuthenticationProcessingFilter aacFilter = new OAuth2AuthenticationProcessingFilter();
+	        OAuth2AuthenticationManager authenticationManager = new OAuth2AuthenticationManager();
+	        AacUserInfoTokenServices tokenServices = new AacUserInfoTokenServices(aacResource().getUserInfoUri(), aac().getClientId());
+	        tokenServices.setPrincipalExtractor(principalExtractor);
+	        authenticationManager.setTokenServices(tokenServices); 
+	       
+	        aacFilter.setAuthenticationManager(authenticationManager);
+	        aacFilter.setStateless(false);
+	        return aacFilter;
+	      }
+	    
         @Override
         protected void configure(HttpSecurity http) throws Exception {
     		http
@@ -239,6 +255,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidateHttpSession(true)
 				.logoutSuccessHandler(customLogoutSuccessHandler);
 		http
+			.cors().and()
 			.csrf()
 				.disable()
 			.authorizeRequests()
@@ -249,6 +266,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.addFilterBefore(rememberMeAuthenticationFilter, BasicAuthenticationFilter.class)
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
+				.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class)
 				.rememberMe();
 					
 		http
