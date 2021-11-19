@@ -35,7 +35,7 @@ angular.module('climbGame.controllers.calendar', [])
         case 'A piedi':
           color = 'cal-foot-friend-col'
           break
-        case "In bici":
+        case "Bici / Monopattino / SkateboardIn bici":
           color = 'cal-bici-col'
           break
         case 'Scuolabus o trasporto pubblico':
