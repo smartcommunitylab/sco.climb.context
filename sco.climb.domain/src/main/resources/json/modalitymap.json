@@ -9,7 +9,7 @@
 		},
 		{
 			"value":"bike",
-			"label": "Bicicletta",
+			"label": "Bici / Monopattino / Skateboard",
 			"active": true,
 			"category": "cat1",
 			"color": "#01C86E"
