@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM maven:3-jdk-11 AS mvn
+FROM maven:3-jdk-8 AS mvn
 WORKDIR /tmp
 COPY ./sco.climb.context-model /tmp/sco.climb.context-model
 WORKDIR /tmp/sco.climb.context-model
@@ -23,7 +23,7 @@ RUN  addgroup -g ${USER_GROUP_ID} ${USER_GROUP}; \
 
 WORKDIR  /home/${USER}/app
 RUN chown ${USER}:${USER_GROUP} /home/${USER}/app
-RUN mkdir indexes && chown ${USER}:${USER_GROUP} indexes 
+RUN mkdir indexes && chown ${USER}:${USER_GROUP} indexes
 RUN apk add --no-cache tzdata
 COPY --from=mvn --chown=climb:climb ${FOLDER}/domain.jar /home/${USER}/app/climb.jar
 
