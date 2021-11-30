@@ -1227,7 +1227,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerDownFR22{
   position: absolute;
   width: 90%;
-  top: 60%;
+  top: 64%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -1235,14 +1235,14 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   position: absolute;
   width: 50%;
   left: 66%;
-  bottom: 20%;
+  bottom: 30%;
   /* margin: -2% 2%; */
 }
 .centerBannerDownRightFR22{
   position: absolute;
   width: 20%;
   left: 48%;
-  bottom: 28%;
+  bottom: 30%;
 }
 
 .centerBannerUpLeftLE{
