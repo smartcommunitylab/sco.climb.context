@@ -35,7 +35,7 @@ deploy_prod:
   stage: deploy
   image: smartcommunitylab/kubectl-alpine:latest
   environment:
-    name: develop
+    name: platform-new
   script:
     - echo "deploy"
     - kubectl -n climb set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE --record=true
@@ -44,7 +44,7 @@ deploy_prod:
     - prod
 
 deploy_dev:
-  stage: deploy
+  stage: platform-new
   environment:
     name: develop
   script:
