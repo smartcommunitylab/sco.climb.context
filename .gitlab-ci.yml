@@ -44,9 +44,9 @@ deploy_prod:
     - prod
 
 deploy_dev:
-  stage: platform-new
+  stage: deploy
   environment:
-    name: develop
+    name: platform-new
   script:
     - ssh -i $DEV_KEY $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
   only:
