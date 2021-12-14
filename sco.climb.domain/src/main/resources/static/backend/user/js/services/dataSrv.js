@@ -379,5 +379,17 @@ angular.module('climbGameUser.services.data', [])
       return deferred.promise
     }
     
+    dataService.isDomainOwner = function(user) {
+    	for (const [key, value] of Object.entries(user.roles)) {
+    		const tokens = key.split('__');
+    		var domain = tokens[0];
+    		var role = tokens[1];
+    		if((domain == currentDomain) && (role == 'owner')) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+     
     return dataService
   })

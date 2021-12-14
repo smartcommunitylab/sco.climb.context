@@ -113,12 +113,7 @@ public class RoleController extends AuthController {
 		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		Institute institute = storage.getInstitute(ownerId, instituteId);
-		School school = storage.getSchool(ownerId, instituteId, schoolId);
-		if((institute == null) || (school == null)) {
-			throw new EntityNotFoundException("institute or school not found");
-		}
-		List<Authorization> auths = roleManager.addGameEditor(ownerId, email, institute, school);
+		List<Authorization> auths = roleManager.addGameEditor(ownerId, email, instituteId, schoolId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addGameEditor: %s - %s - %s - %s", ownerId, email, 
 					instituteId, schoolId));
@@ -134,7 +129,10 @@ public class RoleController extends AuthController {
 			@RequestParam String schoolId,
 			@RequestParam String pedibusGameId,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+		User callerUser = getUserByEmail(request);
+		boolean ownerRole = validateRole(Const.ROLE_OWNER, ownerId, callerUser);
+		boolean editorRole = validateRole(Const.ROLE_GAME_EDITOR, ownerId, callerUser);
+		if(!ownerRole && !editorRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		Institute institute = storage.getInstitute(ownerId, instituteId);
@@ -188,8 +186,11 @@ public class RoleController extends AuthController {
 			@PathVariable String authKey,
 			@RequestParam String email,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_ADMIN, request) && 
-				!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+		User callerUser = getUserByEmail(request);
+		boolean ownerRole = validateRole(Const.ROLE_OWNER, ownerId, callerUser);
+		boolean editorRole = validateRole(Const.ROLE_GAME_EDITOR, ownerId, callerUser);
+		boolean adminRole = validateRole(Const.ROLE_ADMIN, callerUser);
+		if(!ownerRole &&  !editorRole && !adminRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		User user = storage.getUserByEmail(email);
@@ -200,8 +201,15 @@ public class RoleController extends AuthController {
 		if(roles.contains(Const.ROLE_ADMIN)) {
 			throw new UnauthorizedException("Unauthorized Exception: unable to delete admin role");
 		}
-		if(!Utils.checkOwnerId(ownerId, user, authKey)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		String ownerIdKey = Utils.getOwnerIdFromAuthKey(authKey);
+		if(!ownerId.equals(ownerIdKey)) {
+			throw new UnauthorizedException("Unauthorized Exception: domain not valid");
+		}
+		String roleKey = Utils.getRoleFromAuthKey(authKey);
+		if(!ownerRole && !adminRole) {
+			if(!Const.ROLE_TEACHER.equals(roleKey)) {
+				throw new UnauthorizedException("Unauthorized Exception: role not valid");
+			}
 		}
 		storage.removeUserAuthKey(email, authKey);
 		if(logger.isInfoEnabled()) {
@@ -214,10 +222,13 @@ public class RoleController extends AuthController {
 			@PathVariable String ownerId,
 			@RequestParam(required=false) String role,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+		User callerUser = getUserByEmail(request);
+		boolean ownerRole = validateRole(Const.ROLE_OWNER, ownerId, callerUser);
+		boolean editorRole = validateRole(Const.ROLE_GAME_EDITOR, ownerId, callerUser);
+		if(!ownerRole && !editorRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		List<User> result = storage.getUsersByOwnerIdAndRole(ownerId, role);
+		List<User> result = storage.getUsersByOwnerIdAndRole(callerUser, ownerId, role, ownerRole);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getUsersByRole: %s - %s", ownerId, role));
 		}
@@ -229,7 +240,10 @@ public class RoleController extends AuthController {
 			@PathVariable String ownerId,
 			@RequestParam String email,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+		User callerUser = getUserByEmail(request);
+		boolean ownerRole = validateRole(Const.ROLE_OWNER, ownerId, callerUser);
+		boolean editorRole = validateRole(Const.ROLE_GAME_EDITOR, ownerId, callerUser);
+		if(!ownerRole && !editorRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		User user = storage.getUserByEmail(email);
@@ -251,7 +265,10 @@ public class RoleController extends AuthController {
 			@PathVariable String ownerId,
 			@RequestBody User user,
 			HttpServletRequest request) throws Exception {
-		if(!validateRole(Const.ROLE_OWNER, ownerId, request)) {
+		User callerUser = getUserByEmail(request);
+		boolean ownerRole = validateRole(Const.ROLE_OWNER, ownerId, callerUser);
+		boolean editorRole = validateRole(Const.ROLE_GAME_EDITOR, ownerId, callerUser);
+		if(!ownerRole && !editorRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		User userDb = null;
