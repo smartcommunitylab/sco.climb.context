@@ -320,7 +320,7 @@ angular.module('climbGameUser.controllers.users.lists.list', [])
     				if(!$scope.authTextMap[user.objectId][key]['loaded']) {
     					getAuthText(user, key);
     				}
-                });
+          });
     		}
     	}
     	

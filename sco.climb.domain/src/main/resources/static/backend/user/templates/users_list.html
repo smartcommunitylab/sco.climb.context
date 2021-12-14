@@ -40,11 +40,11 @@
       	<md-tooltip md-direction="top">Edit user</md-tooltip>
         <md-icon>mode_edit</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-primary" ng-show="!roleToShow" ng-click="deleteFromDomain($event, user)">
+      <md-button class="md-icon-button md-primary" ng-show="!roleToShow && $parent.isDomainOwner" ng-click="deleteFromDomain($event, user)">
       	<md-tooltip md-direction="top">Delete roles from domain</md-tooltip>
         <md-icon>remove_circle</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-primary" ng-show="!roleToShow" ng-click="deleteUser($event, user)">
+      <md-button class="md-icon-button md-primary" ng-show="!roleToShow && $parent.isDomainOwner" ng-click="deleteUser($event, user)">
       	<md-tooltip md-direction="top">Delete user</md-tooltip>
         <md-icon>delete</md-icon>
       </md-button>

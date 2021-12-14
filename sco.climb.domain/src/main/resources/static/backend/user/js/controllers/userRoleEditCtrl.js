@@ -11,6 +11,14 @@ angular.module('climbGameUser.controllers.users.editRole', [])
     $scope.authTextMap = {};
     $scope.saving = false;
     $scope.actualRole;
+    
+    $scope.isDomainOwner = false;
+    dataService.getProfile().then(
+    		function (data) {
+    			$scope.isDomainOwner = dataService.isDomainOwner(data);
+    		}
+    );
+
     dataService.getUserByEmail($stateParams.userEmail).then(
       function (data) {
         $scope.user = data;
@@ -63,6 +71,10 @@ angular.module('climbGameUser.controllers.users.editRole', [])
           }
         );      
     }
+    
+    $scope.showAllOption = function() {
+    	return $scope.isDomainOwner && ($scope.actualRole== 'editor');
+    }
 
     $scope.loadInstitutesList = function(recoverOtherStates) {
       dataService.getInstitutesList().then(
@@ -79,23 +91,29 @@ angular.module('climbGameUser.controllers.users.editRole', [])
         $scope.schoolsList = undefined;
         $scope.gamesList = undefined;
       }
-      dataService.getSchoolsList($scope.user.instituteId).then(
-        function (data) {
-          $scope.schoolsList = data;
-          if (recoverOtherStates) $scope.loadGamesList(true);
-        }
-      );
+      if($scope.user.instituteId == "*") {
+      	$scope.user.schoolId = "*";
+      } else {
+        dataService.getSchoolsList($scope.user.instituteId).then(
+            function (data) {
+              $scope.schoolsList = data;
+              if (recoverOtherStates) $scope.loadGamesList(true);
+            }
+          );      	      	
+      }
     }
     $scope.loadGamesList = function(recoverOtherStates) {
       if (!recoverOtherStates) {
         $scope.user.gameId = undefined;
         $scope.gamesList = undefined;
       }
-      dataService.getGamesList($scope.user.instituteId, $scope.user.schoolId).then(
-        function (data) {
-          $scope.gamesList = data;
-        }
-      );
+      if($scope.user.schoolId != "*") {
+        dataService.getGamesList($scope.user.instituteId, $scope.user.schoolId).then(
+            function (data) {
+              $scope.gamesList = data;
+            }
+          );      	
+      }
     }
 
     function initParentNavigation() {

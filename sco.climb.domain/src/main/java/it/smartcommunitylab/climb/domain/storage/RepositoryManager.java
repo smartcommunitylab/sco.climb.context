@@ -606,18 +606,19 @@ public class RepositoryManager {
 		return result;
 	}
 	
-	public List<User> getUsersByOwnerIdAndRole(String ownerId, String role) {
+	public List<User> getUsersByOwnerIdAndRole(User requestUser, String ownerId, String role, boolean ownerRole) {
 		List<User> result = new ArrayList<>();
 		List<User> list = mongoTemplate.findAll(User.class);
 		for(User user : list) {
-			if(Utils.checkOwnerId(ownerId, user)) {
-				if(Utils.isNotEmpty(role)) {
-					if(Utils.checkRole(role, user)) {
-						result.add(user);
-					}
-				} else {
-					result.add(user);
+			Map<String, List<Authorization>> rolesFiltered = new HashMap<>();
+			for(String authKey : user.getRoles().keySet()) {
+				if(Utils.validateAuthorizationByRole(authKey, ownerId, role, requestUser, ownerRole)) {
+					rolesFiltered.put(authKey, user.getRoles().get(authKey));
 				}
+			}
+			if(rolesFiltered.keySet().size() > 0) {
+				user.setRoles(rolesFiltered);
+				result.add(user);
 			}
 		}
 		return result;

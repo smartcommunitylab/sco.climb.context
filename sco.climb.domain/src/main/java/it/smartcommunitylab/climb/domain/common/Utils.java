@@ -116,7 +116,9 @@ public class Utils {
 	public static String getAuthKey(String ownerId, String role, String... attributes) {
 		String result = ownerId + "__" + role;
 		for(String attribute : attributes) {
-			result = result + "__" + attribute; 
+			if(!attribute.equals("*")) {
+				result = result + "__" + attribute;
+			}
 		}
 		return result;
 	}
@@ -218,6 +220,65 @@ public class Utils {
 			}
 		}
 		return result;
+	}
+	
+	public static boolean validateAuthorizationByRole(String authKeyToValidate, String ownerId, String role, 
+			User user, boolean ownerRole) {
+		if(user != null) {
+			String[] strings = authKeyToValidate.split("__");
+			String ownerIdAuth = strings[0];
+			String roleAuth = strings[1];
+			String instituteIdAuth = "*";
+			if(strings.length > 2) {
+				instituteIdAuth = strings[2];
+			}
+			String schoolIdAuth = "*";
+			if(strings.length > 3) {
+				schoolIdAuth = strings[3];
+			}			
+			if(!ownerIdAuth.equals(ownerId)) {
+				return false;
+			}
+			if(Utils.isNotEmpty(role)) {
+				if(!roleAuth.equals(role)) {
+					return false;
+				}
+			}
+			if(ownerRole) {
+				return true;
+			}
+			if(Const.ROLE_USER.equals(roleAuth)) {
+				return true;
+			}
+			for(String authKey : user.getRoles().keySet()) {
+				String[] tokens = authKey.split("__");
+				String ownerIdUser = tokens[0];
+				String roleUser = tokens[1];
+				String instituteIdUser = "*";
+				if(tokens.length > 2) {
+					instituteIdUser = tokens[2];
+				}
+				String schoolIdUser = "*";
+				if(tokens.length > 3) {
+					schoolIdUser = tokens[3];
+				}
+				if(ownerIdUser.equals(ownerId)) {
+					if(Const.ROLE_GAME_EDITOR.equals(roleUser)) {
+						if(Const.ROLE_GAME_EDITOR.equals(roleAuth) || 
+								Const.ROLE_TEACHER.equals(roleAuth)) {
+							if(instituteIdUser.equals("*") || 
+									instituteIdUser.equals(instituteIdAuth)) {
+								if(schoolIdUser.equals("*") || 
+										schoolIdUser.equals(schoolIdAuth)) {
+									return true;
+								}
+							}
+						}
+					}		
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static String getNormalizeLegName(String name) {
