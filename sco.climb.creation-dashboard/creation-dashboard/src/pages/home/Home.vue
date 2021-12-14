@@ -27,12 +27,19 @@
                   v-html="$t('home.territorio')">
                   {{ territorioName }}</span>
                 </p>
-                <p class="font-weight-regular">
+                <v-select
+                  v-model="select"
+                  :items="institutes"
+                  item-text="institutes"
+                  return-object
+                  single-line
+                ></v-select>
+                <!-- <p class="font-weight-regular">
                   <v-icon>{{ istitutoIcon }}</v-icon> Istituto:
-                  {{ istitutoName }}
-                </p>
+                  {{ institutes.items[0].name }}
+                </p> -->
                 <p class="font-weight-regular">
-                  <v-icon>{{ scuolaIcon }}</v-icon> Scuola: {{ scuolaName }}
+                  <v-icon>{{ scuolaIcon }}</v-icon> Scuola: {{ schools.items[0].name }}
                 </p>
               </div>  
             </div>
@@ -70,14 +77,10 @@
     </v-row>
     
     <v-btn
-      elevation="6"
-      color="secondary"
-      
-      rounded
+      color="blue"
       bottom
       right
       :absolute="true"
-      text
       class="imFab"
       @click="claDef()"
       >
@@ -177,26 +180,40 @@ export default {
     "Card-Percorso": CardPercorso,
     // "test":Test
   },
-  data() {
+  data () {
+    console.log();
+   
     return {
+      /*school: {
+        institutes: [],
+        schools: [],
+      },*/
       territorioIcon: mdiMapMarker,
       istitutoIcon: mdiBookEducationOutline,
       scuolaIcon: mdiSchoolOutline,
-      territorioName: "Trentino",
-      istitutoName: "IC TN6",
-      scuolaName: "S. Pertini",
+      // territorioName: "Trentino",
+      // istitutoName: "IC TN6",
+      // scuolaName: "S. Pertini",
       role: "Insegnante",
       username: "Francesca Russo",
+      select: "ciao" ,
+      
+      institutes: ["ciao","grazie"],
+    
+    
+
     }
   },
   
   computed: {
     ...mapState("game", ["myGames"]),
     ...mapState("navigation", ["items"]),
+    ...mapState("school", ["schools","institutes"]),
 
   },
   methods: {
     ...mapActions("navigation",["beginSteps"]),
+    ...mapActions("school",{getAllInstitutes:"getAllInstitutes",getAllSchools:"getAllSchools"}),
         claDef() {
           // this.changePageByName("classDefinition");
           // this.nextStep();
@@ -212,6 +229,8 @@ export default {
   },
   mounted() {
     this.getAllMyGames();
+    this.getAllInstitutes();
+    this.getAllSchools();
   },
 };
 </script>

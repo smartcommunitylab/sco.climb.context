@@ -1,5 +1,6 @@
 :root{
     --primary:#034432;
+    --blue: #334799;
 }
 
 .titleFont {
@@ -41,31 +42,36 @@
 
 .imFab {
   bottom: 0;
+  position: fixed; 
+  margin: 0 0 16px 16px;
+}
+
+.imBtn {
+  bottom: 0;
   position: fixed;
   margin: 0 0 16px 16px;
   background-color: var(--primary);
-  border: 1px;
-  border-color: blueviolet;
 }
 
-.imFabOut {
+.imBtnOut {
   bottom: 0;
   position: fixed;
   margin: 16px 0 16px 0;
   background-color: #fff;
 }
 
-.imFabOut.v-btn--outlined {
+.imBtnOut.v-btn--outlined {
   border: thin solid #fff !important;
 }
 
-.imFab span, .plusFab span {
+.imFab span, .imBtn span, .plusFab span {
 color: #fff !important;
 }
 
-.imFabOut span  {
+.imBtnOut span  {
   color: var(--primary);
 }
+
 
 .test {
   background-color: lightcoral;

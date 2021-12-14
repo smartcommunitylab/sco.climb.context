@@ -79,10 +79,10 @@
               
               <span v-if="isDeployed()"
               >
-              APPROVATO</span>
+              VALIDATO</span>
               <span v-else
               >
-              NON APPROVATO</span>
+              NON ANCORA VALIDATO</span>
               </v-chip>
 
               <!-- <v-chip
@@ -131,7 +131,6 @@ export default {
   namespaced: true,
   props: {
     percorso: Object,
-
   },
   methods: {
     isDeployed() {

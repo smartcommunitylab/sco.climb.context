@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import { vuexOidcCreateStoreModule } from 'vuex-oidc';
 import { account } from './account.module';
 import { navigation } from './navigation.module';
+import { school } from './school.module';
 import { alert } from './alert.module';
 import { loader } from './loader.module';
 import { oidcSettings } from '../services/auth.service'
@@ -60,7 +61,8 @@ export const store = new Vuex.Store({
         navigation,
         alert,
         loader,
-        game
+        game,
+        school
     },
     plugins: [createPersistedState({
         storage: window.sessionStorage

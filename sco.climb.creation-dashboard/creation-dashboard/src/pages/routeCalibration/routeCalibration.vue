@@ -1,5 +1,5 @@
 <template>
-  <v-container :fluid="true" class="pa-0">
+  <v-container :fluid="true" class="pa-0 mb-14">
     <v-row class="mt-2">
       <v-col offset="2" cols="8">
         <v-row>
@@ -13,7 +13,7 @@
     </v-row>
 
       <v-row>
-        <v-col cols="6">
+        <v-col offset="2" cols="3">
           <v-dialog
             ref="dialog"
             v-model="modalStart"
@@ -24,7 +24,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="habitsData.pickerStart"
-                :label="$t('dateStart')"
+                :label="$t('global.dateStart')"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
@@ -44,8 +44,8 @@
             </v-date-picker>
           </v-dialog>
         </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="6">
+
+        <v-col offset="1" cols="3">
           <v-dialog
             ref="dialogEnd"
             v-model="modalEnd"
@@ -56,7 +56,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="habitsData.pickerEnd"
-                :label="$t('dateEnd')"
+                :label="$t('global.dateEnd')"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
@@ -77,30 +77,29 @@
           </v-dialog>
         </v-col>
       </v-row>
-    <div class="col-sm-12"></div>
-    <h4 class="font-weight-regular">Gli alunni vanno a scuola di sabato?</h4>
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-4">
-        <v-radio-group v-model="habitsData.saturdaySchool">
-          <v-radio name="saturdaySchool" label="Sì" value="si"></v-radio>
-          <v-radio name="saturdaySchool" label="No" value="no"></v-radio>
-        </v-radio-group>
-      </div>
-    </div>
 
-    <h4 class="font-weight-regular">
-      I punti sono calcolati considerando sia l’andata che il ritorno da scuola?
-    </h4>
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-4">
+      <v-row class="mt-2">
+        <v-col offset="2" cols="3">
+          <div>
+            <p>Gli alunni vanno a scuola di sabato?</p>
+          </div>
+          <v-radio-group v-model="habitsData.saturdaySchool">
+            <v-radio name="saturdaySchool" label="Sì" value="si"></v-radio>
+            <v-radio name="saturdaySchool" label="No" value="no"></v-radio>
+          </v-radio-group>
+        </v-col>
+
+        <v-col offset="1" cols="3">
+          <div>
+            <p>I punti sono calcolati considerando sia l’andata che il ritorno da scuola?</p>
+          </div>
         <v-radio-group v-model="habitsData.roundtrip">
           <v-radio name="roundtrip" label="Sì" value="si"></v-radio>
           <v-radio name="roundtrip" label="No" value="no"></v-radio>
         </v-radio-group>
-      </div>
-    </div>
+        </v-col>
+      </v-row>
+
 
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar">
@@ -122,7 +121,7 @@
       left
       :absolute="true"
       text
-      class="imFabOut"
+      class="imBtnOut"
       @click="goToClassDefinition()"
     >
       <v-icon small>mdi-chevron-left</v-icon>
@@ -137,7 +136,7 @@
       right
       :absolute="true"
       text
-      class="imFab"
+      class="imBtn"
       @click="goOnHab()"
     >
       <span>Salva e prosegui</span>

@@ -11,8 +11,9 @@ export default new Vuetify({
             secondary: '#b0bec5',
             yellow: '#FFB60A',
             green: '#00C86E',
-            accent: '#8c9eff',
+            accent: '#0074ff',
             alert: '#b71c1c',
+            blue: '#334799'
           },
         },
       },

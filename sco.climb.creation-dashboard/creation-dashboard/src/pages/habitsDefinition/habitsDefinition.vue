@@ -1,7 +1,57 @@
 <template>
   <v-container :fluid="true" class="pa-0 mb-14">
+
+      <!-- <div class="text-center ma-2">
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="2000"
+        transition="scroll-y-reverse-transition"
+      >
+        {{ snackBarText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+            Chiudi
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div> -->
     <v-form ref="form">
       <v-row class="mt-2">
+        <v-col offset="2" cols="8">
+          <v-row>
+            <v-col cols="12" align-self="center" class="pa-0 ml-0">
+              <div class="d-inline-block">
+                <p class="titleFont" v-html="$t('habitsDefinition.title2')"></p>
+                <p v-html="$t('habitsDefinition.description2')"></p>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+
+      <v-row class="mt-2">
+        <v-col offset="2" cols="8">
+          <v-row>
+            <v-col
+              cols="12"
+              class="pa-0 ml-0"
+              v-for="(mean, index) in habitsData.diaryMeans"
+              :key="index"
+            >
+              <div class="pa-0 ma-0">
+                <v-checkbox
+                class="pa-0 ma-0"
+                  @change="meansChange(index)"
+                  v-model="mean.checked"
+                  :label="mean.label"
+                ></v-checkbox>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+
+      <v-row class="mt-10">
         <v-col offset="2" cols="8">
           <v-row>
             <v-col cols="12" align-self="center" class="pa-0 ml-0">
@@ -30,9 +80,10 @@
                     <tr>
                       <th class="text-left"></th>
                       <th
-                        class="text-center"
+                        class="text-center size"
                         v-for="(mean, index) in habitsData.diaryMeans"
                         :key="index"
+                        v-show="mean.checked"
                       >
                         {{ mean.label }}
                       </th>
@@ -45,17 +96,20 @@
                       v-for="(gameclass, indexClass) in currentGame.classDefinition"
                       :key="indexClass"
                     >
-                      <td>{{ gameclass.className }}</td>
-                      <td>
+                     <td>{{ gameclass.className }}</td>
+                      <td v-for="(mean, index) in habitsData.diaryMeans"
+                        :key="index"
+                        v-show="mean.checked"
+                        >
                         <v-text-field
                           placeholder="0"
                           class="inputField"
                           @input="onActivityValueChange(indexClass)"
-                          v-model="habitsData.habits[indexClass][0].numStud"
+                          v-model="habitsData.habits[indexClass][index].numStud"
                           type="number"
                         ></v-text-field>
                       </td>
-                      <td>
+                      <!-- <td>
                         <v-text-field
                           placeholder="0"
                           class="inputField"
@@ -104,7 +158,7 @@
                           v-model="habitsData.habits[indexClass][6].numStud"
                           type="number"
                         ></v-text-field>
-                      </td>
+                      </td> -->
                       <td>
                         <span
                           :class="{
@@ -127,54 +181,6 @@
         </v-col>
       </v-row>
 
-      <!-- <div class="text-center ma-2">
-      <v-snackbar
-        v-model="snackbar"
-        :timeout="2000"
-        transition="scroll-y-reverse-transition"
-      >
-        {{ snackBarText }}
-        <template v-slot:action="{ attrs }">
-          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-            Chiudi
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </div> -->
-
-      <v-row class="mt-10">
-        <v-col offset="2" cols="8">
-          <v-row>
-            <v-col cols="12" align-self="center" class="pa-0 ml-0">
-              <div class="d-inline-block">
-                <p class="titleFont" v-html="$t('habitsDefinition.title2')"></p>
-                <p v-html="$t('habitsDefinition.description2')"></p>
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-
-      <v-row class="mt-10">
-        <v-col offset="2" cols="8">
-          <v-row>
-            <v-col
-              cols="4"
-              class="pa-0 ml-0"
-              v-for="(mean, index) in habitsData.diaryMeans"
-              :key="index"
-            >
-              <div class="pa-0">
-                <v-checkbox
-                  @change="meansChange(index)"
-                  v-model="mean.checked"
-                  :label="mean.label"
-                ></v-checkbox>
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
       <div class="text-center ma-2">
         <v-snackbar v-model="snackbar">
           {{ snackBarText }}
@@ -189,13 +195,12 @@
       <v-btn
         elevation="5"
         color="primary"
-        outlined
         rounded
         bottom
         left
         :absolute="true"
         text
-        class="imFabOut"
+        class="imBtnOut"
         @click="goToClassDefinition()"
       >
         <v-icon small>mdi-chevron-left</v-icon>
@@ -210,7 +215,7 @@
         right
         :absolute="true"
         text
-        class="imFab"
+        class="imBtn"
         @click="goNext()"
       >
         <span>Salva e prosegui</span>
@@ -408,5 +413,8 @@ export default {
 .inputField {
   text-align: center;
   min-width: 60%;
+}
+.size{
+  font-size: 15px!important;
 }
 </style>

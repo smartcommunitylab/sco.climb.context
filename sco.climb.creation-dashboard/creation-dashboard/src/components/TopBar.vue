@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="primary" dark height="56px">
       <v-toolbar-title class="pt-4">
         <p v-html="$t('topbar.title')"></p>
       </v-toolbar-title>

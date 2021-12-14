@@ -3,65 +3,6 @@
   :fluid="true"
   class="pa-0 mb-14">
 
-    <!-- <v-row no-gutters>
-      <v-col>
-        <v-card class="pa-2" outlined tile>
-          <div class="pa-7">
-            <v-row> <h2 class="font-weight-regular">Classi</h2></v-row>
-            <v-row> <v-col cols="12"></v-col></v-row>
-            <v-row>
-              <h4 class="font-weight-regular">
-                Inserendo il numero totale degli alunni verrà generata una lista
-                di campi dove potranno essere inseriti i nicknames scelti dagli
-                alunni e che servirà per la compilazione quotidiana del diario
-                di mobilità. Questa modifica non è obbligatoria e può essere
-                fatta a percorso già iniziato.
-              </h4>
-            </v-row>
-          </div>
-
-          <div class="row ma-2">
-            <div class="col-9"></div>
-            <div class="col-3">
-              <v-btn
-                class="ma-2"
-                height="50px"
-                width="200px"
-                color="primary"
-                @click="addNewClass()"
-              >
-                Aggiungi classe
-              </v-btn>
-            </div>
-          </div>
-
-          <div class="row pa-4">
-            <div
-              class="col-5 pa-5"
-              v-for="(schoolClass, idx) in schoolClasses"
-              v-bind:key="schoolClass.id"
-            >
-              <Card-Class
-                @removeClassCard="onCardRemoveBtnClick"
-                :schoolClass="schoolClass"
-                :cardIdx="idx"
-              ></Card-Class>
-            </div>
-          </div>
-          <div class="row py-6">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-5">
-              <v-btn class="float-left" @click="goHome()" color="primary">Indietro</v-btn>
-            </div>
-            <div class="col-sm-5">
-              <v-btn class="float-right" @click="goNext()" color="primary">Avanti</v-btn>
-            </div>
-            <div class="col-sm-1"></div>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row> -->
-
     <v-row class="mt-2">
       <v-col offset="2" cols="8">
         <v-row>
@@ -87,9 +28,9 @@
             <div
               class="col-12 pb-2"
               v-for="(schoolClass, idx) in schoolClasses"
-              v-bind:key="schoolClass.id"
+              :key="schoolClass.id"
             >
-             
+              
               <Card-Class
                 @removeClassCard="onCardRemoveBtnClick"
                 :schoolClass="schoolClass"
@@ -102,10 +43,8 @@
         <v-row>
           <v-col class="plusFab">
             <v-btn
-              color="green"
+              color="blue"
               class="ma-auto"
-              width="100%"
-              
               @click="addNewClass()">
               <v-icon>mdi-plus</v-icon>
               <span>aggiungi classe</span>
@@ -118,43 +57,38 @@
     <div class="text-center ma-2">
       <v-snackbar
       v-model="snackbar"
-      :timeout="2000"
+      :timeout="1500"
+      color="accent"
       transition="scroll-y-transition">
         {{ snackBarText }}
-        <template v-slot:action="{ attrs }">
-          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-            Chiudi
-          </v-btn>
-        </template>
       </v-snackbar>
     </div>
 
-      <v-btn
-        outlined
-        elevation="5"
-        rounded
-        bottom
-        left
-        :absolute="true"
-        text
-        class="imFabOut"
-        @click="goHome()">
-        <v-icon small>home</v-icon>
-        <span>Torna alla home</span>
-      </v-btn>
-    
-      <v-btn
-        elevation="5"
-        rounded
-        bottom
-        right
-        :absolute="true"
-        text
-        class="imFab"
-        @click="goNext()">
-        <span>Salva e prosegui</span>
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
+    <v-btn
+      elevation="5"
+      rounded
+      bottom
+      left
+      :absolute="true"
+      text
+      class="imBtnOut"
+      @click="goHome()">
+      <v-icon small>home</v-icon>
+      <span>Torna alla home</span>
+    </v-btn>
+  
+    <v-btn
+      elevation="5"
+      rounded
+      bottom
+      right
+      :absolute="true"
+      text
+      class="imBtn"
+      @click="goNext()">
+      <span>Salva e prosegui</span>
+      <v-icon>mdi-chevron-right</v-icon>
+    </v-btn>
 
   </v-container>
 </template>
@@ -209,6 +143,9 @@ export default {
 
     addNewClass() {
       this.schoolClasses.push(this.createCardClassObj());
+      this.snackBarText = "Nuova classe aggiunta";
+      this.snackbar = true;
+
       // var scrollingElement = (document.scrollingElement || document.body);
       // scrollingElement.scrollTop = scrollingElement.scrollHeight;
       // window.scrollTo(0,document.body.scrollHeight);
