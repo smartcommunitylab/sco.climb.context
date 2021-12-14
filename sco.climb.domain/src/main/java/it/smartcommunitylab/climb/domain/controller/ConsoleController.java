@@ -96,15 +96,17 @@ public class ConsoleController extends AuthController {
 		DataSetDetails details = (DataSetDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		//check token expiration
-		long now = System.currentTimeMillis();
-		if(now > details.getApp().getExpiration()) {
-			TokenData tokenData = refreshToken(details.getApp().getRefreshToken());
-			details.getApp().setToken(tokenData.getAccess_token());
-			details.getApp().setRefreshToken(tokenData.getRefresh_token());
-			details.getApp().setExpiration(tokenData.getExpires_on());
+		if (details.getApp().getExpiration() > 0) {
+			long now = System.currentTimeMillis();
+			if(now > details.getApp().getExpiration()) {
+				TokenData tokenData = refreshToken(details.getApp().getRefreshToken());
+				details.getApp().setToken(tokenData.getAccess_token());
+				details.getApp().setRefreshToken(tokenData.getRefresh_token());
+				details.getApp().setExpiration(tokenData.getExpires_on());
+			}
+			//save info
+			storage.saveDataSetInfo(details.getApp());
 		}
-		//save info
-		storage.saveDataSetInfo(details.getApp());
 		//create response
 		DataSetInfo dsInfo = new DataSetInfo();
 		dsInfo.setCf(details.getApp().getCf());

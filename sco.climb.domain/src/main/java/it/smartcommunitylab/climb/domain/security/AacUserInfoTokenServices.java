@@ -125,6 +125,7 @@ public class AacUserInfoTokenServices implements ResourceServerTokenServices {
 				DefaultOAuth2AccessToken dafaultToken = new DefaultOAuth2AccessToken(
 						accessToken);
 				dafaultToken.setTokenType(this.tokenType);
+				token = accessToken;
 				restTemplate.getOAuth2ClientContext().setAccessToken(dafaultToken);
 			} else {
 				token = existingToken.getValue();
