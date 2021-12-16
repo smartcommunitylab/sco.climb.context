@@ -35,7 +35,7 @@ deploy_prod:
   stage: deploy
   image: smartcommunitylab/kubectl-alpine:latest
   environment:
-    name: develop
+    name: platform-new
   script:
     - echo "deploy"
     - kubectl -n climb set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE --record=true
@@ -47,7 +47,7 @@ deploy_dev:
   stage: deploy
   image: smartcommunitylab/kubectl-alpine:latest
   environment:
-    name: develop
+    name: platform-new
   script:
     - eval $(ssh-agent -s)
     - echo "$DEV_KEY" | tr -d '\r' | ssh-add -

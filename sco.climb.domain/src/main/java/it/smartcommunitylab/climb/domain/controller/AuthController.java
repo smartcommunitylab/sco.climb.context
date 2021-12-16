@@ -122,7 +122,7 @@ public class AuthController {
 		return validateAuthorization(ownerId, instituteId, schoolId, routeId, gameId,
 				resource, action, user, true);
 	}
-	
+
 	private boolean validateAuthorization(String ownerId, String instituteId, String schoolId, String routeId, 
 			String gameId, String resource, String action, User user, boolean nullable) {
 		if(user != null) {
@@ -173,6 +173,28 @@ public class AuthController {
 		}
 		return false;
 	}
+
+	public boolean validateRole(String role, String ownerId, String instituteId, 
+			String schoolId, HttpServletRequest request) throws Exception {
+		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
+		if(accountByEmail == null) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid or call not authorized");
+		}
+		String email = accountByEmail.getAttributeValue();
+		User user = storage.getUserByEmail(email);
+		if(user != null) {
+			for(String authKey : user.getRoles().keySet()) {
+				List<Authorization> authList = user.getRoles().get(authKey);
+				for(Authorization auth : authList) {
+					if(auth.getRole().equals(role) && auth.getOwnerId().equals(ownerId) && 
+							auth.getInstituteId().equals(instituteId) && auth.getSchoolId().equals(schoolId)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 	
 	public boolean validateRole(String role, String ownerId, HttpServletRequest request) throws Exception {
 		AccountAttributeDTO accountByEmail = getAccountByEmail(getAccoutProfile(request));
@@ -181,6 +203,10 @@ public class AuthController {
 		}
 		String email = accountByEmail.getAttributeValue();
 		User user = storage.getUserByEmail(email);
+		return validateRole(role, ownerId, user);
+	}
+	
+	public boolean validateRole(String role, String ownerId, User user) {
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
 				List<Authorization> authList = user.getRoles().get(authKey);
@@ -191,7 +217,7 @@ public class AuthController {
 				}
 			}
 		}
-		return false;
+		return false;		
 	}
 	
 	public boolean validateRole(String role, HttpServletRequest request) throws Exception {
@@ -201,6 +227,10 @@ public class AuthController {
 		}
 		String email = accountByEmail.getAttributeValue();
 		User user = storage.getUserByEmail(email);
+		return validateRole(role, user);
+	}
+	
+	public boolean validateRole(String role, User user) {
 		if(user != null) {
 			for(String authKey : user.getRoles().keySet()) {
 				List<Authorization> authList = user.getRoles().get(authKey);
@@ -211,7 +241,7 @@ public class AuthController {
 				}
 			}
 		}
-		return false;
+		return false;				
 	}
 	
 }

@@ -3,6 +3,7 @@ angular.module('climbGameUser.controllers.home', [])
   .controller('HomeCtrl', function ($rootScope, $scope, $log, $state, $stateParams, $mdToast, $filter, $mdSidenav, 
   		$timeout, $location, $window, dataService, loginService) {
         $scope.$state = $state;
+        $scope.myProfile = null;
         
         dataService.getProfile().then(
           function (data) {
@@ -43,7 +44,7 @@ angular.module('climbGameUser.controllers.home', [])
         $scope.goBack = function() {
           $state.go($scope.backStateToGo);
         }
-
+        
         $scope.logout = function () {
           var logoutUrl = loginService.logout();
           var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
