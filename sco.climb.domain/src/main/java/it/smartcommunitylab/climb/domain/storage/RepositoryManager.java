@@ -609,18 +609,25 @@ public class RepositoryManager {
 	public List<User> getUsersByOwnerIdAndRole(User requestUser, String ownerId, String role, boolean ownerRole) {
 		List<User> result = new ArrayList<>();
 		List<User> list = mongoTemplate.findAll(User.class);
-		for(User user : list) {
-			Map<String, List<Authorization>> rolesFiltered = new HashMap<>();
-			for(String authKey : user.getRoles().keySet()) {
-				if(Utils.validateAuthorizationByRole(authKey, ownerId, role, requestUser, ownerRole)) {
-					rolesFiltered.put(authKey, user.getRoles().get(authKey));
+		try {
+			for(User user : list) {
+				logger.info(String.format("getUsersByOwnerIdAndRole: %s - %s - %s", ownerId, role, user.getEmail()));
+				Map<String, List<Authorization>> rolesFiltered = new HashMap<>();
+				for(String authKey : user.getRoles().keySet()) {
+					if(Utils.validateAuthorizationByRole(authKey, ownerId, role, requestUser, ownerRole)) {
+						rolesFiltered.put(authKey, user.getRoles().get(authKey));
+					}
 				}
-			}
-			if(rolesFiltered.keySet().size() > 0) {
-				user.setRoles(rolesFiltered);
-				result.add(user);
-			}
+				if(rolesFiltered.keySet().size() > 0) {
+					user.setRoles(rolesFiltered);
+					result.add(user);
+				}
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
+
 		return result;
 	}
 	
