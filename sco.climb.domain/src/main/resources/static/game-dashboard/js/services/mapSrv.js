@@ -148,7 +148,7 @@ angular.module('climbGame.services.map', [])
       do {
         var partialPoly = pointArr.slice(0, count);
         var lengthInMeters = mapService.sumAllDistances(partialPoly) * 1000;
-        if (lengthInMeters > proportionalLength) {
+        if (lengthInMeters >= proportionalLength) {
           findSplitPoint = true;
         } else {
           count++;

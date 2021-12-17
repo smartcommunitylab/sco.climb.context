@@ -226,6 +226,9 @@ public class Utils {
 			User user, boolean ownerRole) {
 		if(user != null) {
 			String[] strings = authKeyToValidate.split("__");
+			if(strings.length < 2) {
+				return false;
+			}
 			String ownerIdAuth = strings[0];
 			String roleAuth = strings[1];
 			String instituteIdAuth = "*";
@@ -252,29 +255,31 @@ public class Utils {
 			}
 			for(String authKey : user.getRoles().keySet()) {
 				String[] tokens = authKey.split("__");
-				String ownerIdUser = tokens[0];
-				String roleUser = tokens[1];
-				String instituteIdUser = "*";
-				if(tokens.length > 2) {
-					instituteIdUser = tokens[2];
-				}
-				String schoolIdUser = "*";
-				if(tokens.length > 3) {
-					schoolIdUser = tokens[3];
-				}
-				if(ownerIdUser.equals(ownerId)) {
-					if(Const.ROLE_GAME_EDITOR.equals(roleUser)) {
-						if(Const.ROLE_GAME_EDITOR.equals(roleAuth) || 
-								Const.ROLE_TEACHER.equals(roleAuth)) {
-							if(instituteIdUser.equals("*") || 
-									instituteIdUser.equals(instituteIdAuth)) {
-								if(schoolIdUser.equals("*") || 
-										schoolIdUser.equals(schoolIdAuth)) {
-									return true;
+				if(tokens.length >= 2) {
+					String ownerIdUser = tokens[0];
+					String roleUser = tokens[1];
+					String instituteIdUser = "*";
+					if(tokens.length > 2) {
+						instituteIdUser = tokens[2];
+					}
+					String schoolIdUser = "*";
+					if(tokens.length > 3) {
+						schoolIdUser = tokens[3];
+					}
+					if(ownerIdUser.equals(ownerId)) {
+						if(Const.ROLE_GAME_EDITOR.equals(roleUser)) {
+							if(Const.ROLE_GAME_EDITOR.equals(roleAuth) || 
+									Const.ROLE_TEACHER.equals(roleAuth)) {
+								if(instituteIdUser.equals("*") || 
+										instituteIdUser.equals(instituteIdAuth)) {
+									if(schoolIdUser.equals("*") || 
+											schoolIdUser.equals(schoolIdAuth)) {
+										return true;
+									}
 								}
 							}
-						}
-					}		
+						}		
+					}					
 				}
 			}
 		}
