@@ -228,10 +228,8 @@ public class RoleController extends AuthController {
 		if(!ownerRole && !editorRole) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		logger.info(String.format("getUsersByRole: %s - %s - %s - %s", ownerId, role, ownerRole, editorRole));
 		List<User> result = storage.getUsersByOwnerIdAndRole(callerUser, ownerId, role, ownerRole);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getUsersByRole: %s - %s", ownerId, role));
-		}
 		return result;
 	}
 	
