@@ -181,7 +181,7 @@ public class EventsPoller {
 					}
 					if (!eventsListCleaned.isEmpty()) {
 						Criteria routeCriteria = Criteria.where("routeId").is(routeId);
-						Sort sort = new Sort(Sort.Direction.ASC, "position");
+						Sort sort = Sort.by(Sort.Direction.ASC, "position");
 						List<Stop> stopList = (List<Stop>) storage.findData(Stop.class, routeCriteria, sort, 
 								game.getOwnerId());
 

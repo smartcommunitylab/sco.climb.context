@@ -78,12 +78,12 @@ public class Utils {
 	
 	public static <T> List<T> readJSONListFromInputStream(InputStream in, Class<T> cls)
 			throws IOException {
-		List<Object> list = Utils.fullMapper.readValue(in, new TypeReference<List<?>>() {
+		List<T> result = Utils.fullMapper.readValue(in, new TypeReference<List<T>>() {
 		});
-		List<T> result = new ArrayList<T>();
-		for (Object o : list) {
-			result.add(Utils.fullMapper.convertValue(o, cls));
-		}
+//		List<T> result = new ArrayList<T>();
+//		for (Object o : list) {
+//			result.add(Utils.fullMapper.convertValue(o, cls));
+//		}
 		return result;
 	}
 	

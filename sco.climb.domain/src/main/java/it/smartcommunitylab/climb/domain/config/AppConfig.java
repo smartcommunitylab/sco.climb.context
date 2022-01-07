@@ -17,8 +17,6 @@
 package it.smartcommunitylab.climb.domain.config;
 
 import java.net.UnknownHostException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,60 +30,43 @@ import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition.TextIndexDefinitionBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.mongodb.MongoException;
 
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
+@EnableWebMvc
 @EnableSwagger2
 @EnableScheduling
-public class AppConfig extends WebMvcConfigurerAdapter {
+public class AppConfig implements WebMvcConfigurer {
 
 	@Autowired
 	@Value("${defaultLang}")
 	private String defaultLang;
-	
-	@Autowired
-	@Value("${swagger.title}")
-	private String swaggerTitle;
-	
-	@Autowired
-	@Value("${swagger.desc}")
-	private String swaggerDesc;
-
-	@Autowired
-	@Value("${swagger.version}")
-	private String swaggerVersion;
-	
-	@Autowired
-	@Value("${swagger.tos.url}")
-	private String swaggerTosUrl;
-	
-	@Autowired
-	@Value("${swagger.contact}")
-	private String swaggerContact;
-
-	@Autowired
-	@Value("${swagger.license}")
-	private String swaggerLicense;
-
-	@Autowired
-	@Value("${swagger.license.url}")
-	private String swaggerLicenseUrl;
-	
+		
 	@Autowired
 	MongoTemplate mongoTemplate;
 	
 	public AppConfig() {
+	}
+	
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**").allowedMethods("*");
 	}
 
 	@Bean
@@ -100,30 +81,35 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
-		.allowedMethods("PUT", "DELETE", "GET", "POST", "PATCH")
-		.allowedOrigins("*");
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry
+			.addResourceHandler("/**")
+			.addResourceLocations("classpath:/static/");
+		registry
+    	.addResourceHandler("swagger-ui.html")
+      .addResourceLocations("classpath:/META-INF/resources/");
+    registry
+    	.addResourceHandler("/webjars/**")
+      .addResourceLocations("classpath:/META-INF/resources/webjars/");
+  }
+
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("it.smartcommunitylab.climb.domain.controller"))
+				.paths(PathSelectors.ant("/api/**"))
+				.build()
+				.apiInfo(apiInfo());
 	}
 	
-	@SuppressWarnings("deprecation")
-	@Bean
-  public Docket swaggerSpringMvcPlugin() {
-		ApiInfo apiInfo = new ApiInfo(swaggerTitle, swaggerDesc, swaggerVersion, swaggerTosUrl, swaggerContact, 
-				swaggerLicense, swaggerLicenseUrl);
-     return new Docket(DocumentationType.SWAGGER_2)
-     	.groupName("api")
-     	.select()
-     		.paths(PathSelectors.regex("/api/.*"))
-     		.build()
-        .apiInfo(apiInfo)
-        .produces(getContentTypes());
-  }
-	
-	private Set<String> getContentTypes() {
-		Set<String> result = new HashSet<String>();
-		result.add("application/json");
-    return result;
-  }
+	private ApiInfo apiInfo() {
+    return new ApiInfoBuilder()
+    		.title("CLIMB Domain")
+    		.version("1.4")
+    		.license("Apache License Version 2.0")
+    		.licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
+    		.contact(new Contact("SmartCommunityLab", "https://http://www.smartcommunitylab.it/", "info@smartcommunitylab.it"))
+    		.build();
+	}
 	
 }

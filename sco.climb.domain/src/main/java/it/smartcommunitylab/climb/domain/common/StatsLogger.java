@@ -2,7 +2,7 @@ package it.smartcommunitylab.climb.domain.common;
 
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
