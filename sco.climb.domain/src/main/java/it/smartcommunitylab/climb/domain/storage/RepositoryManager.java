@@ -611,7 +611,7 @@ public class RepositoryManager {
 		List<User> list = mongoTemplate.findAll(User.class);
 		try {
 			for(User user : list) {
-				logger.info(String.format("getUsersByOwnerIdAndRole: %s - %s - %s", ownerId, role, user.getEmail()));
+				logger.debug(String.format("getUsersByOwnerIdAndRole: %s - %s - %s", ownerId, role, user.getEmail()));
 				Map<String, List<Authorization>> rolesFiltered = new HashMap<>();
 				for(String authKey : user.getRoles().keySet()) {
 					if(Utils.validateAuthorizationByRole(authKey, ownerId, role, requestUser, ownerRole)) {

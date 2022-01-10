@@ -83,6 +83,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
+		<!-- for opaque -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+		</dependency>		
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
