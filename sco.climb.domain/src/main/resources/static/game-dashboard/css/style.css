@@ -1282,6 +1282,55 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.centerBannerUpLeftLE22{
+  position: absolute;
+  width: 50%;
+  left: 40%;
+  /* margin-top: 20%; */
+}
+.centerBannerUpMiddleLE22{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+}
+.centerBannerUpRightLE22{
+  position: absolute;
+  width: 70%;
+  right: 20%;
+  margin-top: -10%;
+}
+.centerBannerDownLeftLE22{
+  position: absolute;
+  width: 60%;
+  left: 60%;
+  bottom: 25%;
+  /* margin: -2% 2%; */
+}
+.centerBannerDownCenter1LE22{
+  position: absolute;
+  width: 50%;
+  left: 38%;
+  bottom: 28%;
+}
+.centerBannerDownCenter2LE22{
+  position: absolute;
+  width: 50%;
+  left: 60%;
+  bottom: 28%;
+}
+.centerBannerDownRightLE22{
+  position: absolute;
+  width: 50%;
+  left: 80%;
+  bottom: 28%;
+}
+.centerBannerDownLE22{
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .centerBannerDownCH{
   position: absolute;
   width: 90%;
@@ -1344,7 +1393,7 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .loginLogoDown{
   width: 50%;
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 2%;
 }
 /* end */
