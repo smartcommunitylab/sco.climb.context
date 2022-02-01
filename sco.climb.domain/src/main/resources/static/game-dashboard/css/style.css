@@ -1395,6 +1395,8 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   position: absolute;
   top: 65%;
   left: 2%;
+  padding:16px;
+      padding-right: 24px;
 }
 /* end */
 .md-toolbar-tools h2.header-custom {
