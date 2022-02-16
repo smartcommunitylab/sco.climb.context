@@ -253,7 +253,9 @@ angular.module('climbGame.services.login', [])
 			localStorage.removeItem(USERTOKEN);
 			localStorage.removeItem(CLASS);
 			localStorage.removeItem(CLASSES);
-			return configService.getURL() + '/logout'
+			new Oidc.UserManager(auth_conf).signoutRedirect();
+
+			// return configService.getURL() + '/logout'
 		}
 		loginService.getParams = function(state) {
 			switch (state) {

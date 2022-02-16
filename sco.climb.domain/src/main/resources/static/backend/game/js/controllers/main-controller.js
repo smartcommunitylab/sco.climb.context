@@ -51,18 +51,14 @@ angular.module('consoleControllers.mainCtrl', [])
             $rootScope.modified = true;
         }
         $scope.logout = function () {
+            
             $scope.selectedOwner = '';
             $scope.selectedInstitute = '';
             $scope.selectedSchool = '';
             $scope.institutesList = [];
             $scope.selectedGame = '';
             $scope.profile = null;
-            localStorage.clear();
-            sessionStorage.clear();
-            var logoutUrl = DataService.getBaseUrl();
-            var baseAppUrl = $location.$$absUrl.replace($location.$$path, '');
-            logoutUrl += '/logout?target=' + baseAppUrl;
-            $window.location.href = logoutUrl;
+            new Oidc.UserManager(auth_conf).signoutRedirect();
         }
 
         $scope.showRegi = false;

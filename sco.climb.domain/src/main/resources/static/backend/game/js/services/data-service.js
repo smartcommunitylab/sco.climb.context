@@ -1,4 +1,4 @@
-angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootScope', '$timeout', 
+angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootScope', '$timeout',
 function ($q, $http, $rootScope, $timeout) {
     var getUrl = window.location;
     var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
@@ -12,15 +12,8 @@ function ($q, $http, $rootScope, $timeout) {
     if (tmp) {
         profileToken = tmp;
     }
-    // var baseUrl = 'http://192.168.42.60:9090/domain';
     var logout = function () {
-        var data = $q.defer();
-        $http.post('logout', {}).success(function () {
-            data.resolve();
-        }, function () {
-            data.resolve();
-        });
-        return data.promise;
+        new Oidc.UserManager(auth_conf).signoutRedirectCallback();
     };
     return {
         getBaseUrl: function () {
@@ -28,7 +21,7 @@ function ($q, $http, $rootScope, $timeout) {
         },
         getProfile: function () {
             var deferred = $q.defer();
-            $http.get(baseUrl + "/console/data",{timeout: timeout}).success(function (data) {       
+            $http.get(baseUrl + "/api/console/data",{timeout: timeout}).success(function (data) {       
                 deferred.resolve(data);
             }).error(function (e) {
                 deferred.reject(e);
