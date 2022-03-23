@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
@@ -27,11 +27,11 @@ public class AuthController {
 	private RepositoryManager storage;
 	
 	protected AccountProfile getAccoutProfile(HttpServletRequest request) throws Exception {
-		BearerTokenAuthentication authentication = (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
-		OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
+		JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+		Jwt principal = (Jwt) authentication.getPrincipal();
+		
 		AccountProfile result = new AccountProfile();
-		result.setCf((String) principal.getAttributes().get("codicefiscale"));
-		result.setEmail((String) principal.getAttributes().get("email"));
+		result.setEmail(principal.getClaimAsString("email"));
 		return result;
 	}
 	
