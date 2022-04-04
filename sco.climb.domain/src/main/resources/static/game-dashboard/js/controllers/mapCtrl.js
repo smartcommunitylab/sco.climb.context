@@ -728,7 +728,7 @@ angular.module("climbGame.controllers.map", [])
     $timeout(function(){ 
     	$scope.flashPublicData = false;
     	$state.go('home.content', {}, { reload: 'home.content' })
-    }, 5000);
+    }, 500000);
     
     $scope.goContent = function() {
     	$scope.flashPublicData = false;

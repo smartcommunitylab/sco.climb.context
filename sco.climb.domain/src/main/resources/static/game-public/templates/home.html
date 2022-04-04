@@ -126,6 +126,53 @@
       </div>
     </md-content>
   </div>
+  <!-- Trentino 2022 -->
+  <div ng-if="sponsorTemplate == 'trentino_2022'"  style="height: 100%;">
+    <md-toolbar style="background-color: white">
+      <div class="md-toolbar-tools">
+        <div aria-label="Go Back"  class="credits-banner " flex="">
+        </div>
+        <md-button aria-label="Go Back" class="credits-banner" flex="">
+          <a href="http://www.comune.trento.it" class="credit-banner"><img ng-src="../game-dashboard/img/credits/logo_comune_TN.png"></a>
+      </md-button>
+      <md-button aria-label="Go Back" class="credits-banner" flex="">
+        <a href="https://trentogiovani.it/" class="credit-banner"><img ng-src="../game-dashboard/img/credits/trentoGiovani.png"></a>
+    </md-button>
+    <md-button aria-label="Go Back" class="credits-banner" flex="">
+      <a href="https://www.comune.trento.it/Aree-tematiche/Ambiente-e-territorio/Mobilita-e-traffico-urbano/Iniziative/Bambini-A-Piedi-Sicuri" class="credit-banner"><img ng-src="../game-dashboard/img/credits/apsTrasparente.png"></a>
+  </md-button>
+        <div aria-label="Go Back"  class="credits-banner " flex="">
+        </div>
+      </div>
+    </md-toolbar>
+    <md-content flex layout-padding style="height: 100%; padding: 0px;">
+      <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <div flex="60" class="centerBannerUpTN">
+          <div layout="row" class="centerBannerRowUpTN" >
+            <div flex="20" class="centerBannerRelative">
+              <a href="http://www.fbk.eu" class="centerBannerUpLeftTN"><img ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 95%;" ></a>
+            </div>
+            <div flex="60" class="centerBannerRelative">
+              <a ng-click="goContent()" href class="centerBannerUpMiddleTN"><img ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+            </div>
+            <div flex="20" class="centerBannerRelative">
+              <a href="http://www.kaleidoscopio.coop" class="centerBannerUpRightTN"><img ng-src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 95%;"></a>
+            </div>
+          </div>
+        </div>
+        <div flex="40" class="centerBannerDownTN">
+          <div layout="row" class="centerBannerRowDownTN" >
+            <div flex="30" class="centerBannerRelative" >
+              <a href="http://www.gruppoitas.it" ><img class="centerBannerDownLeftTN" ng-src="../game-dashboard/img/credits/itas2022.png" ></a>
+            </div>
+            <div flex="30" class="centerBannerRelative">
+              <a href="http://www.cassacentrale.it" ><img class="centerBannerDownCenterTN" ng-src="../game-dashboard/img/credits/cassaCentrale2022.jpg" ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-content>
+  </div>
   <!-- Ferrara -->
   <div ng-if="sponsorTemplate == 'ferrara'"  style="height: 100%;">
     <md-toolbar style="background-color: white">
