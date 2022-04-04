@@ -1159,6 +1159,67 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   width: 60%;
   left: 40%;
 }
+/* for the template Trentino 22 */
+.centerBannerUpTN22{
+  position: relative;
+  background-color: #4153a0; 
+}
+.centerBannerRowUpTN22{
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerUpLeftTN22{
+  text-align: right;
+  /* margin-top: 20%;  */
+}
+.centerBannerUpMiddleTN22{
+
+}
+.centerBannerUpRightTN22{
+  text-align: left;
+  /* margin-top: 20%; */
+}
+.centerBannerDownTN22{
+  position: relative; 
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownTN22{
+  position: absolute;
+  width: 90%;
+  top: 35%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftTN22{
+  position: absolute;
+  width:60%;
+  left: 30%;
+}
+.centerBannerDownCenterTN22{
+  position: absolute;
+  width: 100%;
+  right: 0%;
+}
+.centerBannerDownRightTN22{
+  position: absolute;
+  right: 30%;
+    width: 52%;
+}
+.centerBannerRowFooterTN22{
+  position: absolute;
+  width: 90%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerFooterTN22{
+  position: absolute;
+  width: 60%;
+  left: 40%;
+}
 /* for the template Collecchio */
 .centerBannerRowDownCH{
   position: absolute;
