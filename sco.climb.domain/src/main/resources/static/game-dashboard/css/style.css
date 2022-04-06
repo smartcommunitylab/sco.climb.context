@@ -1172,14 +1172,22 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
   transform: translate(-50%, -50%);
 }
 .centerBannerUpLeftTN22{
-  text-align: right;
+  text-align: center;
+  margin:0;
+  padding:0;
+  position: relative;
+    right: 4%;
   /* margin-top: 20%;  */
 }
 .centerBannerUpMiddleTN22{
-
+	  text-align: center;
+margin:0;
+  padding:0;
 }
 .centerBannerUpRightTN22{
-  text-align: left;
+  text-align: center;
+  margin:0;
+  padding:0;
   /* margin-top: 20%; */
 }
 .centerBannerDownTN22{
@@ -1189,19 +1197,19 @@ md-progress-circular.send-dialog-progress svg path { stroke: white; }
 .centerBannerRowDownTN22{
   position: absolute;
   width: 90%;
-  top: 35%;
-  left: 60%;
+  top: 40%;
+  left: 65%;
   transform: translate(-50%, -50%);
 }
 .centerBannerDownLeftTN22{
-  position: absolute;
-  width:60%;
-  left: 30%;
+    width: 89%;
+    height: 103%;
+    left: 15%;
 }
 .centerBannerDownCenterTN22{
   position: absolute;
   width: 100%;
-  right: 0%;
+  right: -10%;
 }
 .centerBannerDownRightTN22{
   position: absolute;
