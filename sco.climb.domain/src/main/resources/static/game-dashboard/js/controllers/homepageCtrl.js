@@ -88,10 +88,10 @@ angular.module('climbGame.controllers.homepage', [])
                     }
                     //% 100 completed and 0 just started
                     $scope.actualScore = Math.floor(data.teams[i].score / 1000);
-                    $scope.scoreToEnd = Math.round(data.teams[i].scoreToEnd / 1000);
+                    $scope.scoreToEnd = Math.ceil(data.teams[i].scoreToEnd / 1000);
                     $scope.pecentualScore = Math.floor(($scope.actualScore/($scope.actualScore+$scope.scoreToEnd))*100)
 
-                    $scope.scoreToNext = Math.round(data.teams[i].scoreToNext / 1000);
+                    $scope.scoreToNext = Math.ceil(data.teams[i].scoreToNext / 1000);
                     $scope.nextGoal = $scope.actualScore + $scope.scoreToEnd;
                     if ($scope.nextGoal <= $scope.actualScore) {
                       $scope.endReached = true;
