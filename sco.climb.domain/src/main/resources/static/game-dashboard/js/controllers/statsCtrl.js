@@ -10,9 +10,11 @@ angular.module('climbGame.controllers.stats', [])
 
     var data2stats = function (data) {
       console.log("data::",data);
+      // $scope.gameStats.gameScore = (Math.floor($scope.gameStats.gameScore / 1000)).toFixed(3); 
+      // $scope.gameStats.maxGameScore = (Math.ceil($scope.gameStats.maxGameScore / 1000)).toFixed(3); 
       return {
-        'gameScore': Math.round(data.gameScore / 1000, 0),
-        'maxGameScore': Math.round(data.maxGameScore / 1000, 0),
+        'gameScore': (Math.floor(data.gameScore / 1000).toFixed(3)),
+        'maxGameScore': (Math.ceil(data.maxGameScore / 1000)).toFixed(3),
         'scoreModeMap': {          
           'walkPlusPedibus': Math.floor((data.scoreModeMap.walk+data.scoreModeMap.pedibus) / (1000 * KMS_PER_FOOT)),
           'walkPlusPedibus_withoutFloor': (data.scoreModeMap.walk+data.scoreModeMap.pedibus) / (1000 * KMS_PER_FOOT),
