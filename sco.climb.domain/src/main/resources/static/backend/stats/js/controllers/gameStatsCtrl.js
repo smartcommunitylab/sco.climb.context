@@ -19,7 +19,7 @@ angular.module('climbGameUser.controllers.game.stat', [])
         function (data) {
           $scope.gameStats = data;
           $scope.gameStats.gameScore = Math.floor($scope.gameStats.gameScore / 1000); 
-          $scope.gameStats.maxGameScore = Math.floor($scope.gameStats.maxGameScore / 1000); 
+          $scope.gameStats.maxGameScore = Math.ceil($scope.gameStats.maxGameScore / 1000); 
           $scope.gameStats.progressPercentage = Math.floor(data.gameScore / data.maxGameScore * 100.0);          
           if ($scope.gameStats.progressPercentage > 100) $scope.gameStats.progressPercentage = 100;
 

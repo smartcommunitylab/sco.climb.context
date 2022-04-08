@@ -101,7 +101,7 @@ angular.module('climbGame.controllers.stats', [])
     }
     $scope.getGameScorePercentage = function () {
       if ($scope.stats) {
-        return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
+        return Math.floor(($scope.stats.gameScore * 100) / $scope.stats.maxGameScore)
       }
     }
 
