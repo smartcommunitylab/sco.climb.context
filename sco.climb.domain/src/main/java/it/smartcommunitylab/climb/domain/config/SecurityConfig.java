@@ -95,10 +95,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public JwtDecoder jwtDecoder() {
       // build validators for issuer + timestamp (default) and audience
       OAuth2TokenValidator<Jwt> audienceValidator = new JwtAudienceValidator(jwtAudience);
-      OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(jwtIssuerUri);
+      OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(jwtIssuerUri.trim());
 
       // build default decoder and then use custom validators
-      NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(jwtIssuerUri);
+      NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(jwtIssuerUri.trim());
       jwtDecoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator));
 
       return jwtDecoder;
