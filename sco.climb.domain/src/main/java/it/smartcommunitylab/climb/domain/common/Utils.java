@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import it.smartcommunitylab.climb.contextstore.model.Authorization;
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
@@ -78,8 +79,8 @@ public class Utils {
 	
 	public static <T> List<T> readJSONListFromInputStream(InputStream in, Class<T> cls)
 			throws IOException {
-		List<T> result = Utils.fullMapper.readValue(in, new TypeReference<List<T>>() {
-		});
+		CollectionType listType = Utils.fullMapper.getTypeFactory().constructCollectionType(ArrayList.class, cls);
+		List<T> result = Utils.fullMapper.readValue(in, listType);
 //		List<T> result = new ArrayList<T>();
 //		for (Object o : list) {
 //			result.add(Utils.fullMapper.convertValue(o, cls));
