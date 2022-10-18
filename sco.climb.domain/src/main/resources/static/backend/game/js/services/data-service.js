@@ -297,7 +297,7 @@ function ($q, $http, $rootScope, $timeout) {
             return deferred.promise;
         }, 
         updateTerms: function () {
-        var url = baseUrl + "/console/user/accept-terms";
+        var url = baseUrl + "/api/console/user/accept-terms";
         return $http.post(url, new Date(), { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
         },           
         registration: function (data) {
