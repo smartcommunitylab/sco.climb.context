@@ -16,11 +16,8 @@ public class DataSetInfo implements Serializable {
 	private String surname;
 	private String email;
 	private String cf;
-	private String token;
-	private long expiration;
-	private String refreshToken;
-    private TermUsage termUsage;
-	
+	private TermUsage termUsage;
+
 	@Override
 	public String toString() {
 		return ownerIds.toString() + "-" + subject;
@@ -66,14 +63,6 @@ public class DataSetInfo implements Serializable {
 		this.roles = roles;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -90,28 +79,12 @@ public class DataSetInfo implements Serializable {
 		this.cf = cf;
 	}
 
-	public long getExpiration() {
-		return expiration;
+	public TermUsage getTermUsage() {
+		return termUsage;
 	}
 
-	public void setExpiration(long expiration) {
-		this.expiration = expiration;
+	public void setTermUsage(TermUsage termUsage) {
+		this.termUsage = termUsage;
 	}
-
-	public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
-    public TermUsage getTermUsage() {
-        return termUsage;
-    }
-
-    public void setTermUsage(TermUsage termUsage) {
-        this.termUsage = termUsage;
-    }
 
 }

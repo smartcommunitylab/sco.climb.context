@@ -44,10 +44,11 @@ angular.module('climbGame', [
 						mdToast.show(mdToast.simple().content(traslator('translate')('toast_session_expired')));
 						setTimeout(function() {
 							var loginService = $injector.get('loginService');
-							var logoutUrl = loginService.logout();
-							var baseAppUrl = $location.$$absUrl.replace($location.$$path, '');
-							logoutUrl += '?target=' + baseAppUrl;
-							$window.location.href = logoutUrl;
+							loginService.logout();
+							// var logoutUrl = loginService.logout();
+							// var baseAppUrl = $location.$$absUrl.replace($location.$$path, '');
+							// logoutUrl += '?target=' + baseAppUrl;
+							// $window.location.href = logoutUrl;
 						}, 3000);
 					}
 					return $q.reject(response);
@@ -264,6 +265,46 @@ angular.module('climbGame', [
 				return doc.label || doc.name
 			}
 		}
+	}).factory('BearerAuthInterceptor', function ($window, $q, $rootScope) {
+		return {
+			request: function (config) {
+				config.headers = config.headers || {};
+				var user = JSON.parse($window.localStorage.getItem('user'))
+				if (user) {
+					config.headers.Authorization = 'Bearer ' + user.access_token;
+				}
+				return config || $q.when(config);
+			},
+			requestError: function (rejection) {
+				return $q.reject(rejection);
+			},
+			response: function (response) {
+				if (response.status === 403 || response.status === 401) {
+					//  Redirect user to login page / signup Page.
+					//check if token is present and is valid, otherwise login
+					localStorage.setItem('state', JSON.stringify(window.location));
+					var mgr = new Oidc.UserManager(
+						auth_conf);
+					mgr.signinRedirect()
+				}
+				else return response || $q.when(response);
+			},
+			responseError: function (rejection) {
+				if (rejection.status === 403 || rejection.status === 401) {
+					//  Redirect user to login page / signup Page.
+					//check if token is present and is valid, otherwise login
+					localStorage.setItem('state', JSON.stringify(window.location));
+					//$rootScope.mgr.signinRedirect();
+					var mgr = new Oidc.UserManager(auth_conf);
+					 
+					mgr.signinRedirect()
+				}
+				else return rejection || $q.when(rejection);
+
+			}
+		};
+	}).config(function ($httpProvider) {
+		$httpProvider.interceptors.push('BearerAuthInterceptor');
 	})
 	.run(function($rootScope, $state) {
 		$rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {

@@ -477,7 +477,7 @@ public class RepositoryManager {
 		query.addCriteria(new Criteria().andOperator(
 				Criteria.where("timestamp").lte(dateTo),
 				Criteria.where("timestamp").gte(dateFrom)));
-		query.with(new Sort(Sort.Direction.ASC, "timestamp"));
+		query.with(Sort.by(Sort.Direction.ASC, "timestamp"));
 		if(logger.isDebugEnabled()) {
 			logger.debug("searchEvents:" + query.toString());
 		}
@@ -504,7 +504,7 @@ public class RepositoryManager {
 		query.addCriteria(new Criteria().andOperator(
 				Criteria.where("lastUpdate").lt(dateTo),
 				Criteria.where("lastUpdate").gte(dateFrom)));
-		query.with(new Sort(Sort.Direction.ASC, "lastUpdate"));
+		query.with(Sort.by(Sort.Direction.ASC, "lastUpdate"));
 		if(logger.isDebugEnabled()) {
 			logger.debug("searchEventsByLastUpdate:" + query.toString());
 		}
@@ -531,7 +531,7 @@ public class RepositoryManager {
 		query.addCriteria(new Criteria().andOperator(
 			Criteria.where("timestamp").lte(dateTo),
 			Criteria.where("timestamp").gte(dateFrom)));
-		query.with(new Sort(Sort.Direction.ASC, "timestamp"));
+		query.with(Sort.by(Sort.Direction.ASC, "timestamp"));
 		if(logger.isDebugEnabled()) {
 			logger.debug("checkNodes:" + query.toString());
 		}
@@ -611,7 +611,7 @@ public class RepositoryManager {
 		List<User> list = mongoTemplate.findAll(User.class);
 		try {
 			for(User user : list) {
-				logger.info(String.format("getUsersByOwnerIdAndRole: %s - %s - %s", ownerId, role, user.getEmail()));
+				logger.debug(String.format("getUsersByOwnerIdAndRole: %s - %s - %s", ownerId, role, user.getEmail()));
 				Map<String, List<Authorization>> rolesFiltered = new HashMap<>();
 				for(String authKey : user.getRoles().keySet()) {
 					if(Utils.validateAuthorizationByRole(authKey, ownerId, role, requestUser, ownerRole)) {
@@ -657,9 +657,6 @@ public class RepositoryManager {
 				update.set("surname", dataSetInfo.getSurname());
 				update.set("email", dataSetInfo.getEmail());
 				update.set("cf", dataSetInfo.getCf());
-				update.set("token", dataSetInfo.getToken());
-				update.set("expiration", dataSetInfo.getExpiration());
-				update.set("refreshToken", dataSetInfo.getRefreshToken());
 				mongoTemplate.updateFirst(query, update, DataSetInfo.class);
 			} else {
 				mongoTemplate.save(dataSetInfo);
@@ -707,13 +704,13 @@ public class RepositoryManager {
 	public List<PedibusItineraryLeg> getPedibusItineraryLegsByGameId(String ownerId, 
 			String pedibusGameId, String itineraryId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId)
-		.and("itineraryId").is(itineraryId)).with(new Sort(Sort.Direction.ASC, "position"));
+		.and("itineraryId").is(itineraryId)).with(Sort.by(Sort.Direction.ASC, "position"));
 		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
 	}		
 	
 	public List<PedibusItineraryLeg> getPedibusItineraryLegsByItineraryId(String itineraryId) {
 		Query query = new Query(new Criteria("itineraryId").is(itineraryId))
-				.with(new Sort(Sort.Direction.ASC, "position"));
+				.with(Sort.by(Sort.Direction.ASC, "position"));
 		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
 	}
 	
@@ -768,7 +765,7 @@ public class RepositoryManager {
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
 				.and("pedibusGameId").is(pedibusGameId)
 				.and("classRoom").in(classRooms))
-		.with(new Sort(Sort.Direction.ASC, "nickname"));
+		.with(Sort.by(Sort.Direction.ASC, "nickname"));
 		return mongoTemplate.find(query, PedibusPlayer.class);		
 	}	
 	
@@ -813,7 +810,7 @@ public class RepositoryManager {
 				Criteria.where("day").lte(to));
 		criteria = criteria.andOperator(timeCriteria);
 		Query query = new Query(criteria);
-		query.with(new Sort(Sort.Direction.DESC, "day"));
+		query.with(Sort.by(Sort.Direction.DESC, "day"));
 		List<Excursion> result = mongoTemplate.find(query, Excursion.class);
 		return result;
 	}
@@ -828,7 +825,7 @@ public class RepositoryManager {
 				Criteria.where("day").lte(to));
 		criteria = criteria.andOperator(timeCriteria);
 		Query query = new Query(criteria);
-		query.with(new Sort(Sort.Direction.ASC, "day"));
+		query.with(Sort.by(Sort.Direction.ASC, "day"));
 		List<CalendarDay> result = mongoTemplate.find(query, CalendarDay.class);
 		return result;
 	}	
@@ -1512,7 +1509,7 @@ public class RepositoryManager {
 	public List<MultimediaContent> getMultimediaContentByLeg(String ownerId, String itineraryLegId) {
 		Query query = new Query(Criteria.where("legId").is(itineraryLegId)
 				.and("ownerId").is(ownerId));
-		query.with(new Sort(Sort.Direction.ASC, "position"));
+		query.with(Sort.by(Sort.Direction.ASC, "position"));
 		List<MultimediaContent> result = mongoTemplate.find(query, MultimediaContent.class);
 		return result;
 	}
@@ -1568,7 +1565,7 @@ public class RepositoryManager {
 		//calendar stats
 		Query query = new Query(new Criteria("ownerId").is(ownerId)
 				.and("pedibusGameId").is(pedibusGameId));
-		query.with(new Sort(Direction.DESC, "day"));
+		query.with(Sort.by(Direction.DESC, "day"));
 		query.limit(1);
 		long number = mongoTemplate.count(query, CalendarDay.class);
 		CalendarDay findOne = mongoTemplate.findOne(query, CalendarDay.class);
@@ -1588,7 +1585,7 @@ public class RepositoryManager {
 		}
 		query = new Query(new Criteria("ownerId").is(ownerId)
 				.and("routeId").in(routeIds));
-		query.with(new Sort(Direction.DESC, "timestamp"));
+		query.with(Sort.by(Direction.DESC, "timestamp"));
 		query.limit(1);
 		number = mongoTemplate.count(query, WsnEvent.class);
 		WsnEvent event = mongoTemplate.findOne(query, WsnEvent.class);
@@ -1602,7 +1599,7 @@ public class RepositoryManager {
 		//excursion stats
 		query = new Query(new Criteria("ownerId").is(ownerId)
 				.and("pedibusGameId").is(pedibusGameId));
-		query.with(new Sort(Direction.DESC, "day"));
+		query.with(Sort.by(Direction.DESC, "day"));
 		query.limit(1);
 		number = mongoTemplate.count(query, Excursion.class);
 		Excursion excursion = mongoTemplate.findOne(query, Excursion.class);

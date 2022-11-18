@@ -12,7 +12,7 @@ angular.module('MainDataService', []).factory('MainDataService', function ($root
         if (domains == undefined) {
             DataService.getProfile().then(function (profile) {
                 domains = profile;
-                DataService.setProfileToken(profile.token);
+                //DataService.setProfileToken(profile.token);
                 deferred.resolve(domains);
             }, function() {
                 $rootScope.networkProblemDetected("Errore caricamento domini!");

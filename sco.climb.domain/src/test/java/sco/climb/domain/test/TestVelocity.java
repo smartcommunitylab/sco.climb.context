@@ -12,14 +12,12 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.junit.Test;
 
 import it.smartcommunitylab.climb.domain.common.Utils;
 import it.smartcommunitylab.climb.domain.model.PedibusItineraryLeg;
 
 public class TestVelocity {
 
-	@Test
 	public void testVelocityConstants() {
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
@@ -49,7 +47,6 @@ public class TestVelocity {
 		System.out.println(writer.toString());
 	}
 	
-	@Test
 	public void testVelocityCalendarTrips() {
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
@@ -79,7 +76,6 @@ public class TestVelocity {
 		System.out.println(writer.toString());
 	}
 	
-	@Test
 	public void testVelocityLegsBadges() {
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
@@ -128,7 +124,6 @@ public class TestVelocity {
 		System.out.println(writer.toString());
 	}
 	
-	@Test
 	public void testVelocityTempletes() {
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
