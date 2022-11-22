@@ -16,18 +16,6 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.climb.contextstore.model.Route;
-import it.smartcommunitylab.climb.domain.common.Const;
-import it.smartcommunitylab.climb.domain.common.StatsLogger;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
-import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
-import it.smartcommunitylab.climb.domain.exception.StorageException;
-import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
-import it.smartcommunitylab.climb.domain.model.NodeState;
-import it.smartcommunitylab.climb.domain.model.WsnEvent;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,6 +46,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
+
+import it.smartcommunitylab.climb.contextstore.model.Route;
+import it.smartcommunitylab.climb.domain.common.Const;
+import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
+import it.smartcommunitylab.climb.domain.exception.StorageException;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
+import it.smartcommunitylab.climb.domain.model.NodeState;
+import it.smartcommunitylab.climb.domain.model.WsnEvent;
+import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 
 @Controller

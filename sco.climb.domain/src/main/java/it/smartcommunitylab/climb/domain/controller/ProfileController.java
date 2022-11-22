@@ -16,10 +16,6 @@
 
 package it.smartcommunitylab.climb.domain.controller;
 
-import it.smartcommunitylab.climb.contextstore.model.User;
-import it.smartcommunitylab.climb.domain.common.Utils;
-import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
-
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,24 +31,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import it.smartcommunitylab.climb.contextstore.model.User;
+import it.smartcommunitylab.climb.domain.common.Utils;
+
 
 @Controller
 public class ProfileController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(ProfileController.class);
 			
-	@Autowired
-	private RepositoryManager storage;
-
 	@RequestMapping(value = "/api/profile", method = RequestMethod.GET)
 	public @ResponseBody User getProfile(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		String email = getAccountByEmail(getAccoutProfile(request)).getAttributeValue();
-		//TODO TEST
-		//email = "smartcommunitytester@gmail.com";
-		User user = storage.getUserByEmail(email);
+		User user = getUserByEmail(request);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getProfile:%s - %s", email, user));
+			logger.info(String.format("getProfile:%s - %s", user.getEmail(), user.getCf()));
 		}
 		return user;
 	}

@@ -46,10 +46,11 @@ angular.module('climbGameUser.controllers.home', [])
         }
         
         $scope.logout = function () {
-          var logoutUrl = loginService.logout();
-          var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
-          logoutUrl += '?target=' + baseAppUrl;
-          $window.location.href = logoutUrl;
+          loginService.logout();
+          // var logoutUrl = loginService.logout();
+          // var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
+          // logoutUrl += '?target=' + baseAppUrl;
+          // $window.location.href = logoutUrl;
         }
     }
   )
