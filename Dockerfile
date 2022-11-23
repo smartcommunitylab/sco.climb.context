@@ -8,7 +8,7 @@ COPY ./sco.climb.domain /tmp/sco.climb.domain
 WORKDIR /tmp/sco.climb.domain
 RUN --mount=type=cache,target=/root/.m2  mvn clean install -Dmaven.test.skip=true
 
-FROM adoptopenjdk/openjdk8:alpine
+FROM adoptopenjdk/openjdk11:alpine
 ENV FOLDER=/tmp/sco.climb.domain/target
 ARG VER=1.0
 ENV APP=sco.climb.domain-${VER}.jar
