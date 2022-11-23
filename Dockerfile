@@ -28,4 +28,4 @@ RUN apk add --no-cache tzdata
 COPY --from=mvn --chown=climb:climb ${FOLDER}/domain.jar /home/${USER}/app/climb.jar
 
 USER climb
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar climb.jar
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar climb.jar"]
