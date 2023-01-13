@@ -21,6 +21,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,7 @@ import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
 @Controller
 public class ConsoleController extends AuthController {
+	private static final transient Logger logger = LoggerFactory.getLogger(ConsoleController.class);
 
 	@Autowired
 	private RepositoryManager storage;
@@ -71,7 +74,10 @@ public class ConsoleController extends AuthController {
 		dsInfo.setOwnerIds(Utils.getUserOwnerIds(user));
 		dsInfo.getOwnerIds().remove(Const.SYSTEM_DOMAIN);
 		dsInfo.setRoles(Utils.getUserRoles(user));
-          dsInfo.setTermUsage(user.getTermUsage());
+        dsInfo.setTermUsage(user.getTermUsage());
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getDataSetInfo:%s - %s", user.getEmail(), user.getCf()));
+		}        
 		return dsInfo;
 	}
 
