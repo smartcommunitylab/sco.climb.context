@@ -1271,14 +1271,17 @@ margin:0;
   transform: translate(-50%, -50%);
 }
 .centerBannerDownLeftTN23{
-    width: 89%;
-    height: 103%;
-    left: 15%;
+  width: 89%;
+  height: 80%;
+  left: 15%;
+
 }
 .centerBannerDownCenterTN23{
   position: absolute;
   width: 100%;
   right: -10%;
+  top: 10%;
+
 }
 .centerBannerDownRightTN23{
   position: absolute;
@@ -1341,13 +1344,14 @@ margin:0;
 }
 .centerBannerDownLeftTN232{
     width: 89%;
-    height: 103%;
+    height: 80%;
     left: 15%;
 }
 .centerBannerDownCenterTN232{
   position: absolute;
   width: 100%;
   right: -10%;
+    top: 10px;
 }
 .centerBannerDownRightTN232{
   position: absolute;
@@ -1473,6 +1477,14 @@ margin:0;
   position: absolute;
   width: 95%;
   left: 0%;
+  top: 20px;
+
+}
+.centerBannerUpMiddleEE23{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+  top:20px;
 }
 .centerBannerUpRightFR{
   position: absolute;
@@ -1624,7 +1636,6 @@ margin:0;
   position: absolute;
   width: 70%;
   right: 20%;
-  background: white;
   padding: 10px;
 }
 .centerBannerDownLeftLE23{
