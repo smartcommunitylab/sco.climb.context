@@ -1228,6 +1228,217 @@ margin:0;
   width: 60%;
   left: 40%;
 }
+/* for the template Trentino 23 1*/
+.centerBannerUpTN23{
+  position: relative;
+  background-color: #4153a0; 
+}
+.centerBannerRowUpTN22{
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerUpLeftTN23{
+  text-align: center;
+  margin:0;
+  padding:0;
+  position: relative;
+    /* right: 40%; */
+  /* margin-top: 20%;  */
+}
+.centerBannerUpMiddleTN23{
+	  text-align: center;
+margin:0;
+  padding:0;
+}
+.centerBannerUpRightTN23{
+  text-align: center;
+  margin:0;
+  padding:0;
+  /* margin-top: 20%; */
+}
+.centerBannerDownTN23{
+  position: relative; 
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownTN23{
+  position: absolute;
+  width: 90%;
+  top: 40%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftTN23{
+  width: 89%;
+  height: 80%;
+  left: 15%;
+
+}
+.centerBannerDownCenterTN23{
+  position: absolute;
+  width: 100%;
+  right: -10%;
+  top: 10%;
+
+}
+.centerBannerDownRightTN23{
+  position: absolute;
+  right: 30%;
+    width: 52%;
+}
+.centerBannerRowFooterTN23{
+  position: absolute;
+  width: 90%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerFooterTN23{
+  position: absolute;
+  width: 60%;
+  left: 40%;
+}
+/* for the template Trentino 23 2*/
+.centerBannerUpTN232{
+  position: relative;
+  background-color: #4153a0; 
+}
+.centerBannerRowUpTN22{
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerUpLeftTN232{
+  text-align: center;
+  margin:0;
+  padding:0;
+  position: relative;
+    /* right: 40%; */
+  /* margin-top: 20%;  */
+}
+.centerBannerUpMiddleTN232{
+	  text-align: center;
+margin:0;
+  padding:0;
+}
+.centerBannerUpRightTN232{
+  text-align: center;
+  margin:0;
+  padding:0;
+  /* margin-top: 20%; */
+}
+.centerBannerDownTN232{
+  position: relative; 
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownTN232{
+  position: absolute;
+  width: 90%;
+  top: 40%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftTN232{
+    width: 89%;
+    height: 80%;
+    left: 15%;
+}
+.centerBannerDownCenterTN232{
+  position: absolute;
+  width: 100%;
+  right: -10%;
+    top: 10px;
+}
+.centerBannerDownRightTN232{
+  position: absolute;
+  right: 30%;
+    width: 52%;
+}
+.centerBannerRowFooterTN232{
+  position: absolute;
+  width: 90%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerFooterTN232{
+  position: absolute;
+  width: 60%;
+  left: 40%;
+}
+/* for the template Gorgonzola 23 */
+.centerBannerUpGG23{
+  position: relative;
+  background-color: #4153a0; 
+}
+.centerBannerRowUpTN22{
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerUpLeftGG23{
+  text-align: center;
+  margin:0;
+  padding:0;
+  position: relative;
+    /* right: 40%; */
+  /* margin-top: 20%;  */
+}
+.centerBannerUpMiddleGG23{
+	  text-align: center;
+margin:0;
+  padding:0;
+}
+.centerBannerUpRightGG23{
+  text-align: center;
+  margin:0;
+  padding:0;
+  /* margin-top: 20%; */
+}
+.centerBannerDownGG23{
+  position: relative; 
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownGG23{
+  position: absolute;
+  width: 90%;
+  top: 20%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownLeftGG23{
+    width: 89%;
+    height: 103%;
+    left: 15%;
+}
+.centerBannerDownCenterGG23{
+  position: absolute;
+  width: 100%;
+  left:50%;
+}
+.centerBannerDownRightGG23{
+  position: absolute;
+  right: 30%;
+    width: 52%;
+}
+.centerBannerRowFooterGG23{
+  position: absolute;
+  width: 90%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerFooterGG23{
+  position: absolute;
+  width: 60%;
+  left: 40%;
+}
 /* for the template Collecchio */
 .centerBannerRowDownCH{
   position: absolute;
@@ -1266,6 +1477,14 @@ margin:0;
   position: absolute;
   width: 95%;
   left: 0%;
+  top: 20px;
+
+}
+.centerBannerUpMiddleEE23{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+  top:20px;
 }
 .centerBannerUpRightFR{
   position: absolute;
@@ -1313,7 +1532,13 @@ margin:0;
   left: 48%;
   bottom: 30%;
 }
-
+.centerBannerUpLeftFR23{
+  position: absolute;
+  width: 40%;
+  left: 40%;
+  /* margin-top: 20%; */
+}
+/* lecco */
 .centerBannerUpLeftLE{
   position: absolute;
   width: 50%;
@@ -1351,6 +1576,7 @@ margin:0;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+/* lecco 22 */
 .centerBannerUpLeftLE22{
   position: absolute;
   width: 50%;
@@ -1398,6 +1624,53 @@ margin:0;
   width: 90%;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* lecco 23 */
+.centerBannerUpLeftLE23{
+  position: absolute;
+  width: 50%;
+  left: 40%;
+  /* margin-top: 20%; */
+}
+.centerBannerUpMiddleLE23{
+  position: absolute;
+  width: 95%;
+  left: 0%;
+}
+.centerBannerUpRightLE23{
+  position: absolute;
+  width: 50%;
+  padding: 10px;
+}
+.centerBannerDownLeftLE23{
+  position: absolute;
+  width: 20%;
+  left: 40%;
+}
+.centerBannerDownCenter1LE23{
+  position: absolute;
+  width: 50%;
+  left: 38%;
+  bottom: 28%;
+}
+.centerBannerDownCenter2LE23{
+  position: absolute;
+  width: 50%;
+  left: 60%;
+  bottom: 28%;
+}
+.centerBannerDownRightLE23{
+  position: absolute;
+  width: 50%;
+  left: 80%;
+  bottom: 28%;
+}
+.centerBannerDownLE23{
+    position: absolute;
+    width: 90%;
+    top: 10%;
+    left: 50%;
   transform: translate(-50%, -50%);
 }
 .centerBannerDownCH{
