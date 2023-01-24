@@ -1532,6 +1532,12 @@ margin:0;
   left: 48%;
   bottom: 30%;
 }
+.centerBannerUpLeftFR23{
+  position: absolute;
+  width: 40%;
+  left: 40%;
+  /* margin-top: 20%; */
+}
 /* lecco */
 .centerBannerUpLeftLE{
   position: absolute;
@@ -1634,8 +1640,7 @@ margin:0;
 }
 .centerBannerUpRightLE23{
   position: absolute;
-  width: 70%;
-  right: 20%;
+  width: 50%;
   padding: 10px;
 }
 .centerBannerDownLeftLE23{
