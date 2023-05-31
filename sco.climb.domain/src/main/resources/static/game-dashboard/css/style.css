@@ -1740,6 +1740,53 @@ margin:0;
   padding:16px;
       padding-right: 24px;
 }
+.centerBannerUpRightStaffetta{
+  position: absolute;
+  width: 50%;
+  left: -10%;
+  margin-top:50%;
+}
+.centerBannerUpLeftStaffetta{
+  position: absolute;
+  left: 10%;
+}
+.centerBannerDownLeftStaffetta{
+  position: absolute;
+  width: 20%;
+  /* top: 64%; */
+  /* left: 50%; */
+  transform: translate(-150%, -120%);
+  padding-bottom: 20px;
+  z-index:9999;
+}
+.centerBannerDownLeftUPStaffetta{
+  width: 20%;
+  /* left: 66%; */
+  bottom: 50%;
+}
+.centerBannerDownLeftDOWNStaffetta{
+  width: 20%;
+  /* left: 66%; */
+  bottom: 50%;
+}
+.centerBannerDownCenterStaffetta{
+  position: absolute;
+  /* width: 20%; */
+  /* top: 64%; */
+  /* left: 50%; */
+  transform: translate(0%, -150%);
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+.centerBannerDownRightStaffetta{
+  position: absolute;
+  width: 20%;
+  /* top: 64%; */
+  /* left: 50%; */
+  transform: translate(150%, -150%);
+  padding-bottom: 20px;
+}
 /* end */
 .md-toolbar-tools h2.header-custom {
   margin-top: -16px!important;
