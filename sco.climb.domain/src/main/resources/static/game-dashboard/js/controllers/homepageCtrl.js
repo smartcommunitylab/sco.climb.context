@@ -35,14 +35,13 @@ angular.module('climbGame.controllers.homepage', [])
         },
         layers: {
           baselayers: {
-            water: {
-              name: 'Watercolor',
-              url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+            osm: {
+              name: 'OpenStreetMap',
+              url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               type: 'xyz',
               layerOptions: {
                 showOnSelector: false,
                 noWrap: true
-                // attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC-BY-SA'
               }
             }
           }
