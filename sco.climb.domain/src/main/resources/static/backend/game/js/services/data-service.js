@@ -12,8 +12,9 @@ function ($q, $http, $rootScope, $timeout) {
     if (tmp) {
         profileToken = tmp;
     }
-    var logout = function () {
-        new Oidc.UserManager(auth_conf).signoutRedirectCallback();
+    var logout = async function () {
+        var mgr =  await new Oidc.UserManager(auth_conf)
+        mgr.signoutRedirect();
     };
     return {
         getBaseUrl: function () {
@@ -235,7 +236,7 @@ function ($q, $http, $rootScope, $timeout) {
         },
         searchOnYoutube: function (query, pageToken) {
             var deferred = $q.defer();
-            $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
+            $http.get('https://www.googleapis.com/youtube/domain/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
                 deferred.resolve(data);
             },err => {
                 deferred.reject(err);

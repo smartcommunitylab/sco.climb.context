@@ -28,14 +28,7 @@ angular.module("climbGame.controllers.map", [])
         pathMarkers: [],
         layers: {
           baselayers: {
-            altro: {
-              name: 'Watercolor',
-              url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
-              type: 'xyz',
-              layerOptions: {
-                attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC-BY-SA'
-              }
-            },
+  
             osm: {
               name: 'OpenStreetMap',
               url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -728,7 +721,7 @@ angular.module("climbGame.controllers.map", [])
     $timeout(function(){ 
     	$scope.flashPublicData = false;
     	$state.go('home.content', {}, { reload: 'home.content' })
-    }, 50000);
+    }, 5000);
     
     $scope.goContent = function() {
     	$scope.flashPublicData = false;
