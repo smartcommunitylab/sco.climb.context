@@ -1,9 +1,9 @@
  var auth_conf = {
     authority: "https://aac.platform.smartcommunitylab.it/",
     client_id: "c_104137f7-0049-40ae-811e-ad33eb59fd36",
-    redirect_uri: window.location.protocol + "//" + window.location.host + "/domain/backend/game/callback.html",
-    post_logout_redirect_uri: window.location.protocol + "//" + window.location.host + "/domain/backend/game/signout.html",
-    silent_redirect_uri: window.location.protocol + "//" + window.location.host + "/domain/backend/game/silent.html",
+    redirect_uri: window.location.protocol + "//" + window.location.host + "/v3/backend/game/callback.html",
+    post_logout_redirect_uri: window.location.protocol + "//" + window.location.host + "/v3/backend/game/signout.html",
+    silent_redirect_uri: window.location.protocol + "//" + window.location.host + "/v3/backend/game/silent.html",
     response_type: "token id_token",
     scope: "openid email profile",
     automaticSilentRenew: false,
