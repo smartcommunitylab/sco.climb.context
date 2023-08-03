@@ -37,6 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Value("${security.oauth2.resourceserver.opaque-token.client-secret}")
   private String introspectClientSecret;
+  
+  @Value("${management.endpoints.web.base-path}")
+  private String actuatorPath;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -51,7 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   "/backend/**",
                   "/public/**",
                   "/game-public/**",
-                  "/game-dashboard/**").permitAll()
+                  "/game-dashboard/**",
+                  "/api/**",
+                  actuatorPath + "/health").permitAll()
               .anyRequest().authenticated().and()
               .oauth2ResourceServer(oauth2 -> {
                   if (useJwt()) {
