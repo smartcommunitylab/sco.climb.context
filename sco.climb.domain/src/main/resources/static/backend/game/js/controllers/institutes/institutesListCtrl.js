@@ -1,9 +1,15 @@
 var institutesModule = angular.module('consoleControllers.institutes', ['ngSanitize'])
 
-.controller('InstitutesListCtrl', function ($scope, $rootScope, DataService, createDialog, PermissionsService) {
+.controller('InstitutesListCtrl', function ($scope, $rootScope, DataService, $log,createDialog, PermissionsService) {
     $scope.$parent.mainView = 'institute';
     $scope.PermissionsService = PermissionsService;
-
+    /*ngOidcClient.signinRedirect().then(function (user) {
+            $log.log("user:" + JSON.stringify(user));
+            if (!!user) {
+                $log.log('Logged in so going to home state');
+                $state.go('app.home');
+            }
+        });*/
     $scope.delete = function (institute) {
         createDialog('templates/modals/delete-institute.html',{
             id : 'delete-dialog',

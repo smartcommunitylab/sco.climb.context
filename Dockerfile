@@ -8,7 +8,7 @@ COPY ./sco.climb.domain /tmp/sco.climb.domain
 WORKDIR /tmp/sco.climb.domain
 RUN --mount=type=cache,target=/root/.m2  mvn clean install -Dmaven.test.skip=true
 
-FROM adoptopenjdk/openjdk8:alpine
+FROM adoptopenjdk/openjdk11:alpine
 ENV FOLDER=/tmp/sco.climb.domain/target
 ARG VER=1.0
 ENV APP=sco.climb.domain-${VER}.jar
@@ -28,4 +28,4 @@ RUN apk add --no-cache tzdata
 COPY --from=mvn --chown=climb:climb ${FOLDER}/domain.jar /home/${USER}/app/climb.jar
 
 USER climb
-CMD ["java", "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-XX:MaxRAMFraction=2", "-jar", "climb.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar climb.jar"]

@@ -8,7 +8,7 @@ angular.module('climbGameUser.services.profile', [])
       var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
       $http({
         method: 'GET',
-        url: baseUrl + '/console/data',
+        url: baseUrl + '/api/console/data',
       }).
       success(function (data, status, headers, config) {
         //store owner id and token

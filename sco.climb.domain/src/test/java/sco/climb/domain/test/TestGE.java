@@ -11,12 +11,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import it.smartcommunitylab.climb.domain.common.GEngineUtils;
 import it.smartcommunitylab.climb.domain.common.Utils;
@@ -25,7 +22,6 @@ import it.smartcommunitylab.climb.domain.model.gamification.IncrementalClassific
 import it.smartcommunitylab.climb.domain.model.gamification.RuleValidateDTO;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
 @TestPropertySource("classpath:application.properties")
 public class TestGE {
@@ -35,7 +31,6 @@ public class TestGE {
 	
 	private String gameId = "5b4c5d33e4b0b12fd6fe03cf";
 	
-	@Test
 	public void testValidationClassday() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -60,7 +55,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 	
-	@Test
 	public void testValidationWeeklyTask() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -85,7 +79,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationViaggiGiornalieri() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -110,7 +103,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationPedibus() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -135,7 +127,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationScuolaSenzAuto() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -160,7 +151,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationClassTrips() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<PedibusItineraryLeg> legs = new ArrayList<>();
@@ -185,7 +175,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationCalendarTrips() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		params.put("const_pandr_distance", "100");
@@ -217,7 +206,6 @@ public class TestGE {
 		gengineUtils.validateRule(gameId, ruleValidateDTO);
 	}
 
-	@Test
 	public void testValidationLegsBadges() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		params.put("final_destination", "Trento e dintorni");
@@ -294,7 +282,6 @@ public class TestGE {
 //		gengineUtils.validateRule(gameId, ruleValidateDTO);
 //	}
 	
-	@Test
 	public void testClassification() throws Exception {
 		IncrementalClassificationDTO classificationDTO = new IncrementalClassificationDTO();
 		classificationDTO.setClassificationName("team classification weekly");

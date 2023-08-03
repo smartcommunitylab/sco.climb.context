@@ -9,7 +9,8 @@ angular.module('climbGame.services.login', [])
 		var USERTOKEN = "USERTOKEN";
 		var CLASS = "CLASS";
 		var CLASSES = "CLASSES";
-
+		Oidc.Log.logger = console;
+Oidc.Log.level = Log.DEBUG;
 		loginService.login = function(user) {
 			var deferred = $q.defer();
 			$http({
@@ -236,7 +237,7 @@ angular.module('climbGame.services.login', [])
 			localStorage.removeItem(CLASSES);
 			loginService.classes = null;
 		}
-		loginService.logout = function() {
+		loginService.logout = async function() {
 			loginService.ownId = null;
 			loginService.userToken = null;
 			loginService.instituteId = null;
@@ -253,7 +254,8 @@ angular.module('climbGame.services.login', [])
 			localStorage.removeItem(USERTOKEN);
 			localStorage.removeItem(CLASS);
 			localStorage.removeItem(CLASSES);
-			return configService.getURL() + '/logout'
+			var mgr =  await new Oidc.UserManager(auth_conf)
+			mgr.signoutRedirect();
 		}
 		loginService.getParams = function(state) {
 			switch (state) {

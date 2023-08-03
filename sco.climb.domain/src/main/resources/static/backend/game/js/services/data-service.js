@@ -1,4 +1,4 @@
-angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootScope', '$timeout', 
+angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootScope', '$timeout',
 function ($q, $http, $rootScope, $timeout) {
     var getUrl = window.location;
     var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
@@ -12,15 +12,9 @@ function ($q, $http, $rootScope, $timeout) {
     if (tmp) {
         profileToken = tmp;
     }
-    // var baseUrl = 'http://192.168.42.60:9090/domain';
-    var logout = function () {
-        var data = $q.defer();
-        $http.post('logout', {}).success(function () {
-            data.resolve();
-        }, function () {
-            data.resolve();
-        });
-        return data.promise;
+    var logout = async function () {
+        var mgr =  await new Oidc.UserManager(auth_conf)
+        mgr.signoutRedirect();
     };
     return {
         getBaseUrl: function () {
@@ -28,7 +22,7 @@ function ($q, $http, $rootScope, $timeout) {
         },
         getProfile: function () {
             var deferred = $q.defer();
-            $http.get(baseUrl + "/console/data",{timeout: timeout}).success(function (data) {       
+            $http.get(baseUrl + "/api/console/data",{timeout: timeout}).success(function (data) {       
                 deferred.resolve(data);
             }).error(function (e) {
                 deferred.reject(e);
@@ -242,7 +236,7 @@ function ($q, $http, $rootScope, $timeout) {
         },
         searchOnYoutube: function (query, pageToken) {
             var deferred = $q.defer();
-            $http.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
+            $http.get('https://www.googleapis.com/youtube/domain/search?part=snippet&maxResults=10&key=' + googleApiKey + (pageToken ? ("&pageToken="+pageToken) : '') + '&q=' + query).then(function(data){
                 deferred.resolve(data);
             },err => {
                 deferred.reject(err);
@@ -304,7 +298,7 @@ function ($q, $http, $rootScope, $timeout) {
             return deferred.promise;
         }, 
         updateTerms: function () {
-        var url = baseUrl + "/console/user/accept-terms";
+        var url = baseUrl + "/api/console/user/accept-terms";
         return $http.post(url, new Date(), { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
         },           
         registration: function (data) {

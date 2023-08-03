@@ -71,7 +71,7 @@ public class StopController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		criteria = Criteria.where("routeId").is(routeId);
-		Sort sort = new Sort(Sort.Direction.ASC, "position");
+		Sort sort = Sort.by(Sort.Direction.ASC, "position");
 		List<Stop> result = (List<Stop>) storage.findData(Stop.class, criteria, sort, ownerId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("searchStop[%s]:%d", ownerId, result.size()));

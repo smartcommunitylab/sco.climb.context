@@ -88,9 +88,10 @@ angular.module('climbGameUser.services.login', [])
       loginService.ownId = null;
       loginService.ownerIds = null;
       loginService.userToken = null;
-      localStorage.removeItem(OWNERID);
-      localStorage.removeItem(USERTOKEN);
-      return configService.getURL() + '/logout'
+      //localStorage.clear();
+     // sessionStorage.clear();
+      new Oidc.UserManager(auth_conf).signoutRedirect();
+
     }
     return loginService;
   });
