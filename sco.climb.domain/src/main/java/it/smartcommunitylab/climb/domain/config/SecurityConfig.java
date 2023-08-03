@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   "/public/**",
                   "/game-public/**",
                   "/game-dashboard/**",
+                  "/api/**",
                   actuatorPath + "/health").permitAll()
               .anyRequest().authenticated().and()
               .oauth2ResourceServer(oauth2 -> {
