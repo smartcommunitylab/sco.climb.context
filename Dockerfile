@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM maven:3-jdk-11 AS mvn
+FROM maven:3-jdk-11 AS mvn 
 WORKDIR /tmp
 COPY ./sco.climb.context-model /tmp/sco.climb.context-model
 WORKDIR /tmp/sco.climb.context-model
