@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import it.smartcommunitylab.climb.contextstore.model.User;
 import it.smartcommunitylab.climb.domain.common.Const;
 import it.smartcommunitylab.climb.domain.common.Utils;
+import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 import it.smartcommunitylab.climb.domain.storage.RepositoryManager;
 
@@ -87,5 +88,12 @@ public class ConsoleController extends AuthController {
 	public Map<String,String> handleError(HttpServletRequest request, Exception exception) {
 		return Utils.handleError(exception);
 	}
-	
+
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthrizedError(HttpServletRequest request, Exception exception) {
+		return Utils.handleError(exception);
+	}
+
 }
