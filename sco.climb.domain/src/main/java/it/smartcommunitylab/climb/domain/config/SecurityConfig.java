@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                       oauth2.opaqueToken().introspector(tokenIntrospector());
                   }
               })
+              .anonymous().disable()
               // disable request cache, we override redirects but still better enforce it
               .requestCache((requestCache) -> requestCache.disable())
               .exceptionHandling()
