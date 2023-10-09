@@ -27,12 +27,15 @@ public class AuthController {
 	private RepositoryManager storage;
 	
 	protected AccountProfile getAccoutProfile(HttpServletRequest request) throws Exception {
-		JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-		Jwt principal = (Jwt) authentication.getPrincipal();
-		
-		AccountProfile result = new AccountProfile();
-		result.setEmail(principal.getClaimAsString("email"));
-		return result;
+		if(SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken) {
+			JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+			Jwt principal = (Jwt) authentication.getPrincipal();
+			
+			AccountProfile result = new AccountProfile();
+			result.setEmail(principal.getClaimAsString("email"));
+			return result;			
+		}
+		throw new UnauthorizedException("Unauthorized Exception: token not valid");
 	}
 	
 	public User getUserByEmail(HttpServletRequest request) throws Exception {
