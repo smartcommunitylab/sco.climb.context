@@ -595,13 +595,13 @@ public class RepositoryManager {
 	}
 
 	public User getUserByCf(String cf) {
-		Query query = new Query(new Criteria("cf").is(cf));
+		Query query = new Query(new Criteria("cf").regex(cf, "i"));
 		User result = mongoTemplate.findOne(query, User.class);
 		return result;
 	}
 	
 	public User getUserByEmail(String email) {
-		Query query = new Query(new Criteria("email").is(email));
+		Query query = new Query(new Criteria("email").regex(email, "i"));
 		User result = mongoTemplate.findOne(query, User.class);
 		return result;
 	}
@@ -642,9 +642,9 @@ public class RepositoryManager {
 		if(Utils.isNotEmpty(dataSetInfo.getSubject())) {
 			criteria = new Criteria("subject").is(dataSetInfo.getSubject());
 		} else if(Utils.isNotEmpty(dataSetInfo.getEmail())) {
-			criteria = new Criteria("email").is(dataSetInfo.getEmail());
+			criteria = new Criteria("email").regex(dataSetInfo.getEmail(), "i");
 		} else if(Utils.isNotEmpty(dataSetInfo.getCf())) {
-			criteria = new Criteria("cf").is(dataSetInfo.getCf());
+			criteria = new Criteria("cf").regex(dataSetInfo.getCf(), "i");
 		}
 		DataSetInfo dataSetInfoDb = null;
 		if(criteria != null) {
