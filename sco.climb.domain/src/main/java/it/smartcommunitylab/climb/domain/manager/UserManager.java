@@ -56,10 +56,10 @@ public class UserManager {
         }
 
         User toSave = new User();
-        toSave.setCf(user.getCf());
-        toSave.setEmail(user.getEmail());
-        toSave.setName(user.getName());
-        toSave.setSurname(user.getSurname());
+        toSave.setCf(user.getCf().trim());
+        toSave.setEmail(user.getEmail().trim());
+        toSave.setName(user.getName().trim());
+        toSave.setSurname(user.getSurname().trim());
         toSave.getCustomData().put("plessoScolastico", user.getCustomData().get("plessoScolastico"));
 
         repoManager.addUser(toSave);
