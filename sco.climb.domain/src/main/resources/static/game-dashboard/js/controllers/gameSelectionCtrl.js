@@ -32,10 +32,7 @@ angular.module('climbGame.controllers.gameSelection', [])
       }
       
       $scope.logout = function () {
-        var logoutUrl = loginService.logout()
-        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
-        logoutUrl += '?target=' + baseAppUrl;
-        $window.location.href = logoutUrl;
+        loginService.logout();
       }
 
       $scope.select = function () {

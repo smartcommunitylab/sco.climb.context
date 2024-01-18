@@ -269,7 +269,7 @@ angular.module('climbGame', [
 		return {
 			request: function (config) {
 				config.headers = config.headers || {};
-				var user = JSON.parse($window.localStorage.getItem('user'))
+				var user = JSON.parse($window.sessionStorage.getItem('user'))
 				if (user) {
 					config.headers.Authorization = 'Bearer ' + user.access_token;
 				}
@@ -282,7 +282,7 @@ angular.module('climbGame', [
 				if (response.status === 403 || response.status === 401) {
 					//  Redirect user to login page / signup Page.
 					//check if token is present and is valid, otherwise login
-					localStorage.setItem('state', JSON.stringify(window.location));
+					sessionStorage.setItem('state', JSON.stringify(window.location));
 					var mgr = new Oidc.UserManager(
 						auth_conf);
 					mgr.signinRedirect()
@@ -293,7 +293,7 @@ angular.module('climbGame', [
 				if (rejection.status === 403 || rejection.status === 401) {
 					//  Redirect user to login page / signup Page.
 					//check if token is present and is valid, otherwise login
-					localStorage.setItem('state', JSON.stringify(window.location));
+					sessionStorage.setItem('state', JSON.stringify(window.location));
 					//$rootScope.mgr.signinRedirect();
 					var mgr = new Oidc.UserManager(auth_conf);
 					 

@@ -6,7 +6,7 @@
     silent_redirect_uri: window.location.protocol + "//" + window.location.host + "/v3/backend/game/silent.html",
     response_type: "token id_token",
     scope: "openid email profile",
-    automaticSilentRenew: false,
+    automaticSilentRenew: true,
     accessTokenExpiringNotificationTime: 10,
     filterProtocolClaims: true,
     loadUserInfo: true
