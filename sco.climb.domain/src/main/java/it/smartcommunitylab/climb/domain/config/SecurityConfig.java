@@ -1,5 +1,8 @@
 package it.smartcommunitylab.climb.domain.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,12 +15,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.util.StringUtils;
 
-import it.smartcommunitylab.climb.domain.security.AudienceValidatorTokenIntrospector;
-import it.smartcommunitylab.climb.domain.security.CachingTokenIntrospector;
 import it.smartcommunitylab.climb.domain.security.JwtAudienceValidator;
 
 @Configuration
@@ -29,14 +28,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Value("${security.oauth2.resourceserver.jwt.client-id}")
   private String jwtAudience;
 
-  @Value("${security.oauth2.resourceserver.opaque-token.introspection-uri}")
-  private String introspectionUri;
+//  @Value("${security.oauth2.resourceserver.opaque-token.introspection-uri}")
+//  private String introspectionUri;
 
-  @Value("${security.oauth2.resourceserver.opaque-token.client-id}")
-  private String introspectClientId;
+//  @Value("${security.oauth2.resourceserver.opaque-token.client-id}")
+//  private String introspectClientId;
 
-  @Value("${security.oauth2.resourceserver.opaque-token.client-secret}")
-  private String introspectClientSecret;
+//  @Value("${security.oauth2.resourceserver.opaque-token.client-secret}")
+//  private String introspectClientSecret;
   
   @Value("${management.endpoints.web.base-path}")
   private String actuatorPath;
@@ -59,11 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   actuatorPath + "/health").permitAll()
               .anyRequest().authenticated().and()
               .oauth2ResourceServer(oauth2 -> {
-                  if (useJwt()) {
-                      oauth2.jwt().decoder(jwtDecoder());
-                  } else {
-                      oauth2.opaqueToken().introspector(tokenIntrospector());
-                  }
+            	  oauth2.jwt().decoder(jwtDecoder());
               })
               // disable request cache, we override redirects but still better enforce it
               .requestCache((requestCache) -> requestCache.disable())
@@ -86,12 +81,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    * Use a custom caching token introspector with audience validation: we look for
    * clientId in audience
    */
-  public OpaqueTokenIntrospector tokenIntrospector() {
-
-      OpaqueTokenIntrospector introspector = new CachingTokenIntrospector(introspectionUri, introspectClientId,
-              introspectClientSecret);
-      return new AudienceValidatorTokenIntrospector(introspectClientId, introspector);
-  }
+//  public OpaqueTokenIntrospector tokenIntrospector() {
+//
+//      OpaqueTokenIntrospector introspector = new CachingTokenIntrospector(introspectionUri, introspectClientId,
+//              introspectClientSecret);
+//      return new AudienceValidatorTokenIntrospector(introspectClientId, introspector);
+//  }
 
   /*
    * JWT decoder with audience validation
@@ -99,7 +94,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   public JwtDecoder jwtDecoder() {
       // build validators for issuer + timestamp (default) and audience
-      OAuth2TokenValidator<Jwt> audienceValidator = new JwtAudienceValidator(jwtAudience);
+	  List<String> list = Arrays.asList(jwtAudience.split(","));
+      OAuth2TokenValidator<Jwt> audienceValidator = new JwtAudienceValidator(list);
       OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(jwtIssuerUri.trim());
 
       // build default decoder and then use custom validators
@@ -110,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   //
-  private boolean useJwt() {
-      return StringUtils.hasText(jwtIssuerUri);
-  }
+//  private boolean useJwt() {
+//      return StringUtils.hasText(jwtIssuerUri);
+//  }
 }

@@ -64,7 +64,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.ownId) {
 				return loginService.ownId;
 			} else {
-				loginService.ownId = localStorage.getItem(OWNERID);
+				loginService.ownId = sessionStorage.getItem(OWNERID);
 				return loginService.ownId;
 			}
 		}
@@ -72,7 +72,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.instituteId) {
 				return loginService.instituteId;
 			} else {
-				loginService.instituteId = localStorage.getItem(INSTITUTEID);
+				loginService.instituteId = sessionStorage.getItem(INSTITUTEID);
 				return loginService.instituteId;
 			}
 		}
@@ -80,7 +80,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.schoolId) {
 				return loginService.schoolId;
 			} else {
-				loginService.schoolId = localStorage.getItem(SCHOOLID);
+				loginService.schoolId = sessionStorage.getItem(SCHOOLID);
 				return loginService.schoolId;
 			}
 		}
@@ -88,7 +88,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.gameId) {
 				return loginService.gameId;
 			} else {
-				loginService.gameId = localStorage.getItem(GAMEID);
+				loginService.gameId = sessionStorage.getItem(GAMEID);
 				return loginService.gameId;
 			}
 		}
@@ -96,7 +96,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.itineraryId) {
 				return loginService.itineraryId;
 			} else {
-				loginService.itineraryId = localStorage.getItem(ITINERARYID);
+				loginService.itineraryId = sessionStorage.getItem(ITINERARYID);
 				return loginService.itineraryId;
 			}
 		}
@@ -104,7 +104,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.userToken) {
 				return loginService.userToken;
 			} else {
-				loginService.userToken = localStorage.getItem(USERTOKEN);
+				loginService.userToken = sessionStorage.getItem(USERTOKEN);
 				return loginService.userToken;
 			}
 		}
@@ -124,7 +124,7 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.classes) {
 				return loginService.classes;
 			} else {
-				loginService.classes = JSON.parse(localStorage.getItem(CLASSES));
+				loginService.classes = JSON.parse(sessionStorage.getItem(CLASSES));
 				return loginService.classes;
 			}
 		}
@@ -132,47 +132,47 @@ Oidc.Log.level = Log.DEBUG;
 			if (loginService.classRoom) {
 				return loginService.classRoom;
 			} else {
-				loginService.classRoom = localStorage.getItem(CLASS);
+				loginService.classRoom = sessionStorage.getItem(CLASS);
 				return loginService.classRoom;
 			}
 		}
 		loginService.getSingleInstitute = function() {
-			return localStorage.getItem('singleInstitute') == 'true'; //terrible workaround, boolean saved as text
+			return sessionStorage.getItem('singleInstitute') == 'true'; //terrible workaround, boolean saved as text
 		}
 		loginService.getSingleSchool = function() {
-			return localStorage.getItem('singleSchool') == 'true';
+			return sessionStorage.getItem('singleSchool') == 'true';
 		}
 		loginService.getSingleClass = function() {
-			return localStorage.getItem('singleClass') == 'true';
+			return sessionStorage.getItem('singleClass') == 'true';
 		}
 		loginService.getSingleItinerary = function() {
-			return localStorage.getItem('singleItinerary') == 'true';
+			return sessionStorage.getItem('singleItinerary') == 'true';
 		}
 		loginService.getSingleGame = function() {
-			return localStorage.getItem('singleGame') == 'true';
+			return sessionStorage.getItem('singleGame') == 'true';
 		}
 		loginService.setOwnerId = function(id) {
-			localStorage.setItem(OWNERID, id);
+			sessionStorage.setItem(OWNERID, id);
 			loginService.ownId = id;
 		}
 		loginService.setInstituteId = function(id) {
-			localStorage.setItem(INSTITUTEID, id);
+			sessionStorage.setItem(INSTITUTEID, id);
 			loginService.instituteId = id;
 		}
 		loginService.setSchoolId = function(id) {
-			localStorage.setItem(SCHOOLID, id);
+			sessionStorage.setItem(SCHOOLID, id);
 			loginService.schoolId = id;
 		}
 		loginService.setGameId = function(id) {
-			localStorage.setItem(GAMEID, id);
+			sessionStorage.setItem(GAMEID, id);
 			loginService.gameId = id;
 		}
 		loginService.setItineraryId = function(id) {
-			localStorage.setItem(ITINERARYID, id);
+			sessionStorage.setItem(ITINERARYID, id);
 			loginService.itineraryId = id;
 		}
 		loginService.setUserToken = function(token) {
-			localStorage.setItem(USERTOKEN, token);
+			sessionStorage.setItem(USERTOKEN, token);
 			loginService.userToken = token;
 		}
 		loginService.setAllOwners = function(ownerIds) {
@@ -188,53 +188,53 @@ Oidc.Log.level = Log.DEBUG;
 			loginService.itineraryIds = itineraryIds;
 		}
 		loginService.setAllClasses = function(classes) {
-			localStorage.setItem(CLASSES, JSON.stringify(classes));
+			sessionStorage.setItem(CLASSES, JSON.stringify(classes));
 			loginService.classes = classes;
 		}
 		loginService.setSingleInstitute = function(single) {
-			localStorage.setItem('singleInstitute', single);
+			sessionStorage.setItem('singleInstitute', single);
 		}
 		loginService.setSingleSchool = function(single) {
-			localStorage.setItem('singleSchool', single);
+			sessionStorage.setItem('singleSchool', single);
 		}
 		loginService.setSingleClass = function(single) {
-			localStorage.setItem('singleClass', single);
+			sessionStorage.setItem('singleClass', single);
 		}
 		loginService.setSingleItinerary = function(single) {
-			localStorage.setItem('singleItinerary', single);
+			sessionStorage.setItem('singleItinerary', single);
 		}
 		loginService.setSingleGame = function(single) {
-			localStorage.setItem('singleGame', single);
+			sessionStorage.setItem('singleGame', single);
 		}
 		loginService.setClassRoom = function(classRoom) {
-			localStorage.setItem(CLASS, classRoom);
+			sessionStorage.setItem(CLASS, classRoom);
 			loginService.classRoom = classRoom;
 		}
 		loginService.setTitle = function(title) {
 			$rootScope.title = title;
 		}
 		loginService.removeClass = function() {
-			localStorage.removeItem(CLASS);
+			sessionStorage.removeItem(CLASS);
 			loginService.classRoom = null;
 		}
 		loginService.removeItinerary = function() {
-			localStorage.removeItem(ITINERARYID);
+			sessionStorage.removeItem(ITINERARYID);
 			loginService.itineraryId = null;
 		}
 		loginService.removeGame = function() {
-			localStorage.removeItem(GAMEID);
+			sessionStorage.removeItem(GAMEID);
 			loginService.gameId = null;
 		}
 		loginService.removeSchool = function() {
-			localStorage.removeItem(SCHOOLID);
+			sessionStorage.removeItem(SCHOOLID);
 			loginService.schoolId = null;
 		}
 		loginService.removeInstitute = function() {
-			localStorage.removeItem(INSTITUTEID);
+			sessionStorage.removeItem(INSTITUTEID);
 			loginService.instituteId = null;
 		}
 		loginService.removeClasses = function() {
-			localStorage.removeItem(CLASSES);
+			sessionStorage.removeItem(CLASSES);
 			loginService.classes = null;
 		}
 		loginService.logout = async function() {
@@ -246,14 +246,14 @@ Oidc.Log.level = Log.DEBUG;
 			loginService.itineraryId = null;
 			loginService.classRoom = null;
 			loginService.classes = null;
-			localStorage.removeItem(OWNERID);
-			localStorage.removeItem(INSTITUTEID);
-			localStorage.removeItem(SCHOOLID);
-			localStorage.removeItem(GAMEID);
-			localStorage.removeItem(ITINERARYID);
-			localStorage.removeItem(USERTOKEN);
-			localStorage.removeItem(CLASS);
-			localStorage.removeItem(CLASSES);
+			sessionStorage.removeItem(OWNERID);
+			sessionStorage.removeItem(INSTITUTEID);
+			sessionStorage.removeItem(SCHOOLID);
+			sessionStorage.removeItem(GAMEID);
+			sessionStorage.removeItem(ITINERARYID);
+			sessionStorage.removeItem(USERTOKEN);
+			sessionStorage.removeItem(CLASS);
+			sessionStorage.removeItem(CLASSES);
 			var mgr =  await new Oidc.UserManager(auth_conf)
 			mgr.signoutRedirect();
 		}

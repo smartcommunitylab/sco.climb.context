@@ -1,10 +1,10 @@
-/* global angular, localStorage */
+/* global angular, sessionStorage */
 angular.module('climbGame.services.cache', [])
   .factory('CacheSrv', function () {
     var cacheService = {}
 
     cacheService.getLastCheck = function (page) {
-      var timestamp = localStorage.getItem(page + '_page_last_check')
+      var timestamp = sessionStorage.getItem(page + '_page_last_check')
       if (timestamp) {
         return timestamp
       }
@@ -13,22 +13,22 @@ angular.module('climbGame.services.cache', [])
 
     cacheService.updateLastCheck = function (page) {
       var now = new Date().getTime()
-      localStorage.setItem(page + '_page_last_check', now)
+      sessionStorage.setItem(page + '_page_last_check', now)
       return now
     }
 
     cacheService.resetLastCheck = function (page) {
-      localStorage.removeItem(page + '_page_last_check')
+      sessionStorage.removeItem(page + '_page_last_check')
     }
     
     cacheService.setGameFinishedNotified = function (ownerId, gameId, classRoom, booleanValue) {
     	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
-    	localStorage.setItem(key, booleanValue);
+    	sessionStorage.setItem(key, booleanValue);
     }
     
     cacheService.isGameFinishedNotified = function (ownerId, gameId, classRoom) {
     	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
-    	var result = localStorage.getItem(key);
+    	var result = sessionStorage.getItem(key);
     	if(result) {
     		return JSON.parse(result);
     	} else {
@@ -38,7 +38,7 @@ angular.module('climbGame.services.cache', [])
     
     cacheService.resetGameFinishedNotified = function (ownerId, gameId, classRoom) {
     	var key = 'GameFinishedNotified_' + ownerId + '_' + gameId + '_' + classRoom;
-    	localStorage.removeItem(key);
+    	sessionStorage.removeItem(key);
     }
     
     return cacheService

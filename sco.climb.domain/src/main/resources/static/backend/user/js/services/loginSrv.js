@@ -57,7 +57,7 @@ angular.module('climbGameUser.services.login', [])
       if (loginService.ownId) {
         return loginService.ownId;
       } else {
-        loginService.ownId = localStorage.getItem(OWNERID);
+        loginService.ownId = sessionStorage.getItem(OWNERID);
         return loginService.ownId;
       }
     }
@@ -65,7 +65,7 @@ angular.module('climbGameUser.services.login', [])
       if (loginService.userToken) {
         return loginService.userToken;
       } else {
-        loginService.userToken = localStorage.getItem(USERTOKEN);
+        loginService.userToken = sessionStorage.getItem(USERTOKEN);
         return loginService.userToken;
       }
     }
@@ -73,11 +73,11 @@ angular.module('climbGameUser.services.login', [])
     	return loginService.ownerIds;
     }
     loginService.setOwnerId = function (id) {
-      localStorage.setItem(OWNERID, id);
+      sessionStorage.setItem(OWNERID, id);
       loginService.ownId = id;
     }
     loginService.setUserToken = function (token) {
-      localStorage.setItem(USERTOKEN, token);
+      sessionStorage.setItem(USERTOKEN, token);
       loginService.userToken = token;
     }
     loginService.setAllOwners = function (ownerIds) {
@@ -88,7 +88,7 @@ angular.module('climbGameUser.services.login', [])
       loginService.ownId = null;
       loginService.ownerIds = null;
       loginService.userToken = null;
-      //localStorage.clear();
+      //sessionStorage.clear();
      // sessionStorage.clear();
       new Oidc.UserManager(auth_conf).signoutRedirect();
 
