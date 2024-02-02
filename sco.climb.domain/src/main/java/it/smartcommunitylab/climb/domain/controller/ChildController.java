@@ -20,6 +20,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +76,23 @@ public class ChildController extends AuthController {
 	@Autowired
 	private RepositoryManager storage;
 	
+	private Avatar defaultAvatar;
+
+    @EventListener
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+		Resource resource = new ClassPathResource("img/placeholder_child.png", 
+				this.getClass().getClassLoader());
+		try {
+			byte[] imageByte = new byte[(int) resource.contentLength()];
+			resource.getInputStream().read(imageByte, 0, imageByte.length);
+			defaultAvatar = new Avatar();
+			defaultAvatar.setContentType(MediaType.IMAGE_PNG_VALUE);
+			defaultAvatar.setImage(new Binary(imageByte));
+		} catch (IOException e) {
+			logger.error(String.format("onApplicationEvent:%s", e.getMessage()));
+		}
+    }
+    
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/child/{ownerId}/{instituteId}/{schoolId}", method = RequestMethod.GET)
 	public @ResponseBody List<Child> searchChild(
@@ -318,13 +340,13 @@ public class ChildController extends AuthController {
 		criteria = Criteria.where("resourceId").is(objectId).and("resourceType").is(Const.AUTH_RES_Child);
 		Avatar avatar = storage.findOneData(Avatar.class, criteria, ownerId);
 		if(avatar == null) {
-			throw new EntityNotFoundException("avatar not found");
+			avatar = defaultAvatar;
 		}
 		byte[] data = avatar.getImage().getData();
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("downloadAvatar[%s]:%s", ownerId, objectId));
 		}
-		response.setHeader("Cache-Control", "public, max-age=86400");
+		response.setHeader("Cache-Control", "public, max-age=172800");
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(avatar.getContentType()))
 				.contentLength(data.length)
