@@ -11,10 +11,7 @@ angular.module('climbGame.controllers.classSelection', [])
       }
       
       $scope.logout = function () {
-        var logoutUrl = loginService.logout()
-        var baseAppUrl = $location.$$absUrl.replace($location.$$path,'');
-        logoutUrl += '?target=' + baseAppUrl;
-        $window.location.href = logoutUrl;
+        loginService.logout()
       }
       
       $scope.select = function () {
