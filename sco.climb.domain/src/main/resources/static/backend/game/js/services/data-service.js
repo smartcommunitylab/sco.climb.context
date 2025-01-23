@@ -316,7 +316,9 @@ function ($q, $http, $rootScope, $timeout) {
         getNrOfStudents: function (ownerId, instituteId, schoolId, classes) {
             var filtered = classes.filter(function (el) {
                 return el != null;
-              });
+              }).map(function (e1) {
+								return encodeURIComponent(e1);
+							});
             var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + instituteId + "/" + schoolId + "/students?classes=" + filtered;
             return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
@@ -371,7 +373,9 @@ function ($q, $http, $rootScope, $timeout) {
         getStudentsByClasses: function (ownerId, pedibusGameId,classes) {
             var filtered = classes.filter(function (el) {
                 return el != null;
-              });
+              }).map(function (e1) {
+								return encodeURIComponent(e1);
+							});
             var fetchUrl = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/students?classes=" + filtered;
             return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
@@ -392,7 +396,9 @@ function ($q, $http, $rootScope, $timeout) {
         getStudentsByGame: function (element,classes) {
             var filtered = classes.filter(function (el) {
                 return el != null;
-              });
+              }).map(function (e1) {
+								return encodeURIComponent(e1);
+							});
             var fetchUrl = baseUrl + "/api/game/" + element.ownerId + "/" + element.objectId + "/player?classes=" + filtered;
             return $http.get(fetchUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
