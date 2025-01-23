@@ -17,7 +17,7 @@ build_prod:
   script:
     - sed -i -e 's/configService.DEVELOPMENT = true/configService.DEVELOPMENT = false/g' ./sco.climb.domain/src/main/resources/static/game-dashboard/js/services/confSrv.js
     - docker login -u $DHUB_USER -p $DHUB_PASS
-    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
+    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_DEV_IMAGE -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_PROD_IMAGE
   only:
     - prod
