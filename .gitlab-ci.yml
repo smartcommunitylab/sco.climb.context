@@ -19,6 +19,7 @@ build_prod:
     - docker login -u $DHUB_USER -p $DHUB_PASS
     - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_PROD_IMAGE -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_PROD_IMAGE
+    - docker push $CONTAINER_IMAGE
   only:
     - prod
 
@@ -26,8 +27,8 @@ build_dev:
   stage: build
   script:
     - docker login -u $DHUB_USER -p $DHUB_PASS
-    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_DEV_IMAGE -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_IMAGE
+    - DOCKER_BUILDKIT=1 docker build -f Dockerfile -t $CONTAINER_DEV_IMAGE .
+    - docker push $CONTAINER_DEV_IMAGE
   only:
     - dev
 
