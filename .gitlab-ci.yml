@@ -1,15 +1,15 @@
 image: docker:latest
 services:
   - docker:dind
-variables:
-  DOCKER_DRIVER: overlay
 
 stages:
   - build
   - deploy
 
 variables:
+  DOCKER_DRIVER: overlay
   CONTAINER_PROD_IMAGE: smartcommunitylab/climb:$CI_COMMIT_SHORT_SHA
+  CONTAINER_DEV_IMAGE: smartcommunitylab/climb:dev-$CI_COMMIT_SHORT_SHA
   CONTAINER_IMAGE: smartcommunitylab/climb:latest
 
 build_prod:
@@ -35,19 +35,21 @@ deploy_prod:
   stage: deploy
   image: smartcommunitylab/kubectl-alpine:latest
   environment:
-    name: platform-new
+    name: dslab
   script:
     - echo "deploy"
-    - kubectl -n climb set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE --record=true
-    - kubectl -n climb rollout status deployment climb
+    - kubectl -n climb-prod set image deployments/climb climb-domain=$CONTAINER_PROD_IMAGE
+    - kubectl -n climb-prod rollout status deployment climb
   only:
     - prod
 
 deploy_dev:
   stage: deploy
   environment:
-    name: platform-new
+    name: dslab
   script:
-    - ssh -i $DEV_KEY $DEV_USER@$DEV_IP 'bash ~/sco.climb.context.v3/climb.sh'
+    - echo "deploy"
+    - kubectl -n climb-dev set image deployments/climb climb-domain=$CONTAINER_DEV_IMAGE
+    - kubectl -n climb-dev rollout status deployment climb
   only:
     - dev
