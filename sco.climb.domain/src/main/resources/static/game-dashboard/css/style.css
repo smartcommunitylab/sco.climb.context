@@ -1370,6 +1370,13 @@ margin:0;
   width: 60%;
   left: 40%;
 }
+.centerBannerDownCenterTN25{
+  position: absolute;
+  width: 100%;
+  right: 50%;
+  top: 10%;
+
+}
 /* for the template Gorgonzola 23 */
 .centerBannerUpGG23{
   position: relative;
