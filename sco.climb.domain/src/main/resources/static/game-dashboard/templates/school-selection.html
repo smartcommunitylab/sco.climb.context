@@ -1,25 +1,36 @@
 <div class="login-view">
   <div layout="row" layout-align="center center" layout-fill>
     <div layout="column" flex="50">
-      <div flex="50"><img src="img/credits/kidsgogreen_full.png" class="loginLogoUp" ></div>
+      <div flex="50"><img src="img/credits/kidsgogreen_full.png" class="loginLogoUp"></div>
       <div flex="50">
         <div layout="row" class="loginLogoDown">
           <div flex="40">
-            <a href="http://www.fbk.eu"><img src="../game-dashboard/img/credits/fbk.svg" style="width: 80%;" ></a>
-        </div>
-          <div flex="40">
-              <a href="http://www.kaleidoscopio.coop"><img src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 80%;"></a>
+            <a href="http://www.fbk.eu"><img src="../game-dashboard/img/credits/fbk.svg" style="width: 80%;"></a>
           </div>
           <div flex="40">
-            <a href="https://www.legambientelecco.it/it/"><img src="../game-dashboard/img/credits/legambienteWhite.png" style="width: 80%;" ></a>
-        </div>
+            <a href="http://www.kaleidoscopio.coop"><img src="../game-dashboard/img/credits/kaleidoscopio.svg"
+                style="width: 80%;"></a>
+          </div>
+          <div flex="40">
+            <a href="https://www.legambientelecco.it/it/"><img src="../game-dashboard/img/credits/legambienteWhite.png"
+                style="width: 80%;"></a>
+          </div>
+          <div flex="40" style="align-self: center;
+      text-align: center;">
+            <a href="http://www.centroantartide.it"><img src="../game-dashboard/img/credits/antartide.svg"
+                style="width: 80%;"></a>
+          </div>
+          <div flex="40" style="align-self: center;
+      text-align: center;">
+            <a href="http://www.cnr.it"><img src="../game-dashboard/img/credits/cnr.png" style="width: 80%;"></a>
+          </div>
         </div>
       </div>
       <!--<div class="climb-image">-->
       <!-- <img src="img/CLIMB_logo.png"> -->
       <!--</div>-->
     </div>
-		<md-progress-circular md-mode="indeterminate" ng-show="$root.isLoading"></md-progress-circular>
+    <md-progress-circular md-mode="indeterminate" ng-show="$root.isLoading"></md-progress-circular>
     <div layout="column" flex="50">
       <md-content layout="vertical" flex id="content">
         <div layout="row" class="login-view" layout-align="center center" layout-fill>
@@ -31,16 +42,18 @@
               </md-radio-group>
               <div layout="row" layout-align="left center">
                 <div layout="column">
-                  <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="select()">{{'login_enter' | translate}}</md-button>
+                  <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="select()">{{'login_enter'
+                    | translate}}</md-button>
                 </div>
                 <div layout="column">
-                  <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="logout()">{{'menu_logout' | translate}}</md-button>
+                  <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="logout()">{{'menu_logout'
+                    | translate}}</md-button>
                 </div>
               </div>
             </md-content>
-		        <div layout="row" layout-align="center center">
-		       		<label class="login-label">{{'login_selection_google_warning' | translate}}</label>              
-		        </div>
+            <div layout="row" layout-align="center center">
+              <label class="login-label">{{'login_selection_google_warning' | translate}}</label>
+            </div>
           </div>
         </div>
       </md-content>
