@@ -2,63 +2,68 @@
 angular.module('climbGame.controllers.calendar', [])
   .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService', 'loginService', 'profileService',
     function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService, loginService, profileService) {
-      $scope.isLoadingCalendar = true; 
+      $scope.isLoadingCalendar = true;
       $scope.week = []
-      $scope.prev2Week=true;
+      $scope.prev2Week = true;
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
       $scope.selectedMeanColor = 'cal-menu-col'
       $scope.labelWeek = ''
       $scope.sendingData = false
-      $scope.roundTrip =false;
+      $scope.roundTrip = false;
+      $scope.groupMode = false;
       $scope.cal = {
         meanOpen: false
       }
       $scope.classMap = {}
       $scope.weekData = []
       $scope.weekDataReturn = []
+      $scope.groupWeekData = [];
+      for (var i = 0; i < $scope.daysOfWeek; i++) {
+        $scope.groupWeekData[i] = {};
+      }
       $scope.daysOfWeek = 5;
-      $scope.calHeaderFlex=25;
+      $scope.calHeaderFlex = 25;
       $scope.todayData = {
         babies: [],
         means: {}
       }
       $scope.ENABLE_PAST_DAYS_EDIT = configService.ENABLE_PAST_DAYS_EDIT;
-      
+
       $scope.lastLeg = {}
       $scope.isGameFinishedNotificationDisplaied = false;
-      $scope.mapModalities=[];
-      $scope.flexNum=0;
-      var returnModalitiesColor = function(type){
+      $scope.mapModalities = [];
+      $scope.flexNum = 0;
+      var returnModalitiesColor = function (type) {
         var color = ''
         switch (type) {
-        case 'A piedi':
-          color = 'cal-foot-friend-col'
-          break
-        case "Bici / Monopattino / SkateboardIn bici":
-          color = 'cal-bici-col'
-          break
-        case 'Scuolabus o trasporto pubblico':
-          color = 'cal-bus-col'
-          break
-        case 'In auto fino alla piazzola di sosta':
-          color = 'cal-car-square-col'
-          break
-        case 'Car pooling':
-          color = 'cal-car-pooling-col'
-          break
-        case 'In auto fino a scuola':
-          color = 'cal-car-school-col'
-          break
-        case 'Assente':
-          color = 'cal-away-col'
-          break
-        case 'Pedibus':
-          color = 'cal-pedibus-col'
-          break
-        default:
-          color = 'cal-away-col'
-          break
+          case 'A piedi':
+            color = 'cal-foot-friend-col'
+            break
+          case "Bici / Monopattino / SkateboardIn bici":
+            color = 'cal-bici-col'
+            break
+          case 'Scuolabus o trasporto pubblico':
+            color = 'cal-bus-col'
+            break
+          case 'In auto fino alla piazzola di sosta':
+            color = 'cal-car-square-col'
+            break
+          case 'Car pooling':
+            color = 'cal-car-pooling-col'
+            break
+          case 'In auto fino a scuola':
+            color = 'cal-car-school-col'
+            break
+          case 'Assente':
+            color = 'cal-away-col'
+            break
+          case 'Pedibus':
+            color = 'cal-pedibus-col'
+            break
+          default:
+            color = 'cal-away-col'
+            break
         }
         return color
       }
@@ -71,123 +76,129 @@ angular.module('climbGame.controllers.calendar', [])
       setLabelWeek($scope.week)
 
       calendarService.setTitle().then(
-        function () {},
+        function () { },
         function () {
           // default value
         }
       )
 
-      profileService.getProfile().then(function(profile) {
-	    	loginService.setUserToken(profile.token)
-	    	loginService.setAllOwners(profile.ownerIds)
-	      calendarService.getClassPlayers().then(
-	        function (players) {
-	          $scope.classPlayers = players
-	          for (var i = 0; i < players.length; i++) {
-	            $scope.todayData.babies.push({
-	              name: players[i].nickname,
-	              surname: '',
-	              childId: players[i].objectId,
-	              color: ''
-	            })
-	            $scope.classMap[players[i].objectId] = players[i]
-	          }
-	
-	        },
-	        function () {}
-	      )
-	      dataService.getStatus().then(
-	      	function(data) {
+      profileService.getProfile().then(function (profile) {
+        //TODO check group Mode del profilo selezionato
+        $scope.groupMode = true;
+        loginService.setUserToken(profile.token)
+        loginService.setAllOwners(profile.ownerIds)
+        calendarService.getClassPlayers().then(
+          function (players) {
+            $scope.classPlayers = players
+            for (var i = 0; i < players.length; i++) {
+              $scope.todayData.babies.push({
+                name: players[i].nickname,
+                surname: '',
+                childId: players[i].objectId,
+                color: ''
+              })
+              $scope.classMap[players[i].objectId] = players[i]
+            }
+
+          },
+          function () { }
+        )
+        dataService.getStatus().then(
+          function (data) {
             //roundtrip
-            if (data.game.roundTrip){
-              $scope.roundTrip=true;
-				setClassSize();
+            if (data.game.roundTrip) {
+              $scope.roundTrip = true;
+              setClassSize();
             }
             //check the number of modalities and set color
-            if(data.game.modalities.length > 0){
+            if (data.game.modalities.length > 0) {
               var pedibusModalityValue = false;
-              dataService.getModalityMap().then(function(modalityData){
+              dataService.getModalityMap().then(function (modalityData) {
                 //$scope.mapModalities = data.game.modalities.map(val => ({ value: val, color: returnModalitiesColor(val) }));
-                data.game.modalities.map(function(val){ 
-                  modalityData.modalities.find(function(currentValue){
-                    if(currentValue.value==val){
+                data.game.modalities.map(function (val) {
+                  modalityData.modalities.find(function (currentValue) {
+                    if (currentValue.value == val) {
                       $scope.mapModalities.push(currentValue);
-                      if(currentValue.value=="pedibus"){pedibusModalityValue=true;}
+                      if (currentValue.value == "pedibus") { pedibusModalityValue = true; }
                     }
                   })
                 });
-                console.log("mapResult::",$scope.mapModalities)
-                if(pedibusModalityValue){
-                  $scope.flexNum=100/($scope.mapModalities.length);
-                }else{$scope.flexNum=100/($scope.mapModalities.length+1);}
-                
-                console.log("flexNum and walkPlusPedibusModalityValue",$scope.flexNum)
+                console.log("mapResult::", $scope.mapModalities)
+                if (pedibusModalityValue) {
+                  $scope.flexNum = 100 / ($scope.mapModalities.length);
+                } else { $scope.flexNum = 100 / ($scope.mapModalities.length + 1); }
 
-              },function(er){
-                console.log("error",er)
-            });
+                console.log("flexNum and walkPlusPedibusModalityValue", $scope.flexNum)
+
+              }, function (er) {
+                console.log("error", er)
+              });
             }
             //check the Saturday
-            if(data.game.daysOfWeek[5]){
+            if (data.game.daysOfWeek[5]) {
               $scope.daysOfWeek = 6;
-              $scope.calHeaderFlex=10;
+              $scope.calHeaderFlex = 10;
               $scope.week.push(new Date(getMonday(new Date()).getTime() + (5 * 24 * 60 * 60 * 1000)))
-            }else{
-              console.log("Saturday is::",data.game.daysOfWeek[5])
+            } else {
+              console.log("Saturday is::", data.game.daysOfWeek[5])
             }
             calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-	            function (calendar) {
-	              createWeekData(calendar)
-	              //updateTodayData(calendar)
-	            },
-	            function () {}
-	          )
-		      	if(data.legs && data.legs.length) {
-		      		var pos = data.legs.length - 1;
-		      		$scope.lastLeg = data.legs[pos]
+              function (calendar) {
+                createWeekData(calendar)
+                //updateTodayData(calendar)
+              },
+              function () { }
+            )
+            if (data.legs && data.legs.length) {
+              var pos = data.legs.length - 1;
+              $scope.lastLeg = data.legs[pos]
             }
-            $scope.isLoadingCalendar = false; 
+            $scope.isLoadingCalendar = false;
 
-		      }, function (err) {
-            console.log("error::",err)
-            $scope.isLoadingCalendar = false; 
+          }, function (err) {
+            console.log("error::", err)
+            $scope.isLoadingCalendar = false;
 
           }
-	      )
-	    }, function (err) {
-	      console.log(err)
-	      // Toast the Problem
-	      $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+        )
+      }, function (err) {
+        console.log(err)
+        // Toast the Problem
+        $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
       });
-      
-      $scope.escape = function(str) {
-        return str.replace(/"/g,'\\"');
+
+      $scope.escape = function (str) {
+        return str.replace(/"/g, '\\"');
       }
-      
+      $scope.fixInput = function (dayIndex, modality) {
+        if ($scope.groupWeekData[dayIndex][modality] < 0 || isNaN($scope.groupWeekData[dayIndex][modality])) {
+          $scope.groupWeekData[dayIndex][modality] = 0;
+        }
+      }
       $scope.returnColorByType = function (type) {
         var color = ''
         switch (type) {
-        case 'zeroImpact_solo':
-          color = 'cal-foot-friend-col'
-          break
-        case 'zeroImpact_wAdult':
-          color = 'cal-foot-adult-col'
-          break
-        case 'bus':
-          color = 'cal-bus-col'
-          break
-        case 'pandr':
-          color = 'cal-car-square-col'
-          break
-        case 'car':
-          color = 'cal-car-school-col'
-          break
-        case 'absent':
-          color = 'cal-away-col'
-          break
-        case 'pedibus':
-          color = 'cal-pedibus-col'
-          break
+          case 'zeroImpact_solo':
+            color = 'cal-foot-friend-col'
+            break
+          case 'zeroImpact_wAdult':
+            color = 'cal-foot-adult-col'
+            break
+          case 'bus':
+            color = 'cal-bus-col'
+            break
+          case 'pandr':
+            color = 'cal-car-square-col'
+            break
+          case 'car':
+            color = 'cal-car-school-col'
+            break
+          case 'absent':
+            color = 'cal-away-col'
+            break
+          case 'pedibus':
+            color = 'cal-pedibus-col'
+            break
         }
         return color
       }
@@ -206,18 +217,18 @@ angular.module('climbGame.controllers.calendar', [])
         $scope.selectedMean = mean;
         // $scope.selectedMeanColor = returnModalitiesColor($scope.selectedMean)
         // $scope.selectedMeanColor = "'background-color':"+$scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color+" !important;";
-        $scope.selectedMeanColor = $scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color;
+        $scope.selectedMeanColor = $scope.mapModalities.find(val => { return val.value == $scope.selectedMean; }).color;
       }
 
-      $scope.selectBabyMean = function (index, dayIndex, babyId,andata) {
-        var weekData = (andata? $scope.weekData:$scope.weekDataReturn)
+      $scope.selectBabyMean = function (index, dayIndex, babyId, andata) {
+        var weekData = (andata ? $scope.weekData : $scope.weekDataReturn)
         if (!$scope.selectedMean) {
           $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto').position('top left'))
           return
         }
         // if (andata)
         // add mean to index and remove the other
-        weekData[dayIndex][babyId].color = $scope.mapModalities.find(val=>{return val.value==$scope.selectedMean;}).color;
+        weekData[dayIndex][babyId].color = $scope.mapModalities.find(val => { return val.value == $scope.selectedMean; }).color;
         weekData[dayIndex][babyId].mean = $scope.selectedMean
         weekData[dayIndex].walk = 0;
         weekData[dayIndex].pedibus = 0;
@@ -228,18 +239,40 @@ angular.module('climbGame.controllers.calendar', [])
         weekData[dayIndex].car = 0;
         weekData[dayIndex].absent = 0;
         for (var z = 0; z < $scope.classPlayers.length; z++) {
-        	var player = $scope.classPlayers[z]
-        	if(weekData[dayIndex][player.objectId].mean) {
-        		var mean = weekData[dayIndex][player.objectId].mean
-        		weekData[dayIndex][mean]++
-        	}
+          var player = $scope.classPlayers[z]
+          if (weekData[dayIndex][player.objectId].mean) {
+            var mean = weekData[dayIndex][player.objectId].mean
+            weekData[dayIndex][mean]++
+          }
         }
       }
 
       $scope.today = function (index) {
         return index === $scope.todayIndex
       }
+      // Inizializza il dato se serve
+      $scope.ensureGroupWeekData = function (dayIndex, modality) {
+        if (!$scope.groupWeekData[dayIndex]) {
+          $scope.groupWeekData[dayIndex] = {};
+        }
+        if ($scope.groupWeekData[dayIndex][modality] === undefined) {
+          $scope.groupWeekData[dayIndex][modality] = 0;
+        }
+      };
 
+      // Aumenta il numero
+      $scope.increaseCount = function (dayIndex, modality) {
+        $scope.ensureGroupWeekData(dayIndex, modality);
+        $scope.groupWeekData[dayIndex][modality]++;
+      };
+
+      // Diminuisce il numero
+      $scope.decreaseCount = function (dayIndex, modality) {
+        $scope.ensureGroupWeekData(dayIndex, modality);
+        if ($scope.groupWeekData[dayIndex][modality] > 0) {
+          $scope.groupWeekData[dayIndex][modality]--;
+        }
+      };
       $scope.sendData = function (dayIndex) {
         if (dataAreComplete(dayIndex)) {
           $mdDialog.show({
@@ -269,28 +302,28 @@ angular.module('climbGame.controllers.calendar', [])
                   $scope.todayData.day = $scope.week[dayIndex].setHours(0, 0, 0, 0);
                   var babiesMap = {}
                   for (var i = 0; i < $scope.classPlayers.length; i++) {
-                  	var player = $scope.classPlayers[i]
+                    var player = $scope.classPlayers[i]
                     if ($scope.weekData[dayIndex][player.objectId].mean) {
                       babiesMap[player.objectId] = $scope.weekData[dayIndex][player.objectId].mean
                     }
                   }
                   $scope.todayData.modeMap = babiesMap
 
-                  if ($scope.roundTrip)
-                  {var babiesMapReturn = {}
-                  for (var i = 0; i < $scope.classPlayers.length; i++) {
-                  	var player = $scope.classPlayers[i]
-                    if ($scope.weekDataReturn[dayIndex][player.objectId].mean) {
-                      babiesMapReturn[player.objectId] = $scope.weekDataReturn[dayIndex][player.objectId].mean
+                  if ($scope.roundTrip) {
+                    var babiesMapReturn = {}
+                    for (var i = 0; i < $scope.classPlayers.length; i++) {
+                      var player = $scope.classPlayers[i]
+                      if ($scope.weekDataReturn[dayIndex][player.objectId].mean) {
+                        babiesMapReturn[player.objectId] = $scope.weekDataReturn[dayIndex][player.objectId].mean
+                      }
                     }
-                  }
 
-                  $scope.todayData.modeMapReturnTrip = babiesMapReturn
-                }
+                    $scope.todayData.modeMapReturnTrip = babiesMapReturn
+                  }
                   calendarService.sendData($scope.todayData).then(function (returnValue) {
                     // change weekdata to closed
                     $scope.weekData[dayIndex].closed = true
-                      // check if merged or not
+                    // check if merged or not
                     if (returnValue) {
                       // popup dati backend cambiati
                       $mdDialog.show({
@@ -327,7 +360,7 @@ angular.module('climbGame.controllers.calendar', [])
                       $scope.isDevEditMode = undefined;
                       // sent data
                       $mdToast.show($mdToast.simple().content('Dati inviati').position('top right'))
-                        // reload and show
+                      // reload and show
                       calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                         function (calendar) {
                           createWeekData(calendar)
@@ -340,7 +373,7 @@ angular.module('climbGame.controllers.calendar', [])
                         }
                       )
                     }
-                    for (var i=0; i < $scope.todayData.babies.length; i++) {
+                    for (var i = 0; i < $scope.todayData.babies.length; i++) {
                       $scope.todayData.babies[i].color = '';
                       $scope.todayData.babies[i].mean = '';
                     }
@@ -376,13 +409,13 @@ angular.module('climbGame.controllers.calendar', [])
         }
       }
 
-      $scope.switchDevEditMode = function(dayIndex) {
+      $scope.switchDevEditMode = function (dayIndex) {
         if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
         if ($scope.isCurrentEditDay(dayIndex)) {
           $scope.sendData(dayIndex);
         } else {
           //reset: todayData is also for past days in ENABLE_PAST_DAYS_EDIT mode
-          for (var i=0; i < $scope.todayData.babies.length; i++) {
+          for (var i = 0; i < $scope.todayData.babies.length; i++) {
             $scope.todayData.babies[i].color = '';
             $scope.todayData.babies[i].mean = '';
           }
@@ -427,7 +460,7 @@ angular.module('climbGame.controllers.calendar', [])
           return false
         }
         for (var i = 0; i < $scope.classPlayers.length; i++) {
-        	var player = $scope.classPlayers[i]
+          var player = $scope.classPlayers[i]
           if (!$scope.weekData[dayIndex][player.objectId].mean) {
             return false
           }
@@ -461,31 +494,31 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function changeWeek(skipWeek) {
-        $scope.isLoadingCalendar = true; 
+        $scope.isLoadingCalendar = true;
         // take date of week[0] and go 1 week before or after
         var monday = new Date($scope.week[0].getTime())
         monday.setDate(monday.getDate() + 7 * skipWeek)
         /** */
-        if(skipWeek == -1){
+        if (skipWeek == -1) {
           $scope.week = []
           for (var i = 0; i < $scope.daysOfWeek; i++) {
             $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
           }
           var currentDate = new Date;
-          var first = currentDate.getDate() - currentDate.getDay()+1;
+          var first = currentDate.getDate() - currentDate.getDay() + 1;
           var weekStart = new Date(currentDate.setDate(first));
-          var last2week = new Date(weekStart.setDate(weekStart.getDate()-13));
-          if(monday  < last2week ){
-          	$scope.prev2Week=false;
+          var last2week = new Date(weekStart.setDate(weekStart.getDate() - 13));
+          if (monday < last2week) {
+            $scope.prev2Week = false;
           }
         } else {
-          $scope.prev2Week=true;
+          $scope.prev2Week = true;
           $scope.week = []
           for (var i = 0; i < $scope.daysOfWeek; i++) {
             $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
           }
         }
-        
+
         /** */
         // $scope.week = []
         // for (var i = 0; i < 5; i++) {
@@ -496,8 +529,8 @@ angular.module('climbGame.controllers.calendar', [])
           function (calendar) {
             createWeekData(calendar)
           },
-          function(error) {
-          	$mdToast.show($mdToast.simple().content('Errore nel caricamento dati'))
+          function (error) {
+            $mdToast.show($mdToast.simple().content('Errore nel caricamento dati'))
           }
         )
 
@@ -511,8 +544,8 @@ angular.module('climbGame.controllers.calendar', [])
         }
 
         setLabelWeek($scope.week)
-          // $scope.labelWeek = $filter('date')($scope.week[0], 'dd') + " - "
-          // $filter('date')($scope.week[$scope.week.length - 1], 'dd MMM yyyy');
+        // $scope.labelWeek = $filter('date')($scope.week[0], 'dd') + " - "
+        // $filter('date')($scope.week[$scope.week.length - 1], 'dd MMM yyyy');
       }
 
       function setLabelWeek(weekArray) {
@@ -549,10 +582,10 @@ angular.module('climbGame.controllers.calendar', [])
         var d = document
         var e = d.documentElement
         var g = d.getElementsByTagName('body')[0]
-          // x = w.innerWidth || e.clientWidth || g.clientWidth,
+        // x = w.innerWidth || e.clientWidth || g.clientWidth,
         var y = w.innerHeight || e.clientHeight || g.clientHeight
         if (document.getElementById('table')) {
-          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50 -($scope.roundTrip? 50: 0)) + 'px')
+          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50 - ($scope.roundTrip ? 50 : 0)) + 'px')
         }
       }
 
@@ -562,7 +595,7 @@ angular.module('climbGame.controllers.calendar', [])
         for (var i = 0; i < $scope.daysOfWeek; i++) {
           // get i-th day data and put baby with that object id with that setted mean
           $scope.weekData.push({})
-            // if calendar[i] esiste vado avanti
+          // if calendar[i] esiste vado avanti
           if (calendar[k]) {
             // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
             if (checkDayOfTheWeek(calendar[k], i)) {
@@ -571,7 +604,7 @@ angular.module('climbGame.controllers.calendar', [])
                   mean: calendar[k].modeMap[property]
                 }
                 // $scope.weekData[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMap[property])
-                $scope.weekData[i][property].color = $scope.mapModalities.find(val=>{return val.value==calendar[k].modeMap[property];}).color
+                $scope.weekData[i][property].color = $scope.mapModalities.find(val => { return val.value == calendar[k].modeMap[property]; }).color
                 if (!$scope.weekData[i][calendar[k].modeMap[property]]) {
                   $scope.weekData[i][calendar[k].modeMap[property]] = 0
                 }
@@ -593,58 +626,58 @@ angular.module('climbGame.controllers.calendar', [])
             // add entire day of null data
           }
           for (var z = 0; z < $scope.classPlayers.length; z++) {
-          	var player = $scope.classPlayers[z]
-          	if(!$scope.weekData[i][player.objectId]) {
-          		$scope.weekData[i][player.objectId] = {}
-          	}
+            var player = $scope.classPlayers[z]
+            if (!$scope.weekData[i][player.objectId]) {
+              $scope.weekData[i][player.objectId] = {}
+            }
           }
         }
-        if ($scope.roundTrip){
+        if ($scope.roundTrip) {
           $scope.weekDataReturn = []
-        var k = 0
-        for (var i = 0; i < $scope.daysOfWeek; i++) {
-          // get i-th day data and put baby with that object id with that setted mean
-          $scope.weekDataReturn.push({})
+          var k = 0
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
+            // get i-th day data and put baby with that object id with that setted mean
+            $scope.weekDataReturn.push({})
             // if calendar[i] esiste vado avanti
-          if (calendar[k]) {
-            // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
-            if (checkDayOfTheWeek(calendar[k], i)) {
-              for (var property in calendar[k].modeMapReturnTrip) {
-                $scope.weekDataReturn[i][property] = {
-                  mean: calendar[k].modeMapReturnTrip[property]
+            if (calendar[k]) {
+              // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
+              if (checkDayOfTheWeek(calendar[k], i)) {
+                for (var property in calendar[k].modeMapReturnTrip) {
+                  $scope.weekDataReturn[i][property] = {
+                    mean: calendar[k].modeMapReturnTrip[property]
+                  }
+                  // $scope.weekDataReturn[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMapReturnTrip[property])
+                  $scope.weekDataReturn[i][property].color = $scope.mapModalities.find(val => { return val.value == calendar[k].modeMapReturnTrip[property]; }).color
+                  if (!$scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]]) {
+                    $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = 0
+                  }
+                  $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] + 1
                 }
-                // $scope.weekDataReturn[i][property].color = $scope.returnModalitiesColor(calendar[k].modeMapReturnTrip[property])
-                $scope.weekDataReturn[i][property].color = $scope.mapModalities.find(val=>{return val.value==calendar[k].modeMapReturnTrip[property];}).color
-                if (!$scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]]) {
-                  $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = 0
+                if (calendar[k].meteo) {
+                  $scope.weekDataReturn[i].meteo = calendar[k].meteo
                 }
-                $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] = $scope.weekDataReturn[i][calendar[k].modeMapReturnTrip[property]] + 1
+                // if (calendar[i].closed) {
+                $scope.weekDataReturn[i].closed = calendar[k].closed
+                k++
+              } else {
+                // add entire day of null data
+                for (var prop in calendar[k].modeMapReturnTrip) {
+                  $scope.weekDataReturn[i][prop] = {}
+                }
               }
-              if (calendar[k].meteo) {
-                $scope.weekDataReturn[i].meteo = calendar[k].meteo
-              }
-              // if (calendar[i].closed) {
-              $scope.weekDataReturn[i].closed = calendar[k].closed
-              k++
             } else {
               // add entire day of null data
-              for (var prop in calendar[k].modeMapReturnTrip) {
-                $scope.weekDataReturn[i][prop] = {}
+            }
+            for (var z = 0; z < $scope.classPlayers.length; z++) {
+              var player = $scope.classPlayers[z]
+              if (!$scope.weekDataReturn[i][player.objectId]) {
+                $scope.weekDataReturn[i][player.objectId] = {}
               }
             }
-          } else {
-            // add entire day of null data
-          }
-          for (var z = 0; z < $scope.classPlayers.length; z++) {
-          	var player = $scope.classPlayers[z]
-          	if(!$scope.weekDataReturn[i][player.objectId]) {
-          		$scope.weekDataReturn[i][player.objectId] = {}
-          	}
           }
         }
-        }
-       
-        $scope.isLoadingCalendar = false; 
+
+        $scope.isLoadingCalendar = false;
       }
       /*
        * Notifications and Challenges stuff
@@ -686,10 +719,10 @@ angular.module('climbGame.controllers.calendar', [])
       //           console.log('[Calendar] New notifications: ' + data.length)
       //           angular.forEach(data, function(notification) {
       //           	notification.data =  $scope.convertFields(notification.data)
-	    //             if(!CacheSrv.isGameFinishedNotified(loginService.getOwnerId(),
-	    //             		loginService.getGameId(), loginService.getClassRoom())) {
-	    //             	if((notification.key == 'GameFinished') && 
-	    //             			(!$scope.isGameFinishedNotificationDisplaied)) {
+      //             if(!CacheSrv.isGameFinishedNotified(loginService.getOwnerId(),
+      //             		loginService.getGameId(), loginService.getClassRoom())) {
+      //             	if((notification.key == 'GameFinished') && 
+      //             			(!$scope.isGameFinishedNotificationDisplaied)) {
       //             		$scope.gameFinishedNotification = notification;
       //             		$scope.isGameFinishedNotificationDisplaied = true;
       //                 $mdDialog.show({
@@ -721,7 +754,7 @@ angular.module('climbGame.controllers.calendar', [])
       //                   }
       //                 })
       //             	} 	
-	    //             }
+      //             }
       //           })
       //           $scope.lastNotification = data[0]
       //           CacheSrv.updateLastCheck('calendar')
