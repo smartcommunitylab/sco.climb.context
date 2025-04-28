@@ -2015,6 +2015,44 @@ md-card-content md-progress-linear .md-container .md-bar {
     text-align: center; 
 }
 
+.edit-block {
+  background: #f1f1f1;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin: 2px 0;
+}
+
+.edit-input {
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.small-button md-icon {
+  font-size: 20px;
+  color: #666;
+}
+
+/* Quando disabilitato */
+.edit-input[disabled] {
+  background: #e0e0e0;
+  color: #999;
+}
+.small-transport-icon {
+  background-color: var(--modality-color); /* puoi anche sovrascrivere */
+  color: white;
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 20px; /* o anche 18px se serve ancora più piccolo */
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /***************/
 div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up>md-fab-actions{

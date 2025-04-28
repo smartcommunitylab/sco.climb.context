@@ -140,94 +140,87 @@
           <!-- Modalità Group Mode -->
           <div ng-if="groupMode">
             <div layout="row" ng-repeat="modality in mapModalities track by $index" class="cal-baby">
-              <!-- Colonna nome modalità -->
-              <div layout="row" flex="{{calHeaderFlex}}" class="cal-name" style="background-color: {{modality.color}}">
-                <md-icon md-svg-src="{{modality.icon}}" class="calendar-fab-icon"></md-icon>
+              <!-- Colonna modalità -->
+              <div layout="row" flex="{{calHeaderFlex}}" layout-align="start center" class="cal-name" style="padding: 8px; display: flex;">
+                <md-icon
+                class="material-icons small-transport-icon"
+                style="background-color: {{modality.color}}; color: white; border-radius: 50%; padding: 8px; font-size: 20px;"
+              >
+                {{ getIconForType(modality.value) }}
+              </md-icon>
                 <span>{{ modality.label }}</span>
               </div>
-          
+            
               <!-- Celle giorno per giorno -->
               <div
-  ng-repeat="(dayIndex, day) in week track by dayIndex"
-  layout="row"
-  layout-align="center center"
-  ng-init="ensureGroupWeekData(dayIndex, modality.value)"
-  flex="15"
-  style="background-color: {{modality.color}}; padding: 8px; text-align: center;"
->
-  <div layout="row" layout-align="center center" style="width: 100%; gap: 8px; flex-wrap: wrap;">
-    <!-- Se roundTrip è attivo -->
-    <div ng-if="roundTrip" layout="row" layout-align="center center" style="gap: 4px;">
-      <!-- Blocco Andata -->
-      <div layout="row" layout-align="center center" style="gap: 2px;">
-        <md-button class="md-icon-button" ng-click="decreaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
-          <md-icon>remove</md-icon>
-        </md-button>
-
-        <md-input-container style="margin: 0 4px; width: 40px;">
-          <input
-            type="number"
-            ng-model="groupWeekData[dayIndex][modality.value+'_out']"
-            ng-blur="fixInput(dayIndex, modality.value+'_out')"
-            ng-disabled="!canEdit(dayIndex)"
-            min="0"
-            style="text-align: center; font-weight: bold;"
-          />
-        </md-input-container>
-
-        <md-button class="md-icon-button" ng-click="increaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
-          <md-icon>add</md-icon>
-        </md-button>
-      </div>
-
-      <!-- Blocco Ritorno -->
-      <div layout="row" layout-align="center center" style="gap: 2px;">
-        <md-button class="md-icon-button" ng-click="decreaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
-          <md-icon>remove</md-icon>
-        </md-button>
-
-        <md-input-container style="margin: 0 4px; width: 40px;">
-          <input
-            type="number"
-            ng-model="groupWeekData[dayIndex][modality.value+'_return']"
-            ng-blur="fixInput(dayIndex, modality.value+'_return')"
-            ng-disabled="!canEdit(dayIndex)"
-            min="0"
-            style="text-align: center; font-weight: bold;"
-          />
-        </md-input-container>
-
-        <md-button class="md-icon-button" ng-click="increaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
-          <md-icon>add</md-icon>
-        </md-button>
-      </div>
-    </div>
-
-    <!-- Se NON c'è roundTrip -->
-    <div ng-if="!roundTrip" layout="row" layout-align="center center" style="gap: 4px;">
-      <md-button class="md-icon-button" ng-click="decreaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
-        <md-icon>remove</md-icon>
-      </md-button>
-
-      <md-input-container style="margin: 0 4px; width: 50px;">
-        <input
-          type="number"
-          ng-model="groupWeekData[dayIndex][modality.value]"
-          ng-blur="fixInput(dayIndex, modality.value)"
-          ng-disabled="!canEdit(dayIndex)"
-          min="0"
-          style="text-align: center; font-weight: bold;"
-        />
-      </md-input-container>
-
-      <md-button class="md-icon-button" ng-click="increaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
-        <md-icon>add</md-icon>
-      </md-button>
-    </div>
-  </div>
-</div>
-
+                ng-repeat="(dayIndex, day) in week track by dayIndex"
+                layout="column"
+                flex="15"
+                style="padding: 8px; text-align: center;"
+                ng-init="ensureGroupWeekData(dayIndex, modality.value)"
+              >
+                <!-- Se roundTrip è attivo -->
+                <div ng-if="roundTrip" layout="column" layout-align="center center" style="gap: 8px;">
+                  <!-- Andata -->
+                  <div layout="row" layout-align="center center" class="edit-block">
+                    <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
+                      <md-icon>remove</md-icon>
+                    </md-button>
+                    <input
+                      type="number"
+                      ng-model="groupWeekData[dayIndex][modality.value+'_out']"
+                      ng-blur="fixInput(dayIndex, modality.value+'_out')"
+                      ng-disabled="!canEdit(dayIndex)"
+                      min="0"
+                      class="edit-input"
+                    />
+                    <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
+                      <md-icon>add</md-icon>
+                    </md-button>
+                  </div>
+            
+                  <!-- Ritorno -->
+                  <div layout="row" layout-align="center center" class="edit-block">
+                    <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
+                      <md-icon>remove</md-icon>
+                    </md-button>
+                    <input
+                      type="number"
+                      ng-model="groupWeekData[dayIndex][modality.value+'_return']"
+                      ng-blur="fixInput(dayIndex, modality.value+'_return')"
+                      ng-disabled="!canEdit(dayIndex)"
+                      min="0"
+                      class="edit-input"
+                    />
+                    <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
+                      <md-icon>add</md-icon>
+                    </md-button>
+                  </div>
+                </div>
+            
+                <!-- Se roundTrip è falso -->
+                <div ng-if="!roundTrip" layout="row" layout-align="center center" class="edit-block">
+                  <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
+                    <md-icon>remove</md-icon>
+                  </md-button>
+                  <input
+                    type="number"
+                    ng-model="groupWeekData[dayIndex][modality.value]"
+                    ng-blur="fixInput(dayIndex, modality.value)"
+                    ng-disabled="!canEdit(dayIndex)"
+                    min="0"
+                    class="edit-input"
+                  />
+                  <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
+                    <md-icon>add</md-icon>
+                  </md-button>
+                </div>
               </div>
+            </div>
+            
+            
+
+           </div>
             </div>
           </div>
           </div>
@@ -298,7 +291,7 @@
     </md-content>
   </div>
 </div>
-<div class="cal-total" layout="row">
+<div class="cal-total" layout="row" ng-if="!groupMode">
   <!-- <div layout="column" flex="5">
     </div> -->
   <div layout="column" flex={{calHeaderFlex+5}} class="cal-name">

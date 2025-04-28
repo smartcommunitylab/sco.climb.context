@@ -188,6 +188,28 @@ angular.module('climbGame.controllers.calendar', [])
           $scope.groupWeekData[dayIndex][modality] = 0;
         }
       }
+      $scope.getIconForType = function(type) {
+        switch (type) {
+          case 'walk':
+            return 'directions_walk';
+          case 'bike':
+            return 'directions_bike';
+          case 'bus':
+            return 'directions_bus';
+          case 'pandr':
+            return 'local_parking';
+          case 'carpooling':
+            return 'groups'; // oppure 'car_rental'
+          case 'car':
+            return 'directions_car';
+          case 'absent':
+            return 'person_off';
+          case 'pedibus':
+            return 'directions_walk'; // oppure 'hiking' se vuoi diversificarlo
+          default:
+            return 'block';
+        }
+      };
       $scope.returnColorByType = function (type) {
         var color = ''
         switch (type) {
