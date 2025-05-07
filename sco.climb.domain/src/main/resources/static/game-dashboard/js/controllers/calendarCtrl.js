@@ -169,6 +169,23 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.canEdit = function(dayIndex) {
         return $scope.today(dayIndex) || $scope.isCurrentEditDay(dayIndex);
       };
+      $scope.hexToRgba = function(hex, alpha) {
+        var r = 0, g = 0, b = 0;
+      
+        // Se formato corto tipo #f00
+        if (hex.length == 4) {
+          r = "0x" + hex[1] + hex[1];
+          g = "0x" + hex[2] + hex[2];
+          b = "0x" + hex[3] + hex[3];
+        }
+        // Se formato lungo tipo #ff0000
+        else if (hex.length == 7) {
+          r = "0x" + hex[1] + hex[2];
+          g = "0x" + hex[3] + hex[4];
+          b = "0x" + hex[5] + hex[6];
+        }
+        return "rgba("+ +r + "," + +g + "," + +b + "," + alpha + ")";
+      };
       $scope.today = function(dayIndex) {
         if (!$scope.week || !$scope.week[dayIndex]) {
           return false;
@@ -494,12 +511,31 @@ angular.module('climbGame.controllers.calendar', [])
         if (!$scope.selectedWeather) {
           return false
         }
+        if (!$scope.groupMode) {
         for (var i = 0; i < $scope.classPlayers.length; i++) {
           var player = $scope.classPlayers[i]
           if (!$scope.weekData[dayIndex][player.objectId].mean) {
             return false
           }
+          }
+
         }
+        let sum = 0;
+
+        $scope.mapModalities.forEach(function(modality) {
+            if ($scope.roundTrip) {
+                sum += ($scope.groupWeekData[dayIndex][modality.value + '_return'] || 0);
+                sum += ($scope.groupWeekData[dayIndex][modality.value + '_out'] || 0);
+            } else {
+                sum += ($scope.groupWeekData[dayIndex][modality.value] || 0);
+            }
+        });
+    
+        if ($scope.classPlayers.length !== sum) {
+            return false;
+        }
+        
+          
         // all babies  have a mean
         return true
       }
@@ -711,7 +747,22 @@ angular.module('climbGame.controllers.calendar', [])
             }
           }
         }
-
+        if ($scope.roundTrip) {
+          // Andata e ritorno: inizializza _out e _return
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
+            $scope.mapModalities.forEach(function(modality) {
+              $scope.ensureGroupWeekData(i, modality.value + '_out');
+              $scope.ensureGroupWeekData(i, modality.value + '_return');
+            });
+          }
+        } else {
+          // Solo andata: inizializza normale
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
+            $scope.mapModalities.forEach(function(modality) {
+              $scope.ensureGroupWeekData(i, modality.value);
+            });
+          }
+        }
         $scope.isLoadingCalendar = false;
       }
       /*
@@ -724,8 +775,22 @@ angular.module('climbGame.controllers.calendar', [])
 
       function onResize() {
         setClassSize()
+        checkButtonVisibility()
       }
-
+      function checkButtonVisibility() {
+        const containers = document.querySelectorAll('.button-container');
+        containers.forEach(container => {
+          const totalWidth = container.scrollWidth;
+          const visibleWidth = container.clientWidth;
+      
+          if (totalWidth > visibleWidth) {
+            container.classList.add('hide-small-buttons');
+          } else {
+            container.classList.remove('hide-small-buttons');
+          }
+        });
+      }
+      
       $scope.$on('$destroy', function () {
         if ($scope.poller) {
           $interval.cancel($scope.poller)

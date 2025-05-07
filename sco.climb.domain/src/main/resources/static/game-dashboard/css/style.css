@@ -2031,9 +2031,35 @@ md-card-content md-progress-linear .md-container .md-bar {
   font-size: 14px;
 }
 
-.small-button md-icon {
+/* .small-button md-icon {
   font-size: 20px;
   color: #666;
+} */
+.small-icon-button {
+  width: 24px!important; 
+  height: 24px!important;
+  min-width: 24px!important;
+  min-height: 24px!important;
+  padding: 0!important;
+  line-height: 24px!important;
+}
+/* @media (max-width: 2098px) {
+  .small-icon-button {
+    display: none !important;
+  }
+} */
+@media (max-width: 2098px) {
+  .roundtrip-active .small-icon-button {
+    display: none !important;
+  }
+}
+.small-icon-button md-icon {
+  width: 100%!important;
+  height: 100%!important;
+  font-size: 16px!important;
+  display: flex!important;
+  justify-content: center!important;
+  align-items: center!important;
 }
 
 /* Quando disabilitato */
@@ -2053,7 +2079,14 @@ md-card-content md-progress-linear .md-container .md-bar {
   align-items: center;
   justify-content: center;
 }
-
+.hide-small-buttons .small-icon-button {
+  display: none !important;
+}
+.button-container {
+  display: flex;
+  flex-wrap: nowrap; /* oppure wrap se vuoi mandarli a capo */
+  overflow: hidden;
+}
 /***************/
 div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animations-ready.md-up>md-fab-actions{
   max-height: 1px !important;

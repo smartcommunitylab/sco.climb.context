@@ -141,14 +141,14 @@
           <div ng-if="groupMode">
             <div layout="row" ng-repeat="modality in mapModalities track by $index" class="cal-baby">
               <!-- Colonna modalità -->
-              <div layout="row" flex="{{calHeaderFlex}}" layout-align="start center" class="cal-name" style="padding: 8px; display: flex;">
+              <div layout="row" flex="{{calHeaderFlex}}" layout-align="end center" class="cal-name" style="padding: 8px; display: flex;">
+                <span style="width: 100%;text-align: right; margin-right: 8px;">{{ modality.label }}</span>
                 <md-icon
                 class="material-icons small-transport-icon"
                 style="background-color: {{modality.color}}; color: white; border-radius: 50%; padding: 8px; font-size: 20px;"
               >
                 {{ getIconForType(modality.value) }}
               </md-icon>
-                <span>{{ modality.label }}</span>
               </div>
             
               <!-- Celle giorno per giorno -->
@@ -160,10 +160,12 @@
                 ng-init="ensureGroupWeekData(dayIndex, modality.value)"
               >
                 <!-- Se roundTrip è attivo -->
-                <div ng-if="roundTrip" layout="column" layout-align="center center" style="gap: 8px;">
+                <div ng-if="roundTrip" layout="row" layout-align="center center" style="gap: 8px;">
                   <!-- Andata -->
                   <div layout="row" layout-align="center center" class="edit-block">
-                    <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
+                    <div class="button-container" ng-style="canEdit(dayIndex) ? {'background-color': hexToRgba(modality.color, 0.2)} : {}">
+
+                    <md-button class="md-icon-button small-icon-button" ng-click="decreaseCount(dayIndex, modality.value+'_out', true)" ng-if="canEdit(dayIndex) " ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                       <md-icon>remove</md-icon>
                     </md-button>
                     <input
@@ -173,15 +175,20 @@
                       ng-disabled="!canEdit(dayIndex)"
                       min="0"
                       class="edit-input"
+                      ng-style="{ 'border': '1px solid ' + modality.color,'border-radius': '4px'}"
+
                     />
-                    <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value, true)" ng-disabled="!canEdit(dayIndex)">
+                    <md-button class="md-icon-button small-icon-button" ng-click="increaseCount(dayIndex, modality.value+'_out', true)" ng-if="canEdit(dayIndex)" ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                       <md-icon>add</md-icon>
                     </md-button>
+                    </div>
                   </div>
             
                   <!-- Ritorno -->
                   <div layout="row" layout-align="center center" class="edit-block">
-                    <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
+                    <div class="button-container" ng-style="canEdit(dayIndex) ? {'background-color': hexToRgba(modality.color, 0.2)} : {}">
+
+                    <md-button class="md-icon-button small-icon-button" ng-click="decreaseCount(dayIndex, modality.value+'_return', false)" ng-if="canEdit(dayIndex)" ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                       <md-icon>remove</md-icon>
                     </md-button>
                     <input
@@ -191,16 +198,21 @@
                       ng-disabled="!canEdit(dayIndex)"
                       min="0"
                       class="edit-input"
+                      ng-style="{ 'border': '1px solid ' + modality.color,'border-radius': '4px'}"
+
                     />
-                    <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value, false)" ng-disabled="!canEdit(dayIndex)">
+                    <md-button class="md-icon-button small-icon-button" ng-click="increaseCount(dayIndex, modality.value+'_return', false)" ng-if="canEdit(dayIndex)" ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                       <md-icon>add</md-icon>
                     </md-button>
+                    </div>
                   </div>
                 </div>
             
                 <!-- Se roundTrip è falso -->
                 <div ng-if="!roundTrip" layout="row" layout-align="center center" class="edit-block">
-                  <md-button class="md-icon-button small-button" ng-click="decreaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
+                  <div ng-style="canEdit(dayIndex) ? {'background-color': hexToRgba(modality.color, 0.2)} : {}">
+
+                  <md-button class="md-icon-button small-icon-button" ng-click="decreaseCount(dayIndex, modality.value)" ng-if="canEdit(dayIndex)" ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                     <md-icon>remove</md-icon>
                   </md-button>
                   <input
@@ -210,16 +222,16 @@
                     ng-disabled="!canEdit(dayIndex)"
                     min="0"
                     class="edit-input"
+                    ng-style="{ 'border': '1px solid ' + modality.color,'border-radius': '4px'}"
+
                   />
-                  <md-button class="md-icon-button small-button" ng-click="increaseCount(dayIndex, modality.value)" ng-disabled="!canEdit(dayIndex)">
+                  <md-button class="md-icon-button small-icon-button" ng-click="increaseCount(dayIndex, modality.value)" ng-if="canEdit(dayIndex)" ng-style="canEdit(dayIndex) ? {'background-color': modality.color} : {}">
                     <md-icon>add</md-icon>
                   </md-button>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            
-
            </div>
             </div>
           </div>
@@ -291,6 +303,55 @@
     </md-content>
   </div>
 </div>
+<div class="cal-total" layout="row" ng-if="groupMode">
+  <div layout="column" flex="{{calHeaderFlex+5}}" class="cal-name">
+    Totale
+  </div>
+  <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index">
+    <div layout="row">
+      <div layout="column" flex="flexNum" style="background-color: lightgray" ng-if="!roundTrip">
+        <span>
+          <!-- todo da rifare meglio -->
+          {{
+            (
+            
+              groupWeekData[dayIndex].walk +
+              groupWeekData[dayIndex].bike + 
+              groupWeekData[dayIndex].bus + 
+              groupWeekData[dayIndex].pandr +
+              groupWeekData[dayIndex].carpooling + 
+              groupWeekData[dayIndex].car + 
+             + groupWeekData[dayIndex].absent 
+            )
+          }}
+        </span>
+      </div>
+      <div layout="column" flex="flexNum" style="background-color: white" ng-if="roundTrip">
+        <span>  {{
+          (groupWeekData[dayIndex]['walk_out'] || 0) +
+          (groupWeekData[dayIndex]['bike_out'] || 0) +
+          (groupWeekData[dayIndex]['bus_out'] || 0) +
+          (groupWeekData[dayIndex]['pandr_out'] || 0) +
+          (groupWeekData[dayIndex]['carpooling_out'] || 0) +
+          (groupWeekData[dayIndex]['car_out'] || 0) +
+          (groupWeekData[dayIndex]['absent_out'] || 0)
+        }}
+          </span>
+    </div>
+    <div layout="column" flex="flexNum" style="background-color: white" ng-if="roundTrip">
+        <span>  {{
+          (groupWeekData[dayIndex]['walk_return'] || 0) +
+          (groupWeekData[dayIndex]['bike_return'] || 0) +
+          (groupWeekData[dayIndex]['bus_return'] || 0) +
+          (groupWeekData[dayIndex]['pandr_return'] || 0) +
+          (groupWeekData[dayIndex]['carpooling_return'] || 0) +
+          (groupWeekData[dayIndex]['car_return'] || 0) +
+          (groupWeekData[dayIndex]['absent_return'] || 0)
+        }}
+          </span>
+    </div>
+  </div>
+</div>
 <div class="cal-total" layout="row" ng-if="!groupMode">
   <!-- <div layout="column" flex="5">
     </div> -->
@@ -357,7 +418,7 @@
 </div>
 </div>
 </div>
-<div class="cal-fab">
+<div class="cal-fab" ng-if="!groupMode">
   <md-fab-speed-dial md-open="cal.meanOpen" md-direction="up" class="md-scale">
     <md-fab-trigger>
       <md-button aria-label="menu " class="md-fab " style="background-color:{{selectedMeanColor}} !important;">
