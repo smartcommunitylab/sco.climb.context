@@ -590,7 +590,7 @@ main.layout-row.flex {
 
 .baby-list {
   height: 400px;
-  overflow: overlay;
+  overflow: visible;
   margin-right: 5px;
 }
 
