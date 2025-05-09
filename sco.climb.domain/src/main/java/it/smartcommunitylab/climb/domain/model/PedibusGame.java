@@ -39,6 +39,10 @@ public class PedibusGame extends BaseObject {
 	private String sponsorTemplate;
 	private boolean roundTrip = false;
 	private boolean useCalendar = true;
+	
+	//group data entry
+	private boolean groupDataEntry = false;
+	
 
 	public String getSchoolId() {
 		return schoolId;
@@ -246,6 +250,14 @@ public class PedibusGame extends BaseObject {
 
 	public void setMobilityParams(Map<String, Map<String, Integer>> mobilityParams) {
 		this.mobilityParams = mobilityParams;
+	}
+
+	public boolean isGroupDataEntry() {
+		return groupDataEntry;
+	}
+
+	public void setGroupDataEntry(boolean groupDataEntry) {
+		this.groupDataEntry = groupDataEntry;
 	}
 
 }

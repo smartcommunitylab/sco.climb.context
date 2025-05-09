@@ -321,8 +321,8 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
             if (invalidFields.length > 0 || $scope.endDate.toISOString().localeCompare($scope.startDate.toISOString(), { numeric: true }) <= 0)
                 isValidate = false;
-            if (!$scope.classes || $scope.classes.length == 0)
-                isValidate = false;
+            //if (!$scope.classes || $scope.classes.length == 0)
+            //    isValidate = false;
             return isValidate;
         }
 

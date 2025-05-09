@@ -1085,6 +1085,18 @@ public class RepositoryManager {
 		}
 	}
 	
+	public void updatePedibusGameClassRooms(String ownerId, String pedibusGameId, List<String> classRooms) {
+		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
+		Date now = new Date();
+		if (gameDB != null) {
+			Update update = new Update();
+			update.set("classRooms", classRooms);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+		}
+	}
+	
 	public void updatePedibusGameConfTemplateId(String ownerId, String pedibusGameId, String templateId) {
 		Query query = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
@@ -1229,6 +1241,11 @@ public class RepositoryManager {
 	
 	public void removePedibusPlayerByGameId(String ownerId, String pedibusGameId) {
 		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId));
+		mongoTemplate.remove(query, PedibusPlayer.class);
+	}
+	
+	public void removePedibusPlayerByClass(String ownerId, String pedibusGameId, String classRoom) {
+		Query query = new Query(new Criteria("pedibusGameId").is(pedibusGameId).and("ownerId").is(ownerId).and("classRoom").is(classRoom));
 		mongoTemplate.remove(query, PedibusPlayer.class);
 	}
 	
@@ -1667,6 +1684,41 @@ public class RepositoryManager {
 			update.set("position", leg.getPosition());
 			mongoTemplate.updateFirst(query, update, PedibusItineraryLeg.class);
 		}		
+	}
+	
+	public List<PedibusPlayer> createPlayersByClass(String pedibusGameId, String classRoom, int num) {
+		List<PedibusPlayer> result = new ArrayList<>();
+		PedibusGame game = getPedibusGame(pedibusGameId);
+		if((game != null) && !game.isDeployed()) {
+			if(!game.getClassRooms().contains(classRoom)) {
+				game.getClassRooms().add(classRoom);
+				updatePedibusGameClassRooms(game.getOwnerId(), game.getObjectId(), game.getClassRooms());
+			}
+			removePedibusPlayerByClass(game.getOwnerId(), game.getObjectId(), classRoom);
+			Date now = new Date();
+			for(int i = 0; i < num; i++) {
+				PedibusPlayer player = new PedibusPlayer();
+				player.setCreationDate(now);
+				player.setLastUpdate(now);
+				player.setObjectId(Utils.getUUID());
+				player.setOwnerId(game.getOwnerId());
+				player.setPedibusGameId(game.getObjectId());
+				player.setClassRoom(classRoom);
+				result.add(mongoTemplate.save(player));							
+			}
+		}
+		return result;
+	}
+	
+	public void deletePlayersByClass(String pedibusGameId, String classRoom) {
+		PedibusGame game = getPedibusGame(pedibusGameId);
+		if((game != null) && !game.isDeployed()) {
+			if(game.getClassRooms().contains(classRoom)) {
+				game.getClassRooms().remove(classRoom);
+				updatePedibusGameClassRooms(game.getOwnerId(), game.getObjectId(), game.getClassRooms());
+			}
+			removePedibusPlayerByClass(game.getOwnerId(), game.getObjectId(), classRoom);
+		}
 	}
 
 }
