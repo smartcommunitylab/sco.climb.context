@@ -83,8 +83,7 @@ angular.module('climbGame.controllers.calendar', [])
       )
 
       profileService.getProfile().then(function (profile) {
-        //TODO check group Mode del profilo selezionato
-        $scope.groupMode = true;
+
         loginService.setUserToken(profile.token)
         loginService.setAllOwners(profile.ownerIds)
         calendarService.getClassPlayers().then(
@@ -109,6 +108,9 @@ angular.module('climbGame.controllers.calendar', [])
             if (data.game.roundTrip) {
               $scope.roundTrip = true;
               setClassSize();
+            }
+            if (data.game.groupDataEntry) {
+              $scope.groupMode = true;
             }
             //check the number of modalities and set color
             if (data.game.modalities.length > 0) {
@@ -166,12 +168,12 @@ angular.module('climbGame.controllers.calendar', [])
         // Toast the Problem
         $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
       });
-      $scope.canEdit = function(dayIndex) {
+      $scope.canEdit = function (dayIndex) {
         return $scope.today(dayIndex) || $scope.isCurrentEditDay(dayIndex);
       };
-      $scope.hexToRgba = function(hex, alpha) {
+      $scope.hexToRgba = function (hex, alpha) {
         var r = 0, g = 0, b = 0;
-      
+
         // Se formato corto tipo #f00
         if (hex.length == 4) {
           r = "0x" + hex[1] + hex[1];
@@ -184,18 +186,18 @@ angular.module('climbGame.controllers.calendar', [])
           g = "0x" + hex[3] + hex[4];
           b = "0x" + hex[5] + hex[6];
         }
-        return "rgba("+ +r + "," + +g + "," + +b + "," + alpha + ")";
+        return "rgba(" + +r + "," + +g + "," + +b + "," + alpha + ")";
       };
-      $scope.today = function(dayIndex) {
+      $scope.today = function (dayIndex) {
         if (!$scope.week || !$scope.week[dayIndex]) {
           return false;
         }
         const todayDate = new Date();
         const dayDate = new Date($scope.week[dayIndex]);
-        
+
         return todayDate.getDate() === dayDate.getDate() &&
-               todayDate.getMonth() === dayDate.getMonth() &&
-               todayDate.getFullYear() === dayDate.getFullYear();
+          todayDate.getMonth() === dayDate.getMonth() &&
+          todayDate.getFullYear() === dayDate.getFullYear();
       };
       $scope.escape = function (str) {
         return str.replace(/"/g, '\\"');
@@ -205,7 +207,7 @@ angular.module('climbGame.controllers.calendar', [])
           $scope.groupWeekData[dayIndex][modality] = 0;
         }
       }
-      $scope.getIconForType = function(type) {
+      $scope.getIconForType = function (type) {
         switch (type) {
           case 'walk':
             return 'directions_walk';
@@ -349,95 +351,115 @@ angular.module('climbGame.controllers.calendar', [])
 
               $scope.confirmSend = function () {
                 if (!$scope.sendingData) {
-                  $scope.sendingData = true
-                  $scope.todayData.meteo = $scope.selectedWeather
+                  $scope.sendingData = true;
+                  $scope.todayData.meteo = $scope.selectedWeather;
                   $scope.todayData.day = $scope.week[dayIndex].setHours(0, 0, 0, 0);
-                  var babiesMap = {}
-                  for (var i = 0; i < $scope.classPlayers.length; i++) {
-                    var player = $scope.classPlayers[i]
-                    if ($scope.weekData[dayIndex][player.objectId].mean) {
-                      babiesMap[player.objectId] = $scope.weekData[dayIndex][player.objectId].mean
-                    }
-                  }
-                  $scope.todayData.modeMap = babiesMap
+                  var babiesMap = {};
 
-                  if ($scope.roundTrip) {
-                    var babiesMapReturn = {}
+                  if ($scope.groupMode) {
+                    // Se siamo in group mode, distribuisci i valori sui bambini
+                    var unassignedBabies = $scope.classPlayers.map(player => player.objectId);
+
+                    // Per ogni modalità ordinata (per chiave)
+                    Object.keys($scope.groupWeekData[dayIndex]).forEach(function (modality) {
+                      var count = $scope.groupWeekData[dayIndex][modality];
+                      for (var i = 0; i < count; i++) {
+                        if (unassignedBabies.length === 0) break; // sicurezza
+                        var babyId = unassignedBabies.shift(); // prendi il primo disponibile
+                        babiesMap[babyId] = modality;
+                      }
+                    });
+
+                  } else {
+                    // Modalità normale come già esistente
                     for (var i = 0; i < $scope.classPlayers.length; i++) {
-                      var player = $scope.classPlayers[i]
-                      if ($scope.weekDataReturn[dayIndex][player.objectId].mean) {
-                        babiesMapReturn[player.objectId] = $scope.weekDataReturn[dayIndex][player.objectId].mean
+                      var player = $scope.classPlayers[i];
+                      if ($scope.weekData[dayIndex][player.objectId].mean) {
+                        babiesMap[player.objectId] = $scope.weekData[dayIndex][player.objectId].mean;
                       }
                     }
-
-                    $scope.todayData.modeMapReturnTrip = babiesMapReturn
                   }
-                  calendarService.sendData($scope.todayData).then(function (returnValue) {
-                    // change weekdata to closed
-                    $scope.weekData[dayIndex].closed = true
-                    // check if merged or not
-                    if (returnValue) {
-                      // popup dati backend cambiati
-                      $mdDialog.show({
-                        // targetEvent: $event,
-                        scope: $scope, // use parent scope in template
-                        preserveScope: true, // do not forget this if use parent scope
-                        template: '<md-dialog>' +
-                          '  <div class="cal-dialog-title"> Dati cambiati </div><md-divider></md-divider>' +
-                          '  <div class="cal-dialog-text">I dati presenti sono cambiati. </div>' +
-                          '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialogChanged()" class=" send-dialog-delete">' +
-                          '      Ho capito' +
-                          '   </div> </md-button>' +
-                          '</div></md-dialog>',
-                        controller: function DialogController($scope, $mdDialog) {
-                          // reload and show
-                          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-                            function (calendar) {
-                              createWeekData(calendar)
-                              //updateTodayData(calendar)
-                              $scope.sendingData = false
-                            },
-                            function () {
-                              // manage error
-                              $scope.sendingData = false
-                            }
-                          )
 
-                          $scope.closeDialogChanged = function () {
-                            $mdDialog.hide()
-                          }
-                        }
-                      })
-                    } else {
-                      $scope.isDevEditMode = undefined;
-                      // sent data
-                      $mdToast.show($mdToast.simple().content('Dati inviati').position('top right'))
-                      // reload and show
-                      calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-                        function (calendar) {
-                          createWeekData(calendar)
-                          //updateTodayData(calendar)
-                          $scope.sendingData = false
-                        },
-                        function () {
-                          // manage error
-                          $scope.sendingData = false
-                        }
-                      )
+                  $scope.todayData.modeMap = babiesMap;
+
+                  if ($scope.roundTrip) {
+                    var babiesMapReturn = {};
+                    for (var i = 0; i < $scope.classPlayers.length; i++) {
+                      var player = $scope.classPlayers[i];
+                      if ($scope.weekDataReturn[dayIndex][player.objectId].mean) {
+                        babiesMapReturn[player.objectId] = $scope.weekDataReturn[dayIndex][player.objectId].mean;
+                      }
                     }
-                    for (var i = 0; i < $scope.todayData.babies.length; i++) {
-                      $scope.todayData.babies[i].color = '';
-                      $scope.todayData.babies[i].mean = '';
-                    }
-                    $scope.todayData.means = [];
-                    $scope.closeDialog();
-                  }, function () {
-                    // TODO get error
-                    $scope.sendingData = false
-                  })
+                    $scope.todayData.modeMapReturnTrip = babiesMapReturn;
+                  }
+
                 }
+                calendarService.sendData($scope.todayData).then(function (returnValue) {
+                  // change weekdata to closed
+                  $scope.weekData[dayIndex].closed = true
+                  // check if merged or not
+                  if (returnValue) {
+                    // popup dati backend cambiati
+                    $mdDialog.show({
+                      // targetEvent: $event,
+                      scope: $scope, // use parent scope in template
+                      preserveScope: true, // do not forget this if use parent scope
+                      template: '<md-dialog>' +
+                        '  <div class="cal-dialog-title"> Dati cambiati </div><md-divider></md-divider>' +
+                        '  <div class="cal-dialog-text">I dati presenti sono cambiati. </div>' +
+                        '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialogChanged()" class=" send-dialog-delete">' +
+                        '      Ho capito' +
+                        '   </div> </md-button>' +
+                        '</div></md-dialog>',
+                      controller: function DialogController($scope, $mdDialog) {
+                        // reload and show
+                        calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+                          function (calendar) {
+                            createWeekData(calendar)
+                            //updateTodayData(calendar)
+                            $scope.sendingData = false
+                          },
+                          function () {
+                            // manage error
+                            $scope.sendingData = false
+                          }
+                        )
+
+                        $scope.closeDialogChanged = function () {
+                          $mdDialog.hide()
+                        }
+                      }
+                    })
+                  } else {
+                    $scope.isDevEditMode = undefined;
+                    // sent data
+                    $mdToast.show($mdToast.simple().content('Dati inviati').position('top right'))
+                    // reload and show
+                    calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+                      function (calendar) {
+                        createWeekData(calendar)
+                        //updateTodayData(calendar)
+                        $scope.sendingData = false
+                      },
+                      function () {
+                        // manage error
+                        $scope.sendingData = false
+                      }
+                    )
+                  }
+                  for (var i = 0; i < $scope.todayData.babies.length; i++) {
+                    $scope.todayData.babies[i].color = '';
+                    $scope.todayData.babies[i].mean = '';
+                  }
+                  $scope.todayData.means = [];
+                  $scope.closeDialog();
+                }, function () {
+                  // TODO get error
+                  $scope.sendingData = false
+                })
               }
             }
+
           })
         } else {
           $mdDialog.show({
@@ -512,30 +534,31 @@ angular.module('climbGame.controllers.calendar', [])
           return false
         }
         if (!$scope.groupMode) {
-        for (var i = 0; i < $scope.classPlayers.length; i++) {
-          var player = $scope.classPlayers[i]
-          if (!$scope.weekData[dayIndex][player.objectId].mean) {
-            return false
+          for (var i = 0; i < $scope.classPlayers.length; i++) {
+            var player = $scope.classPlayers[i]
+            if (!$scope.weekData[dayIndex][player.objectId].mean) {
+              return false
+            }
           }
-          }
-
+          
         }
+        else {
         let sum = 0;
 
-        $scope.mapModalities.forEach(function(modality) {
-            if ($scope.roundTrip) {
-                sum += ($scope.groupWeekData[dayIndex][modality.value + '_return'] || 0);
-                sum += ($scope.groupWeekData[dayIndex][modality.value + '_out'] || 0);
-            } else {
-                sum += ($scope.groupWeekData[dayIndex][modality.value] || 0);
-            }
+        $scope.mapModalities.forEach(function (modality) {
+          if ($scope.roundTrip) {
+            sum += ($scope.groupWeekData[dayIndex][modality.value + '_return'] || 0);
+            sum += ($scope.groupWeekData[dayIndex][modality.value + '_out'] || 0);
+          } else {
+            sum += ($scope.groupWeekData[dayIndex][modality.value] || 0);
+          }
         });
-    
+
         if ($scope.classPlayers.length !== sum) {
-            return false;
+          return false;
         }
-        
-          
+
+      }
         // all babies  have a mean
         return true
       }
@@ -703,6 +726,7 @@ angular.module('climbGame.controllers.calendar', [])
             }
           }
         }
+        
         if ($scope.roundTrip) {
           $scope.weekDataReturn = []
           var k = 0
@@ -747,10 +771,56 @@ angular.module('climbGame.controllers.calendar', [])
             }
           }
         }
+        if ($scope.groupMode) {
+          for (var i = 0; i < $scope.daysOfWeek; i++) {
+            $scope.groupWeekData[i] = {}; // reset
+        
+            if ($scope.roundTrip) {
+              // ROUND TRIP: conta andata e ritorno separatamente
+        
+              // Andata (_out)
+              $scope.classPlayers.forEach(function(player) {
+                var babyData = $scope.weekData[i][player.objectId];
+                if (babyData && babyData.mean) {
+                  var key = babyData.mean + '_out';
+                  if (!$scope.groupWeekData[i][key]) {
+                    $scope.groupWeekData[i][key] = 0;
+                  }
+                  $scope.groupWeekData[i][key]++;
+                }
+              });
+        
+              // Ritorno (_return)
+              $scope.classPlayers.forEach(function(player) {
+                var babyDataReturn = $scope.weekDataReturn[i][player.objectId];
+                if (babyDataReturn && babyDataReturn.mean) {
+                  var key = babyDataReturn.mean + '_return';
+                  if (!$scope.groupWeekData[i][key]) {
+                    $scope.groupWeekData[i][key] = 0;
+                  }
+                  $scope.groupWeekData[i][key]++;
+                }
+              });
+        
+            } else {
+              // SOLO ANDATA
+              $scope.classPlayers.forEach(function(player) {
+                var babyData = $scope.weekData[i][player.objectId];
+                if (babyData && babyData.mean) {
+                  var key = babyData.mean;
+                  if (!$scope.groupWeekData[i][key]) {
+                    $scope.groupWeekData[i][key] = 0;
+                  }
+                  $scope.groupWeekData[i][key]++;
+                }
+              });
+            }
+          }
+        }
         if ($scope.roundTrip) {
           // Andata e ritorno: inizializza _out e _return
           for (var i = 0; i < $scope.daysOfWeek; i++) {
-            $scope.mapModalities.forEach(function(modality) {
+            $scope.mapModalities.forEach(function (modality) {
               $scope.ensureGroupWeekData(i, modality.value + '_out');
               $scope.ensureGroupWeekData(i, modality.value + '_return');
             });
@@ -758,7 +828,7 @@ angular.module('climbGame.controllers.calendar', [])
         } else {
           // Solo andata: inizializza normale
           for (var i = 0; i < $scope.daysOfWeek; i++) {
-            $scope.mapModalities.forEach(function(modality) {
+            $scope.mapModalities.forEach(function (modality) {
               $scope.ensureGroupWeekData(i, modality.value);
             });
           }
@@ -771,7 +841,7 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.lastNotification = null
       $scope.notificationsPoller = null
 
-      
+
 
       function onResize() {
         setClassSize()
@@ -782,7 +852,7 @@ angular.module('climbGame.controllers.calendar', [])
         containers.forEach(container => {
           const totalWidth = container.scrollWidth;
           const visibleWidth = container.clientWidth;
-      
+
           if (totalWidth > visibleWidth) {
             container.classList.add('hide-small-buttons');
           } else {
@@ -790,7 +860,7 @@ angular.module('climbGame.controllers.calendar', [])
           }
         });
       }
-      
+
       $scope.$on('$destroy', function () {
         if ($scope.poller) {
           $interval.cancel($scope.poller)
