@@ -970,7 +970,7 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("gameName", game.getGameName());
 			update.set("shortName", game.getShortName());
-      update.set("sponsorTemplate", game.getSponsorTemplate());
+			update.set("sponsorTemplate", game.getSponsorTemplate());
 			if(!gameDB.isDeployed()) {
 				update.set("instituteId", game.getInstituteId());
 				update.set("schoolId", game.getSchoolId());
@@ -987,10 +987,11 @@ public class RepositoryManager {
 				update.set("usingPedibusData", game.isUsingPedibusData());
 				update.set("params", game.getParams());
 				update.set("mobilityParams", game.getMobilityParams());
-	      update.set("daysOfWeek", game.getDaysOfWeek());
-	      update.set("modalities", game.getModalities());
-	      update.set("roundTrip", game.isRoundTrip());
-	      update.set("useCalendar", game.isUseCalendar());
+				update.set("daysOfWeek", game.getDaysOfWeek());
+				update.set("modalities", game.getModalities());
+				update.set("roundTrip", game.isRoundTrip());
+				update.set("useCalendar", game.isUseCalendar());
+				update.set("groupDataEntry", game.isGroupDataEntry());
 			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
