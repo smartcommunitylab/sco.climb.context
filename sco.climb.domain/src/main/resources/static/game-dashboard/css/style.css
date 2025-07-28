@@ -442,7 +442,43 @@ md-sidenav {
   margin: 5px 0px 5px 5px;
   border-color: transparent #f39d12 transparent transparent;
 }
+.floating-input-container {
+  position: fixed;
+  bottom: 100px; 
+  right: 20px;    
+  z-index: 100;
+}
 
+.floating-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid;
+  border-radius: 30px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  height: 60px; 
+}
+
+.floating-value {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.floating-icon {
+  font-size: 24px;
+}
+
+.close-button {
+  margin-left: 10px;
+}
+.highlight-row {
+  outline: 2px dashed #666;
+  outline-offset: -4px;
+}
 .cal-fab {
   position: fixed;
   bottom: 50px;

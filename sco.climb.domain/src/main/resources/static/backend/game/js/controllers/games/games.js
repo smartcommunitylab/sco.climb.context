@@ -128,6 +128,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 if ($scope.currentGame.daysOfWeek.length == 0) {
                     $scope.currentGame.daysOfWeek = [1, 1, 1, 1, 1, 0, 0]
                 }
+                $scope.groupMode = $scope.currentGame.groupDataEntry;
                 $scope.saveData = DataService.editData;
                 // if ($scope.currentGame.usingPedibusData) {
                 $scope.startDate.setTime($scope.currentGame.from);
@@ -155,6 +156,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     schoolId: $stateParams.idSchool,
                     instituteId: $stateParams.idInstitute,
                     usingPedibusData: false,
+                    groupDataEntry: true,
                     interval: 5
                 }
                 $scope.currentGame.daysOfWeek = [1, 1, 1, 1, 1, 0, 0]
@@ -226,7 +228,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         // get map for class
         //Map<String, Map<String, Integer>> 
-        $scope.getParamsGame = function(game){
+        $scope.getParamsGame = function (game) {
             return game.mobilityParams;
         }
         // Save the changes made to the path
@@ -260,7 +262,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 });
 
                 if ($scope.selectedTab == 'params') {
-                    DataService.updateParams($scope.currentGame.ownerId ,$scope.currentGame.objectId, $scope.getParamsGame($scope.currentGame)).then(
+                    DataService.updateParams($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.getParamsGame($scope.currentGame)).then(
                         function (response) {
                             $scope.manageResponse(response);
                         })
@@ -278,10 +280,27 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                         function (response) {
                             $scope.manageResponse(response);
+                            if ($scope.currentGame.groupDataEntry) {
+                                $scope.classes.forEach(function (classe) {
+                                    var num = $scope.currentGame.classSizes[classe];
+                                    if (num && !isNaN(num)) {
+                                        DataService.addGroupToGame(
+                                            $scope.currentGame.ownerId,
+                                            $scope.currentGame.objectId,
+                                            classe,
+                                            parseInt(num)
+                                        ).then(function (res) {
+                                            console.log("Gruppo aggiunto:", classe, num);
+                                        }).catch(function (err) {
+                                            console.error("Errore nell'aggiunta gruppo:", classe, err);
+                                        });
+                                    }
+                                });
 
+                            }
                         }, function (error) {
-                            alert("Errore nella richiesta:" + error.data.errorMsg);
-                        }
+                                alert("Errore nella richiesta:" + error.data.errorMsg);
+                            }
                     );
             }
             else {
@@ -352,7 +371,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
     })
 
 
-    .controller('GameInfoCtrl', function ($scope,createDialog, MainDataService,DataService) {
+    .controller('GameInfoCtrl', function ($scope, createDialog, MainDataService, DataService) {
         $scope.$parent.selectedTab = 'info';
         $scope.new = {
             classe: ""
@@ -383,6 +402,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ($scope.currentGame.toHour) {
                 $scope.$parent.collectToHour.setHours(Number($scope.currentGame.toHour.slice(0, 2)), Number($scope.currentGame.toHour.slice(3, 5)));
             }
+            if (typeof $scope.currentGame.groupDataEntry === 'undefined') {
+                $scope.currentGame.groupDataEntry = false;
+            }
         });
 
         $scope.toggleSelectedClasses = function () {
@@ -393,23 +415,23 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         $scope.addClasse = function (nomeClasse) {
             //check if there is a path for this game
-            if ($scope.currentGame && $scope.currentGame.objectId){
-            MainDataService.getItineraries($scope.currentGame.objectId).then(function (response) {
-                var paths = response.data;
-                if (paths && paths.length >0) {
-                    createDialog('templates/modals/add-class-to-game.html',
-                    {
-                        id: 'add-class-to-game-dialog',
-                        title: 'Attenzione!',
-                        success: {
-                            label: "Ok",
-                            fn: null
-        
+            if ($scope.currentGame && $scope.currentGame.objectId) {
+                MainDataService.getItineraries($scope.currentGame.objectId).then(function (response) {
+                    var paths = response.data;
+                    if (paths && paths.length > 0) {
+                        createDialog('templates/modals/add-class-to-game.html',
+                            {
+                                id: 'add-class-to-game-dialog',
+                                title: 'Attenzione!',
+                                success: {
+                                    label: "Ok",
+                                    fn: null
+
+                                }
                             }
-                        }
-                    )
-                }
-            });
+                        )
+                    }
+                });
 
             }
             if (nomeClasse) {
@@ -425,7 +447,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.switchAddClasse = function () {
             $scope.addClass = !$scope.addClass;
         }
-        var deleteClass = function(name) {
+        var deleteClass = function (name) {
             if (name) {
                 $scope.selectedClasses = [];
                 /*            $scope.classesAllSelected = $scope.$parent.classes.every(function (cl) {
@@ -442,30 +464,30 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
         $scope.classToggled = function (name) {
             //se modifico => modale
-            if (name){
-            if ($scope.editGame) {
-                createDialog('templates/modals/delete-class-warning.html',
-                    {
-                        id: 'delete-class-warning-dialog',
-                        title: 'Attenzione!',
-                        success: {
-                            label: "Conferma",
-                            fn: function () {
-                                deleteClass(name);
+            if (name) {
+                if ($scope.editGame) {
+                    createDialog('templates/modals/delete-class-warning.html',
+                        {
+                            id: 'delete-class-warning-dialog',
+                            title: 'Attenzione!',
+                            success: {
+                                label: "Conferma",
+                                fn: function () {
+                                    deleteClass(name);
 
-                            },
-                            cancel: {
-                                label: "Chiudi",
-                                fn: null
+                                },
+                                cancel: {
+                                    label: "Chiudi",
+                                    fn: null
+                                }
                             }
-                        }
-                    })
-            }
-            else {
-                deleteClass(name);
+                        })
+                }
+                else {
+                    deleteClass(name);
 
+                }
             }
-        }
 /*            $scope.calculateStudenti($scope.selectedClasses);
 */        }
 
@@ -477,7 +499,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         }
     })
 
-//params tab ha all the parameters: number of students using different means
+    //params tab ha all the parameters: number of students using different means
     .controller('GameParamsCtrl', function ($scope, DataService, createDialog) {
         $scope.$parent.selectedTab = 'params';
         $scope.nrOfStudenti = {};
@@ -486,53 +508,53 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
                 //for every class
                 $scope.currentGame.mobilityParams = {};
-                if ($scope.currentGame.classRooms.length>0)
-                    {
-                    $scope.classesArePresent=true;
+                if ($scope.currentGame.classRooms.length > 0) {
+                    $scope.classesArePresent = true;
                     $scope.currentGame.classRooms.forEach(classRoom => {
-                    $scope.currentGame.mobilityParams[classRoom] = {
-                        walk_studenti: 0,
-                        bike_studenti: 0,
-                        bus_studenti: 0,
-                        pedibus_studenti: 0,
-                        pandr_studenti: 0,
-                        carpooling_studenti: 0,
-                        car_studenti: 0
-                    }
-                })}
-                else {
-                    $scope.classesArePresent=false;
+                        $scope.currentGame.mobilityParams[classRoom] = {
+                            walk_studenti: 0,
+                            bike_studenti: 0,
+                            bus_studenti: 0,
+                            pedibus_studenti: 0,
+                            pandr_studenti: 0,
+                            carpooling_studenti: 0,
+                            car_studenti: 0
+                        }
+                    })
                 }
-                
+                else {
+                    $scope.classesArePresent = false;
+                }
+
             } else {
                 // typecast params.
-                if ($scope.currentGame.classRooms.length>0)
-
-                {$scope.classesArePresent=true;
+                if ($scope.currentGame.classRooms.length > 0) {
+                    $scope.classesArePresent = true;
                     $scope.currentGame.classRooms.forEach(classRoom => {
-                    for (var p in $scope.currentGame.mobilityParams[classRoom]) {
-                        $scope.currentGame.mobilityParams[classRoom][p] = parseFloat($scope.currentGame.mobilityParams[classRoom][p]);
-                    }
-                })}
+                        for (var p in $scope.currentGame.mobilityParams[classRoom]) {
+                            $scope.currentGame.mobilityParams[classRoom][p] = parseFloat($scope.currentGame.mobilityParams[classRoom][p]);
+                        }
+                    })
+                }
                 else {
-                    $scope.classesArePresent=false;
+                    $scope.classesArePresent = false;
                 }
 
             }
-            
+
         }
         $scope.calculateStudenti = function (classes) {
             //call api and calculate nr.of studenti.
-            var promises=[]
-            classes.forEach(function(classRoom){
+            var promises = []
+            classes.forEach(function (classRoom) {
                 promises.push(DataService.getStudentsByClasses($scope.currentGame.ownerId, $scope.currentGame.objectId, [classRoom]).then(function (data) {
                     $scope.nrOfStudenti[classRoom] = data.data;
                 }))
             })
-            
+
             Promise.all(promises).then((values) => {
                 console.log(values);
-              });
+            });
 
         }
         $scope.$on('gameLoaded', function (e) {
@@ -552,27 +574,27 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             $scope.initParamController();
         });
 
-        $scope.calculateBonusAutonomia = function() {
-               	$scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
-               	$scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
-               	$scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-               	$scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
-               	return $scope.currentGame.params.const_zi_solo_bonus;
-               }
+        $scope.calculateBonusAutonomia = function () {
+            $scope.currentGame.params.const_pandr_distance = $scope.currentGame.params.parcheggio_attestamento_distanza;
+            $scope.currentGame.params.const_bus_distance = $scope.currentGame.params.scuolabus_o_autobus_distanza;
+            $scope.currentGame.params.const_zeroimpact_distance = $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+            $scope.currentGame.params.const_zi_solo_bonus = $scope.currentGame.params.piedi_o_bici_in_autonomia_distanza - $scope.currentGame.params.piedi_o_bici_con_adulti_distanza;
+            return $scope.currentGame.params.const_zi_solo_bonus;
+        }
 
-        
+
 
         $scope.calculateSS = function (classRoom) {
             if ($scope.currentGame && $scope.currentGame.mobilityParams && $scope.currentGame.classRooms) {
-                var ss=0
-            // $scope.currentGame.classRooms.forEach(classRoom => {
-                    ss+=($scope.currentGame.mobilityParams[classRoom].walk_studenti?Number($scope.currentGame.mobilityParams[classRoom].walk_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti?Number($scope.currentGame.mobilityParams[classRoom].bike_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti?Number($scope.currentGame.mobilityParams[classRoom].bus_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti?Number($scope.currentGame.mobilityParams[classRoom].pedibus_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti?Number($scope.currentGame.mobilityParams[classRoom].pandr_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti?Number($scope.currentGame.mobilityParams[classRoom].carpooling_studenti):0) +
-                    ($scope.currentGame.mobilityParams[classRoom].car_studenti?Number($scope.currentGame.mobilityParams[classRoom].car_studenti):0)
+                var ss = 0
+                // $scope.currentGame.classRooms.forEach(classRoom => {
+                ss += ($scope.currentGame.mobilityParams[classRoom].walk_studenti ? Number($scope.currentGame.mobilityParams[classRoom].walk_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bike_studenti ? Number($scope.currentGame.mobilityParams[classRoom].bike_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].bus_studenti ? Number($scope.currentGame.mobilityParams[classRoom].bus_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti ? Number($scope.currentGame.mobilityParams[classRoom].pedibus_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].pandr_studenti ? Number($scope.currentGame.mobilityParams[classRoom].pandr_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti ? Number($scope.currentGame.mobilityParams[classRoom].carpooling_studenti) : 0) +
+                    ($scope.currentGame.mobilityParams[classRoom].car_studenti ? Number($scope.currentGame.mobilityParams[classRoom].car_studenti) : 0)
                 // })
                 return ss;
             }
@@ -603,8 +625,8 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             currentGame: null
         }
         $scope.selectedPlayer = {
-        		nickname: null,
-        		classRoom: null
+            nickname: null,
+            classRoom: null
         }
         $scope.initController = function () {
             DataService.getStudentsByGame(
@@ -635,51 +657,51 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 alert("nome player vuoto");
             }
         }
-        
+
         $scope.changeCurrentClass = function () {
-        	$scope.selectedPlayer.classRoom = $scope.gamers.currentClass
+            $scope.selectedPlayer.classRoom = $scope.gamers.currentClass
         }
-        
+
         $scope.isNewPlayerCompleted = function () {
-        	var result = false;
-        	if ($scope.selectedPlayer) {
-        		if($scope.selectedPlayer.nickname && $scope.selectedPlayer.classRoom) {
-        			result = true;
-        		}
-        	}
-        	return result;
+            var result = false;
+            if ($scope.selectedPlayer) {
+                if ($scope.selectedPlayer.nickname && $scope.selectedPlayer.classRoom) {
+                    result = true;
+                }
+            }
+            return result;
         }
-        
+
         $scope.switchAddPlayer = function () {
             $scope.isAddPlayer = !$scope.isAddPlayer;
         }
         $scope.isEditEnabled = function (player) {
-        	var index = getPlayerIndex(player);
-          return $scope.isEditEnabledArray[index];
+            var index = getPlayerIndex(player);
+            return $scope.isEditEnabledArray[index];
         }
         $scope.enableEdit = function (player) {
-        	var index = getPlayerIndex(player);
-          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
+            var index = getPlayerIndex(player);
+            $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
         }
         $scope.saveEdit = function (player) {
-        	var index = getPlayerIndex(player);
-          $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
+            var index = getPlayerIndex(player);
+            $scope.isEditEnabledArray[index] = !$scope.isEditEnabledArray[index];
         }
         $scope.remove = function (player) {
-        		var index = getPlayerIndex(player);
-        		if(index >= 0) {
-              createDialog('templates/modals/delete-player.html', {
-                id: 'delete-dialog',
-                title: 'Attenzione!',
-                success: {
-                	label: 'Conferma', fn: function () {
-                		$scope.$parent.players.splice(index, 1);
-                		$scope.players = $scope.$parent.players;
-                		$scope.changed();
-                  }
-                }
-              });
-        		}
+            var index = getPlayerIndex(player);
+            if (index >= 0) {
+                createDialog('templates/modals/delete-player.html', {
+                    id: 'delete-dialog',
+                    title: 'Attenzione!',
+                    success: {
+                        label: 'Conferma', fn: function () {
+                            $scope.$parent.players.splice(index, 1);
+                            $scope.players = $scope.$parent.players;
+                            $scope.changed();
+                        }
+                    }
+                });
+            }
         }
 
         // if ($scope.currentSchool) {
@@ -699,37 +721,37 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.selectClass = function (classe) {
             console.log(classe);
         }
-        
+
         $scope.readTextFile = function (file) {
-        	var fileInput = document.getElementById('upload-file');
-        	var reader = new FileReader();
-        	reader.onload = function() {
-        		var text = reader.result;
-        		var list = text.split(/\r\n|\r|\n/);
-        		for (var i = 0; i < list.length; i++) {
-        			var nick = list[i].trim();
-        			if(nick) {
-                var player = {
-                		nickname: list[i],
-                		classRoom: $scope.gamers.currentClass
+            var fileInput = document.getElementById('upload-file');
+            var reader = new FileReader();
+            reader.onload = function () {
+                var text = reader.result;
+                var list = text.split(/\r\n|\r|\n/);
+                for (var i = 0; i < list.length; i++) {
+                    var nick = list[i].trim();
+                    if (nick) {
+                        var player = {
+                            nickname: list[i],
+                            classRoom: $scope.gamers.currentClass
+                        }
+                        $scope.$parent.players.push(player);
+                        $scope.changed();
+                    }
                 }
-                $scope.$parent.players.push(player);
-                $scope.changed();        				
-        			}
-        		}
-        		$scope.players = $scope.$parent.players;
-        		$scope.$apply();
-        	};
-        	reader.readAsText(fileInput.files[0]);
+                $scope.players = $scope.$parent.players;
+                $scope.$apply();
+            };
+            reader.readAsText(fileInput.files[0]);
         }
-        
+
         function getPlayerIndex(player) {
-        	for (var i = 0; i < $scope.players.length; i++) {
-        		if(($scope.players[i].nickname === player.nickname) && ($scope.players[i].classRoom === player.classRoom)) {
-        			return i;
-        		}
-        	}
-        	return -1;
+            for (var i = 0; i < $scope.players.length; i++) {
+                if (($scope.players[i].nickname === player.nickname) && ($scope.players[i].classRoom === player.classRoom)) {
+                    return i;
+                }
+            }
+            return -1;
         }
     })
 
@@ -764,17 +786,18 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     $scope.currentGame.params[p] = parseFloat($scope.currentGame.params[p]);
                 }
                 $scope.checkModalities();
-               
-                
+
+
             }
             $scope.calculateCDND();
 
         }
         $scope.checkModalities = function () {
             $scope.modalities.forEach(mode => {
-                if (mode.value!='absent')
-                {if (!$scope.isModalityPresent(mode.value))
-                      $scope.currentGame.params['const_'+mode.value+'_distance']=0;}
+                if (mode.value != 'absent') {
+                    if (!$scope.isModalityPresent(mode.value))
+                        $scope.currentGame.params['const_' + mode.value + '_distance'] = 0;
+                }
             })
             // if ($scope.isModalityPresent('car'))
             // {
@@ -788,16 +811,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if ($scope.currentGame && $scope.currentGame.params) {
                 // calcuate actual days.
                 actualDays = $scope.getNumWorkDays($scope.currentGame.from, $scope.currentGame.to, $scope.currentGame.daysOfWeek);
-                actualDays = actualDays - ($scope.currentGame.params.giorni_chiusi?$scope.currentGame.params.giorni_chiusi:0);
+                actualDays = actualDays - ($scope.currentGame.params.giorni_chiusi ? $scope.currentGame.params.giorni_chiusi : 0);
                 $scope.kmStimati = ($scope.currentGame.params.const_daily_nominal_distance / 1000) * actualDays;
                 $scope.calculateKMTarget();
                 return;
             }
-            $scope.$scope.kmStimati=0;
+            $scope.$scope.kmStimati = 0;
             return;
 
         }
-        $scope.changedAndcalculateCDND =function () {
+        $scope.changedAndcalculateCDND = function () {
             $scope.changed();
             $scope.calculateCDND();
         }
@@ -806,49 +829,49 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.currentGame.params.const_daily_nominal_distance = 0;
                 $scope.currentGame.classRooms.forEach(classRoom => {
                     if ($scope.currentGame.mobilityParams && $scope.currentGame.mobilityParams[classRoom])
-                    $scope.currentGame.params.const_daily_nominal_distance+=(
-                    (($scope.currentGame.mobilityParams[classRoom].walk_studenti&&$scope.currentGame.params.const_walk_distance)?($scope.currentGame.mobilityParams[classRoom].walk_studenti * $scope.currentGame.params.const_walk_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].bike_studenti&&$scope.currentGame.params.const_bike_distance)?($scope.currentGame.mobilityParams[classRoom].bike_studenti * $scope.currentGame.params.const_bike_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].pedibus_studenti&&$scope.currentGame.params.const_pedibus_distance)?($scope.currentGame.mobilityParams[classRoom].pedibus_studenti * $scope.currentGame.params.const_pedibus_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].bus_studenti&&$scope.currentGame.params.const_bus_distance)?($scope.currentGame.mobilityParams[classRoom].bus_studenti * $scope.currentGame.params.const_bus_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].pandr_studenti&&$scope.currentGame.params.const_pandr_distance)?($scope.currentGame.mobilityParams[classRoom].pandr_studenti * $scope.currentGame.params.const_pandr_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].carpooling_studenti&&$scope.currentGame.params.const_carpooling_distance)?($scope.currentGame.mobilityParams[classRoom].carpooling_studenti * $scope.currentGame.params.const_carpooling_distance):0) +
-                    (($scope.currentGame.mobilityParams[classRoom].car_studenti&&$scope.currentGame.params.const_car_distance)?($scope.currentGame.mobilityParams[classRoom].car_studenti * $scope.currentGame.params.const_car_distance):0))
-                
-            })
-            if($scope.currentGame.roundTrip) {
-                $scope.currentGame.params.const_daily_nominal_distance = $scope.currentGame.params.const_daily_nominal_distance * 2;
-            }
-        $scope.cdnd=$scope.currentGame.params.const_daily_nominal_distance;
-            $scope.calculateKMStimati();
-            $scope.calculateKMTarget();
+                        $scope.currentGame.params.const_daily_nominal_distance += (
+                            (($scope.currentGame.mobilityParams[classRoom].walk_studenti && $scope.currentGame.params.const_walk_distance) ? ($scope.currentGame.mobilityParams[classRoom].walk_studenti * $scope.currentGame.params.const_walk_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].bike_studenti && $scope.currentGame.params.const_bike_distance) ? ($scope.currentGame.mobilityParams[classRoom].bike_studenti * $scope.currentGame.params.const_bike_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].pedibus_studenti && $scope.currentGame.params.const_pedibus_distance) ? ($scope.currentGame.mobilityParams[classRoom].pedibus_studenti * $scope.currentGame.params.const_pedibus_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].bus_studenti && $scope.currentGame.params.const_bus_distance) ? ($scope.currentGame.mobilityParams[classRoom].bus_studenti * $scope.currentGame.params.const_bus_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].pandr_studenti && $scope.currentGame.params.const_pandr_distance) ? ($scope.currentGame.mobilityParams[classRoom].pandr_studenti * $scope.currentGame.params.const_pandr_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].carpooling_studenti && $scope.currentGame.params.const_carpooling_distance) ? ($scope.currentGame.mobilityParams[classRoom].carpooling_studenti * $scope.currentGame.params.const_carpooling_distance) : 0) +
+                            (($scope.currentGame.mobilityParams[classRoom].car_studenti && $scope.currentGame.params.const_car_distance) ? ($scope.currentGame.mobilityParams[classRoom].car_studenti * $scope.currentGame.params.const_car_distance) : 0))
+
+                })
+                if ($scope.currentGame.roundTrip) {
+                    $scope.currentGame.params.const_daily_nominal_distance = $scope.currentGame.params.const_daily_nominal_distance * 2;
+                }
+                $scope.cdnd = $scope.currentGame.params.const_daily_nominal_distance;
+                $scope.calculateKMStimati();
+                $scope.calculateKMTarget();
                 return;
             }
-            $scope.cdnd=0;
+            $scope.cdnd = 0;
             $scope.calculateKMStimati();
             $scope.calculateKMTarget();
             return;
         };
-        $scope.changedClosedDays = function() {
+        $scope.changedClosedDays = function () {
             $scope.calculateKMStimati();
             $scope.changed();
         }
-        $scope.changedChallenges = function() {
+        $scope.changedChallenges = function () {
             $scope.calculateKMTarget();
             $scope.changed();
         }
         $scope.calculateKMTarget = function () {
-                       // $scope.changed();
+            // $scope.changed();
 
             if ($scope.currentGame && $scope.currentGame.params) {
                 var km = $scope.kmStimati;
-                if ($scope.currentGame.params.km_bonus) 
-                km+=Number($scope.currentGame.params.km_bonus);
-                $scope.kmTarget=km;
-                return;  
+                if ($scope.currentGame.params.km_bonus)
+                    km += Number($scope.currentGame.params.km_bonus);
+                $scope.kmTarget = km;
+                return;
             }
-            $scope.kmTarget=0;
-             return;
+            $scope.kmTarget = 0;
+            return;
         }
 
         $scope.isModalityPresent = function (mode) {
@@ -856,39 +879,39 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 return $scope.currentGame.modalities.includes(mode);
             return false
         }
-        
+
         $scope.getNumWorkDays = function (startTS, endTS, daysOfWeek) {
             var numWorkDays = 0;
             var currentDate = new Date(startTS);
             var endDate = new Date(endTS)
             while (currentDate <= endDate) {
-              // check week days
-            	if(currentDate.getDay() == 1 && daysOfWeek[0]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 2 && daysOfWeek[1]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 3 && daysOfWeek[2]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 4 && daysOfWeek[3]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 5 && daysOfWeek[4]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 6 && daysOfWeek[5]) {
-            		numWorkDays++;
-            	}
-            	if(currentDate.getDay() == 0 && daysOfWeek[6]) {
-            		numWorkDays++;
-            	}
-            	currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
+                // check week days
+                if (currentDate.getDay() == 1 && daysOfWeek[0]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 2 && daysOfWeek[1]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 3 && daysOfWeek[2]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 4 && daysOfWeek[3]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 5 && daysOfWeek[4]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 6 && daysOfWeek[5]) {
+                    numWorkDays++;
+                }
+                if (currentDate.getDay() == 0 && daysOfWeek[6]) {
+                    numWorkDays++;
+                }
+                currentDate = new Date(currentDate.setTime(currentDate.getTime() + 1 * 86400000));
             }
             return numWorkDays;
         }
-        
+
         $scope.$on('gameLoaded', function (e) {
             $scope.initParamController();
         });
