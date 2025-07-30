@@ -337,7 +337,7 @@
           (groupWeekData[dayIndex]['carpooling_out'] || 0) +
           (groupWeekData[dayIndex]['car_out'] || 0) +
           (groupWeekData[dayIndex]['absent_out'] || 0)
-          }}
+          }}/{{classPlayers.length}}
         </span>
       </div>
       <div layout="column" flex="flexNum" style="background-color: white" ng-if="roundTrip">
@@ -349,7 +349,7 @@
           (groupWeekData[dayIndex]['carpooling_return'] || 0) +
           (groupWeekData[dayIndex]['car_return'] || 0) +
           (groupWeekData[dayIndex]['absent_return'] || 0)
-          }}
+          }}/{{classPlayers.length}}
         </span>
       </div>
     </div>

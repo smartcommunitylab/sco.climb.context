@@ -175,8 +175,23 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             DataService.getStudentsByGame($scope.currentGame, classes).then(
                 function (response) {
                     $scope.players = response.data;
+
+                    // Inizializza classSizes automaticamente
+                    if (typeof $scope.currentGame.classSizes === 'undefined') {
+                        $scope.currentGame.classSizes = {};
+                    }
+
+                    // Conta il numero di studenti per ciascuna classe
+                    response.data.forEach(function (player) {
+                        if (!$scope.currentGame.classSizes[player.classRoom]) {
+                            $scope.currentGame.classSizes[player.classRoom] = 0;
+                        }
+                        $scope.currentGame.classSizes[player.classRoom]++;
+                    });
+
+                    console.log("Class sizes inizializzate:", $scope.currentGame.classSizes);
                 }
-            )
+            );
             DataService.getModalityMap().then(
                 function (response) {
                     if (response.data) {
@@ -299,8 +314,8 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
                             }
                         }, function (error) {
-                                alert("Errore nella richiesta:" + error.data.errorMsg);
-                            }
+                            alert("Errore nella richiesta:" + error.data.errorMsg);
+                        }
                     );
             }
             else {
@@ -405,6 +420,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if (typeof $scope.currentGame.groupDataEntry === 'undefined') {
                 $scope.currentGame.groupDataEntry = false;
             }
+           
         });
 
         $scope.toggleSelectedClasses = function () {

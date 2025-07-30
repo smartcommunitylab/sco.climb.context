@@ -112,20 +112,19 @@
     
     <!-- INPUT per numero studenti (visibile solo se groupDataEntry è true) -->
     <div class="col-sm-12 col-12" ng-if="currentGame.groupDataEntry">
-        <div class="form-group row" ng-repeat="classe in classes track by $index">
-            <label class="col-sm-4 col-form-label" for="students_{{$index}}">
-                {{classe}}
-            </label>
-            <div class="col-sm-4">
-                <input type="number"
-                       class="form-control"
-                       id="students_{{$index}}"
-                       placeholder="Numero di studenti"
-                       min="0"
-                       ng-disabled="currentGame.deployed"
-                       ng-model="currentGame.classSizes[classe]" />
+        <div class="form-group row align-items-center mb-2" ng-repeat="classe in classes track by $index">
+            <div class="col-sm-4 col-4">
+              <label for="students_{{$index}}" class="form-label mb-0"><strong>{{classe}}</strong></label>
             </div>
-        </div>
+            <div class="col-sm-4 col-4">
+              <input type="number"
+                     class="form-control"
+                     id="students_{{$index}}"
+                     placeholder="Numero di studenti"
+                     min="0"
+                     ng-model="currentGame.classSizes[classe]" />
+            </div>
+          </div>
     </div>
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
