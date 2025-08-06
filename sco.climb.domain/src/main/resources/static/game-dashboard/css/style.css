@@ -445,28 +445,101 @@ md-sidenav {
 .floating-input-container {
   position: fixed;
   bottom: 100px; 
-  right: 20px;    
+  left: 50px;    
   z-index: 100;
 }
+.edit-input--selected {
+  font-weight: bold;
+  outline: none;
+}
 
+.edit-input--selected::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+/* Chrome, Safari, Edge */
+.edit-input::-webkit-inner-spin-button,
+.edit-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.edit-input {
+  -moz-appearance: textfield;
+}
+.day-column {
+  border-right: 1px dashed rgba(0, 0, 0, 0.1);
+}
 .floating-card {
   display: flex;
   align-items: center;
-  background: white;
+  gap: 16px;
+  padding: 12px;
   border: 2px solid;
-  border-radius: 30px;
-  padding: 10px 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  height: 60px; 
+  border-radius: 12px;
+  background: #fff;
 }
 
-.floating-value {
+.floating-double {
+  display: flex;
+  gap: 24px;
+}
+
+.floating-block, .floating-single {
   display: flex;
   align-items: center;
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0 10px;
+  gap: 8px;
 }
+
+.floating-btn {
+  background-color: var(--v-theme-primary);
+  color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.floating-value span {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  min-width: 24px;
+  text-align: center;
+}
+
+.floating-control-button {
+  color: inherit !important;
+  border: 2px solid white;
+  border-radius: 50%;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.floating-control-button md-icon {
+  color: inherit !important;
+  line-height: 1;
+  margin: 0;
+}
+
+.floating-icon-neutral {
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 8px;
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.floating-icon-neutral md-icon {
+  color: white;
+  font-size: 24px;
+  opacity: 0.85;
+}
+
 
 .floating-icon {
   font-size: 24px;
@@ -475,6 +548,19 @@ md-sidenav {
 .close-button {
   margin-left: 10px;
 }
+.close-button md-icon {
+  color: white;
+  font-size: 24px;
+}
+
+.cal-row-even {
+  background-color: #f9f9f9; /* bianco/grigio chiaro */
+}
+
+.cal-row-odd {
+  background-color: #eeeeee; /* grigio un po' più scuro */
+}
+
 .highlight-row {
   outline: 2px dashed #666;
   outline-offset: -4px;
@@ -2052,12 +2138,19 @@ md-card-content md-progress-linear .md-container .md-bar {
 }
 
 .edit-block {
-  background: #f1f1f1;
   border-radius: 8px;
   padding: 4px 6px;
   margin: 2px 0;
 }
-
+.edit-day-column {
+  background-color: rgba(33, 150, 243, 0.05); /* light blue tint */
+  border-left: 3px solid #2196f3; /* Material Design blue */
+  border-right: 3px solid #2196f3; /* Material Design blue */
+}
+.edit-day-total {
+  background-color: rgba(33, 150, 243, 0.05); /* light blue tint */
+  border: 3px solid #2196f3; /* Material Design blue */
+}
 .edit-input {
   width: 40px;
   text-align: center;
@@ -2065,6 +2158,9 @@ md-card-content md-progress-linear .md-container .md-bar {
   border: none;
   background: transparent;
   font-size: 14px;
+}
+.today-highlight {
+  background-color: rgba(255, 235, 59, 0.1); /* giallo chiaro */
 }
 
 /* .small-button md-icon {

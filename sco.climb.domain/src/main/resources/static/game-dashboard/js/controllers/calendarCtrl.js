@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.calendar', [])
-  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService', 'configService', 'loginService', 'profileService',
-    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService, configService, loginService, profileService) {
+  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', '$timeout', 'CacheSrv', 'dataService', 'calendarService', 'configService', 'loginService', 'profileService',
+    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast,$timeout, CacheSrv, dataService, calendarService, configService, loginService, profileService) {
       $scope.isLoadingCalendar = true;
       $scope.week = []
       $scope.prev2Week = true;
@@ -12,6 +12,7 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.sendingData = false
       $scope.roundTrip = false;
       $scope.groupMode = false;
+      $scope.currentEditDayIndex = null;
       $scope.cal = {
         meanOpen: false
       }
@@ -54,15 +55,26 @@ angular.module('climbGame.controllers.calendar', [])
           'border-radius': '10px'
         };
       };
-      $scope.selectFloatingInput = function (dayIndex, modalityKey) {
+      $scope.selectFloatingInput = function(dayIndex, modalityKey) {
         if (!$scope.canEdit(dayIndex)) return;
-        $scope.activeGroupInput = {
-          dayIndex: dayIndex,
-          key: modalityKey,
-          value: $scope.groupWeekData[dayIndex][modalityKey],
-          color: getModalityColor(modalityKey),
-          icon: getModalityIcon(modalityKey)
-        };
+    
+        $scope.currentEditDayIndex = dayIndex; // ✅ imposto il giorno in edit
+        $scope.activeGroupInput = null;
+    
+        $timeout(function() {
+            $scope.activeGroupInput = {
+                dayIndex: dayIndex,
+                key: modalityKey,
+                value: $scope.groupWeekData[dayIndex][modalityKey],
+                color: getModalityColor(modalityKey),
+                icon: getModalityIcon(modalityKey)
+            };
+        }, 0);
+    };
+      $scope.isSelectedGroupInput = function(dayIndex, key) {
+        return $scope.activeGroupInput &&
+               $scope.activeGroupInput.dayIndex === dayIndex &&
+               $scope.activeGroupInput.key === key;
       };
       $scope.incrementFloating = function () {
         const input = $scope.activeGroupInput;
@@ -225,9 +237,17 @@ angular.module('climbGame.controllers.calendar', [])
         // Toast the Problem
         $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
       });
-      $scope.canEdit = function (dayIndex) {
+      $scope.canEdit = function(dayIndex) {
+        if ($scope.currentEditDayIndex !== null && $scope.currentEditDayIndex !== dayIndex) {
+            return false; // ✅ blocca tutto tranne il giorno in edit
+        }
         return $scope.today(dayIndex) || $scope.isCurrentEditDay(dayIndex);
+    };
+      $scope.showInputField = function(dayIndex, modalityKey) {
+        const value = $scope.groupWeekData[dayIndex]?.[modalityKey] || 0;
+        return $scope.canEdit(dayIndex) || value > 0;
       };
+      
       $scope.hexToRgba = function (hex, alpha) {
         var r = 0, g = 0, b = 0;
 
@@ -275,13 +295,13 @@ angular.module('climbGame.controllers.calendar', [])
           case 'pandr':
             return 'local_parking';
           case 'carpooling':
-            return 'groups'; // oppure 'car_rental'
+            return 'groups'; 
           case 'car':
             return 'directions_car';
           case 'absent':
             return 'person_off';
           case 'pedibus':
-            return 'directions_walk'; // oppure 'hiking' se vuoi diversificarlo
+            return 'directions_walk'; 
           default:
             return 'block';
         }
@@ -407,50 +427,82 @@ angular.module('climbGame.controllers.calendar', [])
               }
 
               $scope.confirmSend = function () {
-                if (!$scope.sendingData) {
-                  $scope.sendingData = true;
-                  $scope.todayData.meteo = $scope.selectedWeather;
-                  $scope.todayData.day = $scope.week[dayIndex].setHours(0, 0, 0, 0);
-                  var babiesMap = {};
-
-                  if ($scope.groupMode) {
-                    // Se siamo in group mode, distribuisci i valori sui bambini
-                    var unassignedBabies = $scope.classPlayers.map(player => player.objectId);
-
-                    // Per ogni modalità ordinata (per chiave)
+                if ($scope.sendingData) return;
+              
+                $scope.sendingData = true;
+                $scope.todayData.meteo = $scope.selectedWeather;
+                $scope.todayData.day = $scope.week[dayIndex].setHours(0, 0, 0, 0);
+              
+                var babiesMap = {};
+                var babiesMapReturn = {};
+              
+                if ($scope.groupMode) {
+                  var unassignedBabies = $scope.classPlayers.map(player => player.objectId);
+              
+                  if ($scope.roundTrip) {
+                    // Se roundtrip è attivo, considera separatamente out e return
+                    var outModalities = Object.keys($scope.groupWeekData[dayIndex]).filter(k => k.endsWith('_out'));
+                    var returnModalities = Object.keys($scope.groupWeekData[dayIndex]).filter(k => k.endsWith('_return'));
+              
+                    // Assegna out
+                    outModalities.forEach(function (modalityKey) {
+                      var count = $scope.groupWeekData[dayIndex][modalityKey];
+                      var baseModality = modalityKey.replace('_out', '');
+                      for (var i = 0; i < count && unassignedBabies.length > 0; i++) {
+                        var babyId = unassignedBabies.shift();
+                        babiesMap[babyId] = baseModality;
+                      }
+                    });
+              
+                    // Ricrea la lista per il ritorno
+                    unassignedBabies = $scope.classPlayers.map(player => player.objectId);
+              
+                    // Assegna return
+                    returnModalities.forEach(function (modalityKey) {
+                      var count = $scope.groupWeekData[dayIndex][modalityKey];
+                      var baseModality = modalityKey.replace('_return', '');
+                      for (var i = 0; i < count && unassignedBabies.length > 0; i++) {
+                        var babyId = unassignedBabies.shift();
+                        babiesMapReturn[babyId] = baseModality;
+                      }
+                    });
+              
+                  } else {
+                    // Modalità groupMode senza roundTrip
                     Object.keys($scope.groupWeekData[dayIndex]).forEach(function (modality) {
                       var count = $scope.groupWeekData[dayIndex][modality];
-                      for (var i = 0; i < count; i++) {
-                        if (unassignedBabies.length === 0) break; // sicurezza
-                        var babyId = unassignedBabies.shift(); // prendi il primo disponibile
+                      for (var i = 0; i < count && unassignedBabies.length > 0; i++) {
+                        var babyId = unassignedBabies.shift();
                         babiesMap[babyId] = modality;
                       }
                     });
-
-                  } else {
-                    // Modalità normale come già esistente
-                    for (var i = 0; i < $scope.classPlayers.length; i++) {
-                      var player = $scope.classPlayers[i];
-                      if ($scope.weekData[dayIndex][player.objectId].mean) {
-                        babiesMap[player.objectId] = $scope.weekData[dayIndex][player.objectId].mean;
-                      }
+                  }
+                } else {
+                  // Modalità normale
+                  for (var i = 0; i < $scope.classPlayers.length; i++) {
+                    var player = $scope.classPlayers[i];
+                    if ($scope.weekData[dayIndex][player.objectId].mean) {
+                      babiesMap[player.objectId] = $scope.weekData[dayIndex][player.objectId].mean;
                     }
                   }
-
-                  $scope.todayData.modeMap = babiesMap;
-
+              
                   if ($scope.roundTrip) {
-                    var babiesMapReturn = {};
                     for (var i = 0; i < $scope.classPlayers.length; i++) {
                       var player = $scope.classPlayers[i];
                       if ($scope.weekDataReturn[dayIndex][player.objectId].mean) {
                         babiesMapReturn[player.objectId] = $scope.weekDataReturn[dayIndex][player.objectId].mean;
                       }
                     }
-                    $scope.todayData.modeMapReturnTrip = babiesMapReturn;
                   }
-
                 }
+              
+                // Salva le due mappe
+                $scope.todayData.modeMap = babiesMap;
+                if ($scope.roundTrip) {
+                  $scope.todayData.modeMapReturnTrip = babiesMapReturn;
+                }
+              
+              
                 calendarService.sendData($scope.todayData).then(function (returnValue) {
                   // change weekdata to closed
                   $scope.weekData[dayIndex].closed = true
@@ -540,22 +592,29 @@ angular.module('climbGame.controllers.calendar', [])
         }
       }
 
-      $scope.switchDevEditMode = function (dayIndex) {
+      $scope.switchDevEditMode = function(dayIndex) {
+        $scope.activeGroupInput = null;
         if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
+    
         if ($scope.isCurrentEditDay(dayIndex)) {
-          $scope.sendData(dayIndex);
+            // chiudo l'edit e invio i dati
+            $scope.sendData(dayIndex);
+            $scope.currentEditDayIndex = null; // ✅ reset quando salvo
         } else {
-          //reset: todayData is also for past days in ENABLE_PAST_DAYS_EDIT mode
-          for (var i = 0; i < $scope.todayData.babies.length; i++) {
-            $scope.todayData.babies[i].color = '';
-            $scope.todayData.babies[i].mean = '';
-          }
-          $scope.todayData.means = [];
-
-          $scope.isDevEditMode = {};
-          $scope.isDevEditMode.dayIndex = dayIndex;
+            // reset dei dati per past days
+            for (var i = 0; i < $scope.todayData.babies.length; i++) {
+                $scope.todayData.babies[i].color = '';
+                $scope.todayData.babies[i].mean = '';
+            }
+            $scope.todayData.means = [];
+    
+            $scope.isDevEditMode = {};
+            $scope.isDevEditMode.dayIndex = dayIndex;
+    
+            $scope.currentEditDayIndex = dayIndex; // ✅ setto il giorno in edit
         }
-      }
+    };
+    
 
       $scope.prevWeek = function () {
         changeWeek(-1)
@@ -584,7 +643,7 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.isCurrentEditDay = function (dayIndex) {
         return $scope.isDevEditMode && $scope.isDevEditMode.dayIndex == dayIndex;
       }
-
+     
       function dataAreComplete(dayIndex) {
         // meteo and means must  be chosen
         if (!$scope.selectedWeather) {
