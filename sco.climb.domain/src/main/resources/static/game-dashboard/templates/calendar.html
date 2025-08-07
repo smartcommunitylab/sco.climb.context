@@ -213,14 +213,15 @@ class="cal-header state-row-flex27">
                 style="padding: 8px; display: flex;" ng-style="getLabelStyle(modality)">
                 <span style="width: 100%;text-align: right; margin-right: 8px;">{{ modality.label }}</span>
                 <md-icon class="material-icons small-transport-icon"
-                  style="background-color: {{modality.color}}; color: white; border-radius: 50%; padding: 8px; font-size: 20px;">
-                  {{ getIconForType(modality.value) }}
-                </md-icon>
+                ng-click="isDevEditMode !== null && selectFloatingInput((currentEditDayIndex !== null ? currentEditDayIndex : todayIndex), roundTrip ? (modality.value + '_out') : modality.value)"
+                style="background-color: {{modality.color}}; color: white; border-radius: 50%; padding: 8px; font-size: 20px;">
+                {{ getIconForType(modality.value) }}
+              </md-icon>
               </div>
 
               <!-- Celle giorno per giorno -->
               <div ng-repeat="(dayIndex, day) in week track by dayIndex" layout="column" flex="15" ng-class="{'edit-day-column': isCurrentEditDay(dayIndex),
-  'today-highlight': today(dayIndex) }" style="padding: 4px; text-align: center;"
+              'today-highlight': today(dayIndex) }" style="padding: 4px; text-align: center;"
                 ng-init="ensureGroupWeekData(dayIndex, modality.value)">
                 <!-- Se roundTrip è attivo -->
                 <div ng-if="roundTrip" layout="row" layout-align="center center" style="gap: 8px;">
@@ -406,37 +407,81 @@ class="cal-header state-row-flex27">
   <div class="floating-card"
     ng-style="{'background-color': activeGroupInput.color, 'border-color': activeGroupInput.color}">
 
-    <!-- Pulsante - -->
-    <md-button class="floating-control-button" ng-click="decrementFloating()"
-      ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
-      <md-icon>remove</md-icon>
-    </md-button>
+    <!-- VERSIONE ROUNDTRIP -->
+    <div ng-if="roundTrip" class="floating-dual" layout="row" layout-align="space-around center">
 
-    <!-- Valore -->
-    <div class="floating-value">
-      <span>{{ activeGroupInput.value }}</span>
+      <!-- ANDATA -->
+      <div class="floating-section">
+        <div class="floating-label">{{ 'cal_trip_out_label' | translate }}</div>
+        <div layout="row" layout-align="center center">
+          <md-button class="floating-control-button" ng-click="decrementFloating('out')"
+            ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+            <md-icon>remove</md-icon>
+          </md-button>
+
+          <div class="floating-value">
+            <span>{{ activeGroupInput.out }}</span>
+          </div>
+
+          <md-button class="floating-control-button" ng-click="incrementFloating('out')"
+            ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
+      </div>
+
+      <!-- SEPARATORE VISIVO -->
+      <div class="floating-separator"></div>
+
+
+      <!-- RITORNO -->
+      <div class="floating-section">
+        <div class="floating-label">{{ 'cal_trip_return_label' | translate }}</div>
+        <div layout="row" layout-align="center center">
+          <md-button class="floating-control-button" ng-click="decrementFloating('return')"
+            ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+            <md-icon>remove</md-icon>
+          </md-button>
+
+          <div class="floating-value">
+            <span>{{ activeGroupInput.return }}</span>
+          </div>
+
+          <md-button class="floating-control-button" ng-click="incrementFloating('return')"
+            ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
+      </div>
     </div>
 
-    <!-- Pulsante + -->
-    <md-button class="floating-control-button" ng-click="incrementFloating()"
-      ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
-      <md-icon>add</md-icon>
-    </md-button>
+    <!-- VERSIONE SOLO ANDATA -->
+    <div ng-if="!roundTrip" class="floating-single">
+      <md-button class="floating-control-button" ng-click="decrementFloating()"
+        ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+        <md-icon>remove</md-icon>
+      </md-button>
 
-    <!-- Icona mezzo -->
-    <div class="floating-icon-neutral">
-      <md-icon class="material-icons">
-        {{ activeGroupInput.icon }}
-      </md-icon>
+      <div class="floating-value">
+        <span>{{ activeGroupInput.value }}</span>
+      </div>
+
+      <md-button class="floating-control-button" ng-click="incrementFloating()"
+        ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
+        <md-icon>add</md-icon>
+      </md-button>
     </div>
-
-    <!-- Chiudi -->
+    <div class="floating-icon-neutral inline-icon">
+      <md-icon class="material-icons">{{ activeGroupInput.icon }}</md-icon>
+    </div>
+    <!-- CHIUDI -->
     <md-button class="md-icon-button close-button" ng-click="hideFloatingInput()">
       <md-icon>close</md-icon>
     </md-button>
   </div>
-
 </div>
+
+
 <div class="cal-fab" ng-if="!groupMode">
   <md-fab-speed-dial md-open="cal.meanOpen" md-direction="up" class="md-scale">
     <md-fab-trigger>

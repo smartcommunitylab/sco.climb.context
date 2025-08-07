@@ -106,5 +106,9 @@
   "cal_header_andata":"Andata",
   "cal_header_ritorno":"Ritorno",
   "err":"Errore nell'inserimento dei dati",
-  "menu_homepage" : "Homepage"
+  "menu_homepage" : "Homepage",
+  
+    "cal_trip_out_label": "Andata",
+    "cal_trip_return_label": "Ritorno"
+  
 }

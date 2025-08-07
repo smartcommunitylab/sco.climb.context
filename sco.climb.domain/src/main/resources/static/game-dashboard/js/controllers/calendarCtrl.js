@@ -60,38 +60,122 @@ angular.module('climbGame.controllers.calendar', [])
       };
       $scope.selectFloatingInput = function(dayIndex, modalityKey) {
         if (!$scope.canEdit(dayIndex)) return;
-    
-        $scope.currentEditDayIndex = dayIndex; // ✅ imposto il giorno in edit
+      
+        $scope.currentEditDayIndex = dayIndex;
         $scope.activeGroupInput = null;
-    
+      
         $timeout(function() {
+          const color = getModalityColor(modalityKey);
+          const icon = getModalityIcon(modalityKey);
+          const baseKey = modalityKey.replace(/_(out|return)$/, '');
+      
+          if ($scope.roundTrip) {
             $scope.activeGroupInput = {
-                dayIndex: dayIndex,
-                key: modalityKey,
-                value: $scope.groupWeekData[dayIndex][modalityKey],
-                color: getModalityColor(modalityKey),
-                icon: getModalityIcon(modalityKey)
+              dayIndex,
+              baseKey,
+              keyOut: baseKey + '_out',
+              keyReturn: baseKey + '_return',
+              out: $scope.groupWeekData[dayIndex][baseKey + '_out'],
+              return: $scope.groupWeekData[dayIndex][baseKey + '_return'],
+              color,
+              icon
             };
+          } else {
+            $scope.activeGroupInput = {
+              dayIndex,
+              key: modalityKey,
+              value: $scope.groupWeekData[dayIndex][modalityKey],
+              color,
+              icon
+            };
+          }
         }, 0);
-    };
+      };
+      
       $scope.isSelectedGroupInput = function(dayIndex, key) {
-        return $scope.activeGroupInput &&
-               $scope.activeGroupInput.dayIndex === dayIndex &&
-               $scope.activeGroupInput.key === key;
+        if (!$scope.activeGroupInput) return false;
+      
+        // Caso roundTrip: controlla entrambe le chiavi
+        if ($scope.roundTrip) {
+          return $scope.activeGroupInput.dayIndex === dayIndex &&
+                 (key === $scope.activeGroupInput.keyOut || key === $scope.activeGroupInput.keyReturn);
+        }
+      
+        // Caso normale (solo andata)
+        return $scope.activeGroupInput.dayIndex === dayIndex &&
+               key === $scope.activeGroupInput.key;
       };
-      $scope.incrementFloating = function () {
-        const input = $scope.activeGroupInput;
-        $scope.groupWeekData[input.dayIndex][input.key]++;
-        input.value = $scope.groupWeekData[input.dayIndex][input.key];
-      };
-
-      $scope.decrementFloating = function () {
-        const input = $scope.activeGroupInput;
-        if ($scope.groupWeekData[input.dayIndex][input.key] > 0) {
-          $scope.groupWeekData[input.dayIndex][input.key]--;
-          input.value = $scope.groupWeekData[input.dayIndex][input.key];
+      $scope.incrementFloating = function(which) {
+        if ($scope.roundTrip && which) {
+          if (which === 'out') {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut]++;
+            $scope.activeGroupInput.out++;
+          } else if (which === 'return') {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn]++;
+            $scope.activeGroupInput.return++;
+          }
+        } else {
+          const input = $scope.activeGroupInput;
+          $scope.groupWeekData[input.dayIndex][input.key]++;
+          input.value++;
         }
       };
+      
+      $scope.decrementFloating = function(which) {
+        if ($scope.roundTrip && which) {
+          if (which === 'out' &&
+              $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut] > 0) {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut]--;
+            $scope.activeGroupInput.out--;
+          } else if (which === 'return' &&
+                     $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn] > 0) {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn]--;
+            $scope.activeGroupInput.return--;
+          }
+        } else {
+          const input = $scope.activeGroupInput;
+          if ($scope.groupWeekData[input.dayIndex][input.key] > 0) {
+            $scope.groupWeekData[input.dayIndex][input.key]--;
+            input.value--;
+          }
+        }
+      };
+      $scope.incrementFloating = function(which) {
+        if ($scope.roundTrip && which) {
+          if (which === 'out') {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut]++;
+            $scope.activeGroupInput.out++;
+          } else if (which === 'return') {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn]++;
+            $scope.activeGroupInput.return++;
+          }
+        } else {
+          const input = $scope.activeGroupInput;
+          $scope.groupWeekData[input.dayIndex][input.key]++;
+          input.value++;
+        }
+      };
+      
+      $scope.decrementFloating = function(which) {
+        if ($scope.roundTrip && which) {
+          if (which === 'out' &&
+              $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut] > 0) {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyOut]--;
+            $scope.activeGroupInput.out--;
+          } else if (which === 'return' &&
+                     $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn] > 0) {
+            $scope.groupWeekData[$scope.activeGroupInput.dayIndex][$scope.activeGroupInput.keyReturn]--;
+            $scope.activeGroupInput.return--;
+          }
+        } else {
+          const input = $scope.activeGroupInput;
+          if ($scope.groupWeekData[input.dayIndex][input.key] > 0) {
+            $scope.groupWeekData[input.dayIndex][input.key]--;
+            input.value--;
+          }
+        }
+      };
+            
 
       $scope.hideFloatingInput = function () {
         $scope.activeGroupInput = null;
@@ -509,6 +593,8 @@ angular.module('climbGame.controllers.calendar', [])
               
               
                 calendarService.sendData($scope.todayData).then(function (returnValue) {
+                  $scope.isDevEditMode = null;
+                  $scope.currentEditDayIndex = null;
                   // change weekdata to closed
                   $scope.weekData[dayIndex].closed = true
                   // check if merged or not
@@ -600,27 +686,23 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.switchDevEditMode = function(dayIndex) {
         $scope.activeGroupInput = null;
         if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
-    
+      
         if ($scope.isCurrentEditDay(dayIndex)) {
-            // chiudo l'edit e invio i dati
-            $scope.sendData(dayIndex);
-            $scope.isDevEditMode = null; // ✅ reset corretto
-
-            $scope.currentEditDayIndex = null; // ✅ reset quando salvo
+          // chiudo l'edit e invio i dati
+          $scope.sendData(dayIndex); // il reset ora avviene SOLO dentro confirmSend()
         } else {
-            // reset dei dati per past days
-            for (var i = 0; i < $scope.todayData.babies.length; i++) {
-                $scope.todayData.babies[i].color = '';
-                $scope.todayData.babies[i].mean = '';
-            }
-            $scope.todayData.means = [];
-    
-            $scope.isDevEditMode = {};
-            $scope.isDevEditMode.dayIndex = dayIndex;
-    
-            $scope.currentEditDayIndex = dayIndex; // ✅ setto il giorno in edit
+          // reset dei dati per past days
+          for (var i = 0; i < $scope.todayData.babies.length; i++) {
+            $scope.todayData.babies[i].color = '';
+            $scope.todayData.babies[i].mean = '';
+          }
+          $scope.todayData.means = [];
+      
+          $scope.isDevEditMode = {};
+          $scope.isDevEditMode.dayIndex = dayIndex;
+          $scope.currentEditDayIndex = dayIndex;
         }
-    };
+      };
     
 
       $scope.prevWeek = function () {

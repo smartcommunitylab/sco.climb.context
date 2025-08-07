@@ -479,6 +479,14 @@ md-sidenav {
   border-radius: 12px;
   background: #fff;
 }
+.floating-separator {
+  width: 1px;
+  background-image: linear-gradient(to bottom, white 30%, transparent 30%);
+  background-size: 1px 8px;
+  background-repeat: repeat-y;
+  margin: 0 10px;
+  align-self: stretch;
+}
 
 .floating-double {
   display: flex;
@@ -490,7 +498,17 @@ md-sidenav {
   align-items: center;
   gap: 8px;
 }
+.floating-dual {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
 
+.floating-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .floating-btn {
   background-color: var(--v-theme-primary);
   color: white;
@@ -679,8 +697,41 @@ main.layout-row.flex {
 
 .cal-baby {
   height: 40px;
-  line-height: 40px;
+  /* line-height: 40px; */
   text-align: center;
+}
+.floating-label {
+  color: white;
+  font-size: 12px;
+  margin-bottom: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.floating-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.floating-dual {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+.inline-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+}
+.floating-separator {
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin: 0 8px;
 }
 
 .cal-baby-cell {
@@ -2199,6 +2250,7 @@ md-card-content md-progress-linear .md-container .md-bar {
   background: #e0e0e0;
   color: #999;
 }
+
 .small-transport-icon {
   background-color: var(--modality-color); /* puoi anche sovrascrivere */
   color: white;
