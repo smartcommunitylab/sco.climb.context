@@ -4,18 +4,59 @@
       <div layout="row" class="state-row">
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_state'|translate|
           uppercase}}</div>
-        <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{ 'day-column': true,'edit-day-column': isCurrentEditDay(dayIndex),
-  'today-highlight': today(dayIndex) }" class="cal-header state-row-flex27">
-          <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
-          <span ng-if="!today(dayIndex) && isFuture(dayIndex)"
-            class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
-          <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData(dayIndex)"
-            class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
-          <span ng-if="isPast(dayIndex) && ENABLE_PAST_DAYS_EDIT" ng-click="switchDevEditMode(dayIndex)"
-            class="cal-interactive-button">{{isCurrentEditDay(dayIndex)
-            ? ('cal_edit_save_dev_data_button'| translate) :
-            ('cal_edit_dev_data_button'| translate)}}</span>
-        </div>
+<div layout="column"
+flex="15"
+ng-repeat="day in week track by $index"
+ng-init="dayIndex = $index"
+ng-class="{
+  'day-column': true,
+  'edit-day-column': isCurrentEditDay(dayIndex),
+  'today-highlight': today(dayIndex)
+}"
+class="cal-header state-row-flex27">
+
+<!-- GIORNO CHIUSO -->
+<span ng-if="weekData[dayIndex].closed">
+{{ 'cal_header_sent' | translate }}
+</span>
+
+<!-- GIORNO IN MODIFICA (oggi o altro giorno) -->
+<span ng-if="isCurrentEditDay(dayIndex) && !weekData[dayIndex].closed"
+   ng-click="switchDevEditMode(dayIndex)"
+   class="cal-interactive-button">
+{{ 'cal_edit_save_dev_data_button' | translate }}
+</span>
+
+<!-- GIORNO OGGI NON IN MODIFICA (ma apribile) -->
+<span ng-if="today(dayIndex) &&
+          !weekData[dayIndex].closed &&
+          !isCurrentEditDay(dayIndex)"
+   ng-click="switchDevEditMode(dayIndex)"
+   class="cal-interactive-button">
+{{ 'cal_edit_dev_data_button' | translate }}
+</span>
+
+<!-- GIORNI PASSATI NON IN MODIFICA -->
+<span ng-if="isPast(dayIndex) &&
+          ENABLE_PAST_DAYS_EDIT &&
+          !weekData[dayIndex].closed &&
+          !isCurrentEditDay(dayIndex) &&
+          !today(dayIndex)"
+   ng-click="switchDevEditMode(dayIndex)"
+   class="cal-interactive-button">
+{{ 'cal_edit_dev_data_button' | translate }}
+</span>
+
+<!-- GIORNI FUTURI NON CHIUSI -->
+<span ng-if="isFuture(dayIndex) &&
+          !today(dayIndex) &&
+          !weekData[dayIndex].closed"
+   class="cal-header-future">
+{{ 'cal_send_data_button' | translate }}
+</span>
+
+</div>
+
       </div>
       <div layout="row" class="days-row">
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">

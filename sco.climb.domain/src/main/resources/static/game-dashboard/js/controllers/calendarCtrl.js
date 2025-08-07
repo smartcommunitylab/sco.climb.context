@@ -55,6 +55,9 @@ angular.module('climbGame.controllers.calendar', [])
           'border-radius': '10px'
         };
       };
+      $scope.shouldShowSaveButton = function(dayIndex) {
+        return $scope.isCurrentEditDay(dayIndex) && $scope.isDevEditMode;
+      };
       $scope.selectFloatingInput = function(dayIndex, modalityKey) {
         if (!$scope.canEdit(dayIndex)) return;
     
@@ -136,7 +139,9 @@ angular.module('climbGame.controllers.calendar', [])
         }
         return color
       }
-      setTodayIndex()
+      setTodayIndex();
+      $scope.isDevEditMode = {};
+        $scope.isDevEditMode.dayIndex = $scope.todayIndex;
       setClassSize()
       for (var i = 0; i < $scope.daysOfWeek; i++) {
         $scope.week.push(new Date(getMonday(new Date()).getTime() + (i * 24 * 60 * 60 * 1000)))
@@ -599,6 +604,8 @@ angular.module('climbGame.controllers.calendar', [])
         if ($scope.isCurrentEditDay(dayIndex)) {
             // chiudo l'edit e invio i dati
             $scope.sendData(dayIndex);
+            $scope.isDevEditMode = null; // ✅ reset corretto
+
             $scope.currentEditDayIndex = null; // ✅ reset quando salvo
         } else {
             // reset dei dati per past days
@@ -700,7 +707,12 @@ angular.module('climbGame.controllers.calendar', [])
         }
         return false
       }
-
+      $scope.getEditButtonLabel = function(dayIndex) {
+        if (!$scope.isCurrentEditDay(dayIndex)) return null;
+        return $scope.isDevEditMode
+          ? 'cal_edit_save_dev_data_button'
+          : 'cal_edit_dev_data_button';
+      };
       function setTodayIndex() {
         /* set the day of week */
         var day = new Date().getDay()
@@ -719,6 +731,19 @@ angular.module('climbGame.controllers.calendar', [])
           for (var i = 0; i < $scope.daysOfWeek; i++) {
             $scope.week.push(new Date(monday.getTime() + (i * 24 * 60 * 60 * 1000)))
           }
+          $scope.todayIndex = $scope.week.findIndex(function(day) {
+            const today = new Date();
+            return day.getDate() === today.getDate() &&
+                   day.getMonth() === today.getMonth() &&
+                   day.getFullYear() === today.getFullYear();
+          });
+          
+          // 🔧 Se esiste un giorno di oggi, lo seleziono per l’editing
+          if ($scope.todayIndex !== -1) {
+            $scope.currentEditDayIndex = $scope.todayIndex;
+            $scope.isDevEditMode = true;
+          }
+
           var currentDate = new Date;
           var first = currentDate.getDate() - currentDate.getDay() + 1;
           var weekStart = new Date(currentDate.setDate(first));
