@@ -703,7 +703,36 @@ angular.module('climbGame.controllers.calendar', [])
           $scope.currentEditDayIndex = dayIndex;
         }
       };
-    
+      $scope.getGroupInputStyle = function(dayIndex, key) {
+        const color = getModalityColor(key);
+        const sent = $scope.weekData[dayIndex]?.closed;
+        const isActive = $scope.isCurrentEditDay(dayIndex);
+      
+        const count = $scope.groupWeekData[dayIndex]?.[key];
+      
+        if (sent) {
+          return {
+            'background-color': hexToRgba(color, 0.2),
+            'color': '#333',
+            'border': '2px solid ' + color
+          };
+        } else if (isActive) {
+          return {
+            'background-color': 'white',
+            'color': '#777',
+            'border': '2px solid ' + color
+          };
+        } else if (count > 0) {
+          // pending
+          return {
+            'background-color': 'white',
+            'color': '#333',
+            'border': '2px dashed ' + color
+          };
+        } else {
+          return {}; // default
+        }
+      };
 
       $scope.prevWeek = function () {
         changeWeek(-1)

@@ -2250,7 +2250,12 @@ md-card-content md-progress-linear .md-container .md-bar {
   background: #e0e0e0;
   color: #999;
 }
-
+.edit-input[disabled] {
+  color: #111 !important; /* o #222 se vuoi più tenue */
+  background-color: inherit !important;
+  -webkit-text-fill-color: #111 !important; /* Safari fix */
+  opacity: 1 !important; /* disabilita la trasparenza */
+}
 .small-transport-icon {
   background-color: var(--modality-color); /* puoi anche sovrascrivere */
   color: white;

@@ -235,11 +235,7 @@ class="cal-header state-row-flex27">
                         ng-blur="fixInput(dayIndex, modality.value+'_out')"
                         ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)" min="0"
                         ng-click="selectFloatingInput(dayIndex, modality.value+'_out')" class="edit-input"
-                        ng-style="isSelectedGroupInput(dayIndex, modality.value + '_out') && {
-                          'background-color': activeGroupInput.color,
-                          'color': 'white',
-                          'border': '2px solid white'
-                        }"
+                        ng-style="getGroupInputStyle(dayIndex, modality.value + '_out')"
                         ng-class="{'edit-input--selected': isSelectedGroupInput(dayIndex, modality.value + '_out')}"
                         />
 
@@ -258,12 +254,8 @@ class="cal-header state-row-flex27">
                       ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)"
                       min="0"
                       class="edit-input"
-                      ng-style="isSelectedGroupInput(dayIndex, modality.value + '_return') && {
-                        'background-color': activeGroupInput.color,
-                        'color': 'white',
-                        'border': '2px solid white'
-                      }"
-                      ng-class="{'edit-input--selected': isSelectedGroupInput(dayIndex, modality.value + '_return')}"
+                      ng-style="getGroupInputStyle(dayIndex, modality.value + '_return')"
+
                />
                     </div>
                   </div>
@@ -278,11 +270,8 @@ class="cal-header state-row-flex27">
                     ng-blur="fixInput(dayIndex, modality.value+'_out')"
                     ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)" min="0"
                     ng-click="selectFloatingInput(dayIndex, modality.value)" class="edit-input"
-                    ng-style="isSelectedGroupInput(dayIndex, modality.value) && {
-                      'background-color': activeGroupInput.color,
-                      'color': 'white',
-                      'border': '2px solid white'
-                    }"
+                    ng-style="getGroupInputStyle(dayIndex, modality.value)"
+
                     ng-class="{'edit-input--selected': isSelectedGroupInput(dayIndex, modality.value)}"
                     />
                   </div>
