@@ -2245,16 +2245,30 @@ md-card-content md-progress-linear .md-container .md-bar {
   align-items: center!important;
 }
 
-/* Quando disabilitato */
-.edit-input[disabled] {
-  background: #e0e0e0;
-  color: #999;
+
+.edit-input {
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  font-size: 14px;
 }
-.edit-input[disabled] {
-  color: #111 !important; /* o #222 se vuoi più tenue */
-  background-color: inherit !important;
-  -webkit-text-fill-color: #111 !important; /* Safari fix */
-  opacity: 1 !important; /* disabilita la trasparenza */
+
+.edit-input--pending {
+  color: #333;
+  border: 2px dashed; /* colore dinamico da ng-style */
+}
+
+.edit-input--active {
+  background-color: white;
+  color: #333;
+  border: 2px solid; /* colore dinamico da ng-style */
+}
+
+.edit-input--sent {
+  color: #333;
+  border: 2px solid; /* colore dinamico da ng-style */
 }
 .small-transport-icon {
   background-color: var(--modality-color); /* puoi anche sovrascrivere */
