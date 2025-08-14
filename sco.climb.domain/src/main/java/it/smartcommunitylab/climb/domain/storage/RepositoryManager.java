@@ -1705,6 +1705,7 @@ public class RepositoryManager {
 				player.setOwnerId(game.getOwnerId());
 				player.setPedibusGameId(game.getObjectId());
 				player.setClassRoom(classRoom);
+				player.setNickname(String.valueOf(i));
 				result.add(mongoTemplate.save(player));							
 			}
 		}
