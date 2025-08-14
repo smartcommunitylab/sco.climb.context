@@ -703,36 +703,64 @@ angular.module('climbGame.controllers.calendar', [])
           $scope.currentEditDayIndex = dayIndex;
         }
       };
+      $scope.isSent = function(dayIndex) {
+        return $scope.weekData[dayIndex]?.closed;
+      };
+      
+      $scope.isPending = function(dayIndex, key) {
+        const count = $scope.groupWeekData[dayIndex]?.[key] || 0;
+        return !$scope.weekData[dayIndex]?.closed &&
+               !$scope.isCurrentEditDay(dayIndex) &&
+               count > 0;
+      };
       $scope.getGroupInputStyle = function(dayIndex, key) {
         const color = getModalityColor(key);
-        const sent = $scope.weekData[dayIndex]?.closed;
-        const isActive = $scope.isCurrentEditDay(dayIndex);
-      
-        const count = $scope.groupWeekData[dayIndex]?.[key];
-      
-        if (sent) {
-          return {
-            'background-color': hexToRgba(color, 0.2),
-            'color': '#333',
-            'border': '2px solid ' + color
-          };
-        } else if (isActive) {
-          return {
-            'background-color': 'white',
-            'color': '#777',
-            'border': '2px solid ' + color
-          };
-        } else if (count > 0) {
-          // pending
-          return {
-            'background-color': 'white',
-            'color': '#333',
-            'border': '2px dashed ' + color
-          };
-        } else {
-          return {}; // default
+    
+        // 🔹 Se ho una cella attiva (roundTrip o no), evidenzio sempre
+        if ($scope.activeGroupInput) {
+            let isSelected = false;
+    
+            if ($scope.roundTrip) {
+                // Con roundTrip confronto con entrambe le chiavi
+                isSelected =
+                    ($scope.activeGroupInput.dayIndex === dayIndex) &&
+                    (key === $scope.activeGroupInput.keyOut || key === $scope.activeGroupInput.keyReturn);
+            } else {
+                // Senza roundTrip confronto col singolo key
+                isSelected =
+                    $scope.activeGroupInput.dayIndex === dayIndex &&
+                    key === $scope.activeGroupInput.key;
+            }
+    
+            if (isSelected) {
+                return {
+                    backgroundColor: $scope.hexToRgba(color, 0.2),
+                    borderColor: color
+                };
+            }
         }
-      };
+    
+        // 🔹 Regole originali
+        if ($scope.isSent(dayIndex)) {
+            return {
+                backgroundColor: $scope.hexToRgba(color, 0.2),
+                borderColor: color
+            };
+        }
+        if ($scope.isCurrentEditDay(dayIndex)) {
+            return {
+                borderColor: color
+            };
+        }
+        if ($scope.isPending(dayIndex, key)) {
+            return {
+                borderColor: color
+            };
+        }
+    
+        return {};
+    };
+    
 
       $scope.prevWeek = function () {
         changeWeek(-1)

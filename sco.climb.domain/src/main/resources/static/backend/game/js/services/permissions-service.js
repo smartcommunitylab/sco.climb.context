@@ -17,6 +17,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var userRoles;
 	var shortLink;
 	var sponsor;
+    var group;
     permissionsService.getProfilePermissions = function () {
         return userRoles;
     }
@@ -63,6 +64,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 deleteLegsMultimedia = true;
 shortLink = true;
 sponsor =true;
+group = true;
             } else if (role == 'owner' || role == 'school-owner') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -102,6 +104,8 @@ sponsor =true;
                 deleteLegsMultimedia = true;
 shortLink= true;
 sponsor = true;
+group = true;
+
             } else if (role == 'teacher') {
                 showInstitutes = false;
                 editInstitute = false;
@@ -141,6 +145,8 @@ sponsor = true;
                 deleteLegsMultimedia = true;
 shortLink = false;
 sponsor = false;
+group = false;
+
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -185,6 +191,8 @@ sponsor = false;
                 deleteLegsMultimedia = true;
 shortLink = true;
 sponsor = true;
+group = true;
+
             }
         });
 
@@ -325,6 +333,9 @@ sponsor = true;
     }
 	permissionsService.permissionEnabledSponsor= function () {
         return sponsor;
+    }
+    permissionsService.permissionEnabledGroup= function () {
+        return group;
     }
 
 

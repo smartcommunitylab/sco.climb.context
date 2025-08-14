@@ -101,7 +101,7 @@
     </div>
     <div class="col-sm-12 col-12 ">
         <div class="col-sm-12 col-12">
-            <input ng-disabled="currentGame.deployed"
+            <input ng-disabled="currentGame.deployed || !PermissionsService.permissionEnabledGroup()"
                    type="checkbox"
                    class="checkBoxStyle"
                    ng-change="changed()"
@@ -240,7 +240,7 @@
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}"  ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 5">
-                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)" ng-disabled="currentGame.deployed" >{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 6">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" disabled>{{weekDays[$index]}}
