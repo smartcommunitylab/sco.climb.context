@@ -95,6 +95,37 @@
             <option value="urf">URF</option>
         </select>
     </div>
+    <div class="col-sm-12 col-12 ">
+        <h3>Compilazione per gruppi anonimi</h3>
+        <hr style="border-color: black;">
+    </div>
+    <div class="col-sm-12 col-12 ">
+        <div class="col-sm-12 col-12">
+            <input ng-disabled="currentGame.deployed || !PermissionsService.permissionEnabledGroup()"
+                   type="checkbox"
+                   class="checkBoxStyle"
+                   ng-change="changed()"
+                   ng-model="currentGame.groupDataEntry">
+            Abilita modalità a gruppi
+        </div>
+    </div>
+    
+    <!-- INPUT per numero studenti (visibile solo se groupDataEntry è true) -->
+    <div class="col-sm-12 col-12" ng-if="currentGame.groupDataEntry">
+        <div class="form-group row align-items-center mb-2" ng-repeat="classe in classes track by $index">
+            <div class="col-sm-4 col-4">
+              <label for="students_{{$index}}" class="form-label mb-0"><strong>{{classe}}</strong></label>
+            </div>
+            <div class="col-sm-4 col-4">
+              <input type="number"
+                     class="form-control"
+                     id="students_{{$index}}"
+                     placeholder="Numero di studenti"
+                     min="0"
+                     ng-model="currentGame.classSizes[classe]" />
+            </div>
+          </div>
+    </div>
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
 
@@ -154,6 +185,18 @@
             <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-change="changed()"
                 ng-model="currentGame.globalTeam" ng-required="true" />
         </div>
+        <!-- <div >
+            <label style="font-weight: normal">
+                <input type="checkbox"
+                class="checkBoxStyle" 
+                       ng-model="currentGame.groupMode"
+                       ng-change="changed()"
+                       ng-disabled="currentGame.deployed" />
+                Abilita modalità a gruppi
+            </label>
+        </div> -->
+            <!--  andata e ritorno -->
+   
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
 
@@ -197,7 +240,7 @@
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}"  ng-checked="{{d}}" disabled>{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 5">
-                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)">{{weekDays[$index]}}
+                <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" ng-click="toggleSelectionWeekDay($index)" ng-disabled="currentGame.deployed" >{{weekDays[$index]}}
             </div>
             <div ng-if="$index == 6">
                 <input type="checkbox" class="checkBoxStyle" value="{{d}}" ng-checked="{{d}}" disabled>{{weekDays[$index]}}

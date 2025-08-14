@@ -2,6 +2,8 @@ angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootS
 function ($q, $http, $rootScope, $timeout) {
     var getUrl = window.location;
     var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    //    var baseUrl ="https://climbdev.smartcommunitylab.it/v3"
+    //    var baseUrl ="https://climbdev.smartcommunitylab.it/v3"
     var timeout = 10000;
 
     var googleApiKey = 'AIzaSyCgNyKWM_SBXNe7dKw1QdywllZpbQ0Jioo';
@@ -356,6 +358,23 @@ function ($q, $http, $rootScope, $timeout) {
         var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
         return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
+        // add group players to class /api/game/{ownerId}/{pedibusGameId}/players/group
+        addGroupToGame: function(ownerId, pedibusGameId, classRoom, num) {
+            var url = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + `/players/group?classRoom=${encodeURIComponent(classRoom)}&num=${num}`;
+            return $http.post(url,  { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+        },
+        // remove group players from class /api/game/{ownerId}/{pedibusGameId}/players/group
+        removeGroupFromGame: function(ownerId, pedibusGameId, classRoom) {
+            var url = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/players/group";
+            var config = {
+                params: { classRoom: classRoom },
+                timeout: timeout,
+                headers: { 'Authorization': 'Bearer ' + profileToken }
+            };
+            return $http.delete(url, config);
+        },
+        
+
         // PUT /api/game/{ownerId}/{pedibusGameId}/mobility
         // modifica i dati di abitudini di mobilità
         updateParams: function(ownerId,objectId, params){

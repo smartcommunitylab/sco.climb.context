@@ -5,56 +5,56 @@
 			"label": "Piedi",
 			"active": true,
 			"category": "cat1",
-			"color": "#A8E206"
+			"color": "#b4e047"
 		},
 		{
 			"value":"bike",
 			"label": "Bici / Monopattino / Skateboard",
 			"active": true,
 			"category": "cat1",
-			"color": "#01C86E"
+			"color": "#5ac577"
 		},
 		{
 			"value":"bus",
 			"label": "Scuolabus o trasporto pubblico",
 			"active": true,
 			"category": "cat1",
-			"color": "#FFE600"
+			"color": "#fbe74d"
 		},
 		{
 			"value":"pedibus",
 			"label": "Pedibus",
 			"active": true,
 			"category": "cat1",
-			"color": "#A8E206"
+			"color": "#04d992"
 		},
 		{
 			"value":"pandr",
 			"label": "In auto fino alla piazzola di sosta",
 			"active": true,
 			"category": "cat1",
-			"color": "#0074FF"
+			"color": "#3172f6"
 		},
 		{
 			"value":"carpooling",
 			"label": "Car pooling",
 			"active": true,
 			"category": "cat1",
-			"color": "#FF7F00"
+			"color": "#e7a03c"
 		},
 		{
 			"value":"car",
 			"label": "In auto fino a scuola",
 			"active": true,
 			"category": "cat1",
-			"color": "#FF0020"
+			"color": "#ea3331"
 		},
 		{
 			"value":"absent",
 			"label": "Assente",
 			"active": false,
 			"category": "cat1",
-			"color": "#BDBDBD"
+			"color": "#e0e0e0"
 		}
 	]
 }
