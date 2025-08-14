@@ -519,7 +519,7 @@ md-sidenav {
 .floating-value span {
   font-size: 20px;
   font-weight: bold;
-  color: white;
+  color: black;
   min-width: 24px;
   text-align: center;
 }
@@ -703,7 +703,7 @@ main.layout-row.flex {
 .floating-label {
   color: white;
   font-size: 12px;
-  margin-bottom: 4px;
+  margin-top: 4px;
   text-align: center;
   font-weight: bold;
 }
@@ -712,7 +712,7 @@ main.layout-row.flex {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 0px;
 }
 
 .floating-dual {
@@ -721,6 +721,22 @@ main.layout-row.flex {
   justify-content: space-between;
   width: 100%;
   gap: 16px;
+  
+}
+.floating-single,
+.floating-dual {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden; /* per tagliare il velo ai bordi arrotondati */
+}
+
+.floating-single::before,
+.floating-dual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.3); /* velo bianco con alpha */
+  pointer-events: none; /* non blocca click */
 }
 .inline-icon {
   display: flex;

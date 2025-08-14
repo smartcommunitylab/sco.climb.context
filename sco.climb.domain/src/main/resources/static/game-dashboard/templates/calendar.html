@@ -41,7 +41,7 @@
           <span ng-if="isFuture(dayIndex) &&
           !today(dayIndex) &&
           !weekData[dayIndex].closed" class="cal-header-future">
-            {{ 'cal_send_data_button' | translate }}
+            <!-- {{ 'cal_send_data_button' | translate }} -->
           </span>
 
         </div>
@@ -396,8 +396,9 @@
     ng-style="{'background-color': activeGroupInput.color, 'border-color': activeGroupInput.color}">
 
     <!-- VERSIONE ROUNDTRIP -->
-    <div ng-if="roundTrip" class="floating-dual" layout="row" layout-align="space-around center">
-
+    <div ng-if="roundTrip" class="floating-dual"
+    ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}"
+    layout="row" layout-align="space-around center">
       <!-- ANDATA -->
       <div class="floating-section">
         <div class="floating-label">{{ 'cal_trip_out_label' | translate }}</div>
@@ -444,8 +445,9 @@
     </div>
 
     <!-- VERSIONE SOLO ANDATA -->
-    <div ng-if="!roundTrip" class="floating-single">
-      <md-button class="floating-control-button" ng-click="decrementFloating()"
+    <div ng-if="!roundTrip" class="floating-single"
+    ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}">
+     <md-button class="floating-control-button" ng-click="decrementFloating()"
         ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
         <md-icon>remove</md-icon>
       </md-button>
