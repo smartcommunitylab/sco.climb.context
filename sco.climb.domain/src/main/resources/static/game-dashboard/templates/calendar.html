@@ -1,6 +1,6 @@
 <div>
   <div layout="row">
-    <div layout="column" flex="95">
+    <div layout="column" ng-attr-flex="{{ groupmode ? 95 : 100 }}">
       <div layout="row" class="state-row">
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_state'|translate|
           uppercase}}</div>
@@ -276,7 +276,7 @@
             </div>
           </div>
     </div>
-    <div layout="column" class="scroll-control" layout-align="end center" flex="5">
+    <div layout="column" class="scroll-control" layout-align="end center" flex="5" ng-if="!groupMode">
       <md-button class="md-icon-button " aria-label="Favorite" ng-mousedown="scrollUp()">
         <md-icon class="icon-arrow_up cal-button-scroll"></md-icon>
       </md-button>
