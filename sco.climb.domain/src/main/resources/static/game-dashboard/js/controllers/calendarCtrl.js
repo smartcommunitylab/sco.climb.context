@@ -667,7 +667,7 @@ angular.module('climbGame.controllers.calendar', [])
             scope: $scope, // use parent scope in template
             preserveScope: true, // do not forget this if use parent scope
             template: '<md-dialog>' +
-              '  <div class="cal-dialog-title"> Dati incompleti  </div><md-divider></md-divider>' +
+              '  <div class="cal-dialog-title"> {{"cal_data_missing_title"|translate}} </div><md-divider></md-divider>' +
               '  <div class="cal-dialog-text">{{"cal_data_missing"|translate}}</div>' +
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Ho capito' +
@@ -932,29 +932,6 @@ angular.module('climbGame.controllers.calendar', [])
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy')
       }
 
-      // function updateTodayData(calendar) {
-      //   // reset the number of means
-      //   $scope.todayData.means = {}
-      //     // if there is today data merge it with $scope.todayData
-      //   var today = new Date().setHours(0, 0, 0, 0)
-      //   for (var i = 0; i < calendar.length; i++) {
-      //     if (calendar[i].day === today) {
-      //       // merge it
-      //       for (var k = 0; k < $scope.todayData.babies.length; k++) {
-      //         if (calendar[i].modeMap[$scope.todayData.babies[k].childId]) {
-      //           //$scope.todayData.babies[k].color = $scope.returnModalitiesColor(calendar[i].modeMap[$scope.todayData.babies[k].childId])
-      //           $scope.todayData.babies[k].color = $scope.mapModalities.find(val=>{return val.value==calendar[i].modeMap[$scope.todayData.babies[k].childId];}).color
-      //           $scope.todayData.babies[k].mean = calendar[i].modeMap[$scope.todayData.babies[k].childId]
-      //           if (!$scope.todayData.means[$scope.todayData.babies[k].mean]) {
-      //             $scope.todayData.means[$scope.todayData.babies[k].mean] = 0
-      //           }
-      //           $scope.todayData.means[$scope.todayData.babies[k].mean]++
-      //         }
-      //       }
-      //       break
-      //     }
-      //   }
-      // }
 
       function setClassSize() {
         var w = window
