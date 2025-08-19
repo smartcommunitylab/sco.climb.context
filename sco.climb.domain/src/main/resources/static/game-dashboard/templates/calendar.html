@@ -65,18 +65,18 @@
   'today-highlight': today(dayIndex) }">{{day
           |date:'EEEE dd-MM'}}</div>
       </div>
-      <div layout="row" class="weather-row">
+      <div layout="row" class="weather-row" >
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_clima'|translate|
           uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'day-column': true,'edit-day-column': isCurrentEditDay(dayIndex),
-  'today-highlight': today(dayIndex) }" class="cal-header weather-row-flex27">
+        'today-highlight': today(dayIndex) }" class="cal-header weather-row-flex27">
           <div layout="row" flex="100">
             <div ng-if="weekData[dayIndex].closed" layout="row" flex="100">
               <md-button class="md-icon-button single-weather"> <i layout="column" flex="100" class="weather-icon"
                   ng-class="{'icon-sun':weekData[dayIndex].meteo=='sunny','icon-cloudy':weekData[dayIndex].meteo=='cloudy','icon-rain':weekData[dayIndex].meteo=='rain','icon-snow':weekData[dayIndex].meteo=='snow'}"></i>
               </md-button>
             </div>
-            <div ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future" layout="row" flex="100">
+            <!-- <div ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future" layout="row" flex="100">
               <md-button class="md-icon-button wheater-button ">
                 <i layout="column" flex="25" class="weather-icon icon-sun_outline"></i></md-button>
               <md-button class="md-icon-button wheater-button ">
@@ -85,7 +85,7 @@
                 <i layout="column" flex="25" class="weather-icon icon-rain_outline"></i></md-button>
               <md-button class="md-icon-button wheater-button ">
                 <i layout="column" flex="25" class="weather-icon icon-snow_outline"></i></md-button>
-            </div>
+            </div> -->
             <div ng-if="(today(dayIndex) && !weekData[dayIndex].closed) || isCurrentEditDay(dayIndex)" layout="row"
               flex="100">
               <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('sunny')">
@@ -200,7 +200,7 @@
               <!-- Colonna modalità -->
               <div layout="row" flex="{{calHeaderFlex}}" layout-align="end center" class="cal-name"
                 style="padding: 8px; display: flex;" ng-style="getLabelStyle(modality)">
-                <span style="width: 100%;text-align: right; margin-right: 8px;">{{ modality.label }}</span>
+                <span class="truncate">{{ modality.label }}</span>
                 <md-icon class="material-icons small-transport-icon"
                   ng-click="isDevEditMode !== null && selectFloatingInput((currentEditDayIndex !== null ? currentEditDayIndex : todayIndex), roundTrip ? (modality.value + '_out') : modality.value)"
                   style="background-color: {{modality.color}}; color: white; border-radius: 50%; padding: 8px; font-size: 20px;">
@@ -224,13 +224,11 @@
                         ng-blur="fixInput(dayIndex, modality.value+'_out')"
                         ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)" min="0"
                         ng-click="selectFloatingInput(dayIndex, modality.value+'_out')" class="edit-input"
-                        class="edit-input"
-                        ng-class="{
+                        class="edit-input" ng-class="{
                           'edit-input--pending': isPending(dayIndex, modality.value+'_out'),
                           'edit-input--active': isCurrentEditDay(dayIndex),
                           'edit-input--sent': isSent(dayIndex)
-                        }"
-                        ng-style="getGroupInputStyle(dayIndex, modality.value+'_out')" />
+                        }" ng-style="getGroupInputStyle(dayIndex, modality.value+'_out')" />
 
                     </div>
                   </div>
@@ -244,13 +242,11 @@
                         ng-blur="fixInput(dayIndex, modality.value + '_return')"
                         ng-click="selectFloatingInput(dayIndex, modality.value + '_return')"
                         ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)" min="0"
-                        class="edit-input"
-                        ng-class="{
+                        class="edit-input" ng-class="{
                           'edit-input--pending': isPending(dayIndex, modality.value + '_return'),
                           'edit-input--active': isCurrentEditDay(dayIndex),
                           'edit-input--sent': isSent(dayIndex)
-                        }"
-                        ng-style="getGroupInputStyle(dayIndex, modality.value + '_return')" />
+                        }" ng-style="getGroupInputStyle(dayIndex, modality.value + '_return')" />
                     </div>
                   </div>
                 </div>
@@ -260,16 +256,13 @@
                   <div ng-style="canEdit(dayIndex) ? {'background-color': hexToRgba(modality.color, 0.2)} : {}">
 
                     <input type="number" ng-if="showInputField(dayIndex, modality.value)"
-                      ng-model="groupWeekData[dayIndex][modality.value]"
-                      ng-blur="fixInput(dayIndex, modality.value)"
+                      ng-model="groupWeekData[dayIndex][modality.value]" ng-blur="fixInput(dayIndex, modality.value)"
                       ng-disabled="!canEdit(dayIndex) || (weekData[dayIndex] && weekData[dayIndex].closed)" min="0"
-                      ng-click="selectFloatingInput(dayIndex, modality.value)"  class="edit-input"
-                      ng-class="{
+                      ng-click="selectFloatingInput(dayIndex, modality.value)" class="edit-input" ng-class="{
                         'edit-input--pending': isPending(dayIndex, modality.value),
                         'edit-input--active': isCurrentEditDay(dayIndex),
                         'edit-input--sent': isSent(dayIndex)
-                      }"
-                      ng-style="getGroupInputStyle(dayIndex, modality.value)" />
+                      }" ng-style="getGroupInputStyle(dayIndex, modality.value)" />
                   </div>
                 </div>
               </div>
@@ -397,8 +390,8 @@
 
     <!-- VERSIONE ROUNDTRIP -->
     <div ng-if="roundTrip" class="floating-dual"
-    ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}"
-    layout="row" layout-align="space-around center">
+      ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}" layout="row"
+      layout-align="space-around center">
       <!-- ANDATA -->
       <div class="floating-section">
         <div class="floating-label">{{ 'cal_trip_out_label' | translate }}</div>
@@ -446,8 +439,8 @@
 
     <!-- VERSIONE SOLO ANDATA -->
     <div ng-if="!roundTrip" class="floating-single"
-    ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}">
-     <md-button class="floating-control-button" ng-click="decrementFloating()"
+      ng-style="{'background-color': hexToRgba(activeGroupInput.color, 0.25)}">
+      <md-button class="floating-control-button" ng-click="decrementFloating()"
         ng-style="{'color': 'white', 'background-color': activeGroupInput.color}">
         <md-icon>remove</md-icon>
       </md-button>

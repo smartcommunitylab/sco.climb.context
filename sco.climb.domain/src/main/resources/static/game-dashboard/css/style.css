@@ -2314,4 +2314,14 @@ div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animation
   height: auto;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: right;
+   margin-right: 8px;
+}
+
+
 
