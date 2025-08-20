@@ -10,7 +10,7 @@ global Double const_ZeroImpactDayClass_bonus;
 #[[rule "trip mode update"
 when 
     Action(id == "PlayerCalendarTrip")
-    Player($playerId: id, $members: totalMembers)
+    Player($playerId: id, team == false, $members: totalMembers)
     Game($gameId: id)
     InputData( 
     	$absent : data["absent"] != null, 

@@ -296,12 +296,11 @@ public class GamificationController extends AuthController {
 		}		
 		//create players
 		for (String classRoom : game.getClassRooms()) {
-			TeamDTO player = new TeamDTO();
-			player.setName(classRoom);
+			PlayerStateDTO player = new PlayerStateDTO();
 			player.setPlayerId(classRoom);
 			player.setGameId(game.getGameId());
 			try {
-				gengineUtils.createTeam(game.getGameId(), player);
+				gengineUtils.createPlayer(game.getGameId(), player);
 			} catch (Exception e) {
 				logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
 			}
