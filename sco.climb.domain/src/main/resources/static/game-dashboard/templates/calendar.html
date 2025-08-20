@@ -69,25 +69,16 @@
         <div layout="column" flex={{calHeaderFlex}} class="cal-header">{{'cal_header_clima'|translate|
           uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'day-column': true,'edit-day-column': isCurrentEditDay(dayIndex),
-        'today-highlight': today(dayIndex) }" class="cal-header weather-row-flex27">
+        'today-highlight': today(dayIndex) }" class="cal-header" >
           <div layout="row" flex="100">
             <div ng-if="weekData[dayIndex].closed" layout="row" flex="100">
               <md-button class="md-icon-button single-weather"> <i layout="column" flex="100" class="weather-icon"
                   ng-class="{'icon-sun':weekData[dayIndex].meteo=='sunny','icon-cloudy':weekData[dayIndex].meteo=='cloudy','icon-rain':weekData[dayIndex].meteo=='rain','icon-snow':weekData[dayIndex].meteo=='snow'}"></i>
               </md-button>
             </div>
-            <!-- <div ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future" layout="row" flex="100">
-              <md-button class="md-icon-button wheater-button ">
-                <i layout="column" flex="25" class="weather-icon icon-sun_outline"></i></md-button>
-              <md-button class="md-icon-button wheater-button ">
-                <i layout="column" flex="25" class="weather-icon icon-cloudy_outline"></i></md-button>
-              <md-button class="md-icon-button wheater-button ">
-                <i layout="column" flex="25" class="weather-icon icon-rain_outline"></i></md-button>
-              <md-button class="md-icon-button wheater-button ">
-                <i layout="column" flex="25" class="weather-icon icon-snow_outline"></i></md-button>
-            </div> -->
+
             <div ng-if="(today(dayIndex) && !weekData[dayIndex].closed) || isCurrentEditDay(dayIndex)" layout="row"
-              flex="100">
+              flex="100"  class="weather-row-flex">
               <md-button class="md-icon-button wheater-button cal-interactive-button" ng-click="selectWather('sunny')">
                 <i layout="column" flex="25" class="weather-icon"
                   ng-class="isDevEditMode && !isCurrentEditDay(dayIndex) ? '' : {'icon-sun':selectedWeather=='sunny','icon-sun_outline':selectedWeather!='sunny'}"></i>
@@ -140,17 +131,12 @@
             <div layout="column" flex="15" ng-if="!roundTrip" ng-repeat="day in week track by $index"
               ng-init="dayIndex = $index" ng-class="{'day-column': true,'cal-future-middle':isFuture(dayIndex), 'edit-day-column': isCurrentEditDay(dayIndex),
   'today-highlight': today(dayIndex) }">
-              <md-button ng-if="(!today(dayIndex) || weekData[dayIndex].closed) && !isCurrentEditDay(dayIndex)"
-                class="cal-baby-cell" style="background-color: {{weekData[dayIndex][baby.objectId].color}}">
-                <span ng-if="weekData[dayIndex][baby.objectId].mean=='pedibus'">PEDIBUS</span>
-                <span ng-if="weekData[dayIndex][baby.objectId].mean=='absent'">A</span>
-              </md-button>
-              <md-button ng-if="canEdit(dayIndex)" class="cal-baby-cell"
-                ng-click="selectBabyMean(babyIndex, dayIndex, baby.objectId,true)"
-                style="background-color: {{weekData[dayIndex][baby.objectId].color}}">
-                <span ng-if="weekData[dayIndex][baby.objectId].mean=='pedibus'">PEDIBUS</span>
-                <span ng-if="weekData[dayIndex][baby.objectId].mean=='absent'">A</span>
-              </md-button>
+  <md-button class="cal-baby-cell"
+  ng-click="canEdit(dayIndex) && selectBabyMean(babyIndex, dayIndex, baby.objectId, true)"
+  style="background-color: {{weekData[dayIndex][baby.objectId].color}}">
+<span ng-if="weekData[dayIndex][baby.objectId].mean=='pedibus'">PEDIBUS</span>
+<span ng-if="weekData[dayIndex][baby.objectId].mean=='absent'">A</span>
+</md-button>
             </div>
             <div layout="column" flex="15" ng-if="roundTrip" ng-repeat="day in week track by $index"
               ng-init="dayIndex = $index" ng-class="{'day-column': true,'cal-future-middle':isFuture(dayIndex), 'edit-day-column': isCurrentEditDay(dayIndex),
@@ -288,7 +274,7 @@
 </div>
 
 <div class="cal-total" layout="row" ng-if="groupMode">
-  <div layout="column" flex="{{calHeaderFlex-5}}" class="cal-name">
+  <div layout="column" flex="{{calHeaderFlex}}" class="cal-name">
     Totale
   </div>
   <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index">

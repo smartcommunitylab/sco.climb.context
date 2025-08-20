@@ -690,7 +690,9 @@ main.layout-row.flex {
 .wheater-button {
   padding: 0px!important;
 }
-
+.weather-row-flex {
+  display:inline;
+}
 .single-weather {
   width: 100%!important;
 }

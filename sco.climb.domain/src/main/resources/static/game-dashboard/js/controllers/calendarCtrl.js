@@ -55,6 +55,40 @@ angular.module('climbGame.controllers.calendar', [])
           'border-radius': '10px'
         };
       };
+      $scope.$watch('groupWeekData', function(newVal) {
+        if (!newVal || !$scope.activeGroupInput) return;
+      
+        const input = $scope.activeGroupInput;
+      
+        if ($scope.roundTrip) {
+          if (input.keyOut) {
+            let valOut = newVal[input.dayIndex][input.keyOut];
+            if (valOut === null || valOut === undefined || valOut === '') {
+              newVal[input.dayIndex][input.keyOut] = 0;
+              valOut = 0;
+            }
+            input.out = valOut;
+          }
+          if (input.keyReturn) {
+            let valRet = newVal[input.dayIndex][input.keyReturn];
+            if (valRet === null || valRet === undefined || valRet === '') {
+              newVal[input.dayIndex][input.keyReturn] = 0;
+              valRet = 0;
+            }
+            input.return = valRet;
+          }
+        } else {
+          if (input.key) {
+            let val = newVal[input.dayIndex][input.key];
+            if (val === null || val === undefined || val === '') {
+              newVal[input.dayIndex][input.key] = 0;
+              val = 0;
+            }
+            input.value = val;
+          }
+        }
+      }, true);
+      
       $scope.shouldShowSaveButton = function(dayIndex) {
         return $scope.isCurrentEditDay(dayIndex) && $scope.isDevEditMode;
       };
