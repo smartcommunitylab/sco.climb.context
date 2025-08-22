@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -1705,7 +1706,7 @@ public class RepositoryManager {
 				player.setOwnerId(game.getOwnerId());
 				player.setPedibusGameId(game.getObjectId());
 				player.setClassRoom(classRoom);
-				player.setNickname(String.valueOf(i));
+				player.setNickname(StringUtils.leftPad(String.valueOf(i + 1), 2, '0'));
 				result.add(mongoTemplate.save(player));							
 			}
 		}
