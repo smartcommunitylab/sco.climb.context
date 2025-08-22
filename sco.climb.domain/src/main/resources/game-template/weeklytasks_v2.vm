@@ -42,7 +42,7 @@ rule "R-weekly-record-distance"
 when
 	Classification(name == 'team classification weekly', $counter : scoreType, position <= const_number_of_teams) //only first "const_number_of_teams" (SCHOOL + classes)
 	$pc : PointConcept(name == (String) $counter )
-	Player($teamId : id, team == true, $teamId != const_school_name) // only works with classes
+	Player($teamId : id, team == false, $teamId != const_school_name) // only works with classes
 	Game( $gameId: id)
 	$id : InputData()
 	$bd : PointConcept(name == "bonus_distance")
@@ -98,6 +98,7 @@ when
 	Classification(name == 'team classification weekly', position <= const_number_of_teams) //only first "const_number_of_teams" (SCHOOL + classes)
 	$tot_dist : PointConcept(name == "total_distance")
 	Player($teamId : id, team == true, $teamId == const_school_name) // only applies to school
+	not Player(team == false)
 	Game( $gameId: id)
 	$bonus_dist : PointConcept(name == "bonus_distance")
 then
