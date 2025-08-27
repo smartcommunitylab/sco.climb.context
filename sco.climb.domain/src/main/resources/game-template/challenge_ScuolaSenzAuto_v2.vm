@@ -46,6 +46,7 @@ when
 		team == true, 
 		$teamId == const_school_name, 
 		$school_size : totalMembers)
+	not Player(team == false)
 	Game( $gameId: id)
 	PointConcept(
 		name == "no_car_classes", 
@@ -71,9 +72,10 @@ when
 					$bonusPointType : fields["bonusPointType"], 
 					$bonusScore : fields["bonusScore"])
 	Player($teamId : id, team == true)
-    $id : InputData()
-    BadgeCollectionConcept( 
-    	name == badge_collection_name, 
+	not Player(team == false)
+  $id : InputData()
+  BadgeCollectionConcept( 
+  		name == badge_collection_name, 
     	badgeEarned contains (String)$leg || $leg == null )
 	$pc : PointConcept(name == (String) $bonusPointType)
 	$tot_dist : PointConcept(name == "total_distance")
