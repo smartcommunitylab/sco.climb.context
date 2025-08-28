@@ -1,9 +1,12 @@
 package it.smartcommunitylab.climb.domain.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MobilityMode {
 	private String day;
 	private boolean roundTrip = false;
-	private String modality;
+	private Map<String, Integer>  modalities = new HashMap<>();	
 	private String meteo;
 	
 	public String getDay() {
@@ -18,16 +21,17 @@ public class MobilityMode {
 	public void setRoundTrip(boolean roundTrip) {
 		this.roundTrip = roundTrip;
 	}
-	public String getModality() {
-		return modality;
-	}
-	public void setModality(String modality) {
-		this.modality = modality;
-	}
 	public String getMeteo() {
 		return meteo;
 	}
 	public void setMeteo(String meteo) {
 		this.meteo = meteo;
 	}
+	public Map<String, Integer> getModalities() {
+		return modalities;
+	}
+	public void setModalities(Map<String, Integer> modalities) {
+		this.modalities = modalities;
+	}
+	
 }
