@@ -43,6 +43,17 @@ public class PedibusGame extends BaseObject {
 	//group data entry
 	private boolean groupDataEntry = false;
 	
+	//abitudini di viaggio <classe, lista modalità spostamento> 
+	private Map<String, List<MobilityMode>> travelModes = new HashMap<>() ;
+	
+
+	public Map<String, List<MobilityMode>> getTravelModes() {
+		return travelModes;
+	}
+
+	public void setTravelModes(Map<String, List<MobilityMode>> travelModes) {
+		this.travelModes = travelModes;
+	}
 
 	public String getSchoolId() {
 		return schoolId;
