@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class MobilityMode {
 	private String day;
-	private boolean roundTrip = false;
+	private boolean direct = false;
 	private Map<String, Integer>  modalities = new HashMap<>();	
 	private String meteo;
 	
@@ -14,12 +14,6 @@ public class MobilityMode {
 	}
 	public void setDay(String day) {
 		this.day = day;
-	}
-	public boolean isRoundTrip() {
-		return roundTrip;
-	}
-	public void setRoundTrip(boolean roundTrip) {
-		this.roundTrip = roundTrip;
 	}
 	public String getMeteo() {
 		return meteo;
@@ -32,6 +26,12 @@ public class MobilityMode {
 	}
 	public void setModalities(Map<String, Integer> modalities) {
 		this.modalities = modalities;
+	}
+	public boolean isDirect() {
+		return direct;
+	}
+	public void setDirect(boolean direct) {
+		this.direct = direct;
 	}
 	
 }
