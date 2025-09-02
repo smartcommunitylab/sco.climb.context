@@ -993,6 +993,7 @@ public class RepositoryManager {
 				update.set("roundTrip", game.isRoundTrip());
 				update.set("useCalendar", game.isUseCalendar());
 				update.set("groupDataEntry", game.isGroupDataEntry());
+				update.set("travelModes", game.getTravelModes());
 			}
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
