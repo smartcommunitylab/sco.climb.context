@@ -719,24 +719,63 @@ angular.module('climbGame.controllers.calendar', [])
 
       $scope.switchDevEditMode = function(dayIndex) {
         $scope.activeGroupInput = null;
-        if (!$scope.ENABLE_PAST_DAYS_EDIT) return;
+        if (!$scope.ENABLE_PAST_DAYS_EDIT && $scope.isPast(dayIndex)) return;
       
         if ($scope.isCurrentEditDay(dayIndex)) {
           // chiudo l'edit e invio i dati
-          $scope.sendData(dayIndex); // il reset ora avviene SOLO dentro confirmSend()
+          $scope.sendData(dayIndex); // reset avviene in confirmSend()
         } else {
-          // reset dei dati per past days
-          for (var i = 0; i < $scope.todayData.babies.length; i++) {
-            $scope.todayData.babies[i].color = '';
-            $scope.todayData.babies[i].mean = '';
-          }
-          $scope.todayData.means = [];
+          // prima resetto i dati del vecchio giorno non salvato
+          var oldDayIndex = $scope.currentEditDayIndex;
+          if (oldDayIndex !== null && oldDayIndex !== undefined) {
+            if ($scope.groupMode) {
+              // GroupMode → azzero a 0
+              const dayData = $scope.groupWeekData[oldDayIndex] || {};
+              $scope.mapModalities.forEach(function(m) {
+                if ($scope.roundTrip) {
+                  dayData[m.value + '_out'] = 0;
+                  dayData[m.value + '_return'] = 0;
+                } else {
+                  dayData[m.value] = 0;
+                }
+              });
+              $scope.groupWeekData[oldDayIndex] = dayData;
+            } else {
+              // Modalità normale → metto i bambini a null
+              if ($scope.weekData && $scope.weekData[oldDayIndex]) {
+                $scope.mapModalities.forEach(function(m) {
+                  $scope.weekData[oldDayIndex][m.value] = null;
+                });
       
+                if ($scope.classPlayers) {
+                  for (var i = 0; i < $scope.classPlayers.length; i++) {
+                    var pid = $scope.classPlayers[i].objectId;
+                    if (!$scope.weekData[oldDayIndex][pid]) $scope.weekData[oldDayIndex][pid] = {};
+                    $scope.weekData[oldDayIndex][pid].mean = null;
+                    $scope.weekData[oldDayIndex][pid].color = null;
+                  }
+                }
+              }
+      
+              if ($scope.todayData && $scope.todayData.babies) {
+                $scope.todayData.babies.forEach(function(b){
+                  b.color = null;
+                  b.mean = null;
+                });
+              }
+              if ($scope.todayData) {
+                $scope.todayData.means = [];
+              }
+            }
+          }
+      
+          // poi entro in edit sul nuovo giorno
           $scope.isDevEditMode = {};
           $scope.isDevEditMode.dayIndex = dayIndex;
           $scope.currentEditDayIndex = dayIndex;
         }
       };
+      
       $scope.isSent = function(dayIndex) {
         return $scope.weekData[dayIndex]?.closed;
       };
@@ -796,14 +835,65 @@ angular.module('climbGame.controllers.calendar', [])
     };
     
 
-      $scope.prevWeek = function () {
-        changeWeek(-1)
-        $scope.isDevEditMode = undefined;
+    $scope.hasUnsavedData = function(dayIndex) {
+      if (!$scope.isDevEditMode) return false;
+      if ($scope.isCurrentEditDay(dayIndex)) {
+        return true;
       }
-      $scope.nextWeek = function () {
-        changeWeek(1)
-        $scope.isDevEditMode = undefined;
+      return false;
+    };
+    
+    // Popup di conferma per dati non salvati
+    function confirmUnsavedData(nextAction) {
+      $mdDialog.show({
+        template: '<md-dialog>' +
+          '  <div class="cal-dialog-title">Attenzione!</div><md-divider></md-divider>' +
+          '  <div class="cal-dialog-text">I dati inseriti e non salvati verranno persi. Procedere?</div>' +
+          '  <div layout="row" layout-align="end center" style="margin-top:10px">' +
+          '    <md-button ng-click="cancel()" class="md-primary">Annulla</md-button>' +
+          '    <md-button ng-click="confirm()" class="md-primary md-raised">Procedi</md-button>' +
+          '  </div>' +
+          '</md-dialog>',
+        controller: function DialogController($scope, $mdDialog) {
+          $scope.cancel = function() { $mdDialog.hide(false); }
+          $scope.confirm = function() { $mdDialog.hide(true); }
+        }
+      }).then(function(proceed){
+        if (proceed) {
+          // Reset dello stato dei dati non salvati
+          $scope.isDevEditMode = undefined;
+          $scope.activeGroupInput = null; 
+          // $scope.currentEditDayIndex = null;
+    
+          nextAction();
+        }      });
+    }
+    
+    // Wrapper per cambio giorno
+    $scope.switchDevEditModeSafe = function(dayIndex) {
+      if ($scope.hasUnsavedData($scope.currentEditDayIndex)) {
+        confirmUnsavedData(function() {
+          $scope.switchDevEditMode(dayIndex);
+        });
+      } else {
+        $scope.switchDevEditMode(dayIndex);
       }
+    }
+    
+    // Wrapper per cambio settimana
+    function changeWeekSafe(skipWeek) {
+      if ($scope.hasUnsavedData($scope.currentEditDayIndex)) {
+        confirmUnsavedData(function() {
+          changeWeek(skipWeek);
+        });
+      } else {
+        changeWeek(skipWeek);
+      }
+    }
+    
+    // Sostituisci i vecchi prevWeek/nextWeek con wrapper
+    $scope.prevWeek = function () { changeWeekSafe(-1); }
+    $scope.nextWeek = function () { changeWeekSafe(1); }
 
       $scope.scrollUp = function () {
         document.getElementById('table').scrollTop -= 50
@@ -894,6 +984,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function changeWeek(skipWeek) {
+        $scope.isDevEditMode = undefined;
         $scope.isLoadingCalendar = true;
         // take date of week[0] and go 1 week before or after
         var monday = new Date($scope.week[0].getTime())

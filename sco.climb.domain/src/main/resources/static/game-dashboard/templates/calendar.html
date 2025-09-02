@@ -24,7 +24,7 @@
           <!-- GIORNO OGGI NON IN MODIFICA (ma apribile) -->
           <span ng-if="today(dayIndex) &&
           !weekData[dayIndex].closed &&
-          !isCurrentEditDay(dayIndex)" ng-click="switchDevEditMode(dayIndex)" class="cal-interactive-button">
+          !isCurrentEditDay(dayIndex)" ng-click="switchDevEditModeSafe(dayIndex)" class="cal-interactive-button">
             {{ 'cal_edit_dev_data_button' | translate }}
           </span>
 
@@ -33,7 +33,7 @@
           ENABLE_PAST_DAYS_EDIT &&
           !weekData[dayIndex].closed &&
           !isCurrentEditDay(dayIndex) &&
-          !today(dayIndex)" ng-click="switchDevEditMode(dayIndex)" class="cal-interactive-button">
+          !today(dayIndex)" ng-click="switchDevEditModeSafe(dayIndex)" class="cal-interactive-button">
             {{ 'cal_edit_dev_data_button' | translate }}
           </span>
 
