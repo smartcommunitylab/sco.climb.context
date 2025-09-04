@@ -1,0 +1,118 @@
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
+
+    <!-- Prima riga: selettore classe -->
+    <div class="col-sm-6 field">
+        <label><b>Classe:</b></label>
+        <select class="form-control" ng-model="selectedClass" ng-options="cl for cl in classes"
+            ng-change="updateClassInfo(selectedClass)">
+        </select>
+    </div>
+
+    <!-- Riga successiva -->
+    <div class="col-sm-12"></div> <!-- forza nuova riga -->
+
+    <!-- Numero studenti -->
+    <div class="col-sm-3 field">
+        <label><b>Numero studenti:</b></label>
+        <input class="habits-disabled" type="number" ng-model="classInfo.numStudents" disabled />
+    </div>
+
+    <!-- Modalità (andata / andata e ritorno) -->
+    <div class="col-sm-3 field">
+        <label><b>Modalità:</b></label>
+        <input class="habits-disabled" type="text" ng-model="classInfo.mode" disabled />
+    </div>
+</fieldset>
+
+
+<!-- Tabella delle abitudini -->
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
+    <div class="col-sm-12">
+        <h3>Registro Giornaliero</h3>
+        <hr style="border-color: black;">
+    </div>
+    <table class="table table-bordered table-striped habits-table">
+        <thead>
+            <tr>
+                <th class="text-center">Data</th>
+                <th class="text-center">Giorno</th>
+                <th class="text-center">A/R</th>
+                <th class="text-center">Meteo</th>
+                <th class="vertical-header">A piedi</th>
+                <th class="vertical-header">Bici</th>
+                <th class="vertical-header">Bus</th>
+                <th class="vertical-header">Pedibus</th>
+                <th class="vertical-header">P&amp;R</th>
+                <th class="vertical-header">Carpooling</th>
+                <th class="vertical-header">Auto</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in habits track by $index">
+                <!-- Data -->
+                <td>
+                    <input type="date" class="form-control" ng-model="row.date" ng-change="updateWeekday(row)" />
+                </td>
+
+                <!-- Giorno -->
+                <td>
+                    <input class="form-control" type="text" ng-model="row.weekday" disabled />
+                </td>
+
+                <!-- Andata/Ritorno -->
+                <td>
+                    <input type="radio" ng-model="row.direction" value="andata">
+                    <input type="radio" ng-model="row.direction" value="ritorno">
+                </td>
+
+
+                <!-- Meteo -->
+                <td class="meteo-cell">
+                    <select class="form-control" ng-model="row.weather">
+                        <option value="sereno">Sereno</option>
+                        <option value="nuvoloso">Nuvoloso</option>
+                        <option value="pioggia">Pioggia</option>
+                        <option value="neve">Neve</option>
+                    </select>
+                </td>
+
+                <!-- Mezzi (celle numeriche) -->
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.walk" min="0" /></td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.bike" min="0" /></td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.bus" min="0" /></td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.pedibus" min="0" />
+                </td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.pandr" min="0" />
+                </td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.carpooling"
+                        min="0" /></td>
+                <td><input type="number" class="form-control small-input no-spinner" ng-model="row.car" min="0" /></td>
+
+                <!-- Azioni -->
+                <!-- Azioni -->
+                <td>
+                    <!-- Delete per righe non ultime -->
+                    <button class="btn btn-danger btn-sm" ng-if="!$last" ng-click="removeRow($index)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+
+                    <!-- Add per l’ultima riga -->
+                    <button class="btn btn-success btn-sm" ng-if="$last" ng-click="addRow()"
+                        ng-disabled="!isRowValid(row, habits, classInfo)">
+                        <i class="fa fa-plus"></i>
+                    </button>
+
+                    <!-- Warning se ultima riga non valida -->
+                    <i class="fa fa-exclamation-triangle text-warning"
+                        ng-if="$last && !isRowValid(row, habits, classInfo)"
+                        uib-tooltip="{{getRowError(row, habits, classInfo)}}" tooltip-append-to-body="true">
+                    </i>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+
+</fieldset>

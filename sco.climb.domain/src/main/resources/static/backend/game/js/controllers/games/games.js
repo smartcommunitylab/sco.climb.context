@@ -385,7 +385,108 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     })
 
-
+    .controller('GameHabitsCtrl', function($scope, $filter) {
+        $scope.$parent.selectedTab = 'dailyHabits';
+    
+        $scope.selectedClass = null;
+        $scope.classInfo = { numStudents: null, mode: '' };
+        $scope.habits = [];
+    
+        $scope.updateClassInfo = function(classe) {
+            if ($scope.currentGame && $scope.currentGame.classSizes) {
+                $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
+                $scope.classInfo.mode = $scope.currentGame.roundTrip ? 'Andata e ritorno' : 'Solo andata';
+            }
+        };
+    
+        $scope.updateWeekday = function(row) {
+            if (row.date) {
+                var day = new Date(row.date).getDay();
+                var weekDays = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+                row.weekday = weekDays[day];
+            }
+        };
+    
+        $scope.addRow = function() {
+            $scope.habits.push({
+                date: null,
+                weekday: '',
+                direction: 'andata',
+                walk: null,
+                bike: null,
+                bus: null,
+                pedibus: null,
+                pandr: null,
+                carpooling: null,
+                car: null,
+                weather: ''
+            });
+        };
+    
+        $scope.removeRow = function(index) {
+            $scope.habits.splice(index, 1);
+        };
+    
+        // normalizza la data per confronto (ignora ore)
+        function normalizeDate(d) {
+            if (!d) return null;
+            var dateObj = new Date(d);
+            dateObj.setHours(0,0,0,0);
+            return dateObj;
+        }
+    
+        $scope.isRowValid = function(row, habits, classInfo) {
+            if (!row || !row.date || !row.direction) return false;
+    
+            var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
+                        (row.pedibus || 0) + (row.pandr || 0) +
+                        (row.carpooling || 0) + (row.car || 0);
+    
+            if (total !== classInfo.numStudents) return false;
+    
+            var rowDate = normalizeDate(row.date);
+    
+            var duplicate = habits.some(function(h) {
+                if (h === row) return false;
+                var hDate = normalizeDate(h.date);
+                return hDate && rowDate &&
+                       hDate.getTime() === rowDate.getTime() &&
+                       h.direction === row.direction;
+            });
+            if (duplicate) return false;
+    
+            return true;
+        };
+    
+        $scope.getRowError = function(row, habits, classInfo) {
+            if (!row || !row.date || !row.direction) return "Compila data e direzione";
+    
+            var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
+                        (row.pedibus || 0) + (row.pandr || 0) +
+                        (row.carpooling || 0) + (row.car || 0);
+    
+            if (total < classInfo.numStudents) return "Totale inserito inferiore al numero studenti";
+            if (total > classInfo.numStudents) return "Totale inserito superiore al numero studenti";
+    
+            var rowDate = normalizeDate(row.date);
+    
+            var duplicate = habits.some(function(h) {
+                if (h === row) return false;
+                var hDate = normalizeDate(h.date);
+                return hDate && rowDate &&
+                       hDate.getTime() === rowDate.getTime() &&
+                       h.direction === row.direction;
+            });
+            if (duplicate) return "Esiste già una rilevazione per questa data e direzione";
+    
+            return "";
+        };
+    
+        // inizializza con una riga vuota
+        $scope.addRow();
+    })
+    
+    
     .controller('GameInfoCtrl', function ($scope, createDialog, MainDataService, DataService) {
         $scope.$parent.selectedTab = 'info';
         $scope.new = {

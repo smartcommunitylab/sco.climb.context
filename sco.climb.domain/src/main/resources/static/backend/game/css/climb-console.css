@@ -1364,3 +1364,70 @@ rotate
     opacity: 0.5;
 }
  
+table input.form-control.no-spinner::-webkit-inner-spin-button,
+table input.form-control.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+table input.form-control.no-spinner {
+  -moz-appearance: textfield !important;
+}
+.small-input {
+  width: 60px;   /* o 50px se vuoi molto compatto */
+  padding: 2px 4px;
+  text-align: center;
+}
+/* Colonne mezzi: larghezza uniforme */
+.habits-table .small-input {
+  width: 40px;
+  padding: 2px 2px;
+  text-align: center;
+}
+
+/* Nasconde gli spinner */
+.habits-table .no-spinner::-webkit-inner-spin-button,
+.habits-table .no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+.habits-table .no-spinner {
+  -moz-appearance: textfield !important;
+}
+
+/* Intestazioni verticali */
+.habits-table th.vertical-header {
+  writing-mode: vertical-rl;   /* testo in verticale */
+  transform: rotate(180deg);   /* per leggere dal basso verso l’alto */
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+  width: 40px; 
+}
+/* Colonna meteo con larghezza minima */
+.habits-table td.meteo-cell {
+	min-width: 100px;      /* lo spazio che hai trovato corretto */
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;  /* impedisce il ritorno a capo */
+  }
+  
+
+  .habits-table td {
+	min-width: 65px;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;  /* impedisce il ritorno a capo */
+  }
+/* Solo dentro fieldset abitudini */
+.habits-disabled {
+	width: auto !important;        /* non forzare larghezza */
+	height: auto !important;       /* lascia altezza standard bootstrap */
+	border-radius: 4px !important; /* bordo più normale */
+	background-color: lightgrey !important; /* colore di sfondo più chiaro */
+ }
+  
+  
+  
+  
