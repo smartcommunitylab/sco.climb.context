@@ -466,8 +466,8 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.setAsHabits = function(suggested) {
             if (!$scope.selectedClass || !suggested) return;
         
-            // Salva nell’oggetto padre (classHabits)
-            $scope.$parent.classHabits[$scope.selectedClass] = angular.copy($scope.habits);
+            // // Salva nell’oggetto padre (classHabits)
+            // $scope.$parent.classHabits[$scope.selectedClass] = angular.copy($scope.habits);
         
             // Aggiorna le info della classe
             $scope.updateClassInfo($scope.selectedClass);
@@ -490,12 +490,10 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.$emit('habitsUpdated');
         
                 // --- Salva SOLO mobilityParams sul server ---
-                if ($scope.$parent.DataService) {
-                    var ownerId = $scope.$parent.currentGame.ownerId;
-                    var objectId = $scope.$parent.currentGame.id;
+                if (DataService) {
         
                     // Qui mando solo mobilityParams, non tutto currentGame
-                    $scope.$parent.DataService.updateParams(ownerId, objectId, $scope.$parent.currentGame.mobilityParams)
+                    DataService.updateParams($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.$parent.currentGame.mobilityParams)
                         .then(function(response) {
                             if ($scope.$parent.manageResponse) {
                                 $scope.$parent.manageResponse(response);
