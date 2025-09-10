@@ -143,15 +143,54 @@
               </select>
             </td>
       
-            <!-- Mezzi (celle numeriche) -->
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.walk" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.bike" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.bus" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.pedibus" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.pandr" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.carpooling" min="0" /></td>
-            <td><input type="number" class="form-control small-input no-spinner" ng-model="row.car" min="0" /></td>
-      
+            <!-- A piedi -->
+<td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.walk" min="0"
+           ng-disabled="!isModalityPresent('walk')" />
+  </td>
+  
+  <!-- Bici -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.bike" min="0"
+           ng-disabled="!isModalityPresent('bike')" />
+  </td>
+  
+  <!-- Bus -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.bus" min="0"
+           ng-disabled="!isModalityPresent('bus')" />
+  </td>
+  
+  <!-- Pedibus -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.pedibus" min="0"
+           ng-disabled="!isModalityPresent('pedibus')" />
+  </td>
+  
+  <!-- P&R -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.pandr" min="0"
+           ng-disabled="!isModalityPresent('pandr')" />
+  </td>
+  
+  <!-- Carpooling -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.carpooling" min="0"
+           ng-disabled="!isModalityPresent('carpooling')" />
+  </td>
+  
+  <!-- Auto -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.car" min="0"
+           ng-disabled="!isModalityPresent('car')" />
+  </td>
             <!-- Assenti -->
             <td>
               <input type="number" class="form-control small-input no-spinner"

@@ -463,6 +463,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 row.weekday = weekDays[day];
             }
         };
+        $scope.isModalityPresent = function (mode) {
+            if ($scope.$parent.currentGame && $scope.$parent.currentGame.modalities)
+                return $scope.$parent.currentGame.modalities.includes(mode);
+            return false
+        }
         $scope.setAsHabits = function(suggested) {
             if (!$scope.selectedClass || !suggested) return;
         
@@ -470,7 +475,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             // $scope.$parent.classHabits[$scope.selectedClass] = angular.copy($scope.habits);
         
             // Aggiorna le info della classe
-            $scope.updateClassInfo($scope.selectedClass);
+            // $scope.updateClassInfo($scope.selectedClass);
         
             if ($scope.$parent.currentGame) {
                 // Prendi o crea mobilityParams
@@ -627,7 +632,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.$watch('habits', calculateSuggestions, true);
 
         // inizializza con una riga vuota
-        $scope.addRow();
+        //$scope.addRow();
     })
 
 .controller('MobilitySuggestionsModalCtrl', function($scope, $uibModalInstance, className, habits, numStudents,DataService) {
