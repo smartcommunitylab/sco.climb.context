@@ -87,7 +87,13 @@
                             ng-repeat="class in currentGame.classRooms">
                             <label style="font-style: italic; font-weight: normal">{{class}}
                             </label>
+                            <div>
+                                <a href="" ng-click="openMobilitySuggestionsModal(class)">
+                                    <i class="fa fa-lightbulb-o"></i> Suggerite
+                                  </a>
+                            </div>
                         </div>
+
                     </div>
                     <div class="row">
 

@@ -580,47 +580,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             return "";
         };
 
-        // --- funzione di calcolo abitudini suggerite (presa e adattata da quella che ti hanno dato) ---
-        function habitsDistribution(students, habits_arr) {
-            if (!students || !habits_arr || habits_arr.length != 7) return null;
-            if (students <= 0) return null;
-
-            var totalTrips = habits_arr.reduce((a, b) => a + b, 0);
-            if (totalTrips === 0) return null;
-
-            var avgDist = habits_arr.map(h => (h / totalTrips) * students);
-
-            var avgDistRounded = avgDist.map(a => Math.round(a));
-            var totalDist = avgDistRounded.reduce((a, b) => a + b, 0);
-
-            var distError = totalDist - students;
-            if (distError === 0) return avgDistRounded;
-
-            var roundingValues = avgDistRounded.map((r, i) => r - avgDist[i]);
-            var corrections = new Array(7).fill(0);
-            var needed = Math.abs(distError);
-
-            if (distError > 0) {
-                // eccesso → togliamo
-                var delta = roundingValues.filter(v => v > 0).sort().reverse();
-                var limit = delta[distError - 1];
-                for (var i = 0; i < 7 && needed > 0; i++) {
-                    if (roundingValues[i] >= limit && roundingValues[i] != 0) {
-                        corrections[i] = -1; needed--;
-                    }
-                }
-            } else {
-                // difetto → aggiungiamo
-                var delta = roundingValues.filter(v => v < 0).sort();
-                var limit = delta[Math.abs(distError) - 1];
-                for (var i = 0; i < 7 && needed > 0; i++) {
-                    if (roundingValues[i] >= limit && roundingValues[i] != 0) {
-                        corrections[i] = 1; needed--;
-                    }
-                }
-            }
-            return avgDistRounded.map((r, i) => r + corrections[i]);
-        }
+        
 
         function calculateSuggestions() {
             if (!$scope.habits || $scope.habits.length === 0) {
@@ -642,7 +602,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             });
 
             var arr = [totals.walk, totals.pedibus, totals.bike, totals.bus, totals.pandr, totals.carpooling, totals.car];
-            var result = habitsDistribution($scope.classInfo.numStudents, arr);
+            var result = DataService.habitsDistribution($scope.classInfo.numStudents, arr);
             if (!result) {
                 $scope.suggested = null;
                 return;
@@ -670,7 +630,55 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.addRow();
     })
 
-
+.controller('MobilitySuggestionsModalCtrl', function($scope, $uibModalInstance, className, habits, numStudents,DataService) {
+        $scope.className = className;
+        $scope.habits = habits;
+      
+        function calculateSuggestions() {
+          if (!$scope.habits || $scope.habits.length === 0) {
+            $scope.suggested = null;
+            return;
+          }
+      
+          var totals = { walk: 0, bike: 0, bus: 0, pedibus: 0, pandr: 0, carpooling: 0, car: 0 };
+          $scope.habits.forEach(function(row) {
+            if (row.date) {
+              totals.walk += (row.walk || 0);
+              totals.bike += (row.bike || 0);
+              totals.bus += (row.bus || 0);
+              totals.pedibus += (row.pedibus || 0);
+              totals.pandr += (row.pandr || 0);
+              totals.carpooling += (row.carpooling || 0);
+              totals.car += (row.car || 0);
+            }
+          });
+      
+          var arr = [totals.walk, totals.pedibus, totals.bike, totals.bus, totals.pandr, totals.carpooling, totals.car];
+          var result = DataService.habitsDistribution(numStudents, arr);
+      
+          if (!result) {
+            $scope.suggested = null;
+            return;
+          }
+      
+          $scope.suggested = {
+            walk: result[0],
+            pedibus: result[1],
+            bike: result[2],
+            bus: result[3],
+            pandr: result[4],
+            carpooling: result[5],
+            car: result[6]
+          };
+        }
+      
+        calculateSuggestions();
+      
+        $scope.close = function() {
+          $uibModalInstance.dismiss('cancel');
+        };
+      })
+      
 
     .controller('GameInfoCtrl', function ($scope, createDialog, MainDataService, DataService) {
         $scope.$parent.selectedTab = 'info';
@@ -807,7 +815,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
     })
 
     //params tab ha all the parameters: number of students using different means
-    .controller('GameParamsCtrl', function ($scope, DataService, createDialog) {
+    .controller('GameParamsCtrl', function ($scope, DataService, createDialog,$uibModal) {
         $scope.$parent.selectedTab = 'params';
         $scope.nrOfStudenti = {};
 
@@ -850,6 +858,20 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             }
 
         }
+        $scope.openMobilitySuggestionsModal = function(className) {
+            var habits = $scope.classHabits[className] || [];
+
+            $uibModal.open({
+                templateUrl: 'templates/games/tabs/mobilitySuggestionModal.html',
+              controller: 'MobilitySuggestionsModalCtrl',
+              resolve: {
+                className: function() { return className; },
+                habits: function() { return habits; },
+                numStudents: function() { return $scope.nrOfStudenti[className]; }
+              }
+            });
+          };
+
         $scope.calculateStudenti = function (classes) {
             //call api and calculate nr.of studenti.
             var promises = []
