@@ -15,9 +15,10 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var showLegs, editLegs, deleteLegs, reorderLegs;
     var showLegsMultimedia, editLegsMultimedia, deleteLegsMultimedia;
     var userRoles;
-	var shortLink;
-	var sponsor;
+    var shortLink;
+    var sponsor;
     var group;
+    var getData;
     permissionsService.getProfilePermissions = function () {
         return userRoles;
     }
@@ -49,7 +50,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 editPlayer = true;
                 deletePlayer = true;
                 pedibusInfo = true;
-                createPaths=true;
+                createPaths = true;
                 showPaths = true;
                 editPath = true;
                 deletePath = true;
@@ -62,9 +63,10 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
-shortLink = true;
-sponsor =true;
-group = true;
+                shortLink = true;
+                sponsor = true;
+                group = true;
+                getData = true;
             } else if (role == 'owner' || role == 'school-owner') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -102,9 +104,10 @@ group = true;
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
-shortLink= true;
-sponsor = true;
-group = true;
+                shortLink = true;
+                sponsor = true;
+                group = true;
+                getData = true;
 
             } else if (role == 'teacher') {
                 showInstitutes = false;
@@ -143,15 +146,17 @@ group = true;
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
-shortLink = false;
-sponsor = false;
-group = false;
+                shortLink = false;
+                sponsor = false;
+                group = false;
+                getData = true;
 
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
                 editInstitute = true;
                 showSchools = true;
                 editSchool = true;
+                showClass = true;
             } else if (role == 'game-editor') {
                 showInstitutes = false;
                 editInstitute = false;
@@ -189,9 +194,10 @@ group = false;
                 showLegsMultimedia = true;
                 editLegsMultimedia = true;
                 deleteLegsMultimedia = true;
-shortLink = true;
-sponsor = true;
-group = true;
+                shortLink = true;
+                sponsor = true;
+                group = true;
+                getData = true;
 
             }
         });
@@ -253,6 +259,9 @@ group = true;
     permissionsService.permissionEnabledEditGame = function () {
         return editGame;
     }
+    permissionsService.permissionEnabledGetData = function () {
+        return getData;
+    }
     permissionsService.permissionEnabledDeleteGame = function () {
         return deleteGame;
     }
@@ -267,8 +276,8 @@ group = true;
     }
     permissionsService.permissionEnabledEditClasses = function () {
         return editClasses;
-    }    
-	permissionsService.permissionEnabledShortLink = function () {
+    }
+    permissionsService.permissionEnabledShortLink = function () {
         return shortLink;
     }
     permissionsService.permissionEnabledDeleteClasses = function () {
@@ -292,7 +301,7 @@ group = true;
     permissionsService.permissionEnabledPedibusInfo = function () {
         return pedibusInfo;
     }
-    permissionsService.permissionEnabledShowPaths= function () {
+    permissionsService.permissionEnabledShowPaths = function () {
         return showPaths;
     }
     permissionsService.permissionEnabledEditPaths = function () {
@@ -331,16 +340,16 @@ group = true;
     permissionsService.permissionEnabledDeleteLegsMultimedia = function () {
         return deleteLegsMultimedia;
     }
-	permissionsService.permissionEnabledSponsor= function () {
+    permissionsService.permissionEnabledSponsor = function () {
         return sponsor;
     }
-    permissionsService.permissionEnabledGroup= function () {
+    permissionsService.permissionEnabledGroup = function () {
         return group;
     }
 
 
 
- 
+
 
 
     return permissionsService;

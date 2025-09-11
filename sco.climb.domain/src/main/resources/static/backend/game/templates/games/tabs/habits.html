@@ -1,0 +1,231 @@
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
+
+    <!-- Prima riga: selettore classe -->
+    <div class="col-sm-6 field">
+        <label><b>Classe:</b></label>
+        <select class="form-control" ng-model="selectedClass" ng-options="cl for cl in classes"
+            ng-change="updateClassInfo(selectedClass)">
+        </select>
+    </div>
+
+    <!-- Riga successiva -->
+    <div class="col-sm-12"></div> <!-- forza nuova riga -->
+
+    <!-- Numero studenti -->
+    <div class="col-sm-3 field">
+        <label><b>Numero studenti:</b></label>
+        <input class="habits-disabled" type="number" ng-model="classInfo.numStudents" disabled />
+    </div>
+
+    <!-- Modalità (andata / andata e ritorno) -->
+    <div class="col-sm-3 field">
+        <label><b>Modalità:</b></label>
+        <input class="habits-disabled" type="text" ng-model="classInfo.mode" disabled />
+    </div>
+</fieldset>
+<!-- Toggle per abitudini suggerite -->
+<div class="row">
+<div class="col-sm-12" style="margin-top: 10px;">
+    <button class="btn btn-link" ng-click="showSuggestions = !showSuggestions">
+      <i class="fa" ng-class="{'fa-chevron-down': !showSuggestions, 'fa-chevron-up': showSuggestions}"></i>
+      Vedi abitudini suggerite
+    </button>
+  </div>
+</div>
+<div class="row">
+  <!-- Box espandibile -->
+  <div class="col-sm-12" ng-show="showSuggestions">
+    <div class="panel panel-default" style="padding: 10px; margin-top: 5px;">
+      
+      <!-- Messaggi di warning -->
+      <div ng-if="habits.length === 1" class="alert alert-warning">
+        Dati raccolti insufficienti! Per poter calcolare le abitudini suggerite è necessario registrare alcune giornate sia di andata che di ritorno.
+      </div>
+  
+      <div ng-if="habits.length === 2" class="alert alert-info">
+        I dati rilevati non garantiscono una buona affidabilità delle abitudini suggerite di seguito. 
+        Per una migliore affidabilità si suggerisce la rilevazione di almeno 5 giornate prima dell’avvio effettivo del gioco sia per l’andata che per il ritorno degli studenti.
+      </div>
+  
+      <!-- Tabella delle abitudini suggerite -->
+      <!-- Tabella delle abitudini suggerite -->
+<table class="table table-bordered table-striped suggested-table" ng-if="habits.length > 0">
+    <thead>
+      <tr>
+        <th class="vertical-header">A piedi</th>
+        <th class="vertical-header">Bici</th>
+        <th class="vertical-header">Bus</th>
+        <th class="vertical-header">Pedibus</th>
+        <th class="vertical-header">P&amp;R</th>
+        <th class="vertical-header">Carpooling</th>
+        <th class="vertical-header">Auto</th>
+        <th class="text-center">Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="suggested-cell">{{suggested.walk | number:2}}</td>
+        <td class="suggested-cell">{{suggested.bike | number:2}}</td>
+        <td class="suggested-cell">{{suggested.bus | number:2}}</td>
+        <td class="suggested-cell">{{suggested.pedibus | number:2}}</td>
+        <td class="suggested-cell">{{suggested.pandr | number:2}}</td>
+        <td class="suggested-cell">{{suggested.carpooling | number:2}}</td>
+        <td class="suggested-cell">{{suggested.car | number:2}}</td>
+        <td class="text-center">
+          <button class="btn btn-primary btn-sm"
+                  ng-click="setAsHabits(suggested)"
+                  ng-disabled="habits.length === 0">
+            IMPOSTA COME ABITUDINI
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+    </div>
+  </div>
+  
+</div>
+<!-- Tabella delle abitudini -->
+<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledInfoGame()">
+    <div class="col-sm-12">
+        <h3>Registro Giornaliero</h3>
+        <hr style="border-color: black;">
+    </div>
+    <table class="table table-bordered table-striped habits-table">
+        <thead>
+          <tr>
+            <th class="text-center">Data</th>
+            <th class="text-center">Giorno</th>
+            <th class="text-center">A/R</th>
+            <th class="text-center">Meteo</th>
+            <th class="vertical-header">A piedi</th>
+            <th class="vertical-header">Bici</th>
+            <th class="vertical-header">Bus</th>
+            <th class="vertical-header">Pedibus</th>
+            <th class="vertical-header">P&amp;R</th>
+            <th class="vertical-header">Carpooling</th>
+            <th class="vertical-header">Auto</th>
+            <th class="vertical-header">Assenti</th>
+            <th class="vertical-header">Totale</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="row in habits track by $index">
+            <!-- Data -->
+            <td>
+              <input type="date" class="form-control"
+                     ng-model="row.date"
+                     ng-change="updateWeekday(row)" />
+            </td>
+      
+            <!-- Giorno -->
+            <td>
+              <input class="form-control" type="text"
+                     ng-model="row.weekday" disabled />
+            </td>
+      
+            <!-- Andata/Ritorno -->
+            <td>
+              <input type="radio" ng-model="row.direction" value="andata">
+              <input type="radio" ng-model="row.direction" value="ritorno">
+            </td>
+      
+            <!-- Meteo -->
+            <td class="meteo-cell">
+              <select class="form-control" ng-model="row.weather">
+                <option value="sereno">Sereno</option>
+                <option value="nuvoloso">Nuvoloso</option>
+                <option value="pioggia">Pioggia</option>
+                <option value="neve">Neve</option>
+              </select>
+            </td>
+      
+            <!-- A piedi -->
+<td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.walk" min="0"
+           ng-disabled="!isModalityPresent('walk')" />
+  </td>
+  
+  <!-- Bici -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.bike" min="0"
+           ng-disabled="!isModalityPresent('bike')" />
+  </td>
+  
+  <!-- Bus -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.bus" min="0"
+           ng-disabled="!isModalityPresent('bus')" />
+  </td>
+  
+  <!-- Pedibus -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.pedibus" min="0"
+           ng-disabled="!isModalityPresent('pedibus')" />
+  </td>
+  
+  <!-- P&R -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.pandr" min="0"
+           ng-disabled="!isModalityPresent('pandr')" />
+  </td>
+  
+  <!-- Carpooling -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.carpooling" min="0"
+           ng-disabled="!isModalityPresent('carpooling')" />
+  </td>
+  
+  <!-- Auto -->
+  <td>
+    <input type="number" class="form-control small-input no-spinner"
+           ng-model="row.car" min="0"
+           ng-disabled="!isModalityPresent('car')" />
+  </td>
+            <!-- Assenti -->
+            <td>
+              <input type="number" class="form-control small-input no-spinner"
+                     ng-model="row.absent" min="0" />
+            </td>
+      
+            <!-- Totale (non modificabile) -->
+            <td>
+                <input type="text" class="form-control small-input habits-disabled"
+                       ng-value="getRowTotal(row) + '/' + classInfo.numStudents" disabled />
+              </td>
+      
+            <!-- Azioni -->
+            <td>
+              <!-- Delete per righe non ultime -->
+              <button class="btn btn-danger btn-sm" ng-if="!$last" ng-click="removeRow($index)">
+                <i class="fa fa-trash"></i>
+              </button>
+      
+              <!-- Add per l’ultima riga -->
+              <button class="btn btn-success btn-sm" ng-if="$last" ng-click="addRow()"
+                      ng-disabled="!isRowValid(row, habits, classInfo)">
+                <i class="fa fa-plus"></i>
+              </button>
+      
+              <!-- Warning se ultima riga non valida -->
+              <i class="fa fa-exclamation-triangle text-warning"
+                 ng-if="$last && !isRowValid(row, habits, classInfo)"
+                 uib-tooltip="{{getRowError(row, habits, classInfo)}}" tooltip-append-to-body="true">
+              </i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+
+
+</fieldset>

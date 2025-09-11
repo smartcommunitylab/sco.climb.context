@@ -132,7 +132,12 @@ consoleApp.config(function ($stateProvider, $urlRouterProvider) {
 			templateUrl: 'templates/games/tabs/params.html',
 			controller: 'GameParamsCtrl'
 		})
-		.state('root.game.gamers', {
+		.state('root.game.dailyHabits', {
+			url: '/habits',
+			templateUrl: 'templates/games/tabs/habits.html',
+			controller: 'GameHabitsCtrl'
+		})
+		.state('root.game.habits', {
 			url: '/gamers',
 			templateUrl: 'templates/games/tabs/gamers.html',
 			controller: 'GameGamersCtrl'
