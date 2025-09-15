@@ -441,7 +441,22 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
         $scope.suggested = null;
-
+        $scope.addRow = function () {
+            $scope.habits.push({
+                date: null,
+                weekday: '',
+                direction: 'andata',
+                walk: null,
+                bike: null,
+                bus: null,
+                pedibus: null,
+                pandr: null,
+                carpooling: null,
+                car: null,
+                absent: null,
+                weather: ''
+            });
+        };
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
@@ -509,22 +524,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
         
         
-        $scope.addRow = function () {
-            $scope.habits.push({
-                date: null,
-                weekday: '',
-                direction: 'andata',
-                walk: null,
-                bike: null,
-                bus: null,
-                pedibus: null,
-                pandr: null,
-                carpooling: null,
-                car: null,
-                absent: null,
-                weather: ''
-            });
-        };
+        
 
         $scope.removeRow = function (index) {
             $scope.habits.splice(index, 1);
