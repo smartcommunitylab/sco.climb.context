@@ -543,7 +543,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
             var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
                 (row.pedibus || 0) + (row.pandr || 0) +
-                (row.carpooling || 0) + (row.car || 0);
+                (row.carpooling || 0) + (row.car || 0) + (row.absent || 0);
 
             if (total !== classInfo.numStudents) return false;
 
@@ -566,7 +566,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
             var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
                 (row.pedibus || 0) + (row.pandr || 0) +
-                (row.carpooling || 0) + (row.car || 0);
+                (row.carpooling || 0) + (row.car || 0) + (row.absent || 0);
 
             if (total < classInfo.numStudents) return "Totale inserito inferiore al numero studenti";
             if (total > classInfo.numStudents) return "Totale inserito superiore al numero studenti";
