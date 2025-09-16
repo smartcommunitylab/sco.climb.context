@@ -585,16 +585,21 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             return "";
         };
 
-        
-
+        //calculate suggestions when habits change
         function calculateSuggestions() {
-            if (!$scope.habits || $scope.habits.length === 0) {
+
+            //filter habits for valid rows (only 'andata' if roundTrip is false)
+            $scope.habitsCopy = $scope.habits.filter(function (row) {
+                return $scope.isRowValid(row, $scope.habits, $scope.classInfo) &&
+                    ($scope.currentGame.roundTrip || row.direction === 'andata');
+            });
+            if (!$scope.habitsCopy || $scope.habitsCopy.length === 0) {
                 $scope.suggested = null;
                 return;
             }
 
             var totals = { walk: 0, bike: 0, bus: 0, pedibus: 0, pandr: 0, carpooling: 0, car: 0 };
-            $scope.habits.forEach(function (row) {
+            $scope.habitsCopy.forEach(function (row) {
                 if (row.date) {
                     totals.walk += (row.walk || 0);
                     totals.bike += (row.bike || 0);
