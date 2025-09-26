@@ -457,6 +457,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 weather: ''
             });
         };
+       
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
@@ -635,9 +636,13 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 (row.absent || 0);
         };
         $scope.$watch('habits', calculateSuggestions, true);
-
-        // inizializza con una riga vuota
-        //$scope.addRow();
+        // Inizializza con la classe se presente  e univoca
+        if ($scope.classes && $scope.classes.length === 1) {
+            $scope.selectedClass = $scope.classes[0];
+            $scope.updateClassInfo($scope.selectedClass);
+        } else {
+            $scope.selectedClass = null; 
+        }
     })
 
 .controller('MobilitySuggestionsModalCtrl', function($scope, $uibModalInstance, className, habits, numStudents,DataService) {
