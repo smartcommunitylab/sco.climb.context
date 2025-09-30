@@ -96,22 +96,28 @@
         </select>
     </div>
     <div class="col-sm-12 col-12 ">
-        <h3>Compilazione per gruppi anonimi</h3>
+        <h3>Modalità di compilazione calendario</h3>
         <hr style="border-color: black;">
     </div>
-    <div class="col-sm-12 col-12 ">
+    <div class="col-sm-12 col-12  " style="margin-top: 24px;">
         <div class="col-sm-12 col-12">
             <input ng-disabled="currentGame.deployed || !PermissionsService.permissionEnabledGroup()"
                    type="checkbox"
                    class="checkBoxStyle"
                    ng-change="changed()"
                    ng-model="currentGame.groupDataEntry">
-            Abilita modalità a gruppi
+            Compilazione di gruppo
         </div>
     </div>
+    <div class="col-sm-12 col-12"  style="margin-top: 24px;">
+        <div class="col-sm-12 col-12">
+            <input ng-disabled="currentGame.deployed" type="checkbox" class="checkBoxStyle " ng-model="currentGame.roundTrip">
+                Andata e ritorno</input>
+        </div>    
+</div>
     
     <!-- INPUT per numero studenti (visibile solo se groupDataEntry è true) -->
-    <div class="col-sm-12 col-12" ng-if="currentGame.groupDataEntry">
+    <!-- <div class="col-sm-12 col-12"  style="margin-top: 24px;" ng-if="currentGame.groupDataEntry">
         <div class="form-group row align-items-center mb-2" ng-repeat="classe in classes track by $index">
             <div class="col-sm-4 col-4">
               <label for="students_{{$index}}" class="form-label mb-0"><strong>{{classe}}</strong></label>
@@ -125,7 +131,7 @@
                      ng-model="currentGame.classSizes[classe]" />
             </div>
           </div>
-    </div>
+    </div> -->
 </fieldset>
 <fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
 
@@ -166,6 +172,21 @@
         <div ng-if="!classes || classes.length == 0">
             <div class="col-sm-4 col-4">
                 <p class="empty-list">Nessuna classe presente</p></div>
+        </div>
+        <div class="col-sm-12 col-12"  style="margin-top: 24px;" ng-if="currentGame.groupDataEntry">
+            <div class="form-group row align-items-center mb-2" ng-repeat="classe in classes track by $index">
+                <div class="col-sm-4 col-4">
+                  <label for="students_{{$index}}" class="form-label mb-0"><strong>{{classe}}</strong></label>
+                </div>
+                <div class="col-sm-4 col-4">
+                  <input type="number"
+                         class="form-control"
+                         id="students_{{$index}}"
+                         placeholder="Numero di studenti"
+                         min="0"
+                         ng-model="currentGame.classSizes[classe]" />
+                </div>
+              </div>
         </div>
         <!-- Num studenti nelle classi -->
         <!-- <div class="col-sm-12 field">
@@ -213,7 +234,7 @@
         </div>
     </div>
     
-    <!--  andata e ritorno -->
+     <!-- andata e ritorno
     <div class="col-sm-12 col-12 ">
         <h3>Modalità di compilazione calendario</h3>
         <hr style="border-color: black;">
@@ -223,7 +244,7 @@
 	    		<input ng-disabled="currentGame.deployed" type="checkbox" class="checkBoxStyle " ng-model="currentGame.roundTrip">
 	    			Andata e ritorno</input>
 	    	</div>    
-    </div>
+    </div> -->
 
     <!-- checkbox for days of week -->
     <div class="col-sm-12 col-12 ">
