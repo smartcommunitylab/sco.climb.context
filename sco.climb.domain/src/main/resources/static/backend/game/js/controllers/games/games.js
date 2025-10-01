@@ -457,7 +457,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 weather: ''
             });
         };
-       
+        $scope.$watch('habits', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.changed();
+            }
+        }, true);
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
@@ -529,6 +533,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
         $scope.removeRow = function (index) {
             $scope.habits.splice(index, 1);
+            $scope.changed();
         };
 
         // normalizza la data per confronto (ignora ore)
