@@ -9,7 +9,7 @@ global Utility utils;
 rule "class trip update"
 when
     Action(id == "ClassWalkTrip")
-    Player($playerId : id, team == true) // this actions is valid only for classes/teams
+    Player($playerId : id, team == false) // this actions is valid only for classes/teams
     InputData( 
     	$distance : data["class-distance"] != null, 
     	$participants : data["participants"] != null, 

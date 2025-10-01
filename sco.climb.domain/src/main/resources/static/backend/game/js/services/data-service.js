@@ -2,6 +2,8 @@ angular.module('DataService', []).factory('DataService', ['$q', '$http', '$rootS
 function ($q, $http, $rootScope, $timeout) {
     var getUrl = window.location;
     var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    //    var baseUrl ="https://climbdev.smartcommunitylab.it/v3"
+    //    var baseUrl ="https://climbdev.smartcommunitylab.it/v3"
     var timeout = 10000;
 
     var googleApiKey = 'AIzaSyCgNyKWM_SBXNe7dKw1QdywllZpbQ0Jioo';
@@ -356,6 +358,23 @@ function ($q, $http, $rootScope, $timeout) {
         var deleteUrl= baseUrl + "/api/game/"+ element.ownerId + "/" + element.pedibusGameId + "/itinerary/" + element.itineraryId + "/leg/" + element.legId + "/content/" + element.objectId;
         return $http.delete(deleteUrl, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
         },
+        // add group players to class /api/game/{ownerId}/{pedibusGameId}/players/group
+        addGroupToGame: function(ownerId, pedibusGameId, classRoom, num) {
+            var url = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + `/players/group?classRoom=${encodeURIComponent(classRoom)}&num=${num}`;
+            return $http.post(url,  { timeout: timeout, headers: { 'Authorization': 'Bearer ' + profileToken } });
+        },
+        // remove group players from class /api/game/{ownerId}/{pedibusGameId}/players/group
+        removeGroupFromGame: function(ownerId, pedibusGameId, classRoom) {
+            var url = baseUrl + "/api/game/" + ownerId + "/" + pedibusGameId + "/players/group";
+            var config = {
+                params: { classRoom: classRoom },
+                timeout: timeout,
+                headers: { 'Authorization': 'Bearer ' + profileToken }
+            };
+            return $http.delete(url, config);
+        },
+        
+
         // PUT /api/game/{ownerId}/{pedibusGameId}/mobility
         // modifica i dati di abitudini di mobilità
         updateParams: function(ownerId,objectId, params){
@@ -429,7 +448,48 @@ function ($q, $http, $rootScope, $timeout) {
                 console.log("element::",element)
             var url= baseUrl + "/api/game/"+ element.ownerId + "/player/" + element.objectId ;
             return $http.delete(url, {timeout: timeout, headers: {'Authorization': 'Bearer ' + profileToken}});
+            },
+            // --- funzione di calcolo abitudini suggerite (presa e adattata da quella che ti hanno dato) ---
+         habitsDistribution: function(students, habits_arr) {
+            if (!students || !habits_arr || habits_arr.length != 7) return null;
+            if (students <= 0) return null;
+
+            var totalTrips = habits_arr.reduce((a, b) => a + b, 0);
+            if (totalTrips === 0) return null;
+
+            var avgDist = habits_arr.map(h => (h / totalTrips) * students);
+
+            var avgDistRounded = avgDist.map(a => Math.round(a));
+            var totalDist = avgDistRounded.reduce((a, b) => a + b, 0);
+
+            var distError = totalDist - students;
+            if (distError === 0) return avgDistRounded;
+
+            var roundingValues = avgDistRounded.map((r, i) => r - avgDist[i]);
+            var corrections = new Array(7).fill(0);
+            var needed = Math.abs(distError);
+
+            if (distError > 0) {
+                // eccesso → togliamo
+                var delta = roundingValues.filter(v => v > 0).sort().reverse();
+                var limit = delta[distError - 1];
+                for (var i = 0; i < 7 && needed > 0; i++) {
+                    if (roundingValues[i] >= limit && roundingValues[i] != 0) {
+                        corrections[i] = -1; needed--;
+                    }
+                }
+            } else {
+                // difetto → aggiungiamo
+                var delta = roundingValues.filter(v => v < 0).sort();
+                var limit = delta[Math.abs(distError) - 1];
+                for (var i = 0; i < 7 && needed > 0; i++) {
+                    if (roundingValues[i] >= limit && roundingValues[i] != 0) {
+                        corrections[i] = 1; needed--;
+                    }
+                }
             }
+            return avgDistRounded.map((r, i) => r + corrections[i]);
+        }
                 };
 }
 ]);

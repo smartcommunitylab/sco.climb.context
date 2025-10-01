@@ -57,7 +57,7 @@
   "cal_notifications_empty": "Non ci sono notifiche",
   "cal_challenges": "Sfide",
   "cal_header_state": "Stato",
-  "cal_header_clima": "Clima",
+  "cal_header_clima": "Meteo",
   "cal_header_sent": "Dati Inviati",
   "cal_mean_zeroImpact_solo": "A piedi o in bici da solo o con gli amici",
   "cal_mean_zeroImpact_wAdult": "A piedi o accompagnati da un adulto",
@@ -82,7 +82,8 @@
   "choose_game": "Selezionare un gioco",
   "choose_itinerary": "Selezionare un percorso",
   "choose_classroom": "Selezionare una classe",
-  "cal_data_missing": "Per poter inviare i dati è necessario compilare tutti i campi.",
+  "cal_data_missing_title": "Dati incompleti o errati",
+  "cal_data_missing": "Controlla e correggi i dati! Verifica che il numero di alunni inseriti corrisponde al totale. Ricordati di selezionare il meteo.",
   "notif_this is a test.": "Primo campo messaggio {{msg}}",
   "notif_ZeroImpactDayClass": "BRAVI! Oggi siete venuti tutti a scuola a piedi o in bici: è un giorno a IMPATTO ZERO e avete vinto {{_bonus_}} Km!",
   "notif_NoCarDayClass": "COMPLIMENTI! Oggi nessuno di voi ha utilizzato l'auto per venire a scuola e avete vinto {{_bonus_}} Km!",
@@ -106,5 +107,9 @@
   "cal_header_andata":"Andata",
   "cal_header_ritorno":"Ritorno",
   "err":"Errore nell'inserimento dei dati",
-  "menu_homepage" : "Homepage"
+  "menu_homepage" : "Homepage",
+  
+    "cal_trip_out_label": "Andata",
+    "cal_trip_return_label": "Ritorno"
+  
 }

@@ -48,7 +48,7 @@ public class PedibusTeam implements Gamified {
 	}
 
 	public Double getScore() {
-		return score;
+		return score == null ? Double.valueOf(0) : score;
 	}
 
 	public void setScore(Double score) {

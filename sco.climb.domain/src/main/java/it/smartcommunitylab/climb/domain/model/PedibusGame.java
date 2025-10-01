@@ -39,6 +39,21 @@ public class PedibusGame extends BaseObject {
 	private String sponsorTemplate;
 	private boolean roundTrip = false;
 	private boolean useCalendar = true;
+	
+	//group data entry
+	private boolean groupDataEntry = false;
+	
+	//abitudini di viaggio <classe, lista modalità spostamento> 
+	private Map<String, List<MobilityMode>> travelModes = new HashMap<>() ;
+	
+
+	public Map<String, List<MobilityMode>> getTravelModes() {
+		return travelModes;
+	}
+
+	public void setTravelModes(Map<String, List<MobilityMode>> travelModes) {
+		this.travelModes = travelModes;
+	}
 
 	public String getSchoolId() {
 		return schoolId;
@@ -246,6 +261,14 @@ public class PedibusGame extends BaseObject {
 
 	public void setMobilityParams(Map<String, Map<String, Integer>> mobilityParams) {
 		this.mobilityParams = mobilityParams;
+	}
+
+	public boolean isGroupDataEntry() {
+		return groupDataEntry;
+	}
+
+	public void setGroupDataEntry(boolean groupDataEntry) {
+		this.groupDataEntry = groupDataEntry;
 	}
 
 }

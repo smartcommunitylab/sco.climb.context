@@ -18,6 +18,7 @@ when
 					$target: fields["_target_numTrips_"], 
 					$vp : fields["VirtualPrize"]) 
 	Player($teamId : id, team == true, $teamId == const_school_name) // only applies to SCHOOL
+	not Player(team == false)
 	$walkTrips : PointConcept(name == "walk_trips" )
 	$bikeTrips : PointConcept(name == "bike_trips" )
 	$pedibus : PointConcept(name == "pedibus_trips" )
@@ -48,6 +49,7 @@ when
 					$bonusPointType : fields["bonusPointType"], 
 					$bonusScore : fields["bonusScore"] )
 	Player($teamId : id, team == true)
+	not Player(team == false)
     BadgeCollectionConcept( 
     	name == badge_collection_name, 
     	badgeEarned contains (String) $leg || $leg == null )
