@@ -96,14 +96,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.classes = [];
         $scope.modalities = [];
 
-        $scope.manageResponse = function (response) {
+        $scope.manageResponse = function (response, modified = true) {
             console.log('Salvataggio dati a buon fine.');
             createDialog('templates/modals/save.html', {
                 id: 'save-dialog',
                 title: 'Modificato!',
                 success: { label: 'Ok', fn: null }
             });
-            $rootScope.modified = false;
+            if (modified) {
+                $rootScope.modified = false;
+            }
             //show toast salvataggio
             if ($scope.currentGame.objectId) { //edited
                 if ($scope.games) {
@@ -457,11 +459,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 weather: ''
             });
         };
-        $scope.$watch('habits', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
-                $scope.changed();
-            }
-        }, true);
+
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
@@ -521,7 +519,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     DataService.updateParams($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.$parent.currentGame.mobilityParams)
                         .then(function(response) {
                             if ($scope.$parent.manageResponse) {
-                                $scope.$parent.manageResponse(response);
+                                $scope.$parent.manageResponse(response,false);
                             }
                         });
                 }
@@ -640,6 +638,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 (row.carpooling || 0) + (row.car || 0) +
                 (row.absent || 0);
         };
+        $scope.$watch('habits', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.changed();
+        
+                if ($scope.selectedClass) {
+                    $scope.$parent.classHabits[$scope.selectedClass] = angular.copy(newVal);
+                }
+            }
+        }, true);
         $scope.$watch('habits', calculateSuggestions, true);
         // Inizializza con la classe se presente  e univoca
         if ($scope.classes && $scope.classes.length === 1) {
