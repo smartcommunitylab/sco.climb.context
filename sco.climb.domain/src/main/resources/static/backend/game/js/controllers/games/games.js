@@ -470,6 +470,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.addRow();
             }
         };
+
         if (!$scope.selectedClass && $scope.classes && $scope.classes.length > 0) {
             $scope.selectedClass = $scope.classes[0];
             $scope.updateClassInfo($scope.selectedClass);
@@ -798,11 +799,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     }
                 })
                 $scope.$parent.classes = $scope.selectedClasses;
+                $scope.changed();
             }
         }
 
        
-
+        $scope.$watch('currentGame', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.changed();
+            }
+        }, true);
         
         $scope.classToggled = function (name) {
             //se modifico => modale
