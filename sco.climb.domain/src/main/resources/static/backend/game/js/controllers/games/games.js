@@ -194,6 +194,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
                     console.log("Class sizes inizializzate:", $scope.currentGame.classSizes);
                     $scope.initializing = false;
+                    $timeout(() => {
+                        window.scrollTo(0, 0); 
+                    });
                 }
             );
             DataService.getModalityMap().then(
