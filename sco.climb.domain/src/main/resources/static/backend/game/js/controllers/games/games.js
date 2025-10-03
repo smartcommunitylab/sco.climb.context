@@ -75,6 +75,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, DataService, createDialog, $filter) {
         $scope.$parent.mainView = 'game';
+        $scope.initializing = true;
 
         // Variabili per date-picker
         $scope.dateFormat = 'dd/MM/yyyy';
@@ -192,6 +193,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     });
 
                     console.log("Class sizes inizializzate:", $scope.currentGame.classSizes);
+                    $scope.initializing = false;
                 }
             );
             DataService.getModalityMap().then(
@@ -438,7 +440,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameHabitsCtrl', function ($scope, $filter,DataService) {
         $scope.$parent.selectedTab = 'dailyHabits';
-
         $scope.selectedClass = null;
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
@@ -710,6 +711,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameInfoCtrl', function ($scope, createDialog, MainDataService, DataService) {
         $scope.$parent.selectedTab = 'info';
+
         $scope.new = {
             classe: ""
         }
@@ -743,7 +745,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if (typeof $scope.currentGame.groupDataEntry === 'undefined') {
                 $scope.currentGame.groupDataEntry = false;
             }
-
         });
 
         $scope.toggleSelectedClasses = function () {
@@ -803,12 +804,24 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             }
         }
 
-       
-        $scope.$watch('currentGame', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
+        $scope.$watchCollection('classes', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
                 $scope.changed();
             }
-        }, true);
+        });
+        
+        
+        $scope.$watch('currentGame.roundTrip', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
+                $scope.changed();
+            }
+        });
+        
+        $scope.$watchCollection('currentGame.daysOfWeek', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
+                $scope.changed();
+            }
+        });
         
         $scope.classToggled = function (name) {
             //se modifico => modale
