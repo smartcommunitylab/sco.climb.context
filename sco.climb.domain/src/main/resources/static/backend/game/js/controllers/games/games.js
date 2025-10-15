@@ -75,6 +75,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameCtrl', function ($scope, $stateParams, $state, $rootScope, $timeout, DataService, createDialog, $filter) {
         $scope.$parent.mainView = 'game';
+        $scope.initializing = true;
 
         // Variabili per date-picker
         $scope.dateFormat = 'dd/MM/yyyy';
@@ -96,14 +97,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.classes = [];
         $scope.modalities = [];
 
-        $scope.manageResponse = function (response) {
+        $scope.manageResponse = function (response, modified = true) {
             console.log('Salvataggio dati a buon fine.');
             createDialog('templates/modals/save.html', {
                 id: 'save-dialog',
                 title: 'Modificato!',
                 success: { label: 'Ok', fn: null }
             });
-            $rootScope.modified = false;
+            if (modified) {
+                $rootScope.modified = false;
+            }
             //show toast salvataggio
             if ($scope.currentGame.objectId) { //edited
                 if ($scope.games) {
@@ -190,6 +193,10 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     });
 
                     console.log("Class sizes inizializzate:", $scope.currentGame.classSizes);
+                    $scope.initializing = false;
+                    $timeout(() => {
+                        window.scrollTo(0, 0); 
+                    });
                 }
             );
             DataService.getModalityMap().then(
@@ -436,7 +443,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameHabitsCtrl', function ($scope, $filter,DataService) {
         $scope.$parent.selectedTab = 'dailyHabits';
-
         $scope.selectedClass = null;
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
@@ -457,7 +463,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 weather: ''
             });
         };
-       
+
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
@@ -468,6 +474,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.addRow();
             }
         };
+
         if (!$scope.selectedClass && $scope.classes && $scope.classes.length > 0) {
             $scope.selectedClass = $scope.classes[0];
             $scope.updateClassInfo($scope.selectedClass);
@@ -517,7 +524,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     DataService.updateParams($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.$parent.currentGame.mobilityParams)
                         .then(function(response) {
                             if ($scope.$parent.manageResponse) {
-                                $scope.$parent.manageResponse(response);
+                                $scope.$parent.manageResponse(response,false);
                             }
                         });
                 }
@@ -529,6 +536,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
         $scope.removeRow = function (index) {
             $scope.habits.splice(index, 1);
+            $scope.changed();
         };
 
         // normalizza la data per confronto (ignora ore)
@@ -635,6 +643,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 (row.carpooling || 0) + (row.car || 0) +
                 (row.absent || 0);
         };
+        $scope.$watch('habits', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.changed();
+        
+                if ($scope.selectedClass) {
+                    $scope.$parent.classHabits[$scope.selectedClass] = angular.copy(newVal);
+                }
+            }
+        }, true);
         $scope.$watch('habits', calculateSuggestions, true);
         // Inizializza con la classe se presente  e univoca
         if ($scope.classes && $scope.classes.length === 1) {
@@ -697,6 +714,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
     .controller('GameInfoCtrl', function ($scope, createDialog, MainDataService, DataService) {
         $scope.$parent.selectedTab = 'info';
+
         $scope.new = {
             classe: ""
         }
@@ -730,7 +748,6 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if (typeof $scope.currentGame.groupDataEntry === 'undefined') {
                 $scope.currentGame.groupDataEntry = false;
             }
-
         });
 
         $scope.toggleSelectedClasses = function () {
@@ -786,11 +803,28 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     }
                 })
                 $scope.$parent.classes = $scope.selectedClasses;
+                $scope.changed();
             }
         }
 
-       
-
+        $scope.$watchCollection('classes', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
+                $scope.changed();
+            }
+        });
+        
+        
+        $scope.$watch('currentGame.roundTrip', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
+                $scope.changed();
+            }
+        });
+        
+        $scope.$watchCollection('currentGame.daysOfWeek', function (newVal, oldVal) {
+            if (!$scope.initializing && newVal !== oldVal) {
+                $scope.changed();
+            }
+        });
         
         $scope.classToggled = function (name) {
             //se modifico => modale
