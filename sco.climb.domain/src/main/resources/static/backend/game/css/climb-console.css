@@ -1412,8 +1412,23 @@ table input.form-control.no-spinner {
 	vertical-align: middle;
 	white-space: nowrap;  /* impedisce il ritorno a capo */
   }
-  
-
+  .meteo-cell select.form-control {
+	padding: 6px 4px !important; /* riduce il padding verticale e orizzontale */
+	height: auto !important;     /* lascia che l’altezza si adatti */
+	line-height: 1.4;            /* regola l’altezza del testo */
+	box-sizing: border-box;
+  }
+  .habits-table td.td-small-padding {
+	padding-left: 4px;
+	padding-right: 4px;
+  }
+  .habits-table td.td-small-padding input {
+	width:100%;
+  }
+  .icon-large {
+	font-size: 1.25em;    
+	vertical-align: middle;  
+  }
   .habits-table td {
 	min-width: 65px;
 	text-align: center;
