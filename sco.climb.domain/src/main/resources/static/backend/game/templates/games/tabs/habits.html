@@ -232,7 +232,11 @@
 
             <!-- Warning se ultima riga non valida -->
             <i class="fa fa-exclamation-triangle text-warning icon-large" ng-if="$last && !isRowValid(row, habits, classInfo)"
-              uib-tooltip="{{getRowError(row, habits, classInfo)}}" tooltip-append-to-body="true">
+              uib-tooltip="{{getRowError(row, habits, classInfo)}}"
+              tooltip-placement="left"
+              tooltip-append-to-body="true"
+              uib-tooltip-popup-delay="200"
+              uib-tooltip-hide-delay="200">
             </i>
           </td>
         </tr>
