@@ -5,7 +5,7 @@
             <span class="required-sign">*</span>
             <b>Nome:</b>
         </p>
-        <input class="form-control col-sm-3" type="text" ng-change="changed()" ng-model="currentGame.gameName"
+        <input class="form-control col-sm-3" type="text" ng-change="changed()" ng-model="currentGame.gameName" 
             ng-required="true" />
     </div>
     <!--     Description
@@ -133,7 +133,7 @@
           </div>
     </div> -->
 </fieldset>
-<fieldset class="row" ng-disabled="!PermissionsService.permissionEnabledEditClasses()">
+<fieldset class="row">
 
     <div class="col-sm-12 col-12 ">
         <h3>Team di gioco</h3>
@@ -146,10 +146,10 @@
             <b>Aggiungi le classi che parteciperanno al gioco:</b>
             <div ng-if="addClass" class="pull-right adder"> Aggiungi classe:
                 <input ng-change="changed()" type="text" ng-model="new.classe">
-                <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)">Aggiungi</a>
+                <a class="btn btn-primary btn-lg" role="button" ng-click="addClasse(new.classe)" v>Aggiungi</a>
             </div>
             <div ng-if="!addClass"><a class="btn btn-primary btn-lg pull-right" role="button"
-                    ng-click="switchAddClasse()" ng-disabled="currentGame.deployed">Crea nuova classe</a></div>
+                    ng-click="switchAddClasse()" ng-disabled="currentGame.deployed || !PermissionsService.permissionEnabledClassesModify()">Crea nuova classe</a></div>
 
         </div>
 
@@ -164,7 +164,7 @@
         </div> -->
         <div ng-if="classes.length && classes.length >0">
             <div class="col-sm-4 col-4" ng-repeat="classe in classes track by $index">
-                <div class="btn btn-sm class-button" ng-click="classToggled(classe)" ng-disabled="currentGame.deployed">
+                <div class="btn btn-sm class-button" ng-click="classToggled(classe)" ng-disabled="currentGame.deployed || !PermissionsService.permissionEnabledClassesModify()" >
                     <div><span class="fa fa-trash pull-right"></span> {{classe}}</div>
                 </div>
             </div>
@@ -184,6 +184,7 @@
                          id="students_{{$index}}"
                          placeholder="Numero di studenti"
                          min="0"
+                         ng-disabled="!PermissionsService.permissionEnabledNumberOfPlayers()"
                          ng-model="currentGame.classSizes[classe]" />
                 </div>
               </div>
@@ -203,8 +204,9 @@
                         uib-tooltip="E' il nome della squadra che partecipa al gioco e comprende tutte le classi partecipanti. Puoi modificare il nome della squadra per personalizzarlo."></i>
                 </b>
             </p>
-            <input class="form-control" type="text" ng-disabled="currentGame.deployed" ng-change="changed()"
-                ng-model="currentGame.globalTeam" ng-required="true" />
+            <input class="form-control" type="text"  ng-change="changed()"
+                ng-model="currentGame.globalTeam" ng-required="true" 
+                ng-disabled="!PermissionsService.permissionEnabledTeamName()"/>
         </div>
         <!-- <div >
             <label style="font-weight: normal">
