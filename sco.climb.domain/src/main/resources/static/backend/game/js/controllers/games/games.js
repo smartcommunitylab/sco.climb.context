@@ -347,6 +347,17 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                             };
                         });
                     });
+                    if ($scope.currentGame.mobilityParams) {
+                        const classiAttuali = new Set($scope.classes);
+                        const classiRimosse = Object.keys($scope.currentGame.mobilityParams)
+                            .filter(classe => !classiAttuali.has(classe));
+                    
+                        classiRimosse.forEach(classe => {
+                            delete $scope.currentGame.mobilityParams[classe];
+                        });
+                    
+                        console.log("Classi rimosse da mobilityParams:", classiRimosse);
+                    }
                     $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                         function (response) {
                             $scope.manageResponse(response);
