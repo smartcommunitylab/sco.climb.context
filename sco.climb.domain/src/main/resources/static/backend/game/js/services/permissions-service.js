@@ -19,6 +19,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     var sponsor;
     var group;
     var getData;
+    var numberOfPlayers;
+    var teamName;
+    var classesModify;
     permissionsService.getProfilePermissions = function () {
         return userRoles;
     }
@@ -67,6 +70,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 sponsor = true;
                 group = true;
                 getData = true;
+                teamName=true;
+                numberOfPlayers=true;
+                classesModify = true;
             } else if (role == 'owner' || role == 'school-owner') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -108,7 +114,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 sponsor = true;
                 group = true;
                 getData = true;
-
+                teamName=true;
+                numberOfPlayers=true;
+                classesModify = true;
             } else if (role == 'teacher') {
                 showInstitutes = false;
                 editInstitute = false;
@@ -150,7 +158,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 sponsor = false;
                 group = false;
                 getData = true;
-
+                teamName=true;
+                numberOfPlayers=true;
+                classesModify=false
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
                 editInstitute = true;
@@ -198,7 +208,9 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 sponsor = true;
                 group = true;
                 getData = true;
-
+                teamName=true;
+                numberOfPlayers=true;
+                classesModify = true;
             }
         });
 
@@ -346,7 +358,15 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
     permissionsService.permissionEnabledGroup = function () {
         return group;
     }
-
+    permissionsService.permissionEnabledNumberOfPlayers = function () {
+        return numberOfPlayers;
+    }
+    permissionsService.permissionEnabledTeamName = function () {
+        return teamName;
+    }
+    permissionsService.permissionEnabledClassesModify = function () {
+        return classesModify;
+    }
 
 
 
