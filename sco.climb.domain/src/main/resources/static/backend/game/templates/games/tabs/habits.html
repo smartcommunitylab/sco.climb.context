@@ -156,7 +156,7 @@
           </td>
 
           <!-- Meteo -->
-          <td class="meteo-cell">
+          <td class="meteo-cell td-small-padding">
             <select class="form-control" ng-model="row.weather">
               <option value="sereno">Sereno</option>
               <option value="nuvoloso">Nuvoloso</option>
@@ -220,18 +220,18 @@
           <!-- Azioni -->
           <td>
             <!-- Delete per righe non ultime -->
-            <button class="btn btn-danger btn-sm" ng-if="!$last" ng-click="removeRow($index)">
+            <button class="btn btn-danger btn-sm habit-button" ng-if="!$last" ng-click="removeRow($index)">
               <i class="fa fa-trash"></i>
             </button>
 
             <!-- Add per l’ultima riga -->
-            <button class="btn btn-success btn-sm" ng-if="$last" ng-click="addRow()"
+            <button class="btn btn-success btn-sm habit-button" ng-if="$last" ng-click="addRow()"
               ng-disabled="!isRowValid(row, habits, classInfo)">
               <i class="fa fa-plus"></i>
             </button>
 
             <!-- Warning se ultima riga non valida -->
-            <i class="fa fa-exclamation-triangle text-warning icon-large" ng-if="$last && !isRowValid(row, habits, classInfo)"
+            <i class="fa fa-exclamation-triangle text-warning icon-large" ng-if="!isRowValid(row, habits, classInfo)"
               uib-tooltip="{{getRowError(row, habits, classInfo)}}"
               tooltip-placement="left"
               tooltip-append-to-body="true"

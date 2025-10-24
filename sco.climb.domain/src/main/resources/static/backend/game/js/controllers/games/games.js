@@ -224,26 +224,43 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             );
 
             if ($scope.currentGame.travelModes) {
-                // inizializza habits per ogni classe
                 $scope.classHabits = {};
-
+                
+                var weekDays = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
+            
                 Object.keys($scope.currentGame.travelModes).forEach(function (classe) {
-                    $scope.classHabits[classe] = $scope.currentGame.travelModes[classe].map(function (mob) {
-                        return {
-                            date: new Date(mob.day),
-                            weekday: $scope.weekDays[new Date(mob.day).getDay()],
-                            direction: mob.direct ? 'andata' : 'ritorno',
-                            walk: mob.modalities.walk || 0,
-                            bike: mob.modalities.bike || 0,
-                            bus: mob.modalities.bus || 0,
-                            pedibus: mob.modalities.pedibus || 0,
-                            pandr: mob.modalities.pandr || 0,
-                            carpooling: mob.modalities.carpooling || 0,
-                            car: mob.modalities.car || 0,
-                            absent: mob.modalities.absent || 0,
-                            weather: mob.meteo || ''
-                        };
-                    });
+                    $scope.classHabits[classe] = $scope.currentGame.travelModes[classe]
+                        .filter(function(mob) {
+                            if (!mob.day) return false;
+                            var dateObj = new Date(mob.day);
+                            return dateObj.getFullYear() > 1970;
+                        })
+                        .map(function (mob) {
+                            // Crea la data come locale dal formato yyyy-MM-dd
+                            var dateParts = mob.day.split('-');
+                            var localDate = new Date(
+                                parseInt(dateParts[0]),      // year
+                                parseInt(dateParts[1]) - 1,  // month (0-indexed)
+                                parseInt(dateParts[2])       // day
+                            );
+                            
+                            var dayIndex = localDate.getDay();
+                            
+                            return {
+                                date: localDate,
+                                weekday: weekDays[dayIndex],
+                                direction: mob.direct ? 'andata' : 'ritorno',
+                                walk: mob.modalities.walk || 0,
+                                bike: mob.modalities.bike || 0,
+                                bus: mob.modalities.bus || 0,
+                                pedibus: mob.modalities.pedibus || 0,
+                                pandr: mob.modalities.pandr || 0,
+                                carpooling: mob.modalities.carpooling || 0,
+                                car: mob.modalities.car || 0,
+                                absent: mob.modalities.absent || 0,
+                                weather: mob.meteo || ''
+                            };
+                        });
                 });
             } else {
                 $scope.classHabits = {};
@@ -324,71 +341,93 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                         function (response) {
                             $scope.manageResponse(response);
                         })
-                } else {
-                    $scope.currentGame.travelModes = {};
-
-                    $scope.classes.forEach(function (classe) {
-                        var rows = $scope.classHabits[classe] || [];
-                        $scope.currentGame.travelModes[classe] = rows.map(function (row) {
-                            return {
-                                day: row.date ? row.date.toISOString().slice(0, 10) : null, // yyyy-MM-dd
-                                direct: row.direction === 'andata',
-                                meteo: row.weather || '',
-                                modalities: {
-                                    walk: row.walk || 0,
-                                    bike: row.bike || 0,
-                                    bus: row.bus || 0,
-                                    pedibus: row.pedibus || 0,
-                                    pandr: row.pandr || 0,
-                                    carpooling: row.carpooling || 0,
-                                    car: row.car || 0,
-                                    absent: row.absent || 0
-                                }
-                            };
-                        }).sort(function (a, b) {
-                            // Ordina per giorno 
-                            if (!a.day) return 1;
-                            if (!b.day) return -1;
-                            return new Date(a.day) - new Date(b.day);
-                        });
-                    });
-                    if ($scope.currentGame.mobilityParams) {
-                        const classiAttuali = new Set($scope.classes);
-                        const classiRimosse = Object.keys($scope.currentGame.mobilityParams)
-                            .filter(classe => !classiAttuali.has(classe));
+                    } else {
+                        $scope.currentGame.travelModes = {};
                     
-                        classiRimosse.forEach(classe => {
-                            delete $scope.currentGame.mobilityParams[classe];
-                        });
-                    
-                        console.log("Classi rimosse da mobilityParams:", classiRimosse);
-                    }
-                    $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
-                        function (response) {
-                            $scope.manageResponse(response);
-                            if ($scope.currentGame.groupDataEntry) {
-                                $scope.classes.forEach(function (classe) {
-                                    var num = $scope.currentGame.classSizes[classe];
-                                    if (num && !isNaN(num)) {
-                                        DataService.addGroupToGame(
-                                            $scope.currentGame.ownerId,
-                                            $scope.currentGame.objectId,
-                                            classe,
-                                            parseInt(num)
-                                        ).then(function (res) {
-                                            console.log("Gruppo aggiunto:", classe, num);
-                                        }).catch(function (err) {
-                                            console.error("Errore nell'aggiunta gruppo:", classe, err);
-                                        });
+                        $scope.classes.forEach(function (classe) {
+                            var rows = $scope.classHabits[classe] || [];
+                            
+                            // Filtra righe invalide prima del salvataggio
+                            var validRows = rows.filter(function(row) {
+                                if (!row.date || !row.direction) return false;
+                                
+                                var dateObj = new Date(row.date);
+                                if (dateObj.getFullYear() <= 1970) return false;
+                                
+                                var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
+                                           (row.pedibus || 0) + (row.pandr || 0) +
+                                           (row.carpooling || 0) + (row.car || 0) + (row.absent || 0);
+                                
+                                return total > 0;
+                            });
+                            
+                            $scope.currentGame.travelModes[classe] = validRows.map(function (row) {
+                                // CONVERSIONE CORRETTA DELLA DATA - NON usare toISOString()!
+                                var localDate = new Date(row.date);
+                                var year = localDate.getFullYear();
+                                var month = String(localDate.getMonth() + 1).padStart(2, '0');
+                                var day = String(localDate.getDate()).padStart(2, '0');
+                                var dateString = year + '-' + month + '-' + day;
+                                
+                                return {
+                                    day: dateString,
+                                    direct: row.direction === 'andata',
+                                    meteo: row.weather || '',
+                                    modalities: {
+                                        walk: row.walk || 0,
+                                        bike: row.bike || 0,
+                                        bus: row.bus || 0,
+                                        pedibus: row.pedibus || 0,
+                                        pandr: row.pandr || 0,
+                                        carpooling: row.carpooling || 0,
+                                        car: row.car || 0,
+                                        absent: row.absent || 0
                                     }
-                                });
-
-                            }
-                        }, function (error) {
-                            alert("Errore nella richiesta:" + error.data.errorMsg);
+                                };
+                            }).sort(function (a, b) {
+                                if (!a.day) return 1;
+                                if (!b.day) return -1;
+                                return new Date(a.day) - new Date(b.day);
+                            });
+                        });
+                        
+                        if ($scope.currentGame.mobilityParams) {
+                            const classiAttuali = new Set($scope.classes);
+                            const classiRimosse = Object.keys($scope.currentGame.mobilityParams)
+                                .filter(classe => !classiAttuali.has(classe));
+                        
+                            classiRimosse.forEach(classe => {
+                                delete $scope.currentGame.mobilityParams[classe];
+                            });
+                        
+                            console.log("Classi rimosse da mobilityParams:", classiRimosse);
                         }
-                    );
-                }
+                        
+                        $scope.saveData('game', $scope.currentGame).then(
+                            function (response) {
+                                $scope.manageResponse(response);
+                                if ($scope.currentGame.groupDataEntry) {
+                                    $scope.classes.forEach(function (classe) {
+                                        var num = $scope.currentGame.classSizes[classe];
+                                        if (num && !isNaN(num)) {
+                                            DataService.addGroupToGame(
+                                                $scope.currentGame.ownerId,
+                                                $scope.currentGame.objectId,
+                                                classe,
+                                                parseInt(num)
+                                            ).then(function (res) {
+                                                console.log("Gruppo aggiunto:", classe, num);
+                                            }).catch(function (err) {
+                                                console.error("Errore nell'aggiunta gruppo:", classe, err);
+                                            });
+                                        }
+                                    });
+                                }
+                            }, function (error) {
+                                alert("Errore nella richiesta:" + error.data.errorMsg);
+                            }
+                        );
+                    }
             }
             else {
                 $rootScope.modelErrors = "Errore! Controlla di aver compilato tutti i campi.";
@@ -457,12 +496,14 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     })
 
-    .controller('GameHabitsCtrl', function ($scope, $filter,DataService) {
+    .controller('GameHabitsCtrl', function ($scope, $filter, DataService) {
         $scope.$parent.selectedTab = 'dailyHabits';
         $scope.selectedClass = null;
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
         $scope.suggested = null;
+        $scope.showSuggestions = false;
+        
         $scope.addRow = function () {
             $scope.habits.push({
                 date: null,
@@ -479,47 +520,54 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 weather: ''
             });
         };
-
+    
         $scope.updateClassInfo = function (classe) {
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
                 $scope.classInfo.mode = $scope.currentGame.roundTrip ? 'Andata e ritorno' : 'Solo andata';
             }
+            
+            // Carica le abitudini per questa classe
             $scope.habits = $scope.$parent.classHabits[classe] || [];
+            
+            // Filtra eventuali righe invalide (date nulle o 1970)
+            $scope.habits = $scope.habits.filter(function(row) {
+                if (!row.date) return false;
+                var dateObj = new Date(row.date);
+                return dateObj.getFullYear() > 1970;
+            });
+            
             if ($scope.habits.length === 0) {
                 $scope.addRow();
             }
         };
-
+    
         if (!$scope.selectedClass && $scope.classes && $scope.classes.length > 0) {
             $scope.selectedClass = $scope.classes[0];
             $scope.updateClassInfo($scope.selectedClass);
         }
+    
         $scope.updateWeekday = function (row) {
             if (row.date) {
-                var day = new Date(row.date).getDay();
+                var dateObj = new Date(row.date);
+                var dayIndex = dateObj.getDay();
                 var weekDays = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
-                row.weekday = weekDays[day];
+                row.weekday = weekDays[dayIndex];
             }
         };
+    
         $scope.isModalityPresent = function (mode) {
             if ($scope.$parent.currentGame && $scope.$parent.currentGame.modalities)
                 return $scope.$parent.currentGame.modalities.includes(mode);
-            return false
-        }
+            return false;
+        };
+    
         $scope.setAsHabits = function(suggested) {
             if (!$scope.selectedClass || !suggested) return;
-        
-            // // Salva nell’oggetto padre (classHabits)
-            // $scope.$parent.classHabits[$scope.selectedClass] = angular.copy($scope.habits);
-        
-            // Aggiorna le info della classe
-            // $scope.updateClassInfo($scope.selectedClass);
-        
+    
             if ($scope.$parent.currentGame) {
-                // Prendi o crea mobilityParams
                 var params = $scope.$parent.currentGame.mobilityParams[$scope.selectedClass] || {};
-        
+    
                 params.walk_studenti       = suggested.walk      || 0;
                 params.bike_studenti       = suggested.bike      || 0;
                 params.bus_studenti        = suggested.bus       || 0;
@@ -527,53 +575,49 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 params.pandr_studenti      = suggested.pandr     || 0;
                 params.carpooling_studenti = suggested.carpooling|| 0;
                 params.car_studenti        = suggested.car       || 0;
-        
+    
                 $scope.$parent.currentGame.mobilityParams[$scope.selectedClass] = params;
-        
-                // Ricalcola la CDND
                 $scope.$emit('habitsUpdated');
-        
-                // --- Salva SOLO mobilityParams sul server ---
+    
                 if (DataService) {
-        
-                    // Qui mando solo mobilityParams, non tutto currentGame
                     DataService.updateParams($scope.currentGame.ownerId, $scope.currentGame.objectId, $scope.$parent.currentGame.mobilityParams)
                         .then(function(response) {
                             if ($scope.$parent.manageResponse) {
-                                $scope.$parent.manageResponse(response,false);
+                                $scope.$parent.manageResponse(response, false);
                             }
                         });
                 }
             }
         };
-        
-        
-        
-
+    
         $scope.removeRow = function (index) {
             $scope.habits.splice(index, 1);
             $scope.changed();
         };
-
-        // normalizza la data per confronto (ignora ore)
+    
+        // Normalizza la data per confronto (ignora ore)
         function normalizeDate(d) {
             if (!d) return null;
             var dateObj = new Date(d);
             dateObj.setHours(0, 0, 0, 0);
             return dateObj;
         }
-
+    
         $scope.isRowValid = function (row, habits, classInfo) {
             if (!row || !row.date || !row.direction) return false;
-
+        
+            // Controlla che la data sia valida (non 1970 o null)
+            var dateObj = new Date(row.date);
+            if (dateObj.getFullYear() <= 1970) return false;
+        
             var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
                 (row.pedibus || 0) + (row.pandr || 0) +
                 (row.carpooling || 0) + (row.car || 0) + (row.absent || 0);
-
+        
             if (total !== classInfo.numStudents) return false;
-
+        
             var rowDate = normalizeDate(row.date);
-
+        
             var duplicate = habits.some(function (h) {
                 if (h === row) return false;
                 var hDate = normalizeDate(h.date);
@@ -581,23 +625,25 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     hDate.getTime() === rowDate.getTime() &&
                     h.direction === row.direction;
             });
-            if (duplicate) return false;
-
-            return true;
+            
+            return !duplicate;
         };
-
+        
         $scope.getRowError = function (row, habits, classInfo) {
             if (!row || !row.date || !row.direction) return "Compila data e direzione";
-
+        
+            var dateObj = new Date(row.date);
+            if (dateObj.getFullYear() <= 1970) return "Data non valida";
+        
             var total = (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
                 (row.pedibus || 0) + (row.pandr || 0) +
                 (row.carpooling || 0) + (row.car || 0) + (row.absent || 0);
-
+        
             if (total < classInfo.numStudents) return "Totale inserito inferiore al numero studenti";
             if (total > classInfo.numStudents) return "Totale inserito superiore al numero studenti";
-
+        
             var rowDate = normalizeDate(row.date);
-
+        
             var duplicate = habits.some(function (h) {
                 if (h === row) return false;
                 var hDate = normalizeDate(h.date);
@@ -606,24 +652,24 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     h.direction === row.direction;
             });
             if (duplicate) return "Esiste già una rilevazione per questa data e direzione";
-
+        
             return "";
         };
 
-        //calculate suggestions when habits change
         function calculateSuggestions() {
-
-            //filter habits for valid rows (only 'andata' if roundTrip is false)
             $scope.habitsCopy = $scope.habits.filter(function (row) {
                 return $scope.isRowValid(row, $scope.habits, $scope.classInfo) &&
                     ($scope.currentGame.roundTrip || row.direction === 'andata');
             });
+        
             if (!$scope.habitsCopy || $scope.habitsCopy.length === 0) {
                 $scope.suggested = null;
                 return;
             }
-
+        
             var totals = { walk: 0, bike: 0, bus: 0, pedibus: 0, pandr: 0, carpooling: 0, car: 0 };
+            var countDays = 0;
+            
             $scope.habitsCopy.forEach(function (row) {
                 if (row.date) {
                     totals.walk += (row.walk || 0);
@@ -633,16 +679,31 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     totals.pandr += (row.pandr || 0);
                     totals.carpooling += (row.carpooling || 0);
                     totals.car += (row.car || 0);
+                    countDays++;
                 }
             });
-
+        
+            // Verifica congruenza
+            var expectedTotal = $scope.classInfo.numStudents * countDays;
+            var actualTotal = totals.walk + totals.bike + totals.bus + totals.pedibus + 
+                             totals.pandr + totals.carpooling + totals.car;
+            
+            if (actualTotal !== expectedTotal) {
+                $scope.suggested = null;
+                $scope.suggestionError = "Il numero di rilevamenti non coincide con il numero di studenti. Controlla i dati inseriti";
+                return;
+            }
+            
+            $scope.suggestionError = null;
+        
             var arr = [totals.walk, totals.pedibus, totals.bike, totals.bus, totals.pandr, totals.carpooling, totals.car];
             var result = DataService.habitsDistribution($scope.classInfo.numStudents, arr);
+            
             if (!result) {
                 $scope.suggested = null;
                 return;
             }
-
+        
             $scope.suggested = {
                 walk: result[0],
                 pedibus: result[1],
@@ -653,28 +714,33 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 car: result[6]
             };
         }
+    
         $scope.getRowTotal = function (row) {
             return (row.walk || 0) + (row.bike || 0) + (row.bus || 0) +
                 (row.pedibus || 0) + (row.pandr || 0) +
                 (row.carpooling || 0) + (row.car || 0) +
                 (row.absent || 0);
         };
+    
         $scope.$watch('habits', function (newVal, oldVal) {
             if (newVal !== oldVal) {
                 $scope.changed();
-        
+    
                 if ($scope.selectedClass) {
                     $scope.$parent.classHabits[$scope.selectedClass] = angular.copy(newVal);
                 }
             }
         }, true);
+    
         $scope.$watch('habits', calculateSuggestions, true);
-        // Inizializza con la classe se presente  e univoca
+        $scope.$watch('classInfo.numStudents', calculateSuggestions);
+    
+        // Inizializza con la classe se presente e univoca
         if ($scope.classes && $scope.classes.length === 1) {
             $scope.selectedClass = $scope.classes[0];
             $scope.updateClassInfo($scope.selectedClass);
         } else {
-            $scope.selectedClass = null; 
+            $scope.selectedClass = null;
         }
     })
 
