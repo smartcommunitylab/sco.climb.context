@@ -345,8 +345,24 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                                     absent: row.absent || 0
                                 }
                             };
+                        }).sort(function (a, b) {
+                            // Ordina per giorno 
+                            if (!a.day) return 1;
+                            if (!b.day) return -1;
+                            return new Date(a.day) - new Date(b.day);
                         });
                     });
+                    if ($scope.currentGame.mobilityParams) {
+                        const classiAttuali = new Set($scope.classes);
+                        const classiRimosse = Object.keys($scope.currentGame.mobilityParams)
+                            .filter(classe => !classiAttuali.has(classe));
+                    
+                        classiRimosse.forEach(classe => {
+                            delete $scope.currentGame.mobilityParams[classe];
+                        });
+                    
+                        console.log("Classi rimosse da mobilityParams:", classiRimosse);
+                    }
                     $scope.saveData('game', $scope.currentGame).then(     // reference ad una funzione che cambia se sto creando o modificando un elemento
                         function (response) {
                             $scope.manageResponse(response);
@@ -482,7 +498,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         $scope.updateWeekday = function (row) {
             if (row.date) {
                 var day = new Date(row.date).getDay();
-                var weekDays = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+                var weekDays = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
                 row.weekday = weekDays[day];
             }
         };

@@ -122,7 +122,7 @@
       <thead>
         <tr>
           <th class="text-center">Data</th>
-          <th class="text-center">Giorno</th>
+          <th class="text-center">Giorno&nbsp;</th>
           <th class="text-center">A/R</th>
           <th class="text-center">Meteo</th>
           <th class="vertical-header">A piedi</th>
@@ -166,53 +166,53 @@
           </td>
 
           <!-- A piedi -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.walk" min="0"
               ng-disabled="!isModalityPresent('walk')" />
           </td>
 
           <!-- Bici -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.bike" min="0"
               ng-disabled="!isModalityPresent('bike')" />
           </td>
 
           <!-- Bus -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.bus" min="0"
               ng-disabled="!isModalityPresent('bus')" />
-          </td>
+          </td class="td-small-padding">
 
           <!-- Pedibus -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.pedibus" min="0"
               ng-disabled="!isModalityPresent('pedibus')" />
           </td>
 
           <!-- P&R -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.pandr" min="0"
               ng-disabled="!isModalityPresent('pandr')" />
           </td>
 
           <!-- Carpooling -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.carpooling" min="0"
               ng-disabled="!isModalityPresent('carpooling')" />
           </td>
 
           <!-- Auto -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.car" min="0"
               ng-disabled="!isModalityPresent('car')" />
           </td>
           <!-- Assenti -->
-          <td>
+          <td class="td-small-padding">
             <input type="number" class="form-control small-input no-spinner" ng-model="row.absent" min="0" />
           </td>
 
           <!-- Totale (non modificabile) -->
-          <td>
+          <td class="td-small-padding">
             <input type="text" class="form-control small-input "
               ng-value="getRowTotal(row) + '/' + classInfo.numStudents" disabled />
           </td>
@@ -231,8 +231,12 @@
             </button>
 
             <!-- Warning se ultima riga non valida -->
-            <i class="fa fa-exclamation-triangle text-warning" ng-if="$last && !isRowValid(row, habits, classInfo)"
-              uib-tooltip="{{getRowError(row, habits, classInfo)}}" tooltip-append-to-body="true">
+            <i class="fa fa-exclamation-triangle text-warning icon-large" ng-if="$last && !isRowValid(row, habits, classInfo)"
+              uib-tooltip="{{getRowError(row, habits, classInfo)}}"
+              tooltip-placement="left"
+              tooltip-append-to-body="true"
+              uib-tooltip-popup-delay="200"
+              uib-tooltip-hide-delay="200">
             </i>
           </td>
         </tr>
