@@ -655,7 +655,11 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         
             return "";
         };
-
+        $scope.hasInvalidRows = function (habits, classInfo) {
+            if (!habits || habits.length === 0) return false;
+            return habits.some(row => !$scope.isRowValid(row, habits, classInfo));
+          };
+          
         function calculateSuggestions() {
             $scope.habitsCopy = $scope.habits.filter(function (row) {
                 return $scope.isRowValid(row, $scope.habits, $scope.classInfo) &&
