@@ -1426,7 +1426,7 @@ table input.form-control.no-spinner {
 	width:100%;
   }
   .icon-large {
-	font-size: 1.25em;    
+	font-size: 1.30em;    
 	vertical-align: middle;  
   }
   .habits-table td {
@@ -1454,6 +1454,11 @@ table input.form-control.no-spinner {
 	vertical-align: middle;
 	width: 60px;       /* stessa larghezza delle celle */
   }
+  .habit-button {
+	text-align: center;
+		width: 32px;
+		padding: 6px;
+	}
   
   
   
