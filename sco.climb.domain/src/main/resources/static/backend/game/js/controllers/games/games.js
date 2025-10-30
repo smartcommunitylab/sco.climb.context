@@ -407,6 +407,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                             function (response) {
                                 $scope.manageResponse(response);
                                 if ($scope.currentGame.groupDataEntry) {
+                                    const classiAttuali = new Set($scope.classes);
+                                    const classiEsistenti = new Set(Object.keys($scope.currentGame.classSizes || {}));
+                                
                                     $scope.classes.forEach(function (classe) {
                                         var num = $scope.currentGame.classSizes[classe];
                                         if (num && !isNaN(num)) {
@@ -419,6 +422,20 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                                                 console.log("Gruppo aggiunto:", classe, num);
                                             }).catch(function (err) {
                                                 console.error("Errore nell'aggiunta gruppo:", classe, err);
+                                            });
+                                        }
+                                    });
+                                
+                                    classiEsistenti.forEach(function (classe) {
+                                        if (!classiAttuali.has(classe)) {
+                                            DataService.removeGroupFromGame(
+                                                $scope.currentGame.ownerId,
+                                                $scope.currentGame.objectId,
+                                                classe
+                                            ).then(function (res) {
+                                                console.log("Gruppo rimosso:", classe);
+                                            }).catch(function (err) {
+                                                console.error("Errore nella rimozione gruppo:", classe, err);
                                             });
                                         }
                                     });
@@ -496,14 +513,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     })
 
-    .controller('GameHabitsCtrl', function ($scope, $filter, DataService) {
+    .controller('GameHabitsCtrl', function ($scope, $filter, $timeout,DataService) {
         $scope.$parent.selectedTab = 'dailyHabits';
         $scope.selectedClass = null;
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
         $scope.suggested = null;
         $scope.showSuggestions = false;
-        
+        $scope.suppressWatch = false;
+
         $scope.addRow = function () {
             $scope.habits.push({
                 date: null,
@@ -522,6 +540,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     
         $scope.updateClassInfo = function (classe) {
+            $scope.suppressWatch = true;
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
                 $scope.classInfo.mode = $scope.currentGame.roundTrip ? 'Andata e ritorno' : 'Solo andata';
@@ -538,9 +557,12 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             });
             
             if ($scope.habits.length === 0) {
-                $scope.addRow();
-            }
-        };
+                $scope.habits = [];
+                $scope.addRow();            }
+            ensureEmptyRow();
+            $timeout(function () {
+                $scope.suppressWatch = false;
+            }, 100);        };
     
         if (!$scope.selectedClass && $scope.classes && $scope.classes.length > 0) {
             $scope.selectedClass = $scope.classes[0];
@@ -659,7 +681,16 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             if (!habits || habits.length === 0) return false;
             return habits.some(row => !$scope.isRowValid(row, habits, classInfo));
           };
-          
+          function ensureEmptyRow() {
+            // Controlla se esiste già una riga vuota (date null)
+            var hasEmpty = $scope.habits.some(function(row) {
+                return !row.date;
+            });
+        
+            if (!hasEmpty) {
+                $scope.addRow();
+            }
+        }
         function calculateSuggestions() {
             $scope.habitsCopy = $scope.habits.filter(function (row) {
                 return $scope.isRowValid(row, $scope.habits, $scope.classInfo) &&
@@ -725,17 +756,19 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 (row.carpooling || 0) + (row.car || 0) +
                 (row.absent || 0);
         };
-    
+
         $scope.$watch('habits', function (newVal, oldVal) {
+            if ($scope.suppressWatch) return;
             if (newVal !== oldVal) {
                 $scope.changed();
-    
+        
                 if ($scope.selectedClass) {
                     $scope.$parent.classHabits[$scope.selectedClass] = angular.copy(newVal);
                 }
             }
         }, true);
-    
+        
+        // Aggiorna la visualizzazione quando cambiano le classi
         $scope.$watch('habits', calculateSuggestions, true);
         $scope.$watch('classInfo.numStudents', calculateSuggestions);
     
@@ -746,6 +779,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         } else {
             $scope.selectedClass = null;
         }
+
     })
 
 .controller('MobilitySuggestionsModalCtrl', function($scope, $uibModalInstance, className, habits, numStudents,DataService) {
@@ -956,7 +990,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
 
         $scope.initParamController = function () {
             if ((!$scope.currentGame.mobilityParams) || (Object.keys($scope.currentGame.mobilityParams).length === 0)) {
-                //for every class
+                // Nessun dato precedente → inizializza tutto a 0
                 $scope.currentGame.mobilityParams = {};
                 if ($scope.currentGame.classRooms.length > 0) {
                     $scope.classesArePresent = true;
@@ -969,30 +1003,43 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                             pandr_studenti: 0,
                             carpooling_studenti: 0,
                             car_studenti: 0
-                        }
-                    })
-                }
-                else {
+                        };
+                    });
+                } else {
                     $scope.classesArePresent = false;
                 }
-
+        
             } else {
-                // typecast params.
+                // Dati già presenti → assicura che tutti i campi esistano e siano numerici
                 if ($scope.currentGame.classRooms.length > 0) {
                     $scope.classesArePresent = true;
                     $scope.currentGame.classRooms.forEach(classRoom => {
-                        for (var p in $scope.currentGame.mobilityParams[classRoom]) {
-                            $scope.currentGame.mobilityParams[classRoom][p] = parseFloat($scope.currentGame.mobilityParams[classRoom][p]);
-                        }
-                    })
-                }
-                else {
+                        const params = $scope.currentGame.mobilityParams[classRoom] || {};
+                        $scope.currentGame.mobilityParams[classRoom] = params;
+        
+                        // Assicura che ogni modalità esista e sia numerica
+                        [
+                            'walk_studenti',
+                            'bike_studenti',
+                            'bus_studenti',
+                            'pedibus_studenti',
+                            'pandr_studenti',
+                            'carpooling_studenti',
+                            'car_studenti'
+                        ].forEach(key => {
+                            if (params[key] == null || isNaN(params[key])) {
+                                params[key] = 0;
+                            } else {
+                                params[key] = parseFloat(params[key]);
+                            }
+                        });
+                    });
+                } else {
                     $scope.classesArePresent = false;
                 }
-
             }
-
-        }
+        };
+        
         $scope.openMobilitySuggestionsModal = function(className) {
             var habits = $scope.classHabits[className] || [];
 

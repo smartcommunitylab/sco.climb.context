@@ -691,7 +691,9 @@ main.layout-row.flex {
   padding: 0px!important;
 }
 .weather-row-flex {
-  display:inline;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+  white-space: nowrap;
 }
 .single-weather {
   width: 100%!important;
@@ -2324,6 +2326,8 @@ div.cal-fab.ng-scope > md-fab-speed-dial.md-scale.ng-isolate-scope._md-animation
   text-align: right;
    margin-right: 8px;
 }
+
+
 
 
 
