@@ -407,6 +407,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                             function (response) {
                                 $scope.manageResponse(response);
                                 if ($scope.currentGame.groupDataEntry) {
+                                    const classiAttuali = new Set($scope.classes);
+                                    const classiEsistenti = new Set(Object.keys($scope.currentGame.classSizes || {}));
+                                
                                     $scope.classes.forEach(function (classe) {
                                         var num = $scope.currentGame.classSizes[classe];
                                         if (num && !isNaN(num)) {
@@ -419,6 +422,20 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                                                 console.log("Gruppo aggiunto:", classe, num);
                                             }).catch(function (err) {
                                                 console.error("Errore nell'aggiunta gruppo:", classe, err);
+                                            });
+                                        }
+                                    });
+                                
+                                    classiEsistenti.forEach(function (classe) {
+                                        if (!classiAttuali.has(classe)) {
+                                            DataService.removeGroupFromGame(
+                                                $scope.currentGame.ownerId,
+                                                $scope.currentGame.objectId,
+                                                classe
+                                            ).then(function (res) {
+                                                console.log("Gruppo rimosso:", classe);
+                                            }).catch(function (err) {
+                                                console.error("Errore nella rimozione gruppo:", classe, err);
                                             });
                                         }
                                     });
@@ -496,14 +513,15 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     })
 
-    .controller('GameHabitsCtrl', function ($scope, $filter, DataService) {
+    .controller('GameHabitsCtrl', function ($scope, $filter, $timeout,DataService) {
         $scope.$parent.selectedTab = 'dailyHabits';
         $scope.selectedClass = null;
         $scope.classInfo = { numStudents: null, mode: '' };
         $scope.habits = [];
         $scope.suggested = null;
         $scope.showSuggestions = false;
-        
+        $scope.suppressWatch = false;
+
         $scope.addRow = function () {
             $scope.habits.push({
                 date: null,
@@ -522,6 +540,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
         };
     
         $scope.updateClassInfo = function (classe) {
+            $scope.suppressWatch = true;
             if ($scope.currentGame && $scope.currentGame.classSizes) {
                 $scope.classInfo.numStudents = $scope.currentGame.classSizes[classe] || 0;
                 $scope.classInfo.mode = $scope.currentGame.roundTrip ? 'Andata e ritorno' : 'Solo andata';
@@ -541,7 +560,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 $scope.habits = [];
                 $scope.addRow();            }
             ensureEmptyRow();
-        };
+            $timeout(function () {
+                $scope.suppressWatch = false;
+            }, 100);        };
     
         if (!$scope.selectedClass && $scope.classes && $scope.classes.length > 0) {
             $scope.selectedClass = $scope.classes[0];
@@ -735,17 +756,9 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 (row.carpooling || 0) + (row.car || 0) +
                 (row.absent || 0);
         };
-    
+
         $scope.$watch('habits', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
-                $scope.changed();
-    
-                if ($scope.selectedClass) {
-                    $scope.$parent.classHabits[$scope.selectedClass] = angular.copy(newVal);
-                }
-            }
-        }, true);
-        $scope.$watch('habits', function (newVal, oldVal) {
+            if ($scope.suppressWatch) return;
             if (newVal !== oldVal) {
                 $scope.changed();
         
