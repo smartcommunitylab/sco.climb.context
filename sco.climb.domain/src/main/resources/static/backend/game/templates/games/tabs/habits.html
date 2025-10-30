@@ -170,48 +170,48 @@
 
           <!-- A piedi -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.walk" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.walk" ng-value="row.walk || 0" min="0"
               ng-disabled="!isModalityPresent('walk')" />
           </td>
 
           <!-- Bici -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.bike" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.bike" ng-value="row.bike || 0" min="0"
               ng-disabled="!isModalityPresent('bike')" />
           </td>
 
           <!-- Bus -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.bus" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.bus" ng-value="row.bus || 0" min="0"
               ng-disabled="!isModalityPresent('bus')" />
           </td class="td-small-padding">
 
           <!-- Pedibus -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.pedibus" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.pedibus" ng-value="row.pedibus || 0" min="0"
               ng-disabled="!isModalityPresent('pedibus')" />
           </td>
 
           <!-- P&R -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.pandr" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.pandr" ng-value="row.pandr || 0" min="0"
               ng-disabled="!isModalityPresent('pandr')" />
           </td>
 
           <!-- Carpooling -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.carpooling" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.carpooling" ng-value="row.carpooling || 0" min="0"
               ng-disabled="!isModalityPresent('carpooling')" />
           </td>
 
           <!-- Auto -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.car" min="0"
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.car" ng-value="row.car || 0" min="0"
               ng-disabled="!isModalityPresent('car')" />
           </td>
           <!-- Assenti -->
           <td class="td-small-padding">
-            <input type="number" class="form-control small-input no-spinner" ng-model="row.absent" min="0" />
+            <input type="number" class="form-control small-input no-spinner" ng-model="row.absent"  ng-value="row.absent || 0" min="0" />
           </td>
 
           <!-- Totale (non modificabile) -->
