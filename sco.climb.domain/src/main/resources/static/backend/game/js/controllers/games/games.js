@@ -702,7 +702,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                 return;
             }
         
-            var totals = { walk: 0, bike: 0, bus: 0, pedibus: 0, pandr: 0, carpooling: 0, car: 0 };
+            var totals = { walk: 0, bike: 0, bus: 0, pedibus: 0, pandr: 0, carpooling: 0, car: 0,absent:0 };
             var countDays = 0;
             
             $scope.habitsCopy.forEach(function (row) {
@@ -714,6 +714,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     totals.pandr += (row.pandr || 0);
                     totals.carpooling += (row.carpooling || 0);
                     totals.car += (row.car || 0);
+                    totals.absent += (row.absent || 0);
                     countDays++;
                 }
             });
@@ -721,7 +722,7 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             // Verifica congruenza
             var expectedTotal = $scope.classInfo.numStudents * countDays;
             var actualTotal = totals.walk + totals.bike + totals.bus + totals.pedibus + 
-                             totals.pandr + totals.carpooling + totals.car;
+                             totals.pandr + totals.carpooling + totals.car + totals.absent ;
             
             if (actualTotal !== expectedTotal) {
                 $scope.suggested = null;
