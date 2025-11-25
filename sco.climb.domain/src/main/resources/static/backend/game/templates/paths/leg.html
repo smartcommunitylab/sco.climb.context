@@ -216,8 +216,10 @@
                             alt="{{element.name}}">
                         <img class="path-img" ng-if="element.type == 'video' && element.youtubeThumbnail"
                             ng-src="{{element.youtubeThumbnail}}" alt="Video">
-                        <img class="path-img" ng-if="element.type == 'video' && !element.youtubeThumbnail"
+                            <img class="path-img" ng-if="element.type == 'video' && !element.youtubeThumbnail"
                             src="img/video.png" alt="Video">
+                        <img class="path-img" ng-if="element.type == 'applink'"
+                            src="img/puffin.webp" alt="Video pillola">
                         <img class="path-img" ng-if="element.type == 'link'" src="img/link.png" alt="Link">
                         <img class="path-img" ng-if="element.type == 'file'" src="img/file.png" alt="Link">
                     </a>
