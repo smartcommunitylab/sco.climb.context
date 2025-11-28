@@ -11,7 +11,6 @@ angular.module('climbGame', [
   'pascalprecht.translate',
   'climbGame.controllers.map',
   'climbGame.services.map',
-  'climbGame.services.login',
   'climbGame.services.data',
   'climbGame.services.conf'
 ])
