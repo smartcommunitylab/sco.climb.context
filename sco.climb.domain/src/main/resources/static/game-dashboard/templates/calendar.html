@@ -281,46 +281,35 @@
     <div layout="row">
       <div layout="column" flex="flexNum" style="background-color: lightgray" ng-if="!roundTrip">
         <span>
-          <!-- todo da rifare meglio -->
           {{
-          (
-
-          groupWeekData[dayIndex].walk +
-          groupWeekData[dayIndex].bike +
-          groupWeekData[dayIndex].bus +
-          groupWeekData[dayIndex].pedibus +
-          groupWeekData[dayIndex].pandr +
-          groupWeekData[dayIndex].carpooling +
-          groupWeekData[dayIndex].car +
-          + groupWeekData[dayIndex].absent
-          )
-          }}/{{classPlayers.length}}
+            getGroupDayTotal(dayIndex)
+          }}
+          /
+          {{
+            getSentCountForDay(dayIndex, false)
+          }}
         </span>
       </div>
       <div layout="column" flex="flexNum" style="background-color: white" ng-if="roundTrip">
-        <span> {{
-          (groupWeekData[dayIndex]['walk_out'] || 0) +
-          (groupWeekData[dayIndex]['bike_out'] || 0) +
-          (groupWeekData[dayIndex]['bus_out'] || 0) +
-          (groupWeekData[dayIndex]['pedibus_out'] || 0) +
-          (groupWeekData[dayIndex]['pandr_out'] || 0) +
-          (groupWeekData[dayIndex]['carpooling_out'] || 0) +
-          (groupWeekData[dayIndex]['car_out'] || 0) +
-          (groupWeekData[dayIndex]['absent_out'] || 0)
-          }}/{{classPlayers.length}}
+        <span>
+          {{
+            getGroupDayTotal(dayIndex, '_out')
+          }}
+          /
+          {{
+            getSentCountForDay(dayIndex, false)
+          }}
         </span>
       </div>
       <div layout="column" flex="flexNum" style="background-color: white" ng-if="roundTrip">
-        <span> {{
-          (groupWeekData[dayIndex]['walk_return'] || 0) +
-          (groupWeekData[dayIndex]['bike_return'] || 0) +
-          (groupWeekData[dayIndex]['bus_return'] || 0) +
-          (groupWeekData[dayIndex]['pedibus_return'] || 0) +
-          (groupWeekData[dayIndex]['pandr_return'] || 0) +
-          (groupWeekData[dayIndex]['carpooling_return'] || 0) +
-          (groupWeekData[dayIndex]['car_return'] || 0) +
-          (groupWeekData[dayIndex]['absent_return'] || 0)
-          }}/{{classPlayers.length}}
+        <span>
+          {{
+            getGroupDayTotal(dayIndex, '_return')
+          }}
+          /
+          {{
+            getSentCountForDay(dayIndex, true)
+          }}
         </span>
       </div>
     </div>

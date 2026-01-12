@@ -55,6 +55,36 @@ angular.module('climbGame.controllers.calendar', [])
           'border-radius': '10px'
         };
       };
+       $scope.getSentCountForDay = function (dayIndex, isReturn) {
+        if (!$scope.weekData[dayIndex] || !$scope.weekData[dayIndex].closed) {
+          return $scope.classPlayers.length;
+        }
+      
+        var dataMap = isReturn
+          ? $scope.weekDataReturn[dayIndex]
+          : $scope.weekData[dayIndex];
+      
+        var count = 0;
+        angular.forEach(dataMap, function (entry) {
+          if (entry && entry.mean) {
+            count++;
+          }
+        });
+      
+        return count;
+      };
+      $scope.getGroupDayTotal = function (dayIndex, suffix) {
+        if (!$scope.groupWeekData[dayIndex]) return 0;
+      
+        var total = 0;
+        angular.forEach($scope.groupWeekData[dayIndex], function (value, key) {
+          if (!suffix || key.endsWith(suffix)) {
+            total += value || 0;
+          }
+        });
+        return total;
+      };
+
       $scope.$watch('groupWeekData', function(newVal) {
         if (!newVal || !$scope.activeGroupInput) return;
       
@@ -1069,6 +1099,7 @@ angular.module('climbGame.controllers.calendar', [])
           document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50 - ($scope.roundTrip ? 50 : 0)) + 'px')
         }
       }
+      
 
       function createWeekData(calendar) {
         $scope.weekData = []
@@ -1168,8 +1199,8 @@ angular.module('climbGame.controllers.calendar', [])
               // ROUND TRIP: conta andata e ritorno separatamente
 
               // Andata (_out)
-              $scope.classPlayers.forEach(function (player) {
-                var babyData = $scope.weekData[i][player.objectId];
+              // $scope.classPlayers.forEach(function (player) {})
+                angular.forEach($scope.weekData[i], function (babyData) {
                 if (babyData && babyData.mean) {
                   var key = babyData.mean + '_out';
                   if (!$scope.groupWeekData[i][key]) {
@@ -1180,9 +1211,9 @@ angular.module('climbGame.controllers.calendar', [])
               });
 
               // Ritorno (_return)
-              $scope.classPlayers.forEach(function (player) {
-                var babyDataReturn = $scope.weekDataReturn[i][player.objectId];
-                if (babyDataReturn && babyDataReturn.mean) {
+              // $scope.classPlayers.forEach(function (player) {
+                angular.forEach($scope.weekDataReturn[i], function (babyDataReturn) {
+                  if (babyDataReturn && babyDataReturn.mean) {
                   var key = babyDataReturn.mean + '_return';
                   if (!$scope.groupWeekData[i][key]) {
                     $scope.groupWeekData[i][key] = 0;
@@ -1193,8 +1224,7 @@ angular.module('climbGame.controllers.calendar', [])
 
             } else {
               // SOLO ANDATA
-              $scope.classPlayers.forEach(function (player) {
-                var babyData = $scope.weekData[i][player.objectId];
+              angular.forEach($scope.weekData[i], function (babyData) {
                 if (babyData && babyData.mean) {
                   var key = babyData.mean;
                   if (!$scope.groupWeekData[i][key]) {
