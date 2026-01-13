@@ -1692,23 +1692,27 @@ public class RepositoryManager {
 	public List<PedibusPlayer> createPlayersByClass(String pedibusGameId, String classRoom, int num) {
 		List<PedibusPlayer> result = new ArrayList<>();
 		PedibusGame game = getPedibusGame(pedibusGameId);
-		if((game != null) && !game.isDeployed()) {
-			if(!game.getClassRooms().contains(classRoom)) {
-				game.getClassRooms().add(classRoom);
-				updatePedibusGameClassRooms(game.getOwnerId(), game.getObjectId(), game.getClassRooms());
+		if(game != null) {
+			if(!game.isDeployed()) {
+				if(!game.getClassRooms().contains(classRoom)) {
+					game.getClassRooms().add(classRoom);
+					updatePedibusGameClassRooms(game.getOwnerId(), game.getObjectId(), game.getClassRooms());
+				}
 			}
-			removePedibusPlayerByClass(game.getOwnerId(), game.getObjectId(), classRoom);
-			Date now = new Date();
-			for(int i = 0; i < num; i++) {
-				PedibusPlayer player = new PedibusPlayer();
-				player.setCreationDate(now);
-				player.setLastUpdate(now);
-				player.setObjectId(Utils.getUUID());
-				player.setOwnerId(game.getOwnerId());
-				player.setPedibusGameId(game.getObjectId());
-				player.setClassRoom(classRoom);
-				player.setNickname(StringUtils.leftPad(String.valueOf(i + 1), 2, '0'));
-				result.add(mongoTemplate.save(player));							
+			if(game.getClassRooms().contains(classRoom)) {
+				removePedibusPlayerByClass(game.getOwnerId(), game.getObjectId(), classRoom);
+				Date now = new Date();
+				for(int i = 0; i < num; i++) {
+					PedibusPlayer player = new PedibusPlayer();
+					player.setCreationDate(now);
+					player.setLastUpdate(now);
+					player.setObjectId(Utils.getUUID());
+					player.setOwnerId(game.getOwnerId());
+					player.setPedibusGameId(game.getObjectId());
+					player.setClassRoom(classRoom);
+					player.setNickname(StringUtils.leftPad(String.valueOf(i + 1), 2, '0'));
+					result.add(mongoTemplate.save(player));							
+				}
 			}
 		}
 		return result;
