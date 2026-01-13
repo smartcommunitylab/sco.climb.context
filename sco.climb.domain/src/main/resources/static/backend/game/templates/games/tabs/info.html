@@ -184,7 +184,7 @@
                          id="students_{{$index}}"
                          placeholder="Numero di studenti"
                          min="0"
-                         ng-disabled="!PermissionsService.permissionEnabledNumberOfPlayers()"
+                         ng-disabled="currentGame.deployed && !PermissionsService.permissionEnabledNumberOfPlayers()"
                          ng-model="currentGame.classSizes[classe]" />
                 </div>
               </div>
