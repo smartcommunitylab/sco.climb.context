@@ -159,7 +159,7 @@ angular.module('PermissionsService', []).factory('PermissionsService', function 
                 group = false;
                 getData = true;
                 teamName=true;
-                numberOfPlayers=true;
+                numberOfPlayers=false;
                 classesModify=false
             } else if (role == 'childrenedit') {
                 showInstitutes = true;
