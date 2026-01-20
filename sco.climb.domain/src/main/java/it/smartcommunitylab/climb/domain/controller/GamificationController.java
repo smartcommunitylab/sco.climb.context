@@ -595,7 +595,8 @@ public class GamificationController extends AuthController {
 	public @ResponseBody List<PedibusGame> getPedibusGamesBySchool(
 			@PathVariable String ownerId,
 			@PathVariable String instituteId,
-			@PathVariable String schoolId,			
+			@PathVariable String schoolId,
+			@RequestParam(required = false) boolean activeOnly, 
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		if(!validateAuthorization(ownerId, instituteId, schoolId, null, null, 
@@ -608,7 +609,9 @@ public class GamificationController extends AuthController {
 		for(PedibusGame game : list) {
 			if(validateAuthorization(ownerId, instituteId, schoolId, null, game.getObjectId(),
 				Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_READ, user)) {
-				result.add(game);
+				if(!activeOnly || (activeOnly && game.isDeployed())) {
+					result.add(game);
+				}
 			}
 		}
 		if (logger.isInfoEnabled()) {

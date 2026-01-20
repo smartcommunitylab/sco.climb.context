@@ -54,7 +54,8 @@ angular.module('climbGame.services.data', [])
         url: configService.getURL() + '/api/game/' 
         + loginService.getOwnerId()
         + '/' + loginService.getInstituteId()
-        + '/' + loginService.getSchoolId(),
+        + '/' + loginService.getSchoolId()
+        + '&activeOnly=true',
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()
