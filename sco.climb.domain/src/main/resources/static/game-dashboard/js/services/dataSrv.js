@@ -55,7 +55,7 @@ angular.module('climbGame.services.data', [])
         + loginService.getOwnerId()
         + '/' + loginService.getInstituteId()
         + '/' + loginService.getSchoolId()
-        + '&activeOnly=true',
+        + '?activeOnly=true',
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + loginService.getUserToken()
