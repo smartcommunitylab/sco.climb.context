@@ -328,67 +328,77 @@
     </md-content>
   </div>
    <!-- Trentino 2026 -->
-   <div ng-if="sponsorTemplate == 'trentino_2026'" style="height: 100%;">
+  <div ng-if="sponsorTemplate == 'trentino_2026'" style="height: 100%;">
     <md-toolbar style="background-color: white">
       <div class="md-toolbar-tools">
-        <div aria-label="Go Back" class="credits-banner " flex="">
-        </div>
-        <div aria-label="Go Back" class="credits-banner " flex="">
-        </div>
+        <div class="credits-banner" flex=""></div>
+        <div class="credits-banner" flex=""></div>
       </div>
     </md-toolbar>
     <md-content flex layout-padding style="height: 100%; padding: 0px;">
       <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <!-- parte alta blu: fbk, kidsgogreen, kaleidoscopio -->
         <div flex="60" class="centerBannerUpTN">
           <div layout="row" class="centerBannerRowUpTN">
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.fbk.eu" class="centerBannerUpLeftTN"><img
-                  ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 95%;"></a>
+              <a href="http://www.fbk.eu" class="centerBannerUpLeftTN">
+                <img ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 95%;">
+              </a>
             </div>
             <div flex="60" class="centerBannerRelative">
-              <a ng-click="goContent()" href class="centerBannerUpMiddleTN"><img
-                  ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+              <a ng-click="goContent()" href class="centerBannerUpMiddleTN">
+                <img ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;">
+              </a>
             </div>
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.kaleidoscopio.coop" class="centerBannerUpRightTN"><img
-                  ng-src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 95%;"></a>
+              <a href="http://www.kaleidoscopio.coop" class="centerBannerUpRightTN">
+                <img ng-src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 95%;">
+              </a>
             </div>
           </div>
         </div>
-        <div flex="40" class="centerBannerDownTN23">
-          <div layout="column" style="height: 100%;">
-            <!-- Prima riga: Casse Trentine, Eclissi -->
-            <div layout="row" class="centerBannerRowDownTN23" style="flex: 1;">
-              <div flex="50" class="centerBannerRelative">
-                <a href="https://www.cassacentrale.it/it"><img class="centerBannerDownLeftTN23"
-                    ng-src="../game-dashboard/img/credits/crt.png" style="width: 80%;"></a>
-              </div>
-              <div flex="50" class="centerBannerRelative">
-                <a href="https://eclissi.coop/"><img class="centerBannerDownCenterTN23"
-                    ng-src="../game-dashboard/img/credits/eclissi.png" style="width: 80%;"></a>
-              </div>
+        <!-- parte bassa: 2 righe sponsor -->
+        <div flex="40" class="centerBannerDownTN26">
+          <!-- riga 1: Casse Trentine, Eclissi (2 colonne) -->
+          <div layout="row" class="centerBannerRowDownTN26row1">
+            <div flex="50" class="centerBannerRelative">
+              <a href="LINK_CASSE_TRENTINE">
+                <img class="centerBannerDownTN26row1Left"
+                     ng-src="../game-dashboard/img/credits/casseTrentine.png">
+              </a>
             </div>
-            <!-- Seconda riga: HD-motion, EU, MIMIT -->
-            <div layout="row" style="flex: 1; position: relative;">
-              <div flex="33" class="centerBannerRelative">
-                <a href="https://hdmotion.eu/"><img class="centerBannerDownLeftTN23"
-                    ng-src="../game-dashboard/img/credits/hd-motion.png" style="width: 80%;"></a>
-              </div>
-              <div flex="33" class="centerBannerRelative">
-                <a href="https://next-generation-eu.europa.eu/index_it"><img class="centerBannerDownCenterTN23"
-                    ng-src="../game-dashboard/img/credits/eu.png" style="width: 80%;"></a>
-              </div>
-              <div flex="33" class="centerBannerRelative">
-                <a href="https://www.mimit.gov.it/it/"><img class="centerBannerDownCenterTN23"
-                    ng-src="../game-dashboard/img/credits/mise.webp" style="width: 80%;"></a>
-              </div>
+            <div flex="50" class="centerBannerRelative">
+              <a href="LINK_ECLISSI">
+                <img class="centerBannerDownTN26row1Right"
+                     ng-src="../game-dashboard/img/credits/eclissi.png">
+              </a>
+            </div>
+          </div>
+          <!-- riga 2: HD-motion, EU, MIMIT (3 colonne) -->
+          <div layout="row" class="centerBannerRowDownTN26row2">
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://hdmotion.eu/">
+                <img class="centerBannerDownTN26row2Left"
+                     ng-src="../game-dashboard/img/credits/hdmotion.png">
+              </a>
+            </div>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://next-generation-eu.europa.eu/index_it">
+                <img class="centerBannerDownTN26row2Center"
+                     ng-src="../game-dashboard/img/credits/eu.png">
+              </a>
+            </div>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://www.mimit.gov.it/it/">
+                <img class="centerBannerDownTN26row2Right"
+                     ng-src="../game-dashboard/img/credits/mise.webp">
+              </a>
             </div>
           </div>
         </div>
       </div>
     </md-content>
   </div>
-
   <!-- Gorgonzola 2023 -->
   <div ng-if="sponsorTemplate == 'gorgonzola_2023'" style="height: 100%;">
     <md-toolbar style="background-color: white">
@@ -574,108 +584,131 @@
   <div ng-if="sponsorTemplate == 'ferrara_2026'" style="height: 100%;">
     <md-toolbar style="background-color: white">
       <div class="md-toolbar-tools">
-        <div aria-label="Go Back" class="credits-banner " flex="25">
-        </div>
-        <md-button aria-label="Go Back" class="credits-banner " flex="25">
-          <a href="https://www.comune.fe.it/" class="credit-banner"><img ng-src="../game-dashboard/img/credits/comuneFerrara.jpg"></a>
+        <div class="credits-banner" flex="25"></div>
+        <md-button class="credits-banner" flex="25">
+          <a href="https://www.comune.fe.it/" class="credit-banner">
+            <img ng-src="../game-dashboard/img/credits/comuneFerrara.jpg">
+          </a>
         </md-button>
-        <md-button aria-label="Go Back" class="credits-banner " flex="25">
-          <a href="https://www.provincia.fe.it/" class="credit-banner"><img ng-src="../game-dashboard/img/credits/provinciaFerrara.png"></a>
+        <md-button class="credits-banner" flex="25">
+          <a href="https://www.provincia.fe.it/" class="credit-banner">
+            <img ng-src="../game-dashboard/img/credits/provinciaFerrara.png">
+          </a>
         </md-button>
-        <div aria-label="Go Back" class="credits-banner " flex="25">
-        </div>
+        <div class="credits-banner" flex="25"></div>
       </div>
     </md-toolbar>
     <md-content flex layout-padding style="height: 100%; padding: 0px;">
       <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <!-- parte alta blu: fbk, kidsgogreen, kaleidoscopio -->
         <div flex="60" class="centerBannerUpFR">
           <div layout="row" class="centerBannerRowUpFR">
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR"><img
-                  ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;"></a>
+              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR">
+                <img ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;">
+              </a>
             </div>
             <div flex="60" class="centerBannerRelative">
-              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR"><img
-                  ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR">
+                <img ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;">
+              </a>
             </div>
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.kaleidoscopio.coop" class="centerBannerUpRightFR"><img
-                  ng-src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 100%;"></a>
+              <a href="http://www.kaleidoscopio.coop" class="centerBannerUpRightFR">
+                <img ng-src="../game-dashboard/img/credits/kaleidoscopio.svg" style="width: 100%;">
+              </a>
             </div>
           </div>
         </div>
-        <div flex="40" style="position: relative;">
-          <!-- Unica riga: HD-motion, EU, MIMIT -->
-          <div layout="row" class="centerBannerDownFR22">
+        <!-- parte bassa: HD-motion, EU, MIMIT (3 colonne, unica riga) -->
+        <div flex="40" class="centerBannerDownFR26">
+          <div layout="row" class="centerBannerRowDownFR26">
             <div flex="33" class="centerBannerRelative">
-              <a href="https://hdmotion.eu/"><img class="centerBannerDownLeftFR22"
-                  ng-src="../game-dashboard/img/credits/hd-motion.png" style="width: 80%;"></a>
+              <a href="https://hdmotion.eu/">
+                <img class="centerBannerDownFR26Left"
+                     ng-src="../game-dashboard/img/credits/hdmotion.png">
+              </a>
             </div>
-            <div flex="33" class="">
-              <a href="https://next-generation-eu.europa.eu/index_it"><img class="centerBannerDownRightFR22"
-                  ng-src="../game-dashboard/img/credits/eu.png" style="width: 80%;"></a>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://next-generation-eu.europa.eu/index_it">
+                <img class="centerBannerDownFR26Center"
+                     ng-src="../game-dashboard/img/credits/eu.png">
+              </a>
             </div>
-            <div flex="33" class="">
-              <a href="https://www.mimit.gov.it/it/"><img class="centerBannerDownRightFR22"
-                  ng-src="../game-dashboard/img/credits/mise.webp" style="width: 80%;"></a>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://www.mimit.gov.it/it/">
+                <img class="centerBannerDownFR26Right"
+                     ng-src="../game-dashboard/img/credits/mise.webp">
+              </a>
             </div>
           </div>
         </div>
       </div>
     </md-content>
   </div>
-   <!-- Bologna 2026 -->
-   <div ng-if="sponsorTemplate == 'bologna_2026'" style="height: 100%;">
+   
+  <!-- Bologna 2026 -->
+  <div ng-if="sponsorTemplate == 'bologna_2026'" style="height: 100%;">
     <md-toolbar style="background-color: white">
       <div class="md-toolbar-tools">
-        <div aria-label="Go Back" class="credits-banner " flex="25">
-        </div>
-        <md-button aria-label="Go Back" class="credits-banner " flex="50">
-          <a href="https://www.comune.bologna.it/" class="credit-banner"><img
-              ng-src="../game-dashboard/img/credits/bologna.jpg"></a>
+        <div class="credits-banner" flex="25"></div>
+        <md-button class="credits-banner" flex="50">
+          <a href="LINK_COMUNE_BOLOGNA" class="credit-banner">
+            <img ng-src="../game-dashboard/img/credits/COMUNE_BOLOGNA.png">
+          </a>
         </md-button>
-        <div aria-label="Go Back" class="credits-banner " flex="25">
-        </div>
+        <div class="credits-banner" flex="25"></div>
       </div>
     </md-toolbar>
     <md-content flex layout-padding style="height: 100%; padding: 0px;">
       <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <!-- parte alta blu: fbk, kidsgogreen, antartide -->
         <div flex="60" class="centerBannerUpFR">
           <div layout="row" class="centerBannerRowUpFR">
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR"><img
-                  ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;"></a>
+              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR">
+                <img ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;">
+              </a>
             </div>
             <div flex="60" class="centerBannerRelative">
-              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR"><img
-                  ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR">
+                <img ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;">
+              </a>
             </div>
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.centroantartide.it" class="centerBannerUpRightFR"><img
-                  ng-src="../game-dashboard/img/credits/antartideNew.svg" style="width: 100%;"></a>
+              <a href="http://www.centroantartide.it" class="centerBannerUpRightFR">
+                <img ng-src="../game-dashboard/img/credits/antartideNew.svg" style="width: 100%;">
+              </a>
             </div>
           </div>
         </div>
-        <div flex="40" style="position: relative; background: white;">
-          <!-- Unica riga: HD-motion, EU, MIMIT -->
-          <div layout="row" class="centerBannerDownFR22">
+        <!-- parte bassa: HD-motion, EU, MIMIT (3 colonne, unica riga) -->
+        <div flex="40" class="centerBannerDownFR26">
+          <div layout="row" class="centerBannerRowDownFR26">
             <div flex="33" class="centerBannerRelative">
-              <a href="https://hdmotion.eu/"><img class="centerBannerDownLeftFR22"
-                  ng-src="../game-dashboard/img/credits/hd-motion.png" style="width: 80%;"></a>
+              <a href="https://hdmotion.eu/">
+                <img class="centerBannerDownFR26Left"
+                     ng-src="../game-dashboard/img/credits/hdmotion.png">
+              </a>
             </div>
-            <div flex="33" class="">
-              <a href="https://next-generation-eu.europa.eu/index_it"><img class="centerBannerDownRightFR22"
-                  ng-src="../game-dashboard/img/credits/eu.png" style="width: 80%;"></a>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://next-generation-eu.europa.eu/index_it">
+                <img class="centerBannerDownFR26Center"
+                     ng-src="../game-dashboard/img/credits/eu.png">
+              </a>
             </div>
-            <div flex="33" class="">
-              <a href="https://www.mimit.gov.it/it/"><img class="centerBannerDownRightFR22"
-                  ng-src="../game-dashboard/img/credits/mise.webp" style="width: 80%;"></a>
+            <div flex="33" class="centerBannerRelative">
+              <a href="https://www.mimit.gov.it/it/">
+                <img class="centerBannerDownFR26Right"
+                     ng-src="../game-dashboard/img/credits/mise.webp">
+              </a>
             </div>
           </div>
         </div>
       </div>
     </md-content>
   </div>
+
   <!-- Ginosa -->
   <div ng-if="sponsorTemplate == 'ginosa'" style="height: 100%;">
     <md-toolbar style="background-color: white">
@@ -684,25 +717,32 @@
     </md-toolbar>
     <md-content flex layout-padding style="height: 100%; padding: 0px;">
       <div layout="column" layout-wrap="" style="height: 100%; padding: 0px;">
+        <!-- parte alta blu: fbk, kidsgogreen, cnr -->
         <div flex="60" class="centerBannerUpFR">
           <div layout="row" class="centerBannerRowUpFR">
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR"><img
-                  ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;"></a>
+              <a href="http://www.fbk.eu" class="centerBannerUpLeftFR">
+                <img ng-src="../game-dashboard/img/credits/fbk.svg" style="width: 100%;">
+              </a>
             </div>
             <div flex="60" class="centerBannerRelative">
-              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR"><img
-                  ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;"></a>
+              <a href="http://www.kidsgogreen.eu" class="centerBannerUpMiddleFR">
+                <img ng-src="../game-dashboard/img/credits/kidsgogreen.png" style="width: 95%;">
+              </a>
             </div>
             <div flex="20" class="centerBannerRelative">
-              <a href="http://www.cnr.it" class="centerBannerUpRightFR"><img
-                  ng-src="../game-dashboard/img/credits/cnr.png" style="width: 100%;"></a>
+              <a href="http://www.cnr.it" class="centerBannerUpRightFR">
+                <img ng-src="../game-dashboard/img/credits/cnr.png" style="width: 100%;">
+              </a>
             </div>
           </div>
         </div>
+        <!-- nessuna parte bassa per ginosa -->
+        <div flex="40" style="background-color: white;"></div>
       </div>
     </md-content>
   </div>
+
   <!-- Staffetta-->
   <div  ng-if="sponsorTemplate == 'staffetta'" style="height: 100%;">
     <md-toolbar style="background-color: white">
