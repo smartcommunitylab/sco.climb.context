@@ -2109,7 +2109,7 @@ margin:0;
 }
 .centerBannerDownFR26Center {
   position: absolute;
-  width: 55%;
+  width: 60%;
   left: 22%;
   top: 50%;
   transform: translateY(-50%);
@@ -2117,7 +2117,7 @@ margin:0;
 .centerBannerDownFR26Right {
   position: absolute;
   width: 60%;
-  left: 5%;
+  left: 10%;
   top: 50%;
   transform: translateY(-50%);
 }
