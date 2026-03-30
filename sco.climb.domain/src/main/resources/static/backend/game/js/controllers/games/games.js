@@ -32,13 +32,17 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     label: 'Conferma', fn: function () {
                         DataService.resetGame(game.ownerId, game.objectId).then(
                             function (response) {
-                                var gameUpdated = response.data;
-                                for (var i = 0; i < $scope.games.length; i++) {
-                                    if ($scope.games[i].objectId == gameUpdated.objectId) {
-                                        $scope.games[i] = gameUpdated;
-                                    }
-                                }
-                                alert("reset gioco effettuato con successo.");
+																if((response.status >= 200) && (response.status <= 299)) {
+	                                var gameUpdated = response.data;
+	                                for (var i = 0; i < $scope.games.length; i++) {
+	                                    if ($scope.games[i].objectId == gameUpdated.objectId) {
+	                                        $scope.games[i] = gameUpdated;
+	                                    }
+	                                }
+	                                alert("reset gioco effettuato con successo.");
+																} else {
+																	alert("Errore nella richiesta:" + response.data.errorMsg);
+																}
                             }, function (error) {
                                 alert("Errore nella richiesta:" + error.data.errorMsg);
                             });
@@ -55,13 +59,17 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
                     label: 'Conferma', fn: function () {
                         DataService.initGameCall(game.ownerId, game.objectId).then(
                             function (response) {
-                                var gameUpdated = response.data;
-                                for (var i = 0; i < $scope.games.length; i++) {
-                                    if ($scope.games[i].objectId == gameUpdated.objectId) {
-                                        $scope.games[i] = gameUpdated;
-                                    }
-                                }
-                                alert("Init game riuscito!");
+																if((response.status >= 200) && (response.status <= 299)) {
+	                                var gameUpdated = response.data;
+	                                for (var i = 0; i < $scope.games.length; i++) {
+	                                    if ($scope.games[i].objectId == gameUpdated.objectId) {
+	                                        $scope.games[i] = gameUpdated;
+	                                    }
+	                                }
+	                                alert("Init game riuscito!");
+																} else {
+																	alert("Errore nella richiesta:" + response.data.errorMsg);
+																}
                             }, function (error) {
                                 alert("Errore nella richiesta:" + error.data.errorMsg);
                             }

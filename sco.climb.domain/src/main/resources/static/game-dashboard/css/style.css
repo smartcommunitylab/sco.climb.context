@@ -1692,6 +1692,12 @@ margin:0;
   right: 45%;
   /* margin-top: 15%; */
 }
+.centerBannerUpRightFR26 {
+  position: absolute;
+  width: 50%;
+  right: 45%;
+  /* 
+}
 .centerBannerDownFR{
   position: absolute;
   width: 90%;
@@ -1986,6 +1992,134 @@ margin:0;
   /* left: 50%; */
   transform: translate(150%, -150%);
   padding-bottom: 20px;
+}
+/* for the template Trentino 2026 / Ferrara 2026 / Bologna 2026 - shared bottom row (3 items) */
+.centerBannerDown3col {
+  position: relative;
+  border-bottom: 2px solid rgb(232, 232, 232);
+  height: 100%;
+}
+.centerBannerRow3col {
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* colonna sinistra in riga a 3 */
+.centerBannerDown3colLeft {
+  position: absolute;
+  width: 70%;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* colonna centrale in riga a 3 */
+.centerBannerDown3colCenter {
+  position: absolute;
+  width: 70%;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* colonna destra in riga a 3 */
+.centerBannerDown3colRight {
+  position: absolute;
+  width: 70%;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* for the template Trentino 2026 - bottom section (2 rows) */
+.centerBannerDownTN26 {
+  position: relative;
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+/* prima riga TN26: 2 colonne - Casse Trentine, Eclissi */
+.centerBannerRowDownTN26row1 {
+  position: absolute;
+  width: 90%;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownTN26row1Left {
+  position: absolute;
+  width: 65%;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.centerBannerDownTN26row1Right {
+  position: absolute;
+  width: 65%;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* seconda riga TN26: 3 colonne - HD-motion, EU, MIMIT */
+.centerBannerRowDownTN26row2 {
+  position: absolute;
+  width: 90%;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownTN26row2Left {
+  position: absolute;
+  width: 55%;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.centerBannerDownTN26row2Center {
+  position: absolute;
+  width: 60%;
+  left: 22%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.centerBannerDownTN26row2Right {
+  position: absolute;
+  width: 70%;
+  left: 25%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* for the template Ferrara 2026 / Bologna 2026 - bottom row (3 items: HD-motion, EU, MIMIT) */
+.centerBannerDownFR26 {
+  position: relative;
+  border-bottom: 2px solid rgb(232, 232, 232);
+}
+.centerBannerRowDownFR26 {
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.centerBannerDownFR26Left {
+  position: absolute;
+  width: 55%;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.centerBannerDownFR26Center {
+  position: absolute;
+  width: 60%;
+  left: 22%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.centerBannerDownFR26Right {
+  position: absolute;
+  width: 60%;
+  left: 25%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 /* end */
 .md-toolbar-tools h2.header-custom {
