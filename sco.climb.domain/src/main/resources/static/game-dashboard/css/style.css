@@ -2083,7 +2083,7 @@ margin:0;
 .centerBannerDownTN26row2Right {
   position: absolute;
   width: 70%;
-  left: 5%;
+  left: 25%;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -2117,7 +2117,7 @@ margin:0;
 .centerBannerDownFR26Right {
   position: absolute;
   width: 60%;
-  left: 10%;
+  left: 25%;
   top: 50%;
   transform: translateY(-50%);
 }
