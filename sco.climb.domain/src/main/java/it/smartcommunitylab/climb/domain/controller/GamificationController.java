@@ -406,7 +406,7 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		pedibusGameDb.setMobilityParams(mobilityParams);
-		ricalcolaNumeroStudentiMobility(pedibusGameDb);
+		updateMobilityStudentNumbers(pedibusGameDb);
 		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGameMobility[%s]: %s", ownerId, pedibusGameId));
@@ -414,24 +414,17 @@ public class GamificationController extends AuthController {
 		return result;
 	}
 	
-	private void ricalcolaNumeroStudentiMobility(PedibusGame pedibusGameDb) {
+	private void updateMobilityStudentNumbers(PedibusGame pedibusGameDb) {
 		Map<String, Integer> mobilityParams = new HashMap<>();
-		mobilityParams.put("walk_studenti", 0);
-		mobilityParams.put("bike_studenti", 0);
-		mobilityParams.put("bus_studenti", 0);
-		mobilityParams.put("car_studenti", 0);
-		mobilityParams.put("pedibus_studenti", 0);
-		mobilityParams.put("pandr_studenti", 0);
-		mobilityParams.put("carpooling_studenti", 0);
 		String[] paramsName = new String[] {"walk_studenti", "bike_studenti", "bus_studenti",
 				"car_studenti", "pedibus_studenti", "pandr_studenti", "carpooling_studenti"};
 		for(String param : paramsName) {
 			mobilityParams.put(param, 0);
 		}
 		for(Map<String, Integer> map : pedibusGameDb.getMobilityParams().values()) {
-			Integer num = map.get("walk_studenti");
-			if(num != null) {
-				for(String param : paramsName) {
+			for(String param : paramsName) {
+				Integer num = map.get(param);
+				if(num != null) {
 					mobilityParams.put(param, mobilityParams.get(param) + num);
 				}
 			}
@@ -459,7 +452,7 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		pedibusGameDb.getParams().putAll(game.getParams());
-		ricalcolaNumeroStudentiMobility(pedibusGameDb);
+		updateMobilityStudentNumbers(pedibusGameDb);
 		PedibusGame result = storage.savePedibusGame(pedibusGameDb, ownerId, true);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("updatePedibusGameTuning[%s]: %s", ownerId, pedibusGameId));
