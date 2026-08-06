@@ -88,80 +88,84 @@
         <textarea ng-model="currentPath.description"  ng-class="{error: !leg.description}" ng-model="leg.description" ng-required="true" class="input-text-area"></textarea>
         <text-angular ng-class="{error: !leg.description}" ng-model="leg.description" ng-required="true"></text-angular>
     </div> -->
-    <legend>Geolocalizzazione</legend>
-    <div class="col-md-6  col-xs-6 field" ng-if="leg.position > 0">
-        <p><b>Mezzo di arrivo:</b></p>
-        <select class="form-control" style="width: 200px" ng-model="leg.transport"
-            ng-change="updateTravelType(leg.transport)" ng-disabled="currentGame.deployed">
-            <option value="foot">A piedi</option>
-            <option value="car">In macchina</option>
-            <option value="plane">Aereo</option>
-            <option value="boat">Nave/Traghetto</option>
-        </select>
-        <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
-            tooltip-append-to-body="true" uib-tooltip="É il mezzo di spostamento che scelgo per tracciare il percorso dalla tappa precedente a quella attuale sulla mappa."></i>
-    </div>
-    <div class="col-md-6 col-xs-6">
+    <legend ng-init="geoOpen=false" ng-click="geoOpen=!geoOpen" style="cursor:pointer">
+        Geolocalizzazione
+        <i class="fa" ng-class="geoOpen ? 'fa-chevron-up' : 'fa-chevron-down'" style="float:right;margin-top:2px"></i>
+    </legend>
+    <div id="geolocalization" ng-show="geoOpen">
+        <div class="col-md-6  col-xs-6 field" ng-if="leg.position > 0">
+            <p><b>Mezzo di arrivo:</b></p>
+            <select class="form-control" style="width: 200px" ng-model="leg.transport"
+                ng-change="updateTravelType(leg.transport)" ng-disabled="currentGame.deployed">
+                <option value="foot">A piedi</option>
+                <option value="car">In macchina</option>
+                <option value="plane">Aereo</option>
+                <option value="boat">Nave/Traghetto</option>
+            </select>
+            <i class="glyphicon glyphicon-info-sign information-circle" tooltip-placement="auto top"
+                tooltip-append-to-body="true" uib-tooltip="É il mezzo di spostamento che scelgo per tracciare il percorso dalla tappa precedente a quella attuale sulla mappa."></i>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <div class="col-lg-12 field">
+                <div class="geocode-hint">
+                    <p><b>Cerca posizione:</b></p>
+                </div>
+                <input class="form-control geocode-hint-input" type="text" id="geocodeHintInput" ng-disabled="currentGame.deployed"/>
+            </div>
+        </div>
+        <div class="col-md-12 col-xs-12">
+            <div id="map-leg" ng-class="{'click-disabled':currentGame.deployed}"></div>
+        </div>
+        <!-- <div class="col-md-5"> -->
+        <div class="row">
+            <div class="col-md-6 col-xs-6 field lat-long-filed">
+                <div class="coordinates-label">
+                    <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
+                </div>
+                <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lat}"
+                    class="form-control coordinates-input" type="number" ng-change="changed()"  ng-model="leg.coordinates.lat"
+                    ng-required="true" />
+            </div>
+            <div class="col-md-6 col-xs-6 field lat-long-filed">
+                <div class="coordinates-label">
+                    <p><span class="required-sign">*</span> <b>Longitudine:</b></p>
+                </div>
+                <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}"
+                    class="form-control coordinates-input" type="number" ng-change="changed()" ng-model="leg.coordinates.lng"
+                    ng-required="true" />
+            </div>
+        </div>
+
+
+        <!-- <div class="col-lg-12 field" ng-show="leg.transport !== 'foot'" ng-init="distance = ''">
+                        <div class="coordinates-label">
+                            <p><b>Lunghezza linea (km):</b></p>
+                        </div>
+                        <input id="airDistance" ng-blur="calculateNewMarkerPos(distance)" class="form-control coordinates-input" type="number" ng-model="distance"/>
+                    </div> -->
+        <div class="col-lg-12">
+            <p class="hint">Suggerimento: trascina il segnaposto rosso o inserisci le coordinate geografiche in base
+                decimale per impostare la posizione della tappa. Verrà calcolato l'itinerario a piedi con partenza
+                dalla tappa precedente.<br>
+                Se la destinazione non è raggiungibile a piedi, seleziona un mezzo di arrivo adeguato.</p>
+            <!-- <p ng-if="leg.transport !== 'foot'" class="hint">In alternativa, puoi anche impostare la lunghezza in chilometri della linea retta nel campo di testo qui sopra.</p> -->
+        </div>
+
+        <div class="col-lg-12">
+            <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
+        </div>
         <div class="col-lg-12 field">
-            <div class="geocode-hint">
-                <p><b>Cerca posizione:</b></p>
-            </div>
-            <input class="form-control geocode-hint-input" type="text" id="geocodeHintInput" ng-disabled="currentGame.deployed"/>
+            <p><span class="required-sign">*</span> <b>Distanza tappa (Km):</b></p>
+            <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0"  ng-change="changed()"  ng-model="leg.score"
+                ng-disabled="currentGame.deployed" ng-required="true" />
         </div>
-    </div>
-    <div class="col-md-12 col-xs-12">
-        <div id="map-leg" ng-class="{'click-disabled':currentGame.deployed}"></div>
-    </div>
-    <!-- <div class="col-md-5"> -->
-    <div class="row">
-        <div class="col-md-6 col-xs-6 field lat-long-filed">
-            <div class="coordinates-label">
-                <p><span class="required-sign">*</span> <b>Latitudine:</b></p>
-            </div>
-            <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lat}"
-                class="form-control coordinates-input" type="number" ng-change="changed()"  ng-model="leg.coordinates.lat"
-                ng-required="true" />
+        <div class="col-lg-12 field">
+            <p><b>Distanza tappa precedente (Km): {{previousLegScore| number : 3}}</b></p>
         </div>
-        <div class="col-md-6 col-xs-6 field lat-long-filed">
-            <div class="coordinates-label">
-                <p><span class="required-sign">*</span> <b>Longitudine:</b></p>
-            </div>
-            <input disabled ng-blur="updateMarkerPosition()" ng-class="{error: !leg.coordinates.lng}"
-                class="form-control coordinates-input" type="number" ng-change="changed()" ng-model="leg.coordinates.lng"
-                ng-required="true" />
+        <div class="col-lg-12 field">
+            <b>Distanza totale (Km): </b>{{previousLegScore + leg.score | number : 3}}
         </div>
-    </div>
 
-
-    <!-- <div class="col-lg-12 field" ng-show="leg.transport !== 'foot'" ng-init="distance = ''">
-                    <div class="coordinates-label">
-                        <p><b>Lunghezza linea (km):</b></p>
-                    </div>
-                    <input id="airDistance" ng-blur="calculateNewMarkerPos(distance)" class="form-control coordinates-input" type="number" ng-model="distance"/>
-                </div> -->
-    <div class="col-lg-12">
-        <p class="hint">Suggerimento: trascina il segnaposto rosso o inserisci le coordinate geografiche in base
-            decimale per impostare la posizione della tappa. Verrà calcolato l'itinerario a piedi con partenza
-            dalla tappa precedente.<br>
-            Se la destinazione non è raggiungibile a piedi, seleziona un mezzo di arrivo adeguato.</p>
-        <!-- <p ng-if="leg.transport !== 'foot'" class="hint">In alternativa, puoi anche impostare la lunghezza in chilometri della linea retta nel campo di testo qui sopra.</p> -->
-    </div>
-    </div>
-    </div>
-
-    <div class="col-lg-12">
-        <p>I campi contrassegnati col simbolo <span class="required-sign">*</span> sono obbligatori</p>
-    </div>
-    <div class="col-lg-12 field">
-        <p><span class="required-sign">*</span> <b>Distanza tappa (Km):</b></p>
-        <input ng-class="{error: !leg.score}" class="form-control" type="number" min="0"  ng-change="changed()"  ng-model="leg.score"
-            ng-disabled="currentGame.deployed" ng-required="true" />
-    </div>
-    <div class="col-lg-12 field">
-        <p><b>Distanza tappa precedente (Km): {{previousLegScore| number : 3}}</b></p>
-    </div>
-    <div class="col-lg-12 field">
-        <b>Distanza totale (Km): </b>{{previousLegScore + leg.score | number : 3}}
     </div>
     <!-- <div style="display: table; margin-bottom: 10px;">
         <div class="col-lg-5 field" style="display: table-cell">
