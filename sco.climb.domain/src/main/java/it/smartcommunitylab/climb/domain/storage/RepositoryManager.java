@@ -2,6 +2,7 @@ package it.smartcommunitylab.climb.domain.storage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.Avatar;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.ItineraryImport;
 import it.smartcommunitylab.climb.domain.model.ModalityMap;
 import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.NodeState;
@@ -1275,6 +1277,62 @@ public class RepositoryManager {
 			update.set("lastUpdate", actualDate);
 			mongoTemplate.updateFirst(query, update, PedibusItinerary.class);
 		}
+	}
+
+	public PedibusItinerary importItinerary(String ownerId, String pedibusGameId,
+			ItineraryImport data) throws EntityNotFoundException, StorageException {
+		PedibusGame game = getPedibusGame(ownerId, pedibusGameId);
+		if (game == null) {
+			throw new EntityNotFoundException(String.format("PedibusGame with id %s not found", pedibusGameId));
+		}
+		Date now = new Date();
+		// update game fields
+		ItineraryImport.GameData gameData = data.getGame();
+		if (gameData != null) {
+			Query gameQuery = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
+			Update gameUpdate = new Update();
+			if (gameData.getName() != null) {
+				gameUpdate.set("gameName", gameData.getName());
+			}
+			if (gameData.getFrom() != null) {
+				gameUpdate.set("from", gameData.getFrom());
+			}
+			if (gameData.getTo() != null) {
+				gameUpdate.set("to", gameData.getTo());
+			}
+			gameUpdate.set("roundTrip", gameData.isRoundTrip());
+			if (gameData.getDaysOfWeek() != null && !gameData.getDaysOfWeek().isEmpty()) {
+				gameUpdate.set("daysOfWeek", gameData.getDaysOfWeek());
+			}
+			if (gameData.getMobilityParams() != null && !gameData.getMobilityParams().isEmpty()) {
+				gameUpdate.set("mobilityParams", gameData.getMobilityParams());
+			}
+			gameUpdate.set("lastUpdate", now);
+			mongoTemplate.updateFirst(gameQuery, gameUpdate, PedibusGame.class);
+		}
+		// create itinerary
+		ItineraryImport.ItineraryData itineraryData = data.getItinerary();
+		if (itineraryData == null) {
+			throw new StorageException("itinerary data is missing");
+		}
+		PedibusItinerary itinerary = new PedibusItinerary();
+		itinerary.setOwnerId(ownerId);
+		itinerary.setPedibusGameId(pedibusGameId);
+		itinerary.setName(itineraryData.getName());
+		itinerary.setDescription(itineraryData.getDescription());
+		savePedibusItinerary(itinerary);
+		// create legs
+		if (itineraryData.getLegs() != null) {
+			List<PedibusItineraryLeg> legs = new ArrayList<>(itineraryData.getLegs());
+			Collections.sort(legs);
+			for (PedibusItineraryLeg leg : legs) {
+				leg.setOwnerId(ownerId);
+				leg.setPedibusGameId(pedibusGameId);
+				leg.setItineraryId(itinerary.getObjectId());
+				savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
+			}
+		}
+		return itinerary;
 	}
 
 	public Child getChild(String ownerId, String objectId) {

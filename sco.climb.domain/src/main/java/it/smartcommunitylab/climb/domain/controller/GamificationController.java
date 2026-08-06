@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
@@ -55,6 +56,7 @@ import it.smartcommunitylab.climb.domain.exception.InvalidParametersException;
 import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.domain.model.Gamified;
+import it.smartcommunitylab.climb.domain.model.ItineraryImport;
 import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.PedibusGame;
 import it.smartcommunitylab.climb.domain.model.PedibusGameReport;
@@ -118,7 +120,12 @@ public class GamificationController extends AuthController {
 	@Autowired
 	private SchedulerManager schedulerManager;
 
-	private ObjectMapper mapper = new ObjectMapper();
+	private ObjectMapper mapper;
+	
+	{
+		mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	}
 	
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/deploy", method = RequestMethod.GET)
 	public @ResponseBody PedibusGame deployGame(
@@ -1091,6 +1098,31 @@ public class GamificationController extends AuthController {
 			logger.info(String.format("uploadPedibusItineraryLegLinkFile: %s - %s - %s", ownerId, legId, url));
 		}
 		return "{\"link\":\"" + url + "\"}";
+	}
+
+	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/import", method = RequestMethod.POST)
+	public @ResponseBody PedibusItinerary importItinerary(
+			@PathVariable String ownerId,
+			@PathVariable String pedibusGameId,
+			@RequestParam MultipartFile file,
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		PedibusGame game = storage.getPedibusGame(ownerId, pedibusGameId);
+		if (game == null) {
+			throw new EntityNotFoundException("game not found");
+		}
+		if (!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null,
+				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request) || 
+			!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null,
+				pedibusGameId, Const.AUTH_RES_PedibusGame_Itinerary, Const.AUTH_ACTION_ADD, request)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		ItineraryImport itineraryImport = mapper.readValue(file.getInputStream(), ItineraryImport.class);
+		PedibusItinerary result = storage.importItinerary(ownerId, pedibusGameId, itineraryImport);
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("importItinerary[%s]: %s", ownerId, pedibusGameId));
+		}
+		return result;
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{pedibusGameId}/itinerary/{itineraryId}/leg/{legId}", method = RequestMethod.GET)

@@ -27,6 +27,10 @@
                         <a class="btn btn-icon btn-primary" ng-click="initGameOnServer(game)"  ng-disabled="!PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-gamepad" aria-hidden="true" uib-tooltip="DEPLOY"></i></a>
 <!--                         <a href="#/game/{{selectedOwner}}/{{selectedInstitute.objectId}}/{{selectedSchool.objectId}}/{{game.objectId}}/info" class="btn btn-icon btn-primary" role="button" ng-click="$parent.$parent.$parent.gamesModified = true"><i class="fa fa-pencil" aria-hidden="true" uib-tooltip="EDIT"></i></a>
  -->                    <a ng-click="reset(game)" class="btn btn-icon btn-danger" role="button"  ng-disabled="!PermissionsService.permissionEnabledFunctionGame()"><i class="fa fa-eraser" aria-hidden="true" uib-tooltip="RESET"></i></a>
+                        <label class="btn btn-icon btn-primary" ng-disabled="!PermissionsService.permissionEnabledFunctionGame()" uib-tooltip="IMPORT ITINERARIO" style="margin:0;cursor:pointer">
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            <input type="file" accept=".json" style="display:none" onchange="var s=angular.element(this).scope(); s.$apply(function(){ s.importItinerary(s.game, this.files[0]); }.bind(this)); this.value=''">
+                        </label>
                         <a ng-click="delete(game)" class="btn btn-icon btn-danger" role="button"  ng-disabled="!PermissionsService.permissionEnabledDeleteGame() || game.deployed"><i class="fa fa-trash" aria-hidden="true" uib-tooltip="DELETE"></i></a>
                     </div>
                 </div>
