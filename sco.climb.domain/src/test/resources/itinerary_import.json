@@ -1,0 +1,68 @@
+{
+    "game": {
+        "name":"Test Import Itinerary",
+        "from":  1767225600000,
+        "to":  1798675200000,
+        "roundTrip": true,
+        "daysOfWeek": [true, true, true, true, true, false, false],
+        "mobilityParams": {
+            "3A": {
+                "walk_studenti": 9,
+                "bike_studenti": 0,
+                "bus_studenti": 0,
+                "pedibus_studenti": 5,
+                "pandr_studenti": 0,
+                "carpooling_studenti": 0,
+                "car_studenti": 3
+            },
+            "3B": {
+                "walk_studenti": 6,
+                "bike_studenti": 1,
+                "bus_studenti": 1,
+                "pedibus_studenti": 7,
+                "pandr_studenti": 0,
+                "carpooling_studenti": 0,
+                "car_studenti": 3
+            }
+        }        
+    },
+    "itinerary": {
+        "name": "Test Itinerary",
+        "description": "Test Itinerary Description",
+        "legs": [
+            {
+                "name": "Partenza",
+                "description": "Leg 1 Description",
+                "position": 0,
+                "geocoding": [9.3893655, 45.8639528], 
+                "imageUrl":"https://minio-climb-prod.platform.smartcommunitylab.it/climb-kgg/7d047da8-d300-4f3b-a244-379748b57aa8",
+                "polyline": "",
+                "score": 0,
+                "transport": "foot",
+                "icon": "foot"
+            },
+            {
+                "name": "Rivolta D'Adda",
+                "description": "Leg 2 Description",
+                "position": 1,
+                "geocoding": [9.5130213, 45.4705077],
+                "imageUrl":"https://minio-climb-prod.platform.smartcommunitylab.it/climb-kgg/d62bdf83-1091-4cd8-90d5-40194a1abec0",
+                "polyline": "gy|vGszhx@vOoShQhFhHeDd@`@dIlNtMpJhB}DzKzCxAr@zI~F_Gvg@AnVzKbf@xOnR~Zjo@`d@le@zMr@p[tMrFrJzDlAnAhFIvWkI~s@xIpi@tRrk@bJx_@Rr\\`HdNpExUpEla@zJxn@jBlWoHd[uEdR~AhS_Bdb@mAfHc@hAkA`VmAjF{EgEcCaHkFh@sMwFcEXmO|CsOsCgMaZgP{OuWVg[~DMVkj@c@wQrCqCxAaL|PyQaAqKbAyEgAkC_c@`C}K_Hg^{R_@{FwJa@eBcOy\\kPgZ{PwO_k@c]oKkI_D_KeY_FiEmCoKpDqIhDjLuKsHzAoEeGsCvFwFcCoItEcIzRgHt\\_DlLZqEg]vJwHk@kJfJkVlFgT`Pak@rYwj@bMoUdG{Rh@c[rMi{@zY{PrWoHlJoNjLmJpKkh@uGuOdJkJnPkHjCaM{B}YzBm[c@{@lGrHvMhK`LnYnKrRxh@vNvLxO`y@fKzS`UtV~LfSfDlPrWnOlLzRf[t`@pElLjAhMl@rQnIjLxAhl@lFbr@zGtn@dKtp@hHjWpHf_@lLde@fVj]nOxBdMo@~_@_G|ZaJtg@oHdJkBjCnFlNBh]`ArKbDzU{IvFcBnEzG`RaHpMkAbE{IxSpDfFkE|Ld@|VkAhJnDfOyCpOr@z_@f]`a@tu@`N|^Hfo@_GduAvJhNrHzBpJ|JxLbB~Ph]dWpIt[hLxShMxEhT|TnSjY~d@dIlh@~IhM`Jj@`d@ca@nLwQxHaHpBwN~MiNtGgIjQiRnE{GhEsPrHcCaH_C`R_JdCq[dH}TfC{SEu]nIqUc@mg@tCow@pFc|@`q@iaAv{@}gAxd@qs@xOag@u@yPpEsFtS}EpNgYfJW|FpEpWbBbIrBrf@Jv@oHpQl@l}@wKbVoHjIsNtp@iF~R_F|GsQ`v@kApNcDtKkN`NiS|I`AhDuA`Wgn@~\\gYbMgIbB}KlOoYnPmPbKsV|V_I`G_VnKuI`DvFpJcBxEsM~MqV|FuMjJj@hDiFm@uHeB}CxEiK~No]dPmMxDgFToSjPq^pJwShEyQJiMtIeNpM{HpWym@fo@i~@tZyLpe@jAdGPbPeOx]wx@bWqp@`MyuAbP{gBxBuc@zk@uSvAia@pTwUb^Nh`@_Clh@iExXaBxLyIj]kHtb@zCdq@wd@lZqHxdA_Ixm@c[nm@qa@ddAgq@fqA}w@bOiNoAwRxHiKQkKZqXzFmJhj@eQMcIjM{EAcM@mCWqv@}B}bB{Acc@bKeVlK_p@~Jy_ArKcp@vEcJT}IpG{CjGuY",
+                "score": 127000,
+                "transport": "foot",
+                "icon": "foot"
+            },
+            {
+                "name": "Incisioni rupestri della Valcamonica",
+                "description": "Leg 3 Description",
+                "position": 2,
+                "geocoding": [10.3021057, 45.9547697],
+                "imageUrl":"https://minio-climb-prod.platform.smartcommunitylab.it/climb-kgg/f160c889-32da-4870-9343-7d685c4114bd",
+                "polyline": "u}otG}~`y@_RyCkEySoFsGwA}IqAqKsKkEH}O?e@qPix@gp@shAoBad@[wUkEaZsCme@wMfEyGuKytAewAkRkSqMwQgDLg@IaRgM{CwUoFyRsCc[oBmSiOjFm@yC}JwE{i@}fBio@aqBaw@mTg\\agCsT_v@sQclAwDk]qGmEk^aDaKaYgQuIe\\iX{RqKaJcJHe~@}DyYiMmd@wFwbB}R}bCiGci@zGiHiA}f@[cp@JsAfB}rBdFwhA|HofAhVsd@eOq^TsYmB}a@eOgRkKsq@kNyfAyNi_@}DuUyFqM_FgGCSkDg`@mMyVsDuIyOuOyGs]{@aIEaC{Iq{@{a@sh@}IgE]aLtFmm@gE}lAqG{Yl@ic@{CuJgKwUeVyr@ko@ox@AgQl@iOm@eJbAqFcGuAiCsJuEk@cYFcSqT_FgPaGsHwBsm@_H{f@cEyo@kNiK}@}DqQu_AuSelAmTuf@yCuYgWg`As\\cw@{Va\\g]sv@yb@oj@oLcPqOuHaZiVgKuBm_@cWw\\wBuAe@m~@gF{TbAc`@z_@oFzMqM~^cQhFcVaAcE_EiKFgGnHhCsFrDuUsFl@oD`KaFwBt@^eByF_TyRvErAI_AoQ}J`BCnO_@sRiJoPwNzHzB{QmOiHwEQkS_DcH{Q_GuXV|@|F_KbAiKkJ}FEgFcMi@yEyBZ|Am\nBaFmDoAz@wDaDj@`L{VlDuClG{BfB}FfB{HlEiLr@}CvBkA[uFsDoB`@{D`CwJtDkBc@aCpDqFiMwEkFz@xGiLlI{@i@uBqRrA|TeSpJsImGcLjBqMyKbMoU`RgV|AlBiGjCcNeDfCR_EuG~AmF`CeEmAxI}PjK}WsAqQbEaJqBcGaM{\\yLmRsSkNcRyY{LeHnDtH|GtKyB}Coc@SgNp@iJuBmEhHyDtGkFu@wN~@}ClK{\rTrZ{DsVrRgO|UsSlRwYxOoO~HeJxTk@_UaHnb@cI|QDtE}@wDU_KsAwDN`HyDzOmBlQs@lOaPrYEza@~EvUkBsJHzEvVpYfVbH`L}Fh@~NdEvETpX_BmD?`I}AzCgB[pSzOfCzEcD]_@hBtPdEqAn@tKcDgBjEfHi@zA|IiKi@mTrAiLk@yE{@a_@ec@{U}Yek@iXeh@u_@mo@er@{i@ul@exBu`Cg\\{Ro\\om@QE{QyPmRpLaGeC_TmPi_@o_@ca@cWya@ij@y_@op@ySeUaKsYaR}]eJy]mVuf@uYao@cZqPyTwWkXc}@qPkf@Hk^mRaz@}h@uDcPg]yLy\tG_OzEqWhHgLeAkL{DsV@E",
+                "score": 255000,
+                "transport": "foot",
+                "icon": "foot"
+            }
+        ]
+    }
+}
