@@ -155,6 +155,8 @@ angular.module('consoleControllers.leg', ['isteven-multi-select', 'angularUtils.
             { icon: "<img src=img/POI_baloon_full.png />", name: "Mongolfiera", value: "balloon" },
             { icon: "<img src=img/POI_zeppelin_full.png />", name: "Dirigibile", value: "zeppelin" },
             { icon: "<img src=img/POI_train_full.png />", name: "Treno", value: "train" },
+            { icon: "<img src=img/POI_bike_full.png />", name: "Bicicletta", value: "bike" },
+            { icon: "<img src=img/POI_bus_full.png />", name: "Autobus", value: "bus" },
             { icon: "<img src=img/POI_sleigh_full.png />", name: "Slitta", value: "sled" }
         ];
         $scope.editMode = false;
