@@ -9,6 +9,7 @@ import java.util.Map;
 public class ItineraryImport {
 
 	public static class GameData {
+		private String id;
 		private String name;
 		private Date from;
 		private Date to;
@@ -16,6 +17,8 @@ public class ItineraryImport {
 		private List<Boolean> daysOfWeek = new ArrayList<>();
 		private Map<String, Map<String, Integer>> mobilityParams = new HashMap<>();
 
+		public String getId() { return id; }
+		public void setId(String id) { this.id = id; }
 		public String getName() { return name; }
 		public void setName(String name) { this.name = name; }
 		public Date getFrom() { return from; }

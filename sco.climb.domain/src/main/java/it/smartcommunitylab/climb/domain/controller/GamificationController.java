@@ -1118,6 +1118,9 @@ public class GamificationController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		ItineraryImport itineraryImport = mapper.readValue(file.getInputStream(), ItineraryImport.class);
+		if (itineraryImport.getGame() == null || itineraryImport.getGame().getId() == null || !itineraryImport.getGame().getId().equals(pedibusGameId)) {
+			throw new EntityNotFoundException("game id not corrisponding to the imported itinerary");
+		}
 		PedibusItinerary result = storage.importItinerary(ownerId, pedibusGameId, itineraryImport);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("importItinerary[%s]: %s", ownerId, pedibusGameId));
