@@ -1121,7 +1121,8 @@ public class GamificationController extends AuthController {
 		if (itineraryImport.getGame() == null || itineraryImport.getGame().getId() == null || !itineraryImport.getGame().getId().equals(pedibusGameId)) {
 			throw new EntityNotFoundException("game id not corrisponding to the imported itinerary");
 		}
-		PedibusItinerary result = storage.importItinerary(ownerId, pedibusGameId, itineraryImport);
+		User user = getUserByEmail(request);
+		PedibusItinerary result = storage.importItinerary(ownerId, pedibusGameId, itineraryImport, user);
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("importItinerary[%s]: %s", ownerId, pedibusGameId));
 		}
@@ -1485,42 +1486,9 @@ public class GamificationController extends AuthController {
 			leg.setIcon(legToClone.getIcon());
 			leg.setAdditionalPoints(legToClone.getAdditionalPoints());
 			storage.savePedibusItineraryLeg(leg, ownerId, false, false);
-			//clone multimedia content
-			List<MultimediaContent> mcListToClone = storage.getMultimediaContentByLeg(
-					legToClone.getOwnerId(), legToClone.getObjectId());
-			for(MultimediaContent mcToClone : mcListToClone) {
-				if(mcToClone.isDisabled()) {
-					continue;
-				}
-				MultimediaContent content = new MultimediaContent();
-				content.setOwnerId(ownerId);
-				content.setInstituteId(instituteId);
-				content.setInstituteName(institute.getName());
-				content.setSchoolId(schoolId);
-				content.setSchoolName(school.getName());
-				content.setItineraryId(itineraryId);
-				content.setItineraryName(itinerary.getName());
-				content.setLegId(leg.getObjectId());
-				content.setLegName(leg.getName());
-				content.setName(mcToClone.getName());
-				content.setType(mcToClone.getType());
-				content.setLink(mcToClone.getLink());
-				content.setGeocoding(mcToClone.getGeocoding());
-				content.setClasses(game.getClassRooms());
-				content.setSubjects(mcToClone.getSubjects());
-				content.setSchoolYears(mcToClone.getSchoolYears());
-				content.setPreviewUrl(mcToClone.getPreviewUrl());
-				content.setPosition(mcToClone.getPosition());
-				content.setContentOwner(contentOwner);
-				content.setSharable(mcToClone.isSharable());
-				content.setPublicLink(mcToClone.isPublicLink());
-				if(Utils.isNotEmpty(mcToClone.getContentReferenceId())) {
-					content.setContentReferenceId(mcToClone.getContentReferenceId());
-				} else {
-					content.setContentReferenceId(mcToClone.getObjectId());
-				}
-				storage.saveMultimediaContent(content);
-			}
+			storage.cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg,
+					legToClone.getItineraryId(), legToClone.getObjectId(), institute, school,
+					contentOwner);
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info(String.format("cloneItinerary[%s]: %s - %s", ownerId, pedibusGameId, itineraryId));

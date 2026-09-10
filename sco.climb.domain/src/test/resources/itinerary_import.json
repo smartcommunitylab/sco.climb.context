@@ -28,8 +28,8 @@
         }        
     },
     "itinerary": {
-        "name": "Test Itinerary",
-        "description": "Test Itinerary Description",
+        "name": "Test Itinerary 2",
+        "description": "Test Itinerary Description 2",
         "legs": [
             {
                 "name": "Partenza",
@@ -40,18 +40,28 @@
                 "polyline": "",
                 "score": 0,
                 "transport": "foot",
-                "icon": "foot"
+                "icon": "foot",
+                "multimedia": [
+                    {
+                        "name": "Videopillola",
+                        "link": "https://",
+                        "type": "applink",
+                        "sharable": false,
+                        "publicLink": false
+                    }
+                ]
             },
             {
                 "name": "Rivolta D'Adda",
                 "description": "Leg 2 Description",
                 "position": 1,
                 "geocoding": [9.5130213, 45.4705077],
-                "imageUrl":"https://minio-climb-prod.platform.smartcommunitylab.it/climb-kgg/d62bdf83-1091-4cd8-90d5-40194a1abec0",
                 "polyline": "gy|vGszhx@vOoShQhFhHeDd@`@dIlNtMpJhB}DzKzCxAr@zI~F_Gvg@AnVzKbf@xOnR~Zjo@`d@le@zMr@p[tMrFrJzDlAnAhFIvWkI~s@xIpi@tRrk@bJx_@Rr\\`HdNpExUpEla@zJxn@jBlWoHd[uEdR~AhS_Bdb@mAfHc@hAkA`VmAjF{EgEcCaHkFh@sMwFcEXmO|CsOsCgMaZgP{OuWVg[~DMVkj@c@wQrCqCxAaL|PyQaAqKbAyEgAkC_c@`C}K_Hg^{R_@{FwJa@eBcOy\\kPgZ{PwO_k@c]oKkI_D_KeY_FiEmCoKpDqIhDjLuKsHzAoEeGsCvFwFcCoItEcIzRgHt\\_DlLZqEg]vJwHk@kJfJkVlFgT`Pak@rYwj@bMoUdG{Rh@c[rMi{@zY{PrWoHlJoNjLmJpKkh@uGuOdJkJnPkHjCaM{B}YzBm[c@{@lGrHvMhK`LnYnKrRxh@vNvLxO`y@fKzS`UtV~LfSfDlPrWnOlLzRf[t`@pElLjAhMl@rQnIjLxAhl@lFbr@zGtn@dKtp@hHjWpHf_@lLde@fVj]nOxBdMo@~_@_G|ZaJtg@oHdJkBjCnFlNBh]`ArKbDzU{IvFcBnEzG`RaHpMkAbE{IxSpDfFkE|Ld@|VkAhJnDfOyCpOr@z_@f]`a@tu@`N|^Hfo@_GduAvJhNrHzBpJ|JxLbB~Ph]dWpIt[hLxShMxEhT|TnSjY~d@dIlh@~IhM`Jj@`d@ca@nLwQxHaHpBwN~MiNtGgIjQiRnE{GhEsPrHcCaH_C`R_JdCq[dH}TfC{SEu]nIqUc@mg@tCow@pFc|@`q@iaAv{@}gAxd@qs@xOag@u@yPpEsFtS}EpNgYfJW|FpEpWbBbIrBrf@Jv@oHpQl@l}@wKbVoHjIsNtp@iF~R_F|GsQ`v@kApNcDtKkN`NiS|I`AhDuA`Wgn@~\\gYbMgIbB}KlOoYnPmPbKsV|V_I`G_VnKuI`DvFpJcBxEsM~MqV|FuMjJj@hDiFm@uHeB}CxEiK~No]dPmMxDgFToSjPq^pJwShEyQJiMtIeNpM{HpWym@fo@i~@tZyLpe@jAdGPbPeOx]wx@bWqp@`MyuAbP{gBxBuc@zk@uSvAia@pTwUb^Nh`@_Clh@iExXaBxLyIj]kHtb@zCdq@wd@lZqHxdA_Ixm@c[nm@qa@ddAgq@fqA}w@bOiNoAwRxHiKQkKZqXzFmJhj@eQMcIjM{EAcM@mCWqv@}B}bB{Acc@bKeVlK_p@~Jy_ArKcp@vEcJT}IpG{CjGuY",
                 "score": 127000,
                 "transport": "foot",
-                "icon": "foot"
+                "icon": "foot",
+                "sourceItineraryId": "0eb9ea3e-6ad4-4064-bc9f-f09950e1e730",
+                "sourceLegId": "ca8b6ad9-d546-4894-ab06-4d35a17c008c"
             },
             {
                 "name": "Incisioni rupestri della Valcamonica",
