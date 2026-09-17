@@ -1111,6 +1111,9 @@ public class GamificationController extends AuthController {
 		if (game == null) {
 			throw new EntityNotFoundException("game not found");
 		}
+		if (game.isDeployed()) {
+			throw new IllegalStateException("game is already deployed");
+		}
 		if (!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null,
 				pedibusGameId, Const.AUTH_RES_PedibusGame, Const.AUTH_ACTION_UPDATE, request) || 
 			!validateAuthorization(ownerId, game.getInstituteId(), game.getSchoolId(), null,
