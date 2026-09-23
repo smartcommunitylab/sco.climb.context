@@ -51,6 +51,23 @@ angular.module('consoleControllers.games', ['ngSanitize', 'toaster', 'ngAnimate'
             });
         };
 
+        $scope.importItinerary = function (game, file) {
+            if (!file) return;
+            var formdata = new FormData();
+            formdata.append('file', file);
+            DataService.importItinerary(game.ownerId, game.objectId, formdata).then(
+                function (response) {
+                    if((response.status >= 200) && (response.status <= 299)) {
+                        toaster.pop('success', 'Import completato', 'Itinerario importato con successo');
+                    } else {
+                        alert('Errore durante l\'import: ' + (response.data && response.data.errorMsg ? response.data.errorMsg : response.status));
+                    }
+                }, function (error) {
+                    alert('Errore durante l\'import: ' + (error.data && error.data.errorMsg ? error.data.errorMsg : error.status));
+                }
+            );
+        };
+
         $scope.initGameOnServer = function (game) {
             createDialog('templates/modals/init-game-confirmation.html', {
                 id: 'init-game-confirmation-dialog',

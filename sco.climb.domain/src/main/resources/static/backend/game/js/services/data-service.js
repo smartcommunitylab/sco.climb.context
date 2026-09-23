@@ -201,6 +201,18 @@ function ($q, $http, $rootScope, $timeout) {
                 {headers: {timeout: timeout, 'Authorization': 'Bearer ' + profileToken}}
             );
         },
+        importItinerary: function(ownerId, pedibusGameId, formdata) {
+            var postUrl = baseUrl + '/api/game/' + ownerId + '/' + pedibusGameId + '/import';
+            return $http.post(postUrl, formdata,
+                {
+                    timeout: 30000,
+                    headers: {
+                        'Authorization': 'Bearer ' + profileToken,
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity
+                });
+        },
         cloneGame: function(ownerId, instituteId, schoolId, pedibusGameId, itineraryId) {
             return $http.get(baseUrl + "/api/game/" + ownerId + "/" + instituteId 
                     + "/" + schoolId + "/" + pedibusGameId + "/clone/" + itineraryId, 

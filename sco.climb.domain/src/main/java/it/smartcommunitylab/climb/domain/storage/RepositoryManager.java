@@ -2,6 +2,7 @@ package it.smartcommunitylab.climb.domain.storage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import it.smartcommunitylab.climb.domain.exception.StorageException;
 import it.smartcommunitylab.climb.domain.model.Avatar;
 import it.smartcommunitylab.climb.domain.model.CalendarDay;
 import it.smartcommunitylab.climb.domain.model.Excursion;
+import it.smartcommunitylab.climb.domain.model.ItineraryImport;
 import it.smartcommunitylab.climb.domain.model.ModalityMap;
 import it.smartcommunitylab.climb.domain.model.MultimediaContentTags;
 import it.smartcommunitylab.climb.domain.model.NodeState;
@@ -53,6 +55,7 @@ import it.smartcommunitylab.climb.domain.model.PedibusPlayer;
 import it.smartcommunitylab.climb.domain.model.WsnEvent;
 import it.smartcommunitylab.climb.domain.model.gamification.PedibusGameConfTemplate;
 import it.smartcommunitylab.climb.domain.model.monitoring.MonitoringPlay;
+import it.smartcommunitylab.climb.domain.model.multimedia.ContentOwner;
 import it.smartcommunitylab.climb.domain.model.multimedia.MultimediaContent;
 import it.smartcommunitylab.climb.domain.security.DataSetInfo;
 
@@ -1274,6 +1277,190 @@ public class RepositoryManager {
 			update.set("description", itinerary.getDescription());
 			update.set("lastUpdate", actualDate);
 			mongoTemplate.updateFirst(query, update, PedibusItinerary.class);
+		}
+	}
+
+	public PedibusItinerary importItinerary(String ownerId, String pedibusGameId,
+			ItineraryImport data, User user) throws EntityNotFoundException, StorageException {
+		PedibusGame game = getPedibusGame(ownerId, pedibusGameId);
+		if (game == null) {
+			throw new EntityNotFoundException(String.format("PedibusGame with id %s not found", pedibusGameId));
+		}
+		Date now = new Date();
+		// update game fields
+		ItineraryImport.GameData gameData = data.getGame();
+		if (gameData != null) {
+			Query gameQuery = new Query(new Criteria("objectId").is(pedibusGameId).and("ownerId").is(ownerId));
+			Update gameUpdate = new Update();
+			if (gameData.getName() != null) {
+				gameUpdate.set("gameName", gameData.getName());
+			}
+			if (gameData.getFrom() != null) {
+				gameUpdate.set("from", gameData.getFrom());
+			}
+			if (gameData.getTo() != null) {
+				gameUpdate.set("to", gameData.getTo());
+			}
+			gameUpdate.set("roundTrip", gameData.isRoundTrip());
+			if (gameData.getDaysOfWeek() != null && !gameData.getDaysOfWeek().isEmpty()) {
+				gameUpdate.set("daysOfWeek", gameData.getDaysOfWeek());
+			}
+			if (gameData.getMobilityParams() != null && !gameData.getMobilityParams().isEmpty()) {
+				gameUpdate.set("mobilityParams", gameData.getMobilityParams());
+			}
+			gameUpdate.set("lastUpdate", now);
+			mongoTemplate.updateFirst(gameQuery, gameUpdate, PedibusGame.class);
+		}
+		// create itinerary
+		ItineraryImport.ItineraryData itineraryData = data.getItinerary();
+		if (itineraryData == null) {
+			throw new StorageException("itinerary data is missing");
+		}
+		PedibusItinerary itinerary = new PedibusItinerary();
+		itinerary.setOwnerId(ownerId);
+		itinerary.setPedibusGameId(pedibusGameId);
+		itinerary.setName(itineraryData.getName());
+		itinerary.setDescription(itineraryData.getDescription());
+		savePedibusItinerary(itinerary);
+		// create legs
+		if (itineraryData.getLegs() != null) {
+			Institute institute = getInstitute(ownerId, game.getInstituteId());
+			School school = getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+			ContentOwner importContentOwner = new ContentOwner();
+			importContentOwner.setName(user.getName() + " " + user.getSurname());
+			importContentOwner.setUserId(user.getObjectId());
+			List<ItineraryImport.ItineraryLegData> importLegs = new ArrayList<>(itineraryData.getLegs());
+			Collections.sort(importLegs, (a, b) -> Integer.compare(a.getPosition(), b.getPosition()));
+			for (ItineraryImport.ItineraryLegData importLeg : importLegs) {
+				PedibusItineraryLeg leg = new PedibusItineraryLeg();
+				leg.setName(importLeg.getName());
+				leg.setDescription(importLeg.getDescription());
+				leg.setPosition(importLeg.getPosition());
+				leg.setGeocoding(importLeg.getGeocoding());
+				leg.setImageUrl(importLeg.getImageUrl());
+				leg.setPolyline(importLeg.getPolyline());
+				leg.setScore(importLeg.getScore());
+				leg.setTransport(importLeg.getTransport());
+				leg.setIcon(importLeg.getIcon());
+				if (importLeg.getAdditionalPoints() != null) {
+					leg.setAdditionalPoints(importLeg.getAdditionalPoints());
+				}
+				leg.setOwnerId(ownerId);
+				leg.setPedibusGameId(pedibusGameId);
+				leg.setItineraryId(itinerary.getObjectId());
+				savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
+				if (Utils.isNotEmpty(importLeg.getSourceItineraryId()) && Utils.isNotEmpty(importLeg.getSourceLegId())) {
+					cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg,
+							importLeg.getSourceItineraryId(), importLeg.getSourceLegId(), institute, school,
+							importContentOwner);
+				}
+				if (importLeg.getMultimedia() != null && !importLeg.getMultimedia().isEmpty()) {
+					createMultimediaContentByImportData(ownerId, game, itinerary, leg, importLeg.getMultimedia(),
+							importContentOwner);
+				}
+			}
+		}
+		return itinerary;
+	}
+
+	public void cloneMultimediaContentBySourceLeg(String ownerId, PedibusGame game,
+			PedibusItinerary itinerary, PedibusItineraryLeg leg, String sourceItineraryId, String sourceLegId,
+			Institute institute, School school, ContentOwner contentOwner) throws StorageException {
+		Query sourceLegQuery = new Query(new Criteria("ownerId").is(ownerId)
+				.and("objectId").is(sourceLegId)
+				.and("itineraryId").is(sourceItineraryId));
+		PedibusItineraryLeg sourceLeg = mongoTemplate.findOne(sourceLegQuery, PedibusItineraryLeg.class);
+		if (sourceLeg == null) {
+			return;
+		}
+		if(Utils.isEmpty(leg.getImageUrl()) && Utils.isNotEmpty(sourceLeg.getImageUrl())) {
+			leg.setImageUrl(sourceLeg.getImageUrl());
+			savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
+		}
+		List<MultimediaContent> sourceContents = getMultimediaContentByLeg(ownerId, sourceLegId);
+		if (sourceContents == null || sourceContents.isEmpty()) {
+			return;
+		}
+		for (MultimediaContent mcToClone : sourceContents) {
+			if (mcToClone.isDisabled()) {
+				continue;
+			}
+			MultimediaContent content = new MultimediaContent();
+			content.setOwnerId(ownerId);
+			content.setInstituteId(game.getInstituteId());
+			if (institute != null) {
+				content.setInstituteName(institute.getName());
+			}
+			content.setSchoolId(game.getSchoolId());
+			if (school != null) {
+				content.setSchoolName(school.getName());
+			}
+			content.setItineraryId(itinerary.getObjectId());
+			content.setItineraryName(itinerary.getName());
+			content.setLegId(leg.getObjectId());
+			content.setLegName(leg.getName());
+			content.setName(mcToClone.getName());
+			content.setType(mcToClone.getType());
+			content.setLink(mcToClone.getLink());
+			content.setGeocoding(leg.getGeocoding());
+			content.setClasses(game.getClassRooms());
+			content.setSubjects(mcToClone.getSubjects());
+			content.setSchoolYears(mcToClone.getSchoolYears());
+			content.setPreviewUrl(mcToClone.getPreviewUrl());
+			content.setPosition(mcToClone.getPosition());
+			if (contentOwner != null) {
+				content.setContentOwner(contentOwner);
+			} else {
+				content.setContentOwner(mcToClone.getContentOwner());
+			}
+			content.setSharable(mcToClone.isSharable());
+			content.setPublicLink(mcToClone.isPublicLink());
+			if (Utils.isNotEmpty(mcToClone.getContentReferenceId())) {
+				content.setContentReferenceId(mcToClone.getContentReferenceId());
+			} else {
+				content.setContentReferenceId(mcToClone.getObjectId());
+			}
+			saveMultimediaContent(content);
+		}
+	}
+
+	public void createMultimediaContentByImportData(String ownerId, PedibusGame game,
+			PedibusItinerary itinerary, PedibusItineraryLeg leg, List<ItineraryImport.MultimediaData> multimediaDataList,
+			ContentOwner contentOwner) {
+		Institute institute = getInstitute(ownerId, game.getInstituteId());
+		School school = getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
+		int basePosition = (int) getMultimediaContentNumberByLeg(ownerId, leg.getObjectId());
+		if (contentOwner == null) {
+			contentOwner = new ContentOwner();
+			contentOwner.setName("IMPORT");
+			contentOwner.setUserId("import");
+		}
+		for (int position = 0; position < multimediaDataList.size(); position++) {
+			ItineraryImport.MultimediaData multimediaData = multimediaDataList.get(position);
+			MultimediaContent content = new MultimediaContent();
+			content.setOwnerId(ownerId);
+			content.setInstituteId(game.getInstituteId());
+			if (institute != null) {
+				content.setInstituteName(institute.getName());
+			}
+			content.setSchoolId(game.getSchoolId());
+			if (school != null) {
+				content.setSchoolName(school.getName());
+			}
+			content.setItineraryId(itinerary.getObjectId());
+			content.setItineraryName(itinerary.getName());
+			content.setLegId(leg.getObjectId());
+			content.setLegName(leg.getName());
+			content.setName(multimediaData.getName());
+			content.setLink(multimediaData.getLink());
+			content.setType(multimediaData.getType());
+			content.setGeocoding(leg.getGeocoding());
+			content.setClasses(game.getClassRooms());
+			content.setSharable(multimediaData.isSharable());
+			content.setPublicLink(multimediaData.isPublicLink());
+			content.setPosition(basePosition + position);
+			content.setContentOwner(contentOwner);
+			saveMultimediaContent(content);
 		}
 	}
 
