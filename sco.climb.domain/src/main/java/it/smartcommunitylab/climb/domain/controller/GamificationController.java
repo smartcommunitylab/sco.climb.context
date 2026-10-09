@@ -256,6 +256,7 @@ public class GamificationController extends AuthController {
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 			velocityEngine.setProperty(RuntimeConstants.INPUT_ENCODING, "UTF-8");
 			velocityEngine.setProperty(RuntimeConstants.OUTPUT_ENCODING, "UTF-8");
+			velocityEngine.setProperty(RuntimeConstants.ENCODING_DEFAULT, "UTF-8");
 			velocityEngine.init();
 			VelocityContext context = new VelocityContext();
 			context.put("params", game.getParams());
