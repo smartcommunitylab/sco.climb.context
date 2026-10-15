@@ -123,7 +123,7 @@ public class HTTPUtils {
 		conn.setDoInput(true);
 
 		conn.setRequestProperty("Accept", "application/json");
-		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 		
 		if(Utils.isNotEmpty(basicAuthUser) && Utils.isNotEmpty(basicAuthPassowrd)) {
 			String authString = basicAuthUser + ":" + basicAuthPassowrd;

@@ -1,6 +1,7 @@
 package it.smartcommunitylab.climb.domain.controller;
 
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -254,9 +255,9 @@ public class GamificationController extends AuthController {
 			VelocityEngine velocityEngine = new VelocityEngine();
 			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 			velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-			velocityEngine.setProperty(RuntimeConstants.INPUT_ENCODING, "UTF-8");
-			velocityEngine.setProperty(RuntimeConstants.OUTPUT_ENCODING, "UTF-8");
-			velocityEngine.setProperty(RuntimeConstants.ENCODING_DEFAULT, "UTF-8");
+			velocityEngine.setProperty(RuntimeConstants.INPUT_ENCODING, StandardCharsets.UTF_8.name());
+			velocityEngine.setProperty(RuntimeConstants.OUTPUT_ENCODING, StandardCharsets.UTF_8.name());
+			velocityEngine.setProperty(RuntimeConstants.ENCODING_DEFAULT, StandardCharsets.UTF_8.name());
 			velocityEngine.init();
 			VelocityContext context = new VelocityContext();
 			context.put("params", game.getParams());
@@ -266,10 +267,22 @@ public class GamificationController extends AuthController {
 			for(String ruleFile : gameConf.getRuleFileTemplates()) {
 				String ruleName = ruleFile.replace(".vm", ""); 
 				try {
-					Template t = velocityEngine.getTemplate("game-template/" + ruleFile);
+					logger.info("Creating rule from template: {}", ruleFile);
+					Template t = velocityEngine.getTemplate("game-template/" + ruleFile, StandardCharsets.UTF_8.name());
 					StringWriter writer = new StringWriter();
 					t.merge(context, writer);
 					String ruleContent = writer.toString();
+					logger.info("ruleContent accents [e_grave={}, e_acute={}, a_grave={}, o_grave={}, u_grave={}, mojibake_e_grave={}, mojibake_e_acute={}, mojibake_a_grave={}, mojibake_o_grave={}, mojibake_u_grave={}]",
+							ruleContent.contains("\u00E8"),
+							ruleContent.contains("\u00E9"),
+							ruleContent.contains("\u00E0"),
+							ruleContent.contains("\u00F2"),
+							ruleContent.contains("\u00F9"),
+							ruleContent.contains("\u00C3\u00A8"),
+							ruleContent.contains("\u00C3\u00A9"),
+							ruleContent.contains("\u00C3\u00A0"),
+							ruleContent.contains("\u00C3\u00B2"),
+							ruleContent.contains("\u00C3\u00B9"));
 					if(!ruleName.contains("constants")) {
 						RuleValidateDTO ruleValidateDTO = new RuleValidateDTO();
 						ruleValidateDTO.setRule(ruleContent);
