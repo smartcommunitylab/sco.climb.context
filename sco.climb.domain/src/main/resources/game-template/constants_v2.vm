@@ -50,7 +50,7 @@ $H name of the badge collection for journey stops
 badge_collection_name=LegsCollection
 
 $H name of the destination
-final_destination=$params.final_destination
+final_destination=$Utils.getEscapedLegName($params.final_destination)
 
 $H constants representing distances to legs 
 #foreach($leg in $legList)

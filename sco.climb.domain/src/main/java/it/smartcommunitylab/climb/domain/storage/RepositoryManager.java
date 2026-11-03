@@ -705,6 +705,11 @@ public class RepositoryManager {
 		return mongoTemplate.findOne(query, PedibusItineraryLeg.class);		
 	}		
 	
+	public PedibusItineraryLeg getPedibusItineraryLegById(String itineraryId, String legId) {
+		Query query = new Query(new Criteria("itineraryId").is(itineraryId).and("objectId").is(legId));
+		return mongoTemplate.findOne(query, PedibusItineraryLeg.class);		
+	}		
+
 	public List<PedibusItineraryLeg> getPedibusItineraryLegsByGameId(String ownerId, 
 			String pedibusGameId, String itineraryId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("pedibusGameId").is(pedibusGameId)
@@ -1350,9 +1355,9 @@ public class RepositoryManager {
 				leg.setItineraryId(itinerary.getObjectId());
 				savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
 				if (Utils.isNotEmpty(importLeg.getSourceItineraryId()) && Utils.isNotEmpty(importLeg.getSourceLegId())) {
-					cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg,
-							importLeg.getSourceItineraryId(), importLeg.getSourceLegId(), institute, school,
-							importContentOwner);
+					PedibusItineraryLeg sourceLeg = getPedibusItineraryLegById(importLeg.getSourceItineraryId(), importLeg.getSourceLegId());
+					cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg, sourceLeg, 
+							institute, school, importContentOwner);
 				}
 				if (importLeg.getMultimedia() != null && !importLeg.getMultimedia().isEmpty()) {
 					createMultimediaContentByImportData(ownerId, game, itinerary, leg, importLeg.getMultimedia(),
@@ -1364,12 +1369,8 @@ public class RepositoryManager {
 	}
 
 	public void cloneMultimediaContentBySourceLeg(String ownerId, PedibusGame game,
-			PedibusItinerary itinerary, PedibusItineraryLeg leg, String sourceItineraryId, String sourceLegId,
+			PedibusItinerary itinerary, PedibusItineraryLeg leg, PedibusItineraryLeg sourceLeg,
 			Institute institute, School school, ContentOwner contentOwner) throws StorageException {
-		Query sourceLegQuery = new Query(new Criteria("ownerId").is(ownerId)
-				.and("objectId").is(sourceLegId)
-				.and("itineraryId").is(sourceItineraryId));
-		PedibusItineraryLeg sourceLeg = mongoTemplate.findOne(sourceLegQuery, PedibusItineraryLeg.class);
 		if (sourceLeg == null) {
 			return;
 		}
@@ -1377,7 +1378,7 @@ public class RepositoryManager {
 			leg.setImageUrl(sourceLeg.getImageUrl());
 			savePedibusItineraryLeg(leg, ownerId, true, game.isDeployed());
 		}
-		List<MultimediaContent> sourceContents = getMultimediaContentByLeg(ownerId, sourceLegId);
+		List<MultimediaContent> sourceContents = getMultimediaContentByLeg(sourceLeg.getOwnerId(), sourceLeg.getObjectId());
 		if (sourceContents == null || sourceContents.isEmpty()) {
 			return;
 		}
