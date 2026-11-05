@@ -1354,15 +1354,19 @@ public class RepositoryManager {
 				leg.setPedibusGameId(pedibusGameId);
 				leg.setItineraryId(itinerary.getObjectId());
 				savePedibusItineraryLeg(leg, ownerId, false, game.isDeployed());
-				if (Utils.isNotEmpty(importLeg.getSourceItineraryId()) && Utils.isNotEmpty(importLeg.getSourceLegId())) {
-					PedibusItineraryLeg sourceLeg = getPedibusItineraryLegById(importLeg.getSourceItineraryId(), importLeg.getSourceLegId());
-					cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg, sourceLeg, 
-							institute, school, importContentOwner);
-				}
+				// clone multimedia content from source leg if available
+				int positionOffset = 0;
 				if (importLeg.getMultimedia() != null && !importLeg.getMultimedia().isEmpty()) {
 					createMultimediaContentByImportData(ownerId, game, itinerary, leg, importLeg.getMultimedia(),
 							importContentOwner);
+					positionOffset = importLeg.getMultimedia().size();
+				}				
+				if (Utils.isNotEmpty(importLeg.getSourceItineraryId()) && Utils.isNotEmpty(importLeg.getSourceLegId())) {
+					PedibusItineraryLeg sourceLeg = getPedibusItineraryLegById(importLeg.getSourceItineraryId(), importLeg.getSourceLegId());
+					cloneMultimediaContentBySourceLeg(ownerId, game, itinerary, leg, sourceLeg, 
+							institute, school, importContentOwner, positionOffset);
 				}
+
 			}
 		}
 		return itinerary;
@@ -1370,7 +1374,7 @@ public class RepositoryManager {
 
 	public void cloneMultimediaContentBySourceLeg(String ownerId, PedibusGame game,
 			PedibusItinerary itinerary, PedibusItineraryLeg leg, PedibusItineraryLeg sourceLeg,
-			Institute institute, School school, ContentOwner contentOwner) throws StorageException {
+			Institute institute, School school, ContentOwner contentOwner, int positionOffset) throws StorageException {
 		if (sourceLeg == null) {
 			return;
 		}
@@ -1408,7 +1412,7 @@ public class RepositoryManager {
 			content.setSubjects(mcToClone.getSubjects());
 			content.setSchoolYears(mcToClone.getSchoolYears());
 			content.setPreviewUrl(mcToClone.getPreviewUrl());
-			content.setPosition(mcToClone.getPosition());
+			content.setPosition(mcToClone.getPosition() + positionOffset);
 			if (contentOwner != null) {
 				content.setContentOwner(contentOwner);
 			} else {
@@ -1430,7 +1434,6 @@ public class RepositoryManager {
 			ContentOwner contentOwner) {
 		Institute institute = getInstitute(ownerId, game.getInstituteId());
 		School school = getSchool(ownerId, game.getInstituteId(), game.getSchoolId());
-		int basePosition = (int) getMultimediaContentNumberByLeg(ownerId, leg.getObjectId());
 		if (contentOwner == null) {
 			contentOwner = new ContentOwner();
 			contentOwner.setName("IMPORT");
@@ -1459,7 +1462,7 @@ public class RepositoryManager {
 			content.setClasses(game.getClassRooms());
 			content.setSharable(multimediaData.isSharable());
 			content.setPublicLink(multimediaData.isPublicLink());
-			content.setPosition(basePosition + position);
+			content.setPosition(position);
 			content.setContentOwner(contentOwner);
 			saveMultimediaContent(content);
 		}
